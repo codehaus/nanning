@@ -7,17 +7,16 @@
  */
 package org.codehaus.nanning;
 
-import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.*;
+import java.util.Collection;
 
 /**
  * Utility for accessing and modifying aspected object.
  *
- * <!-- $Id: Aspects.java,v 1.2 2003-07-12 16:48:16 lecando Exp $ -->
+ * <!-- $Id: Aspects.java,v 1.3 2003-07-16 13:05:20 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.2 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.3 $
  */
 public class Aspects {
     private static ThreadLocal contextAspectFactory = new InheritableThreadLocal();
