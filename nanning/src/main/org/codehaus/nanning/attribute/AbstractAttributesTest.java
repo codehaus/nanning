@@ -5,6 +5,12 @@ import java.net.MalformedURLException;
 
 import junit.framework.TestCase;
 
+/**
+ * For internal use only, test-cases in the frameworks extend this to compile their
+ * attributes properly under IntelliJ. It should be placed in the test-directory but
+ * unfortunately those classes are not included in the produced jar-file so the
+ * frameworks can't use them.
+ */
 public abstract class AbstractAttributesTest extends TestCase {
     private static boolean attributesCompiled = false;
     private static File attributesDir;

@@ -2,13 +2,13 @@ package org.codehaus.nanning.remote;
 
 import java.util.Collection;
 
-import org.prevayler.util.clock.ClockedSystem;
+import org.codehaus.nanning.prevayler.IdentifyingSystem;
 
 
 /**
  * @entity
  */
-public interface MySystem extends ClockedSystem {
+public interface MySystem extends IdentifyingSystem {
     MyObject createMyObject();
 
     /**

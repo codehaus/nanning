@@ -23,6 +23,10 @@ public class IdentifyingMarshaller implements Marshaller, Serializable {
         } else if (PrevaylerUtils.isStatelessService(o.getClass())) {
             return new Identity(o.getClass(), Aspects.getAspectInstance(o).getClassIdentifier());
 
+        } else if (getSystem() == o) {
+            /* the system itself will get a special ID */
+            return new Identity(Aspects.getAspectInstance(o).getClassIdentifier(), new Long(0));
+
         } else if (PrevaylerUtils.isEntity(o.getClass())) {
             if (getSystem().hasObjectID(o)) {
                 return new Identity(Aspects.getAspectInstance(o).getClassIdentifier(), new Long(getSystem().getObjectID(o)));

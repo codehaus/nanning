@@ -1,7 +1,5 @@
 package org.codehaus.nanning.config;
 
-import java.util.Iterator;
-
 import org.codehaus.nanning.*;
 import junit.framework.TestCase;
 

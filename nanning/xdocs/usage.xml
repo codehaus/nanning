@@ -9,8 +9,10 @@
     <body>
 
         <section name="Out of date">
+        		<p>
             This documentation is a bit out of date. For better documentation please see the
             <a href="http://nanning.snipsnap.org">wiki</a>. This documentation will be updated before the 1.0 release.
+        		</p>
         </section>
 
         <section name="Usage">

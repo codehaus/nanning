@@ -15,16 +15,16 @@ import java.io.InputStream;
 import java.io.IOException;
 
 /**
- * TODO document Attributes
+ * Main entry-point for the runtime access of attributes.
  *
  * TODO: there's actually a nasty little bug in here
  * If there are two methods with the same name, same set of arguments with types with same name but
- * in _different_ packages the attributes with same name of these methods will collide.
-
- * <!-- $Id: Attributes.java,v 1.1 2003-07-04 10:53:59 lecando Exp $ -->
+ * in <em>different</em> packages the attributes with same name of these methods will collide.
  *
- * @author $Author: lecando $
- * @version $Revision: 1.1 $
+ * <!-- $Id: Attributes.java,v 1.2 2003-08-10 16:18:18 tirsen Exp $ -->
+ *
+ * @author $Author: tirsen $
+ * @version $Revision: 1.2 $
  */
 
 public class Attributes {

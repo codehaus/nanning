@@ -2,14 +2,14 @@ package org.codehaus.nanning.prevayler;
 
 import java.util.Collection;
 
-import org.prevayler.util.clock.ClockedSystem;
+//import org.prevayler.util.clock.ClockedSystem;
 import org.codehaus.nanning.prevayler.MyObject;
 
 
 /**
  * @entity
  */
-public interface MySystem extends ClockedSystem {
+public interface MySystem extends IdentifyingSystem {
     MyObject createMyObject();
 
     /**
@@ -20,4 +20,11 @@ public interface MySystem extends ClockedSystem {
     MyObject getMyObject();
 
     Collection getAllObjects();
+
+    /**
+     * @transaction
+     */ 
+    void setSimpleString(String string);
+
+    String getSimpleString();
 }

@@ -1,63 +1,40 @@
 package org.codehaus.nanning.prevayler;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.codehaus.nanning.Invocation;
+import org.prevayler.TransactionWithQuery;
+
+import javax.security.auth.Subject;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
-import javax.security.auth.Subject;
-
-import org.codehaus.nanning.Invocation;
-import org.codehaus.nanning.prevayler.AuthenticatedCall;
-import org.codehaus.nanning.prevayler.Call;
-import org.codehaus.nanning.prevayler.CurrentPrevayler;
-import org.codehaus.nanning.prevayler.IdentifyingCall;
-import org.prevayler.util.clock.ClockedSystem;
-import org.prevayler.util.clock.ClockedTransaction;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-public class InvokeCommand extends ClockedTransaction {
+public class InvokeCommand implements TransactionWithQuery {
     private static final Log logger = LogFactory.getLog(InvokeCommand.class);
     static final long serialVersionUID = 320681517664792343L;
 
     private AuthenticatedCall call;
 
-    public InvokeCommand(Invocation invocation, boolean resolveEntities) throws Exception {
-        if (resolveEntities) {
-            call = new IdentifyingCall(invocation);
-            
-        } else {
-            call = new AuthenticatedCall(invocation);
-        }
+    public InvokeCommand(Invocation invocation) throws Exception {
+        call = new IdentifyingCall(invocation);
     }
 
-    protected Object executeClocked(ClockedSystem system) throws Exception {
-        Object prev = null;
-        if (CurrentPrevayler.isInitialized()) {
-            prev = CurrentPrevayler.getSystem();
+    public Object executeAndQuery(Object system, Date executionTime) throws Exception {
+
+        CurrentPrevayler.enterTransaction(system);
+
+        IdentifyingSystem identifyingSystem = (IdentifyingSystem) system;
+        if (!identifyingSystem.hasObjectID(identifyingSystem)) {
+            identifyingSystem.registerObjectID(identifyingSystem);
+            assert identifyingSystem.getObjectID(identifyingSystem) == 0;
         }
-        if (!CurrentPrevayler.hasSystem() || CurrentPrevayler.getSystem() != system) {
-            CurrentPrevayler.setSystem(system);
-        }
-        CurrentPrevayler.enterTransaction();
+
         try {
-            if (logger.isDebugEnabled()) {
-                Object target = call.getTarget();
-                Object[] args = call.getArgs();
-                Method method = call.getMethod();
-                Subject subject = call.getSubject();
-
-                List argsList = Collections.EMPTY_LIST;
-                if (args != null) {
-                    argsList = Arrays.asList(args);
-                }
-                logger.debug("invoking method " + method + " on " + target);
-                logger.debug("args " + argsList);
-                logger.debug("user " + subject);
-            }
-
+            logInvocation();
             Object result = call.invoke();
             logger.debug("success!");
             return result;
@@ -75,11 +52,28 @@ public class InvokeCommand extends ClockedTransaction {
             throw e;
         } finally {
             CurrentPrevayler.exitTransaction();
-            CurrentPrevayler.setSystem(prev);
+        }
+    }
+
+    private void logInvocation() {
+        if (logger.isDebugEnabled()) {
+            Object target = call.getTarget();
+            Object[] args = call.getArgs();
+            Method method = call.getMethod();
+            Subject subject = call.getSubject();
+
+            List argsList = Collections.EMPTY_LIST;
+            if (args != null) {
+                argsList = Arrays.asList(args);
+            }
+            logger.debug("invoking method " + method + " on " + target);
+            logger.debug("args " + argsList);
+            logger.debug("user " + subject);
         }
     }
 
     public Call getCall() {
         return call;
     }
+
 }

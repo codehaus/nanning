@@ -17,7 +17,7 @@ public class BasicIdentifyingSystemGCTest extends TestCase {
         for (int i = 0; i < 1024; i++) {
             registredObject += "I'm big";
         }
-        CurrentPrevayler.enterTransaction();
+        CurrentPrevayler.enterTransaction(basicIdentifyingSystem);
         basicIdentifyingSystem.registerObjectID(registredObject);
         CurrentPrevayler.exitTransaction();
     }

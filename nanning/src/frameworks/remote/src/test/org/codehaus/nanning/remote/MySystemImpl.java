@@ -5,9 +5,9 @@ import java.util.Collection;
 import java.util.ArrayList;
 
 import org.codehaus.nanning.Aspects;
-import org.prevayler.util.clock.AbstractClockedSystem;
+import org.codehaus.nanning.prevayler.BasicIdentifyingSystem;
 
-public class MySystemImpl extends AbstractClockedSystem implements MySystem, Serializable {
+public class MySystemImpl extends BasicIdentifyingSystem implements MySystem, Serializable {
     private MyObject myObject;
 
     public MyObject createMyObject() {
