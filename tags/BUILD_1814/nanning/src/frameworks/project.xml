@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<project>
+    <extend>${basedir}/../../project.xml</extend>
+
+    <logo>/../../images/nanning.png</logo>
+    <currentVersion>1.0-beta-1</currentVersion>
+    <groupId>nanning</groupId>
+    <organization>
+        <name>Jon Tirsen</name>
+        <url>http://codehaus.org/</url>
+        <logo>http://images.werken.com/codehaus-plain.gif</logo>
+    </organization>
+    <inceptionYear>2002</inceptionYear>
+
+    <url>http://nanning.codehaus.org</url>
+    <issueTrackingUrl>
+        http://jira.codehaus.org/secure/BrowseProject.jspa?id=10102
+    </issueTrackingUrl>
+
+    <dependencies>
+        <dependency>
+            <id>xml-apis</id>
+            <version>1.0.b2</version>
+        </dependency>
+
+        <dependency>
+            <id>xerces</id>
+            <version>2.0.2</version>
+        </dependency>
+
+        <dependency>
+            <id>oro</id>
+            <version>2.0.7</version>
+        </dependency>
+
+        <dependency>
+            <id>commons-collections</id>
+            <version>2.1</version>
+        </dependency>
+
+        <dependency>
+            <id>commons-logging</id>
+            <version>1.0.2</version>
+        </dependency>
+
+        <dependency>
+            <id>commons-digester</id>
+            <version>1.4.1</version>
+        </dependency>
+
+        <dependency>
+            <id>qdox</id>
+            <version>1.2</version>
+        </dependency>
+
+        <dependency>
+            <id>commons-beanutils</id>
+            <version>1.5</version>
+        </dependency>
+
+        <dependency>
+            <id>jaas</id>
+            <version>1.0</version>
+        </dependency>
+
+        <dependency>
+            <id>prevayler</id>
+            <version>2.00.000-alpha</version>
+        </dependency>
+
+        <dependency>
+            <groupId>nanning</groupId>
+            <artifactId>nanning</artifactId>
+            <version>1.0-beta-1</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+
+        <nagEmailAddress>
+            tirsen@codehaus.org
+        </nagEmailAddress>
+
+        <sourceDirectory>${basedir}/src/main</sourceDirectory>
+
+        <unitTestSourceDirectory>${basedir}/src/test</unitTestSourceDirectory>
+
+        <!-- Unit test classes -->
+
+        <unitTest>
+            <includes>
+                <include>**/*Test.java</include>
+            </includes>
+            <excludes>
+                <exclude>**/Abstract*.java</exclude>
+                <exclude>**/PerformanceTest.java</exclude>
+                <exclude>**/BasicIdentifyingSystemGCTest.java</exclude>
+                <exclude>**/SoftMapTest.java</exclude>
+            </excludes>
+            <resources>
+                <resource>
+                    <directory>${basedir}/src/test</directory>
+                    <includes>
+                        <include>**/*.xml</include>
+                        <include>**/*.properties</include>
+                    </includes>
+                </resource>
+            </resources>
+        </unitTest>
+
+
+        <resources>
+            <directory>${basedir}/src/main</directory>
+            <includes>
+                <include>**/*.xml</include>
+            </includes>
+        </resources>
+
+    </build>
+
+    <reports>
+        <report>maven-checkstyle-plugin</report>
+        <report>maven-jdepend-plugin</report>
+        <report>maven-changelog-plugin</report>
+        <report>maven-file-activity-plugin</report>
+        <report>maven-developer-activity-plugin</report>
+        <report>maven-jxr-plugin</report>
+        <report>maven-javadoc-plugin</report>
+        <report>maven-junit-report-plugin</report>
+        <report>maven-clover-plugin</report>
+    </reports>
+
+</project>
