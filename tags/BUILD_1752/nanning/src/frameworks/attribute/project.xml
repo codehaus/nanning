@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<project>
+    <extend>${basedir}/../project.xml</extend>
+    <name>Nanning Attribute</name>
+    <id>nanning-attribute</id>
+    <currentVersion>1.0-beta-1</currentVersion>
+    <package>org.codehaus.nanning.attribute</package>
+    <shortDescription>Attribute</shortDescription>
+    <description>Some experimental plugins for the attribute-implementation</description>
+
+    <developers>
+
+        <developer>
+            <name>Jon Tirsen</name>
+            <id>tirsen</id>
+            <organization>Lecando AB</organization>
+        </developer>
+
+        <developer>
+            <name>Lecando AB</name>
+            <id>lecando</id>
+            <organization>Lecando AB</organization>
+        </developer>
+
+    </developers>
+
+    <dependencies>
+
+        <dependency>
+            <id>commons-digester</id>
+            <version>1.4.1</version>
+        </dependency>
+
+        <dependency>
+            <id>commons-beanutils</id>
+            <version>1.5</version>
+        </dependency>
+
+        <dependency>
+            <id>commons-collections</id>
+            <version>2.1</version>
+        </dependency>
+
+    </dependencies>
+
+</project>
