@@ -4,6 +4,7 @@ import java.lang.reflect.AccessibleObject;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.io.Serializable;
 
 import com.tirsen.nanning.Aspects;
 
@@ -12,6 +13,7 @@ public class IdentifyingMarshaller implements Marshaller {
         if (Identity.isPrimitive(o)) {
             return o;
         } else if (Identity.isStatefulService(o.getClass())) {
+            assert o instanceof Serializable : "Stateful services must be serializable";
             return o;
         } else if (Identity.isStatelessService(o.getClass())) {
             return new Identity(o.getClass(), Aspects.getAspectInstance(o).getClassIdentifier());
