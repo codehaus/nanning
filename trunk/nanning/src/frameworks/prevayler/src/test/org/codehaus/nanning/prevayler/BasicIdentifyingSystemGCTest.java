@@ -43,7 +43,7 @@ public class BasicIdentifyingSystemGCTest extends TestCase {
         long removedId = object1.getObjectID();
         object1 = null;
 
-        somethingWasGCd();
+        somethingWasGCd(2000);
         assertFalse("Key for value was not removed after GC", system.isIDRegistered(removedId));
         assertNull("Value was not removed after GC", system.getIdentifiable(removedId));
         assertEquals(1, system.getAllRegisteredObjects().size());
@@ -59,7 +59,7 @@ public class BasicIdentifyingSystemGCTest extends TestCase {
 
         long object1ID = object1.getObjectID();
         object1 = null;
-        somethingWasGCd();
+        somethingWasGCd(2000);
 
         assertFalse(system.isIDRegistered(object1ID));
         assertTrue(system.isIDRegistered(object2.getObjectID()));
@@ -87,10 +87,15 @@ public class BasicIdentifyingSystemGCTest extends TestCase {
        return readMap;
     }
 
-    private void somethingWasGCd() throws InterruptedException {
-        while (!system.keyRemoverThread.hasBeenGCdSinceLastCall()) {
+    private void somethingWasGCd(long timeout) throws InterruptedException {
+        long timePassed = 0;
+        while (!system.hasBeenGCdSinceLastCall()) {
             System.gc();
             Thread.sleep(50);
+            timePassed += 50;
+            if (timePassed > timeout) {
+                fail("Garbage collect did not occur within timeout");
+            }
         }
     }
 
