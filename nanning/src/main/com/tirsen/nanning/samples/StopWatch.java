@@ -7,9 +7,12 @@ public class StopWatch {
     private long startTime;
     private long time;
     private long memory;
+    private static final double MILLIS_PER_SECOND = 1000;
+    private boolean stopped = false;
+    private static final int BYTES_PER_K = 1024;
 
     public StopWatch() {
-        this(true);
+        this(false);
     }
 
     public StopWatch(boolean doGC) {
@@ -21,6 +24,7 @@ public class StopWatch {
     }
 
     public void stop() {
+        stopped = true;
         time = System.currentTimeMillis() - startTime;
         memory = startMemory - Runtime.getRuntime().freeMemory();
     }
@@ -34,11 +38,23 @@ public class StopWatch {
     }
 
     public double getTimeSpent(int numberOfIterations) {
+        assert stopped : "you need to invoke stop() first";
         return getTimeSpent() / (double) numberOfIterations;
     }
 
     public double getMemoryUsed(int numberOfIterations) {
+        assert stopped : "you need to invoke stop() first";
         return getMemoryUsed() / (double) numberOfIterations;
+    }
+
+    public String getTimeSpentSeconds() {
+        assert stopped : "you need to invoke stop() first";
+        return getTimeSpent() / MILLIS_PER_SECOND + "s";
+    }
+
+    public String getMemoryUsedKs() {
+        assert stopped : "you need to invoke stop() first";
+        return getMemoryUsed() / BYTES_PER_K + "k";
     }
     ///CLOVER:ON
 }
