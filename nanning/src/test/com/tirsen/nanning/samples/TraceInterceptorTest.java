@@ -22,10 +22,10 @@ import java.net.URL;
 /**
  * TODO document TraceInterceptorTest
  *
- * <!-- $Id: TraceInterceptorTest.java,v 1.3 2002-12-08 12:57:45 tirsen Exp $ -->
+ * <!-- $Id: TraceInterceptorTest.java,v 1.4 2002-12-11 10:57:52 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.3 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.4 $
  */
 public class TraceInterceptorTest extends TestCase
 {
@@ -111,16 +111,14 @@ public class TraceInterceptorTest extends TestCase
                 String expectedMessage = (String) expectIterator.next();
                 assertTrue("log output not as expected", actualIterator.hasNext());
                 String actualMessage = (String) actualIterator.next();
-                System.out.println("expectedMessage = " + expectedMessage);
-                System.out.println("actualMessage = " + actualMessage);
-                assertEquals("log output not as expected", expectedMessage, actualMessage);
+                assertTrue("log output does not match: " + expectedMessage, actualMessage.startsWith(expectedMessage));
             }
         }
 
         public void reset()
         {
-            actualMessages.removeAll(actualMessages);
-            expectMessages.removeAll(expectMessages);
+            actualMessages.clear();
+            expectMessages.clear();
         }
 
         ///CLOVER:OFF
@@ -245,7 +243,7 @@ public class TraceInterceptorTest extends TestCase
         assertTrue("failed to patch into commons-logging", LogFactory.getFactory() instanceof MockLogFactory);
         MockLog mockLog = ((MockLogFactory) LogFactory.getFactory()).getMockLog();
         mockLog.expectAddMessage(">>> call(hej, svej)");
-        mockLog.expectAddMessage("<<< call(hej, svej), took 0 ms, result hej tillbax!");
+        mockLog.expectAddMessage("<<< call(hej, svej), took");
         Intf intf = (Intf) aspectClass.newInstance();
         intf.call("hej", "svej");
         mockLog.verify();
@@ -253,7 +251,7 @@ public class TraceInterceptorTest extends TestCase
         mockLog.reset();
         aspectClass.setTarget(ErrorImpl.class);
         mockLog.expectAddMessage(">>> call(hej, svej)");
-        mockLog.expectAddMessage("ERROR <<< call(hej, svej) threw exception, took 0 ms");
+        mockLog.expectAddMessage("ERROR <<< call(hej, svej) threw exception, took");
         intf = (Intf) aspectClass.newInstance();
         try
         {

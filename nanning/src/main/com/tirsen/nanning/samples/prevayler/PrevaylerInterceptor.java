@@ -1,57 +1,18 @@
 package com.tirsen.nanning.samples.prevayler;
 
-import com.tirsen.nanning.*;
-import org.prevayler.Prevayler;
-
 import java.lang.reflect.Method;
+
+import com.tirsen.nanning.*;
 
 /**
  * TODO document PrevaylerInterceptor
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class PrevaylerInterceptor
-        implements SingletonInterceptor, FilterMethodsInterceptor, DefinitionAwareInterceptor, ConstructionInterceptor {
+        implements SingletonInterceptor, FilterMethodsInterceptor, ConstructionInterceptor {
     private ThreadLocal inTransaction = new ThreadLocal();
-    private Class constructCommandClass;
-    private Class invokeCommandClass;
-    private Prevayler prevayler;
-
-    public void setInterceptorDefinition(InterceptorDefinition interceptorDefinition) {
-        String constructCommandClassName = (String) interceptorDefinition.getAttribute("constructCommandClass");
-        if (constructCommandClassName != null) {
-            try {
-                setConstructCommandClass(Class.forName(constructCommandClassName));
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        String invokeCommandClassName = (String) interceptorDefinition.getAttribute("invokeCommandClass");
-        if (invokeCommandClassName != null) {
-            try {
-                setInvokeCommandClass(Class.forName(invokeCommandClassName));
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        Prevayler prevayler = (Prevayler) interceptorDefinition.getAttribute("prevayler");
-        if (prevayler != null) {
-            setPrevayler(prevayler);
-        }
-    }
-
-    public void setConstructCommandClass(Class constructCommandClass) {
-        this.constructCommandClass = constructCommandClass;
-    }
-
-    public void setInvokeCommandClass(Class invokeCommandClass) {
-        this.invokeCommandClass = invokeCommandClass;
-    }
-
-    public void setPrevayler(Prevayler prevayler) {
-        this.prevayler = prevayler;
-    }
 
     public boolean interceptsConstructor(Class interfaceClass) {
         return Attributes.hasAttribute(interfaceClass, "instantiation-is-prevayler-command");
@@ -65,9 +26,8 @@ public class PrevaylerInterceptor
         if (!isInTransaction()) {
             enterTransaction();
             try {
-                ConstructCommand command = (ConstructCommand) constructCommandClass.newInstance();
-                command.setInvocation(invocation);
-                return prevayler.executeCommand(command);
+                ConstructCommand command = new ConstructCommand(invocation);
+                return CurrentPrevayler.getPrevayler().executeCommand(command);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             } finally {
@@ -91,9 +51,8 @@ public class PrevaylerInterceptor
         if (!isInTransaction()) {
             enterTransaction();
             try {
-                InvocationCommand command = (InvocationCommand) invokeCommandClass.newInstance();
-                command.setInvocation(invocation);
-                return prevayler.executeCommand(command);
+                InvokeCommand command = new InvokeCommand(invocation);
+                return CurrentPrevayler.getPrevayler().executeCommand(command);
             } finally {
                 exitTransaction();
             }

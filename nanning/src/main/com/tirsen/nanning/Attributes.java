@@ -28,10 +28,10 @@ import java.util.*;
  * Hmm... wait, a minute, there's some support for this in QDox, maybe that will work...
  * -- jon
 
- * <!-- $Id: Attributes.java,v 1.10 2002-12-08 12:57:45 tirsen Exp $ -->
+ * <!-- $Id: Attributes.java,v 1.11 2002-12-11 10:57:52 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.10 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.11 $
  */
 
 public class Attributes
@@ -55,8 +55,12 @@ public class Attributes
     private static String getProperty(Class klass, String key)
     {
         Properties properties = getProperties(klass);
-        String value = properties.getProperty(key);
-        return value;
+        if (properties != null) {
+            String value = properties.getProperty(key);
+            return value;
+        } else {
+            return null;
+        }
     }
 
     private static Properties getProperties(Class klass)
@@ -95,10 +99,6 @@ public class Attributes
                     properties = new Properties();
                     properties.load(inputStream);
                     propertiesCache.put(klass, properties);
-                }
-                else
-                {
-                    throw new RuntimeException("Could not find attributes for " + klass);
                 }
             }
             catch (MalformedURLException e)
@@ -180,16 +180,28 @@ public class Attributes
 
     public static boolean hasAttribute(Class klass, String attribute)
     {
-        return getProperties(klass).containsKey(propertyName(klass, attribute));
+        Properties properties = getProperties(klass);
+        if(properties == null) {
+            return false;
+        }
+        return properties.containsKey(propertyName(klass, attribute));
     }
 
     public static boolean hasAttribute(Method method, String attribute)
     {
-        return getProperties(method.getDeclaringClass()).containsKey(propertyName(method, attribute));
+        Properties properties = getProperties(method.getDeclaringClass());
+        if(properties == null) {
+            return false;
+        }
+        return properties.containsKey(propertyName(method, attribute));
     }
 
     public static boolean hasAttribute(Field field, String attribute)
     {
-        return getProperties(field.getDeclaringClass()).containsKey(propertyName(field, attribute));
+        Properties properties = getProperties(field.getDeclaringClass());
+        if(properties == null) {
+            return false;
+        }
+        return properties.containsKey(propertyName(field, attribute));
     }
 }
