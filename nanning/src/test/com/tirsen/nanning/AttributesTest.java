@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.net.MalformedURLException;
 
 import com.tirsen.nanning.AttributesCompiler;
 import com.tirsen.nanning.Attributes;
@@ -20,15 +21,16 @@ import com.tirsen.nanning.Attributes;
 /**
  * TODO document AttributesTest
  *
- * <!-- $Id: AttributesTest.java,v 1.1 2002-11-17 14:03:34 tirsen Exp $ -->
+ * <!-- $Id: AttributesTest.java,v 1.2 2002-12-03 17:21:01 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.2 $
  */
 public class AttributesTest extends TestCase
 {
     private File targetDir;
     private URL searchPath;
+    private static boolean attributesCompiled;
 
     protected void setUp() throws Exception
     {
@@ -64,5 +66,21 @@ public class AttributesTest extends TestCase
         Method argMethod = AttributesTestClass.class.getMethod("method", new Class[]{ String.class, String.class });
         assertEquals("argMethodValue", Attributes.getAttribute(argMethod, "methodAttribute"));
         assertFalse(Attributes.hasAttribute(argMethod, "stupidAttribute"));
+    }
+
+    public static void compileAttributes() {
+        if (attributesCompiled) {
+            attributesCompiled = true;
+            File targetDir = new File("target" + File.separator + "attributes");
+            try {
+                Attributes.addSearchPath(targetDir.toURL());
+            } catch (MalformedURLException e) {
+                fail(e.getMessage());
+            }
+            AttributesCompiler attributesCompiler = new AttributesCompiler();
+            attributesCompiler.setSrc(new File("src" + File.separator + "test"));
+            attributesCompiler.setDest(targetDir);
+            attributesCompiler.execute();
+        }
     }
 }

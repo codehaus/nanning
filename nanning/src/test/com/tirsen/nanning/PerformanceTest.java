@@ -7,65 +7,23 @@
 package com.tirsen.nanning;
 
 import junit.framework.TestCase;
+import com.tirsen.nanning.samples.StopWatch;
 
 /**
  * TODO document PerformanceTest
  *
- * <!-- $Id: PerformanceTest.java,v 1.7 2002-12-03 14:10:23 lecando Exp $ -->
+ * <!-- $Id: PerformanceTest.java,v 1.8 2002-12-03 17:21:02 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class PerformanceTest extends TestCase
 {
-    public static class StopWatch {
-        ///CLOVER:OFF
-
-        private long startMemory;
-        private long startTime;
-        private long time;
-        private long memory;
-
-        public StopWatch() {
-            this(true);
-        }
-
-        public StopWatch(boolean doGC) {
-            if (doGC) {
-                System.gc(); System.gc(); System.gc();
-            }
-            startMemory = Runtime.getRuntime().freeMemory();
-            startTime = System.currentTimeMillis();
-        }
-
-        public void stop() {
-            time = System.currentTimeMillis() - startTime;
-            memory = startMemory - Runtime.getRuntime().freeMemory();
-        }
-
-        public double getTimeSpent() {
-            return time;
-        }
-
-        public double getMemoryUsed() {
-            return memory;
-        }
-
-        public double getTimeSpent(int numberOfIterations) {
-            return getTimeSpent() / (double) numberOfIterations;
-        }
-
-        public double getMemoryUsed(int numberOfIterations) {
-            return getMemoryUsed() / (double) numberOfIterations;
-        }
-        ///CLOVER:ON
-    }
-
-    public void testPerformanceAndMemory() throws IllegalAccessException, InstantiationException
+    public void testInvocation() throws IllegalAccessException, InstantiationException
     {
         // these are exceptionally high due to Clover...
         double maxMemoryPerInvocation = 1.6;
-        double timesSlowerTolerance = 48;
+        double timesSlowerTolerance = 53;
         double maxTimePerInvocation = 0.012;
 
         int numberOfInvocations = 100000;
