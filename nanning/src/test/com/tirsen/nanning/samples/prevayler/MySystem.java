@@ -1,6 +1,6 @@
 package com.tirsen.nanning.samples.prevayler;
 
-import java.util.List;
+
 
 /**
  * @entity
@@ -11,8 +11,6 @@ public interface MySystem extends IdentifyingSystem {
      * @transaction
      */
     MyObject createMyObject();
-
-    List getObjects();
 
     /**
      * @transaction

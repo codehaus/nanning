@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * @entity
  */
-public interface MyObject extends Serializable {
+public interface MyObject extends Serializable, FinalizationCallback {
     String getAttribute();
 
     /**
@@ -19,4 +19,6 @@ public interface MyObject extends Serializable {
     void setMyObject(MyObject myObject);
 
     MyObject getMyObject();
+
+    boolean wasFinalized();
 }

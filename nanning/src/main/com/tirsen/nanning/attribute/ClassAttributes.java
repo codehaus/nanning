@@ -48,7 +48,12 @@ public class ClassAttributes {
                 } else if ("method".equals(parts[0])) {
                     assert parts.length == 3 : "can't handle attributes with dots at the moment: " + propertyName;
                     String methodSignature = parts[1];
-                    getMap(methodAttributes, methodSignature).put(parts[2], attributeValue);
+                    Method method = findMethod(methodSignature);
+                    if (method != null) {
+                        getMap(methodAttributes, method).put(parts[2], attributeValue);
+                    } else {
+                        logger.warn("could not find method for " + methodSignature);
+                    }
                 } else {
                     assert false : "invalid property " + propertyName;
                 }
@@ -57,6 +62,17 @@ public class ClassAttributes {
         assert classAttributes != null : "properties not loaded";
         assert fieldAttributes != null : "properties not loaded";
         assert methodAttributes != null : "properties not loaded";
+    }
+
+    private Method findMethod(String methodSignature) {
+        Method[] declaredMethods = aClass.getDeclaredMethods();
+        for (int i = 0; i < declaredMethods.length; i++) {
+            Method method = declaredMethods[i];
+            if (Attributes.methodSignature(method).equals(methodSignature)) {
+                return method;
+            }
+        }
+        return null;
     }
 
     public String getAttribute(String attribute) {
@@ -91,11 +107,11 @@ public class ClassAttributes {
 
     public String getAttribute(Method method, String attribute) {
         maybeLoadAttributes();
-        return (String) getMap(methodAttributes, Attributes.methodSignature(method)).get(attribute);
+        return (String) getMap(methodAttributes, method).get(attribute);
     }
 
     public boolean hasAttribute(Method method, String attribute) {
         maybeLoadAttributes();
-        return getMap(methodAttributes, Attributes.methodSignature(method)).containsKey(attribute);
+        return getMap(methodAttributes, method).containsKey(attribute);
     }
 }
