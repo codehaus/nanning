@@ -8,6 +8,7 @@ package com.tirsen.nanning;
 
 import com.tirsen.nanning.attribute.AttributesTest;
 import com.tirsen.nanning.attribute.AttributesXMLParserTest;
+import com.tirsen.nanning.samples.prevayler.ObjectGraphVisitorTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -15,10 +16,10 @@ import junit.framework.TestSuite;
 /**
  * TODO document UnitTestSuite
  *
- * <!-- $Id: UnitTestSuite.java,v 1.9 2003-01-12 13:25:40 tirsen Exp $ -->
+ * <!-- $Id: UnitTestSuite.java,v 1.10 2003-01-24 15:46:09 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class UnitTestSuite
 {
@@ -35,6 +36,7 @@ public class UnitTestSuite
         suite.addTestSuite(MethodFilterTest.class);
         suite.addTestSuite(AttributesXMLParserTest.class);
         suite.addTestSuite(AttributeFilterTest.class);
+        suite.addTestSuite(ObjectGraphVisitorTest.class);
         return suite;
     }
     ///CLOVER:ON

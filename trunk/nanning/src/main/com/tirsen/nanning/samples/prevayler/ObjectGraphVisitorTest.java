@@ -1,6 +1,7 @@
 package com.tirsen.nanning.samples.prevayler;
 
 import junit.framework.TestCase;
+import com.tirsen.nanning.samples.prevayler.ObjectGraphVisitor;
 
 public class ObjectGraphVisitorTest extends TestCase {
     public static class A {
