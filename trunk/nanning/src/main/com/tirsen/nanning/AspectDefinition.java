@@ -12,10 +12,10 @@ import java.lang.reflect.Method;
 /**
  * Defines an interface that's to be added to an aspected object.
  *
- * <!-- $Id: AspectDefinition.java,v 1.10 2002-12-11 10:57:52 lecando Exp $ -->
+ * <!-- $Id: AspectDefinition.java,v 1.11 2002-12-11 15:11:54 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class AspectDefinition
 {
@@ -81,7 +81,11 @@ public class AspectDefinition
     SideAspectInstance createAspectInstance()
             throws IllegalAccessException, InstantiationException
     {
-        return createAspectInstance(targetClass.newInstance());
+        if (targetClass != null) {
+            return createAspectInstance(targetClass.newInstance());
+        } else {
+            return createAspectInstance(null);
+        }
     }
 
     public Class getInterfaceClass()
@@ -114,6 +118,10 @@ public class AspectDefinition
     }
 
     void checkTarget(Object target) {
+        if(target == null) {
+            return;
+        }
+        
         if(!interfaceClass.isInstance(target)) {
             throw new IllegalArgumentException("target does not implement interface: " + target);
         }

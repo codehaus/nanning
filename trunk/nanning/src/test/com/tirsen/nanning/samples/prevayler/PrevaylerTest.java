@@ -4,10 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import com.tirsen.nanning.AspectClass;
-import com.tirsen.nanning.AspectRepository;
-import com.tirsen.nanning.AttributesTest;
-import com.tirsen.nanning.InterceptorDefinition;
+import com.tirsen.nanning.*;
 import junit.framework.TestCase;
 import org.prevayler.implementation.SnapshotPrevayler;
 
@@ -34,7 +31,7 @@ public class PrevaylerTest extends TestCase {
         aspectRepository1.defineClass(aspectClass);
         aspectRepository = aspectRepository1;
 
-        CurrentPrevayler.setAspectRepository(aspectRepository);
+        Aspects.setContextAspectRepository(aspectRepository);
 
         prevaylerDir = File.createTempFile("test", "");
         prevaylerDir.delete();

@@ -12,10 +12,10 @@ import com.tirsen.nanning.samples.StopWatch;
 /**
  * TODO document PerformanceTest
  *
- * <!-- $Id: PerformanceTest.java,v 1.8 2002-12-03 17:21:02 lecando Exp $ -->
+ * <!-- $Id: PerformanceTest.java,v 1.9 2002-12-11 15:11:55 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class PerformanceTest extends TestCase
 {
@@ -24,7 +24,7 @@ public class PerformanceTest extends TestCase
         // these are exceptionally high due to Clover...
         double maxMemoryPerInvocation = 1.6;
         double timesSlowerTolerance = 53;
-        double maxTimePerInvocation = 0.012;
+        double maxTimePerInvocation = 0.013;
 
         int numberOfInvocations = 100000;
 

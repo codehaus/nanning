@@ -2,6 +2,7 @@ package com.tirsen.nanning.samples.prevayler;
 
 import com.tirsen.nanning.AspectRepository;
 import com.tirsen.nanning.InterceptorDefinition;
+import com.tirsen.nanning.Aspects;
 import org.prevayler.Prevayler;
 
 /**
@@ -9,17 +10,8 @@ import org.prevayler.Prevayler;
  * same time.
  */
 public class CurrentPrevayler {
-    private static AspectRepository aspectRepository;
     private static IdentifyingSystem currentSystem;
     private static Prevayler prevayler;
-
-    public static AspectRepository getAspectRepository() {
-        return aspectRepository;
-    }
-
-    public static void setAspectRepository(AspectRepository aspectRepository) {
-        CurrentPrevayler.aspectRepository = aspectRepository;
-    }
 
     public static IdentifyingSystem getSystem() {
         return currentSystem;
@@ -39,7 +31,7 @@ public class CurrentPrevayler {
     }
 
     public static PrevaylerInterceptor getPrevaylerInterceptor() {
-        InterceptorDefinition interceptorDefinition = aspectRepository.getInterceptor(PrevaylerInterceptor.class);
+        InterceptorDefinition interceptorDefinition = Aspects.getCurrentAspectRepository().getInterceptor(PrevaylerInterceptor.class);
         PrevaylerInterceptor prevaylerInterceptor = (PrevaylerInterceptor) interceptorDefinition.getSingleton();
         return prevaylerInterceptor;
     }

@@ -6,21 +6,20 @@
  */
 package com.tirsen.nanning;
 
+import com.tirsen.nanning.samples.TraceInterceptorTest;
+import com.tirsen.nanning.samples.prevayler.PrevaylerTest;
+import com.tirsen.nanning.samples.rmi.RemoteTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import com.tirsen.nanning.samples.TraceInterceptorTest;
-import com.tirsen.nanning.samples.ContractInterceptorTest;
-import com.tirsen.nanning.samples.prevayler.PrevaylerTest;
-import com.tirsen.nanning.*;
 
 
 /**
  * TODO document UnitTestSuite
  *
- * <!-- $Id: AcceptanceTestSuite.java,v 1.1 2002-12-08 15:32:01 tirsen Exp $ -->
+ * <!-- $Id: AcceptanceTestSuite.java,v 1.2 2002-12-11 15:11:55 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.2 $
  */
 public class AcceptanceTestSuite
 {
@@ -31,6 +30,7 @@ public class AcceptanceTestSuite
         suite.addTestSuite(PerformanceTest.class);
         suite.addTestSuite(PrevaylerTest.class);
         suite.addTestSuite(TraceInterceptorTest.class);
+        suite.addTestSuite(RemoteTest.class);
         return suite;
     }
     ///CLOVER:ON
