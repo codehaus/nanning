@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Nanning">
+
+    <title>Nanning</title>
+
+    <body>
+        <links>
+            <item name="bugs" href="http://nanning.snipsnap.org"/>
+            <item name="wiki" href="http://nanning.snipsnap.org"/>
+            <item name="jutopia" href="http://www.freeroller.net/page/tirsen"/>
+            <item name="Maven" href="http://maven.apache.org"/>
+            <item name="QDox" href="http://qdox.codehaus.org"/>
+        </links>
+        <menu name="Nanning Aspects">
+            <item name="Overview" href="/overview.html"/>
+            <item name="Download" href="/download.html"/>
+            <item name="Usage" href="/usage.html">
+            	<item name="AspectInstance" href="/aspect-instance.html" />
+            	<item name="AspectSystem" href="/aspect-system.html" />
+            </item>
+            <item name="Frameworks" href="/frameworks/index.html"/>
+            <item name="Changes" href="/changes-report.html"/>
+            <item name="FAQ" href="/faq.html"/>
+        </menu>
+    </body>
+    
+</project>
