@@ -60,9 +60,26 @@ public class InterceptorAspectTest extends TestCase {
         assertTrue(interceptor != interceptor2);
     }
 
+    public void testPerInstance() {
+        AspectInstance instance2 = new AspectInstance();
+        instance2.addMixin(new MixinInstance(Interface.class, null));
+
+        InterceptorAspect interceptorAspect = new InterceptorAspect(NOPInterceptor.class, InterceptorAspect.PER_INSTANCE);
+        assertEquals(InterceptorAspect.PER_INSTANCE, interceptorAspect.getStateManagement());
+
+        interceptorAspect.advise(instance);
+        interceptorAspect.advise(instance2);
+
+        assertEquals(1, instance.getAllInterceptors().size());
+        assertEquals(1, instance2.getAllInterceptors().size());
+        NOPInterceptor interceptor = (NOPInterceptor) instance.getInterceptorsForMethod(method).get(0);
+        NOPInterceptor interceptor2 = (NOPInterceptor) instance2.getInterceptorsForMethod(method2).get(0);
+        assertTrue(interceptor != interceptor2);
+    }
+
     public void testFalsePointcut() {
         InterceptorAspect interceptorAspect = new InterceptorAspect(new AbstractPointcut() {
-            protected boolean adviseMethod(Method method) {
+            public boolean adviseMethod(Method method) {
                 return false;
             }
         }, interceptor);

@@ -17,6 +17,7 @@ import com.tirsen.nanning.samples.CacheTest;
 import com.tirsen.nanning.samples.prevayler.ObjectGraphVisitorTest;
 import com.tirsen.nanning.samples.rmi.RemoteTest;
 import com.tirsen.nanning.xml.AspectSystemParserTest;
+import com.tirsen.nanning.locking.PessimisticLockingAspectTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -65,6 +66,9 @@ public class UnitTestSuite {
         suite.addTestSuite(InterceptorAspectTest.class);
 
         suite.addTestSuite(AspectSystemParserTest.class);
+
+        suite.addTestSuite(PessimisticLockingAspectTest.class);
+        
         return suite;
     }
     ///CLOVER:ON
