@@ -63,12 +63,12 @@ public class LinkedHashSet implements Set {
     }
 
     public boolean addAll(Collection c) {
-        Set newElements = new HashSet(c);
-        newElements.removeAll(set);
-        if (set.addAll(c)) {
-            return list.addAll(newElements);
+        boolean changed = false;
+        for (Iterator i = c.iterator(); i.hasNext();) {
+            Object o = i.next();
+            changed |= add(o);
         }
-        return false;
+        return changed;
     }
 
     public boolean retainAll(Collection c) {
