@@ -23,10 +23,10 @@ import com.tirsen.nanning.AspectClass;
 /**
  * TODO document AspectTagLibrary
  *
- * <!-- $Id: AspectTagLibrary.java,v 1.1 2002-11-03 17:14:28 tirsen Exp $ -->
+ * <!-- $Id: AspectTagLibrary.java,v 1.2 2002-11-03 18:45:47 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class AspectTagLibrary extends TagLibrary
 {
@@ -74,22 +74,18 @@ public class AspectTagLibrary extends TagLibrary
         public void doTag(XMLOutput xmlOutput) throws Exception
         {
             // find repository and class where I'm contained
-            AspectRepository aspectRepository;
-            AspectClass aspectClass;
-            if (getParent() instanceof AspectRepositoryTag)
+            AspectRepository aspectRepository = null;
+            AspectClass aspectClass = null;
+            AspectRepositoryTag aspectRepositoryTag =
+                    (AspectRepositoryTag) findAncestorWithClass(AspectRepositoryTag.class);
+            if (aspectRepositoryTag != null)
             {
-                aspectClass = null;
-                aspectRepository = ((AspectRepositoryTag) getParent()).getAspectRepository();
+                aspectRepository = aspectRepositoryTag.getAspectRepository();
             }
-            else if (getParent() instanceof AspectClassTag)
+            AspectClassTag aspectClassTag = (AspectClassTag) findAncestorWithClass(AspectClassTag.class);
+            if (aspectClassTag != null)
             {
-                aspectClass = ((AspectClassTag) getParent()).getAspectClass();
-                aspectRepository = ((AspectRepositoryTag) getParent().getParent()).getAspectRepository();
-            }
-            else
-            {
-                aspectClass = null;
-                aspectRepository = null;
+                aspectClass = aspectClassTag.getAspectClass();
             }
 
             // find or instantiate aspect
@@ -109,9 +105,13 @@ public class AspectTagLibrary extends TagLibrary
             {
                 aspectClass.addSideAspect(aspectDefinition);
             }
-            else
+            else if(aspectRepository != null)
             {
                 aspectRepository.defineAspect(aspectDefinition);
+            }
+            else
+            {
+                throw new IllegalStateException("Must be contained within 'aspect-repository' or 'class'.");
             }
         }
     }

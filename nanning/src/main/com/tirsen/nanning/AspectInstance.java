@@ -6,6 +6,8 @@
  */
 package com.tirsen.nanning;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -17,13 +19,15 @@ import java.util.List;
 /**
  * TODO document AspectInstance
  *
- * <!-- $Id: AspectInstance.java,v 1.8 2002-10-31 16:38:56 lecando Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.9 2002-11-03 18:45:47 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.8 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.9 $
  */
 class AspectInstance implements InvocationHandler
 {
+    static ThreadLocal currentThis = new ThreadLocal();
+
     class InvocationImpl implements Invocation
     {
         private int index = -1;
@@ -129,10 +133,28 @@ class AspectInstance implements InvocationHandler
             throws Throwable
     {
         Class interfaceClass = method.getDeclaringClass();
-        SideAspectInstance interfaceInstance = (SideAspectInstance) interfacesToInstancesIndex.get(interfaceClass);
+        if (interfaceClass != Object.class)
+        {
+            Object prevThis = currentThis.get();
+            try
+            {
+                currentThis.set(proxy);
+                SideAspectInstance interfaceInstance = (SideAspectInstance) interfacesToInstancesIndex.get(interfaceClass);
+                // if it wasn't defined by any of the specified interfaces let's assume it's the default one (ie. index 0)
 
-        Invocation invocation = new InvocationImpl(method, args, interfaceInstance);
-        return invocation.invokeNext();
+                Invocation invocation = new InvocationImpl(method, args, interfaceInstance);
+                return invocation.invokeNext();
+            }
+            finally
+            {
+                currentThis.set(prevThis);
+            }
+        }
+        else
+        {
+            // I take care of all calls to Object (such as equals, toString and so on)
+            return method.invoke(this, args);
+        }
     }
 
     Object createProxy()
@@ -176,5 +198,14 @@ class AspectInstance implements InvocationHandler
     {
         SideAspectInstance sideAspectInstance = getSideAspectInstance(interfaceClass);
         sideAspectInstance.setTarget(target);
+    }
+
+    public String toString()
+    {
+        SideAspectInstance defaultInterfaceInstance = interfaceInstances[0];
+        return new ToStringBuilder(this)
+                .append("interface", defaultInterfaceInstance.getInterfaceClass().getName())
+                .append("target", defaultInterfaceInstance.getTarget())
+                .toString();
     }
 }
