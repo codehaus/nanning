@@ -2,10 +2,7 @@ package com.tirsen.nanning.samples.prevayler;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -40,35 +37,35 @@ public class BasicIdentifyingSystem extends AbstractClockedSystem implements Ide
         }
     }
 
-    public Object getObjectWithID(long oid) {
+    public synchronized Object getObjectWithID(long oid) {
         Object object = idToObject.get(new Long(oid));
         assert object != null : "could not find object with id " + oid;
         assert hasObjectID(object) : "object is not registered " + object;
         return object;
     }
 
-    public long getObjectID(Object object) {
+    public synchronized long getObjectID(Object object) {
         assert hasObjectID(object) : "object " + object + " had no object id, use registerObjectID(Object)";
         return ((Long) objectToId.get(object)).longValue();
     }
 
-    public boolean hasNoRegisteredObjects() {
+    public synchronized boolean hasNoRegisteredObjects() {
         return objectToId.isEmpty();
     }
 
-    public Collection getAllRegisteredObjects() {
+    public synchronized Collection getAllRegisteredObjects() {
         return new ArrayList(objectToId.keySet());
     }
 
-    public boolean hasObjectID(Object object) {
+    public synchronized boolean hasObjectID(Object object) {
         return objectToId.containsKey(object);
     }
 
-    public boolean isIDRegistered(long objectId) {
+    public synchronized boolean isIDRegistered(long objectId) {
         return idToObject.containsKey(new Long(objectId));
     }
 
-    public long registerObjectID(final Object object) {
+    public synchronized long registerObjectID(final Object object) {
         if (!CurrentPrevayler.isInTransaction()) {
             throw new IllegalStateException("You have to be inside a transaction to register objects");
         }
@@ -76,27 +73,18 @@ public class BasicIdentifyingSystem extends AbstractClockedSystem implements Ide
         assert object != null : "can't register null";
         assert !hasObjectID(object) : "already has ID: " + object;
 
-        Map newIdToObject = SoftMap.createSoftValuesMap();
-        newIdToObject.putAll(idToObject);
-        Map newObjectToId = SoftMap.createSoftKeysMap();
-        newObjectToId.putAll(objectToId);
-
         Long id = getNextId();
-        assert !newIdToObject.containsKey(id);
-        assert !newObjectToId.containsKey(object);
-        assert id != null && object != null;
-        newIdToObject.put(id, object);
-        newObjectToId.put(object, id);
-        logger.debug("registering object " + object + " with id " + id);
+        assert !isIDRegistered(id.longValue());
 
-        // TODO this block should probably lock away all reads, but it might be possible to ignore that
-        objectToId = newObjectToId;
-        idToObject = newIdToObject;
+        idToObject.put(id, object);
+        objectToId.put(object, id);
+
+        logger.debug("registering object " + object + " with id " + id);
 
         return id.longValue();
     }
 
-    private Long getNextId() {
+    private synchronized Long getNextId() {
         return new Long(nextObjectId++);
     }
 }
