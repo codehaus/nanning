@@ -23,12 +23,12 @@ import com.tirsen.nanning.jelly.AspectTagLibrary;
 /**
  * TODO document AspectRepository
  *
- * <!-- $Id: AspectRepository.java,v 1.6 2002-11-25 12:17:07 lecando Exp $ -->
+ * <!-- $Id: AspectRepository.java,v 1.7 2002-11-27 13:18:01 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
-public class AspectRepository
+public class AspectRepository  
 {
     private static AspectRepository instance;
     private static final Log logger = LogFactory.getLog(AspectRepository.class);

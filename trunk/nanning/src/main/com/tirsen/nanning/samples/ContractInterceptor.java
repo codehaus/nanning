@@ -22,7 +22,7 @@ import java.util.ListIterator;
  * you can enable and disable contract-checking in the same way you enable and disable assertions (java -ea and so on).
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class ContractInterceptor implements Interceptor {
     private static final Pattern oldPattern =
@@ -55,7 +55,7 @@ public class ContractInterceptor implements Interceptor {
                     String old = matcher.group(2);
                     String tail = matcher.group(3);
                     oldValues.add(executeExpression(invocation, old));
-                    String oldRef = getOldReference(oldValues.size());
+                    String oldRef = getOldReference(oldValues.size() - 1);
                     parsedEnsure.append(head + oldRef + tail);
                     matcher = oldPattern.matcher(tail);
                 }
