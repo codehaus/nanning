@@ -10,7 +10,7 @@ public class AspectSystemTest extends TestCase {
     public void test() throws NoSuchMethodException {
         AspectSystem aspectSystem = new AspectSystem();
         aspectSystem.addAspect(new FindTargetMixinAspect());
-        aspectSystem.addAspect(new Introductor(TestMixin.class, TestMixinImpl.class));
+        aspectSystem.addAspect(new MixinAspect(TestMixin.class, TestMixinImpl.class, P.all()));
         aspectSystem.addAspect(new InterceptorAspect(new MockInterceptor()));
         final NullInterceptor nullInterceptor = new NullInterceptor();
         aspectSystem.addAspect(new InterceptorAspect(nullInterceptor));

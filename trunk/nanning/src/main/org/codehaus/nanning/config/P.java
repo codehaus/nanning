@@ -3,6 +3,7 @@ package org.codehaus.nanning.config;
 import org.codehaus.nanning.config.Pointcut;
 import org.codehaus.nanning.Mixin;
 import org.codehaus.nanning.AspectInstance;
+import org.codehaus.nanning.MethodInterceptor;
 import org.codehaus.nanning.attribute.Attributes;
 
 import java.lang.reflect.Method;
@@ -46,6 +47,14 @@ public class P {
         return new MethodName(pattern);
     }
 
+    public static Pointcut classAttribute(final String attribute) {
+        return new ClassAttribute(attribute);
+    }
+
+    public static Pointcut isClass(final Class classIdentifier) {
+        return new IsClass(classIdentifier);
+    }
+
     public static class And extends Pointcut {
         private Pointcut pointcut1;
         private Pointcut pointcut2;
@@ -74,6 +83,10 @@ public class P {
 
     public static class All extends Pointcut {
         public boolean adviseMethod(AspectInstance instance, Mixin mixin, Method method) {
+            return true;
+        }
+
+        public boolean introduceOn(AspectInstance instance) {
             return true;
         }
     }
@@ -143,6 +156,46 @@ public class P {
 
         public boolean adviseMethod(AspectInstance instance, Mixin mixin, Method method) {
             return pattern.matcher(method.getName()).matches();
+        }
+    }
+
+    private static class ClassAttribute extends Pointcut {
+        private final String attribute;
+
+        public ClassAttribute(String attribute) {
+            this.attribute = attribute;
+        }
+
+        public boolean adviseMethod(AspectInstance instance, Mixin mixin, Method method) {
+            return matches(instance);
+        }
+
+        public boolean introduceOn(AspectInstance instance) {
+            return matches(instance);
+        }
+
+        private boolean matches(AspectInstance instance) {
+            return Attributes.hasInheritedAttribute(instance.getClassIdentifier(), attribute);
+        }
+    }
+
+    private static class IsClass extends Pointcut {
+        private final Class classIdentifier;
+
+        public IsClass(Class classIdentifier) {
+            this.classIdentifier = classIdentifier;
+        }
+
+        public boolean introduceOn(AspectInstance instance) {
+            return matches(instance);
+        }
+
+        private boolean matches(AspectInstance instance) {
+            return classIdentifier.equals(instance.getClassIdentifier());
+        }
+
+        public boolean adviseMethod(AspectInstance instance, Mixin mixin, Method method) {
+            return matches(instance);
         }
     }
 }

@@ -4,13 +4,19 @@ import org.codehaus.nanning.AspectException;
 import org.codehaus.nanning.AspectInstance;
 import org.codehaus.nanning.Mixin;
 
-public class Introductor extends AbstractAspect {
+public class MixinAspect extends AbstractAspect {
     protected Class interfaceClass;
     protected Class targetClass;
+    protected Pointcut pointcut;
 
-    public Introductor(Class interfaceClass, Class targetClass) {
+    public MixinAspect(Class interfaceClass, Class targetClass, Pointcut pointcut) {
         this.interfaceClass = interfaceClass;
         this.targetClass = targetClass;
+        this.pointcut = pointcut;
+    }
+
+    public MixinAspect(Class interfaceClass, Class targetClass) {
+        this(interfaceClass, targetClass, P.isClass(interfaceClass));
     }
 
     public void introduce(AspectInstance aspectInstance) {
@@ -29,7 +35,7 @@ public class Introductor extends AbstractAspect {
     }
 
     public boolean shouldIntroduce(AspectInstance aspectInstance) {
-        return true;
+        return pointcut.introduceOn(aspectInstance);
     }
 
     public Class getInterfaceClass() {

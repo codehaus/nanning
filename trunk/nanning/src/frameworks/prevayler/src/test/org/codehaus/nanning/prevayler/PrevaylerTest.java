@@ -5,18 +5,16 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.IdentityHashMap;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.codehaus.nanning.AspectFactory;
 import org.codehaus.nanning.AspectInstance;
 import org.codehaus.nanning.Aspects;
 import org.codehaus.nanning.Mixin;
-import org.codehaus.nanning.prevayler.*;
 import org.codehaus.nanning.attribute.AbstractAttributesTest;
 import org.codehaus.nanning.attribute.Attributes;
 import org.codehaus.nanning.config.AspectSystem;
 import org.codehaus.nanning.config.FindTargetMixinAspect;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
-import org.prevayler.implementation.CheckpointPrevayler;
 
 public class PrevaylerTest extends AbstractAttributesTest {
 

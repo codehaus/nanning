@@ -53,8 +53,8 @@ public class AspectSystemParser {
         }
     }
 
-    private Introductor parseMixinAspect(Element element) {
-        return new Introductor(loadClass(element.getAttribute("interface")), loadClass(element.getAttribute("target")));
+    private MixinAspect parseMixinAspect(Element element) {
+        return new MixinAspect(loadClass(element.getAttribute("interface")), loadClass(element.getAttribute("target")));
     }
 
     private ClassAspect parseClass(Element element) {
