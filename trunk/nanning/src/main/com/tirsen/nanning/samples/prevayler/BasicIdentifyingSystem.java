@@ -72,6 +72,8 @@ public class BasicIdentifyingSystem implements IdentifyingSystem {
     }
 
     public synchronized long registerObjectID(Object object) {
+        assert nextObjectId > 0 ? CurrentPrevayler.isInTransaction() : true :
+                "can't register IDs outside transaction, use NodeService.newInstance(Class) instead";
         assert object != null : "can't register null";
         assert !hasObjectID(object) : "already has ID: " + object;
 
