@@ -113,7 +113,7 @@ public class IdentifyingCall extends Call {
         final IdentifyingSystem system = CurrentPrevayler.getSystem();
         ObjectGraphVisitor.visit(o, new ObjectGraphVisitor() {
             protected void visit(Object o) {
-                if (Identity.isMarshalByValue(o)) {
+                if (o instanceof String) {
                     return;
                 }
                 if (Identity.isEntity(o.getClass())) {

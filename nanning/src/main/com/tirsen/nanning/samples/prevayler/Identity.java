@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.tirsen.nanning.Aspects;
 import com.tirsen.nanning.attribute.Attributes;
@@ -13,7 +14,7 @@ import com.tirsen.nanning.attribute.Attributes;
  * TODO document Identity
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class Identity implements Serializable {
     private Class objectClass;
@@ -66,7 +67,7 @@ public class Identity implements Serializable {
             return true;
         } else if (o instanceof Boolean) {
             return true;
-        } else if (o instanceof ArrayList) {
+        } else if (o instanceof List) {
             return true;
         } else if (Attributes.hasInheritedAttribute(o.getClass(), "marshal-by-value")) {
             return true;
