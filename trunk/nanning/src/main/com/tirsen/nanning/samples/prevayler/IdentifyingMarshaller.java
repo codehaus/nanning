@@ -84,10 +84,6 @@ public class IdentifyingMarshaller implements Marshaller {
                     for (int i = 0; i < targets.length; i++) {
                         super.visit(targets[i]);
                     }
-                    Interceptor[] interceptors = Aspects.getInterceptors(o);
-                    for (int i = 0; i < interceptors.length; i++) {
-                        super.visit(interceptors[i]);
-                    }
                 } else {
                     super.visit(o);
                 }
