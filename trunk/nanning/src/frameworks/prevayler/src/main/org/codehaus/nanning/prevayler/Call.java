@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.codehaus.nanning.Invocation;
+import org.codehaus.nanning.util.WrappedException;
 
 public class Call implements Serializable {
     static final long serialVersionUID = -3336463259251779539L;
@@ -36,7 +37,7 @@ public class Call implements Serializable {
         try {
             return interfaceClass.getMethod(methodName, parameterTypes);
         } catch (Exception e) {
-            throw new RuntimeException("did not find method " + methodName + " returning null" + e);
+            throw new WrappedException("did not find method " + methodName + " returning null", e);
         }
     }
 

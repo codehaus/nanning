@@ -42,10 +42,10 @@ import java.util.Iterator;
  * tests that executes the above Java-code to compile your attributes before 
  * the actual tests are executed.
  *
- * <!-- $Id: AttributesCompiler.java,v 1.2 2003-08-10 16:18:18 tirsen Exp $ -->
+ * <!-- $Id: AttributesCompiler.java,v 1.3 2003-09-22 14:36:39 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.2 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.3 $
  */
 public class AttributesCompiler extends Task {
     private File src;
@@ -114,4 +114,14 @@ public class AttributesCompiler extends Task {
         }
     }
 
+    public static void main(String[] args) {
+        if (args.length != 2) {
+            System.out.println("Usage: AttributesCompiler <source-directory> <destination-directory>");
+            System.exit(0);
+        }
+        AttributesCompiler compiler = new AttributesCompiler();
+        compiler.setSrc(new File(args[0]));
+        compiler.setDest(new File(args[1]));
+        compiler.execute();
+    }
 }
