@@ -23,12 +23,14 @@ import org.apache.commons.lang.builder.ToStringStyle;
 /**
  * TODO document AspectInstance
  *
- * <!-- $Id: AspectInstance.java,v 1.26 2003-02-12 12:01:21 lecando Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.27 2003-02-18 15:17:28 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  */
 public final class AspectInstance implements InvocationHandler, Externalizable {
+    static final long serialVersionUID = 5462785783512485056L;
+
     private Object proxy;
     private Map mixins = new HashMap();
 
