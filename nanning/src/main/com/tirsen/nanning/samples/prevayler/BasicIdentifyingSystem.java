@@ -54,7 +54,6 @@ public class BasicIdentifyingSystem implements IdentifyingSystem {
 
     public long registerObjectID(Object object) {
         assert object != null : "can't register null";
-        logger.debug("registering object " + object);
         assert !hasObjectID(object) : "already has ID: " + object;
 
         Long id = getNextId();
@@ -63,6 +62,7 @@ public class BasicIdentifyingSystem implements IdentifyingSystem {
         assert id != null && object != null;
         idToObject.put(id, object);
         objectToId.put(object,  id);
+        logger.debug("registering object " + object + " with id " + id);
         return id.longValue();
     }
 

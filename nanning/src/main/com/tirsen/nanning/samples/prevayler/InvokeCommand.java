@@ -31,7 +31,9 @@ public class InvokeCommand implements Command {
         if (CurrentPrevayler.isInitialized()) {
             prev = CurrentPrevayler.getSystem();
         }
-        CurrentPrevayler.setSystem((IdentifyingSystem) system);
+        if (!CurrentPrevayler.hasSystem() || CurrentPrevayler.getSystem() != system) {
+            CurrentPrevayler.setSystem((IdentifyingSystem) system);
+        }
         CurrentPrevayler.enterTransaction();
         try {
             Object target = call.getTarget();

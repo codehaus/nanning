@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.Collection;
 import java.lang.ref.Reference;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 public class GarbageCollectingPrevayler extends SnapshotPrevayler {
     private static final Log logger = LogFactory.getLog(GarbageCollectingPrevayler.class);
@@ -51,7 +52,7 @@ public class GarbageCollectingPrevayler extends SnapshotPrevayler {
         final Set referencedObjects = new HashSet();
         ObjectGraphVisitor.visit(system, new ObjectGraphVisitor() {
             protected void visitField(Field field, Object container) {
-                if (!Attributes.hasAttribute(field, "weak")) {
+                if (!Modifier.isStatic(field.getModifiers()) && !Attributes.hasInheritedAttribute(field, "weak")) {
                     super.visitField(field, container);
                 }
             }
