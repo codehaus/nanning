@@ -209,6 +209,31 @@ public static class TestFilterMethodsInterceptor implements FilterMethodsInterce
 }
                 ]]></source>
             </subsection>
+            <subsection name="Method name filters">
+                Filtering what methods an interceptor should intercept depending on its name by setting
+                the attribute "methodNameFilter" on the InterceptorDefinition to a regular expression that
+                the method name must match. (NOTE: your interceptor must extend BasicInterceptor,
+                where this behaviour is implemented). In this example only methods whose name contains
+                "Again" are intercepted (regular expression .*Again.*).
+                <source><![CDATA[
+AspectClass aspectClass = new AspectClass();
+aspectClass.setInterface(SomeAspect.class);
+InterceptorDefinition interceptorDefinition = new InterceptorDefinition(TestFilterMethodsInterceptor.class);
+// set the regular expression that method-name must match
+interceptorDefinition.setAttribute("methodNameFilter", ".*Again.*");
+aspectClass.addInterceptor(interceptorDefinition);
+aspectClass.setTarget(SomeAspectImpl.class);
+
+SomeAspect someAspect = (SomeAspect) aspectClass.newInstance();
+Object proxy = createAspectProxy();
+
+SomeAspect aspect = (SomeAspect) proxy;
+
+aspect.doIt(); // will NOT be called
+aspect.doItAgain(); // WILL be called
+aspect.oupsIDidItAgain(); // WILL be called
+                ]]></source>
+            </subsection>
         </section>
 
         <section name="Samples">
@@ -219,7 +244,7 @@ public static class TestFilterMethodsInterceptor implements FilterMethodsInterce
                 <p>
                     An experimental Design by Contract-interceptor is provided.
                     Add <a href="apidocs/com/tirsen/nanning/samples/ContractInterceptor.html">
-                        ContractInterceptor</a>.
+                        ContractInterceptor</a>
                     to your stack and you will be able to use contracts on interfaces like this:
                 </p>
                 <source>
@@ -234,7 +259,8 @@ public interface ContractIntf {
 
     /**
      * "old this.method()" will be executed before the invocation of the method but used in the
-     * post-condition.
+     * post-condition. Variables are named $0, $1, $2 and so on... (in wait for new commons-attributes
+     * that might handle this better.)
      *
      * @requires $0 > 0
      * @ensures old this.getValue() + $0 == this.getValue()
