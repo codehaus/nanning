@@ -17,6 +17,14 @@ public class FindTargetMixinAspect implements Aspect {
     }
 
     public void introduce(AspectInstance aspectInstance) {
+        if (aspectInstance.getClassIdentifier() == null) {
+            return;
+        }
+        
+        if (aspectInstance.hasMixinForInterface(aspectInstance.getClassIdentifier())) {
+            return;
+        }
+
         MixinInstance mixin = new MixinInstance();
 
         Class interfaceClass = aspectInstance.getClassIdentifier();
