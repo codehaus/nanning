@@ -34,10 +34,10 @@ import org.apache.commons.lang.builder.ToStringStyle;
  aspectInstance.addMixin(mixinInstance);
  </pre></code>
  *
- * <!-- $Id: AspectInstance.java,v 1.38 2003-05-09 14:57:45 lecando Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.39 2003-05-11 15:42:20 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.38 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.39 $
  */
 public final class AspectInstance implements InvocationHandler, Externalizable {
     static final long serialVersionUID = 5462785783512485056L;
@@ -92,6 +92,9 @@ public final class AspectInstance implements InvocationHandler, Externalizable {
                 return ((MixinInstance) o).getInterfaceClass();
             }
         }));
+        if (classIdentifier != null) {
+            interfaces.add(classIdentifier);
+        }
         return interfaces;
     }
 

@@ -14,10 +14,10 @@ import java.lang.reflect.Proxy;
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: AspectInstanceTest.java,v 1.8 2003-05-11 11:17:17 tirsen Exp $ -->
+ * <!-- $Id: AspectInstanceTest.java,v 1.9 2003-05-11 15:42:20 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class AspectInstanceTest extends TestCase {
     public void testEmptyAspectInstance() {
@@ -93,6 +93,24 @@ public class AspectInstanceTest extends TestCase {
         assertSame(target, mixin.getTarget());
     }
 
+    public void testInvocationOnTarget() {
+        AspectInstance instance = new AspectInstance();
+        MixinInstance mixin = new MixinInstance(Interface.class, null);
+        instance.addMixin(mixin);
+
+        final Interface proxy = (Interface) instance.getProxy();
+        mixin.setTarget(new Target() {
+            public void call() {
+                wasCalled = true;
+                assertSame(proxy, Aspects.getThis());
+            }
+        });
+
+        assertFalse(wasCalled);
+        proxy.call();
+        assertTrue(wasCalled);
+    }
+
     public void testChangeTargetDuringInterception() {
         AspectInstance instance = new AspectInstance();
         MixinInstance mixin = new MixinInstance(Interface.class, new Target());
@@ -109,20 +127,12 @@ public class AspectInstanceTest extends TestCase {
         assertSame(target, mixin.getTarget());
     }
 
-    public void testInvocationOnTarget() {
-        AspectInstance instance = new AspectInstance();
-        MixinInstance mixin = new MixinInstance(Interface.class, null);
-        instance.addMixin(mixin);
-
-        final Object proxy = instance.getProxy();
-        mixin.setTarget(new Target() {
-            public void call() {
-                assertSame(proxy, Aspects.getThis());
-            }
-        });
+    public static interface EmptyInterface {
     }
 
-    public static interface EmptyIntf {
+    public void testClassIdentifierAsInterfaceInProxy() {
+        AspectInstance instance = new AspectInstance(EmptyInterface.class);
+        assertTrue(instance.getProxy() instanceof EmptyInterface);
     }
 
     public void testGetInterceptors() {
@@ -134,7 +144,7 @@ public class AspectInstanceTest extends TestCase {
 
         assertTrue(instance.getAllInterceptors().contains(interceptor));
 
-        MixinInstance mixin2 = new MixinInstance(EmptyIntf.class, null);
+        MixinInstance mixin2 = new MixinInstance(EmptyInterface.class, null);
         MethodInterceptor interceptor2 = new NOPInterceptor();
         mixin2.addInterceptor(interceptor2);
         assertTrue(instance.getInterceptors(Interface.class).contains(interceptor));
