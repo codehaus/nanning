@@ -8,14 +8,16 @@ package com.tirsen.nanning;
 
 import java.lang.reflect.Proxy;
 
+import com.lecando.lcms.framework.CheckInitializedInterceptor;
+
 
 /**
  * Facade for accessing some important features of aspected objects and their definitions.
  *
- * <!-- $Id: Aspects.java,v 1.7 2002-11-03 18:45:47 tirsen Exp $ -->
+ * <!-- $Id: Aspects.java,v 1.8 2002-11-22 17:22:09 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.7 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.8 $
  */
 public class Aspects
 {
@@ -27,7 +29,7 @@ public class Aspects
      */
     public static Interceptor[] getInterceptors(Object proxy)
     {
-        return getAspectInstance(proxy).getProxyInterceptors();
+        return getAspectInstance(proxy).getClassInterceptors();
     }
 
     /**
@@ -67,5 +69,34 @@ public class Aspects
     public static Object getThis()
     {
         return AspectInstance.currentThis.get();
+    }
+
+    public static boolean isAspectObject(Object o) {
+        return o == null ? true : Proxy.isProxyClass(o.getClass());
+    }
+
+    public static Object getClassTarget(Object value) {
+        return value == null ? null : getTarget(value, getAspectInstance(value).getAspectClass().getInterfaceClass());
+    }
+
+    public static Object[] getTargets(Object object) {
+        return object == null ? null : Aspects.getAspectInstance(object).getTargets();
+    }
+
+    /**
+     * TODO only search class-interceptors at the moment.
+     * @param o
+     * @param interceptorClass
+     * @return
+     */
+    public static Interceptor findInterceptorByClass(Object o, Class interceptorClass) {
+        Interceptor[] interceptors = getAspectInstance(o).getClassInterceptors();
+        for (int i = 0; i < interceptors.length; i++) {
+            Interceptor interceptor = interceptors[i];
+            if(interceptorClass.isInstance(interceptor)) {
+                return interceptor;
+            }
+        }
+        return null;
     }
 }
