@@ -17,10 +17,21 @@ public class RegexpPatternTest extends TestCase {
     }
 
     public void testComplexPatterns() throws Exception {
-        RegexpPattern regexpPattern = RegexpPattern.compile("uid=(.*?)(,.*)");
+        RegexpPattern regexpPattern = RegexpPattern.compile("uid=(.*?)((,|$).*)");
         Matcher matcher = regexpPattern.matcher("uid=jimmy,ou=TesT-uid,dc=lecando,dc=com");
         assertTrue(matcher.matches());
         assertEquals("jimmy", matcher.group(1));
+        assertEquals(",ou=TesT-uid,dc=lecando,dc=com", matcher.group(2));
+    }
+
+    public void testMorePatterns() throws Exception {
+        RegexpPattern regexpPattern = RegexpPattern.compile("cn=(.*?)((,|$).*)");
+        Matcher matcher = regexpPattern.matcher("cn=George Poirier");
+        assertTrue(matcher.matches());
+        assertEquals("George Poirier", matcher.group(1));
+        matcher = regexpPattern.matcher("cn=George Poirier,ou=TesT-uid,dc=lecando,dc=com");
+        assertTrue(matcher.matches());
+        assertEquals("George Poirier", matcher.group(1));
         assertEquals(",ou=TesT-uid,dc=lecando,dc=com", matcher.group(2));
     }
 
