@@ -15,10 +15,10 @@ import java.lang.reflect.Method;
 /**
  * TODO document InterceptorDefinition
  *
- * <!-- $Id: InterceptorDefinition.java,v 1.8 2002-12-11 15:11:55 lecando Exp $ -->
+ * <!-- $Id: InterceptorDefinition.java,v 1.9 2002-12-11 17:29:37 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class InterceptorDefinition {
     private final Class interceptorClass;
@@ -35,14 +35,13 @@ public class InterceptorDefinition {
     }
 
     public Interceptor newInstance() {
+        if(singletonInterceptor != null) {
+            return singletonInterceptor;
+        }
         try {
-            Interceptor instance;
-            if (singletonInterceptor != null) {
-                instance = singletonInterceptor;
-            } else if (SingletonInterceptor.class.isAssignableFrom(interceptorClass)) {
-                instance = singletonInterceptor = (Interceptor) interceptorClass.newInstance();
-            } else {
-                instance = (Interceptor) interceptorClass.newInstance();
+            Interceptor instance = (Interceptor) interceptorClass.newInstance();
+            if (SingletonInterceptor.class.isAssignableFrom(interceptorClass)) {
+                singletonInterceptor = instance;
             }
 
             if (instance instanceof DefinitionAwareInterceptor) {

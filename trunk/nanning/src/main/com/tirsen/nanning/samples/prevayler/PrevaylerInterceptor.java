@@ -3,16 +3,19 @@ package com.tirsen.nanning.samples.prevayler;
 import java.lang.reflect.Method;
 
 import com.tirsen.nanning.*;
+import org.prevayler.Prevayler;
 
 /**
  * TODO document PrevaylerInterceptor
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class PrevaylerInterceptor
         implements SingletonInterceptor, FilterMethodsInterceptor, ConstructionInterceptor {
     private ThreadLocal inTransaction = new ThreadLocal();
+    private IdentifyingSystem system;
+    private Prevayler prevayler;
 
     public boolean interceptsConstructor(Class interfaceClass) {
         return Attributes.hasAttribute(interfaceClass, "instantiation-is-prevayler-command");
@@ -35,7 +38,9 @@ public class PrevaylerInterceptor
             }
         }
         else {
-            return invocation.getProxy();
+            Object object = invocation.getProxy();
+            CurrentPrevayler.getSystem().registerOID(object);
+            return object;
         }
     }
 
@@ -63,5 +68,22 @@ public class PrevaylerInterceptor
 
     private boolean isInTransaction() {
         return inTransaction.get() != null;
+    }
+
+    public void setSystem(IdentifyingSystem system) {
+        this.system = system;
+    }
+
+    public IdentifyingSystem getSystem() {
+        return system;
+    }
+
+    public Prevayler getPrevayler() {
+        return prevayler;
+    }
+
+    public void setPrevayler(Prevayler prevayler) {
+        this.prevayler = prevayler;
+        setSystem((IdentifyingSystem) prevayler.system());
     }
 }
