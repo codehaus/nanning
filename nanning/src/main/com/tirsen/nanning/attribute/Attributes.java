@@ -28,10 +28,10 @@ import java.util.*;
  * Hmm... wait, a minute, there's some support for this in QDox, maybe that will work...
  * -- jon
 
- * <!-- $Id: Attributes.java,v 1.1 2003-01-12 13:25:40 tirsen Exp $ -->
+ * <!-- $Id: Attributes.java,v 1.2 2003-01-16 11:01:23 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.2 $
  */
 
 public class Attributes {
@@ -210,5 +210,28 @@ public class Attributes {
             return false;
         }
         return properties.containsKey(propertyName(field, attribute));
+    }
+
+    public static String getInheritedAttribute(Class aClass, String attribute) {
+        if (aClass == null) {
+            return null;
+        }
+        
+        if (Attributes.hasAttribute(aClass, attribute)) {
+            return Attributes.getAttribute(aClass, attribute);
+        } else {
+            String attributeValue = Attributes.getAttribute(aClass.getSuperclass(), attribute);
+            if (attributeValue == null) {
+                Class[] interfaces = aClass.getInterfaces();
+                for (int i = 0; i < interfaces.length; i++) {
+                    Class anInterface = interfaces[i];
+                    attributeValue = Attributes.getAttribute(anInterface, attribute);
+                    if (attributeValue != null) {
+                        break;
+                    }
+                }
+            }
+            return attributeValue;
+        }
     }
 }

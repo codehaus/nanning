@@ -24,10 +24,10 @@ import com.tirsen.nanning.Aspects;
 /**
  * TODO document AspectRepository
  *
- * <!-- $Id: AspectRepository.java,v 1.1 2003-01-12 13:25:40 tirsen Exp $ -->
+ * <!-- $Id: AspectRepository.java,v 1.2 2003-01-16 11:01:23 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.2 $
  */
 public class AspectRepository implements AspectFactory {
     private static AspectRepository instance;
@@ -35,7 +35,7 @@ public class AspectRepository implements AspectFactory {
 
     private final Map interceptorDefinitions = new HashMap();
     private final Map aspectDefinitions = new HashMap();
-    private final Map aspectClasses = new HashMap();
+    protected final Map aspectClasses = new HashMap();
 
     public void defineInterceptor(InterceptorDefinition interceptorDefinition) {
         interceptorDefinitions.put(interceptorDefinition.getInterceptorClass(), interceptorDefinition);
