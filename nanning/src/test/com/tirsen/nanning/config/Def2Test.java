@@ -24,9 +24,9 @@ public class Def2Test extends TestCase {
 
         constructionInterceptor.verify();
 
-        assertSame(nullInterceptor, interceptors[0]);
-        MockInterceptor mockInterceptor = (MockInterceptor) interceptors[1];
-        MockInterceptor mockInterceptor2 = (MockInterceptor) interceptors[2];
+        assertSame(nullInterceptor, interceptors[1]);
+        MockInterceptor mockInterceptor = (MockInterceptor) interceptors[2];
+        MockInterceptor mockInterceptor2 = (MockInterceptor) interceptors[0];
         ((TestMixin) bigMomma).mixinCall();
         mockInterceptor.verify();
         ((Intf) bigMomma).call();
