@@ -3,6 +3,7 @@ package org.codehaus.nanning.prevayler;
 import java.io.*;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
+import java.lang.ref.Reference;
 import java.util.*;
 
 import org.apache.commons.logging.Log;
@@ -13,24 +14,34 @@ public class BasicIdentifyingSystem extends IdentifiableImpl implements Identify
     private static final Log logger = LogFactory.getLog(BasicIdentifyingSystem.class);
     static final long serialVersionUID = 4503034161857395426L;
 
+    private boolean somethingWasGCd;
     private Map idToObject = new HashMap();
-    private ReferenceQueue queue = new ReferenceQueue();
-    private List readBackValues;
-    KeyRemovalThread keyRemoverThread;
+    private transient ReferenceQueue queue = new ReferenceQueue();
+    private transient List readBackValues;
 
     private long nextObjectId = 0;
 
-    public BasicIdentifyingSystem() {
-        startKeyRemovalThread();
+    private void removeUnreferencedKeys() {
+        SoftReference reference = (SoftReference) queue.poll();
+        if (reference == null) {
+            return;
+        }
+
+        somethingWasGCd = true;
+        idToObject.remove(new Long(((IdentifiableSoftReference) reference).getObjectId()));
     }
 
-    private void startKeyRemovalThread() {
-        keyRemoverThread = new KeyRemovalThread(new SoftReference(this, queue), idToObject, queue);
-        keyRemoverThread.start();
+    public boolean hasBeenGCdSinceLastCall() {
+        periodicalMaintenanceOperation();
+        if (somethingWasGCd) {
+            somethingWasGCd = false;
+            return true;
+        }
+        return false;
     }
 
     public Identifiable getIdentifiable(long id) {
-        reinitValues();
+        periodicalMaintenanceOperation();
         SoftReference reference = getReference(id);
         if (reference == null || isUpForGC(reference)) {
             return null;
@@ -48,7 +59,7 @@ public class BasicIdentifyingSystem extends IdentifiableImpl implements Identify
     }
 
     public long register(Object object) {
-        reinitValues();
+        periodicalMaintenanceOperation();
         if (!CurrentPrevayler.isInTransaction()) {
             throw new IllegalStateException("You have to be inside a transaction to register objects");
         }
@@ -72,7 +83,7 @@ public class BasicIdentifyingSystem extends IdentifiableImpl implements Identify
     }
 
     public boolean isIDRegistered(long id) {
-        reinitValues();
+        periodicalMaintenanceOperation();
         SoftReference reference = getReference(id);
         if (reference == null || isUpForGC(reference)) {
             return false;
@@ -81,12 +92,12 @@ public class BasicIdentifyingSystem extends IdentifiableImpl implements Identify
     }
 
     public boolean hasNoRegisteredObjects() {
-        reinitValues();
+        periodicalMaintenanceOperation();
         return getAllRegisteredObjects().isEmpty();
     }
 
     public Collection getAllRegisteredObjects() {
-        reinitValues();
+        periodicalMaintenanceOperation();
         List result = new ArrayList();
         for (Iterator i = idToObject.values().iterator(); i.hasNext();) {
             SoftReference reference = (SoftReference) i.next();
@@ -123,7 +134,11 @@ public class BasicIdentifyingSystem extends IdentifiableImpl implements Identify
             Identifiable identifiable = (Identifiable) i.next();
             readBackValues.add(identifiable);
         }
-        startKeyRemovalThread();
+    }
+
+    private void periodicalMaintenanceOperation() {
+        reinitValues();
+        removeUnreferencedKeys();
     }
 
     private void reinitValues() {

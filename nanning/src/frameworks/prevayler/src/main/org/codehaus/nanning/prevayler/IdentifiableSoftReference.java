@@ -11,6 +11,10 @@ public class IdentifiableSoftReference extends SoftReference {
         this.id = referent.getObjectID();
     }
 
+    public IdentifiableSoftReference() {
+        super(null);
+    }
+
     public long getObjectId() {
         return id;
     }
