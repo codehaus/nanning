@@ -3,7 +3,7 @@
     <extend>${basedir}/../project.xml</extend>
     <name>Nanning Remote</name>
     <id>nanning-cache</id>
-    <currentVersion>0.9</currentVersion>
+    <currentVersion>1.0-beta-1-SNAPSHOT</currentVersion>
     <package>org.codehaus.nanning.cache</package>
     <shortDescription>Cache</shortDescription>
     <description></description>
