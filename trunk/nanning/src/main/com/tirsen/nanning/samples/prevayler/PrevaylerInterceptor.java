@@ -10,9 +10,14 @@ import com.tirsen.nanning.definition.SingletonInterceptor;
  * TODO document PrevaylerInterceptor
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirs?n</a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  */
 public class PrevaylerInterceptor implements SingletonInterceptor, MethodInterceptor, FilterMethodsInterceptor {
+    private boolean resolveEntities;
+
+    public PrevaylerInterceptor(boolean resolveEntities) {
+        this.resolveEntities = resolveEntities;
+    }
 
     public boolean interceptsConstructor(Class interfaceClass) {
         return Attributes.hasAttribute(interfaceClass, "entity");
@@ -44,7 +49,7 @@ public class PrevaylerInterceptor implements SingletonInterceptor, MethodInterce
         {
             CurrentPrevayler.enterTransaction();
             try {
-                InvokeCommand command = new InvokeCommand(invocation);
+                InvokeCommand command = new InvokeCommand(invocation, resolveEntities);
                 return command.executeUsing(CurrentPrevayler.getPrevayler());
             } finally {
                 CurrentPrevayler.exitTransaction();

@@ -49,7 +49,8 @@ public class ObjectGraphVisitor {
                 } else {
                     visitNested(nested);
                 }
-            } catch (Exception e) {
+
+            } catch (IllegalAccessException e) {
                 logger.warn("could not enter field " + field + " on object " + container, e);
             }
         }

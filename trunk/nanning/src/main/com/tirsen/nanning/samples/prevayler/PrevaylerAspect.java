@@ -1,28 +1,33 @@
 package com.tirsen.nanning.samples.prevayler;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Iterator;
-
 import com.tirsen.nanning.AspectInstance;
 import com.tirsen.nanning.MixinInstance;
+import com.tirsen.nanning.attribute.Attributes;
 import com.tirsen.nanning.config.Aspect;
 
 /**
  * TODO document PrevaylerInterceptor
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirs?n</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class PrevaylerAspect implements Aspect {
     private TransactionUnsupportedInterceptor unsupportedInterceptor;
     private CheckTransactionUnsupportedInterceptor checkUnsupportedInterceptor;
     private PrevaylerInterceptor prevaylerInterceptor;
+    private RegisterObjectInterceptor registerObjectInterceptor;
 
     public PrevaylerAspect() {
+        this(false);
+    }
+
+    public PrevaylerAspect(boolean resolveEntities) {
         unsupportedInterceptor = new TransactionUnsupportedInterceptor();
         checkUnsupportedInterceptor = new CheckTransactionUnsupportedInterceptor();
-        prevaylerInterceptor = new PrevaylerInterceptor();
+        prevaylerInterceptor = new PrevaylerInterceptor(resolveEntities);
+        if (resolveEntities) {
+            registerObjectInterceptor = new RegisterObjectInterceptor();
+        }
     }
 
     public void adviseMixin(AspectInstance aspectInstance, MixinInstance mixin) {
@@ -32,6 +37,9 @@ public class PrevaylerAspect implements Aspect {
     }
 
     public void advise(AspectInstance aspectInstance) {
+        if (registerObjectInterceptor != null && Attributes.hasInheritedAttribute(aspectInstance.getClassIdentifier(), "entity")) {
+            aspectInstance.addConstructionInterceptor(registerObjectInterceptor);
+        }
     }
 
     public void introduce(AspectInstance aspectInstance) {
