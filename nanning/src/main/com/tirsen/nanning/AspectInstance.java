@@ -25,6 +25,9 @@ import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
+import net.sf.cglib.Enhancer;
+import net.sf.cglib.MethodInterceptor;
+import net.sf.cglib.MethodProxy;
 
 /**
  * The central concept of the Nanning Core, contains mixins.
@@ -39,12 +42,12 @@ import org.apache.commons.collections.Transformer;
  aspectInstance.addMixin(mixinInstance);
  </pre></code>
  *
- * <!-- $Id: AspectInstance.java,v 1.50 2003-06-20 11:53:58 tirsen Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.51 2003-06-22 16:26:26 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.50 $
+ * @version $Revision: 1.51 $
  */
-public final class AspectInstance implements InvocationHandler, Serializable {
+public final class AspectInstance implements InvocationHandler, Serializable, MethodInterceptor {
     static final long serialVersionUID = 5462785783512485056L;
 
     private Map mixins = new HashMap();
@@ -54,6 +57,7 @@ public final class AspectInstance implements InvocationHandler, Serializable {
     private Object proxy;
     private transient List constructionInterceptors = new ArrayList();
     private transient AspectFactory aspectFactory;
+    private boolean useCglib;
 
     public AspectInstance() {
     }
@@ -70,14 +74,40 @@ public final class AspectInstance implements InvocationHandler, Serializable {
     public Object createProxy(boolean runConstructionInterceptors) {
         if (proxy == null) {
             Set interfaces = getInterfaceClasses();
-            proxy = Proxy.newProxyInstance(getClass().getClassLoader(),
-                                           (Class[]) interfaces.toArray(new Class[0]),
-                                           this);
+            MixinInstance mainMixin = findMainMixin();
+            useCglib = useCglib || mainMixin != null;
+            if (useCglib) {
+                Class mainClass = null;
+                if (mainMixin != null) {
+                    mainClass = mainMixin.getMainClass();
+                    interfaces.remove(mainClass);
+                }
+                
+                proxy = Enhancer.enhance(mainClass, (Class[]) interfaces.toArray(new Class[interfaces.size()]), this);
+
+                if (mainMixin != null) {
+                    mainMixin.setTarget(proxy);
+                }
+            } else {
+                proxy = Proxy.newProxyInstance(getClass().getClassLoader(),
+                                               (Class[]) interfaces.toArray(new Class[0]),
+                                               this);
+            }
         }
         if (runConstructionInterceptors) {
             proxy = executeConstructionInterceptors(proxy);
         }
         return proxy;
+    }
+
+    private MixinInstance findMainMixin() {
+        for (Iterator iterator = mixinsList.iterator(); iterator.hasNext();) {
+            MixinInstance mixin = (MixinInstance) iterator.next();
+            if (mixin.isMainMixin()) {
+                return mixin;
+            }
+        }
+        return null;
     }
 
     private Set getInterfaceClasses() {
@@ -92,8 +122,11 @@ public final class AspectInstance implements InvocationHandler, Serializable {
         return interfaces;
     }
 
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    public Object intercept(Object object, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
+        return invoke(method, args, methodProxy);
+    }
 
+    private Object invoke(Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
         Class interfaceClass = method.getDeclaringClass();
 
         if (interfaceClass != Object.class) {
@@ -101,7 +134,7 @@ public final class AspectInstance implements InvocationHandler, Serializable {
             try {
                 Aspects.setThis(proxy);
                 MixinInstance mixin = getMixinForInterface(interfaceClass);
-                return mixin.invokeMethod(proxy, method, args);
+                return mixin.invokeMethod(proxy, method, args, methodProxy);
             } finally {
                 Aspects.setThis(prevThis);
             }
@@ -119,6 +152,10 @@ public final class AspectInstance implements InvocationHandler, Serializable {
             }
             return method.invoke(this, args);
         }
+    }
+
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        return invoke(method, args, null);
     }
 
     Object getTarget(Class interfaceClass) {
@@ -176,12 +213,11 @@ public final class AspectInstance implements InvocationHandler, Serializable {
      * @param mixin
      */
     public void addMixin(MixinInstance mixin) {
-        assert proxy == null : "Can't addMixin mixins when proxy has been created.";
+        assert proxy == null : "Can't add mixins when proxy has been created.";
         Class interfaceClass = mixin.getInterfaceClass();
         bindMixinToInterface(interfaceClass, mixin);
         mixinsList.add(mixin);
     }
-
 
     public void setMixins(List mixinsList) {
         this.mixinsList = mixinsList;
@@ -331,5 +367,9 @@ public final class AspectInstance implements InvocationHandler, Serializable {
             MixinInstance mixin = (MixinInstance) iterator.next();
             mixin.addInterceptor(interceptor);
         }
+    }
+
+    public void useCglib(boolean flag) {
+        this.useCglib = flag;
     }
 }

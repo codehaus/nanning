@@ -81,6 +81,10 @@ public class CurrentPrevayler {
                     return null;
                 }
             });
+        } catch (Error e) {
+            throw e;
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
