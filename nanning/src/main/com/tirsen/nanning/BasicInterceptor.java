@@ -16,10 +16,10 @@ import java.util.regex.Matcher;
  * extending it.
  * TODO document BasicInterceptor
  *
- * <!-- $Id: BasicInterceptor.java,v 1.1 2002-11-30 18:23:56 tirsen Exp $ -->
+ * <!-- $Id: BasicInterceptor.java,v 1.2 2002-12-08 15:50:58 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 
 public abstract class BasicInterceptor implements DefinitionAwareInterceptor, FilterMethodsInterceptor {
@@ -38,9 +38,24 @@ public abstract class BasicInterceptor implements DefinitionAwareInterceptor, Fi
      */
     public boolean interceptsMethod(Method method) {
         InterceptorDefinition interceptorDefinition = getInterceptorDefinition();
-        Object objValue = interceptorDefinition.getAttribute(METHOD_NAME_FILTER_ATTRIBUTE_NAME);
-        if (objValue != null) {
-            String methodNameFilterPattern = (String) interceptorDefinition.getAttribute(METHOD_NAME_FILTER_ATTRIBUTE_NAME);
+        String methodNameFilterPattern = (String) interceptorDefinition.getAttribute(METHOD_NAME_FILTER_ATTRIBUTE_NAME);
+
+        if (methodNameFilterPattern != null) {
+            methodNameFilterPattern = (String) interceptorDefinition.getAttribute(METHOD_NAME_FILTER_ATTRIBUTE_NAME);
+        } else {
+            // try the runtime-attributes
+            try {
+                methodNameFilterPattern = Attributes.getAttribute(this.getClass(), METHOD_NAME_FILTER_ATTRIBUTE_NAME);
+                // qdox returns [.*] as [. ] so replace [. ] with [.*]; qdox should fix this or we have got to come up with a better work-around
+                methodNameFilterPattern = Pattern.compile(". ").matcher(methodNameFilterPattern).replaceAll(".*");
+
+            } catch (Exception e) {
+                // bad stuff happend so let it intercept
+                return true;
+            }
+
+        }
+        if (methodNameFilterPattern != null) {
             Matcher m = Pattern.compile(methodNameFilterPattern).matcher(method.getName());
             return m.matches();
         }
