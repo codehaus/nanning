@@ -201,8 +201,13 @@ public class ClassPropertiesHelper {
     }
 
     public File getAttributeFile(File baseDir) {
-        return new File(baseDir, getPackageName().replace('.', File.separatorChar) + File.separator + getClassName() +
-                                 PropertyFileAttributeLoader.ATTRIBUTE_FILE_SUFFIX);
+        String packageName = getPackageName();
+        if (packageName != null) {
+            return new File(baseDir, packageName.replace('.', File.separatorChar) + File.separator + getClassName() +
+                                     PropertyFileAttributeLoader.ATTRIBUTE_FILE_SUFFIX);
+        } else {
+            return new File(baseDir, getClassName() + PropertyFileAttributeLoader.ATTRIBUTE_FILE_SUFFIX);
+        }
     }
 
     public void store(File dest) throws IOException {
