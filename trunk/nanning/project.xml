@@ -3,7 +3,7 @@
     <pomVersion>3</pomVersion>
     <name>Nanning Aspects</name>
     <id>nanning</id>
-    <currentVersion>0.2</currentVersion>
+    <currentVersion>0.3</currentVersion>
     <organization>
         <url>http://sourceforge.net/projects/nanning</url>
         <logo>http://sourceforge.net/sflogo.php?group_id=64968&amp;type=5</logo>
@@ -41,6 +41,11 @@
             <id>0.1</id>
             <name>0.1</name>
             <tag>RELEASE_0_1</tag>
+        </version>
+        <version>
+            <id>0.2</id>
+            <name>0.2</name>
+            <tag>RELEASE_0_2</tag>
         </version>
     </versions>
 
