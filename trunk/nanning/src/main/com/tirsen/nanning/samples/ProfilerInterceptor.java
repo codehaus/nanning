@@ -2,7 +2,6 @@ package com.tirsen.nanning.samples;
 
 import com.tirsen.nanning.Invocation;
 import com.tirsen.nanning.MethodInterceptor;
-import com.tirsen.nanning.attribute.Attributes;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
