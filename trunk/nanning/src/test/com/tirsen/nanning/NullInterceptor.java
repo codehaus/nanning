@@ -6,19 +6,17 @@
  */
 package com.tirsen.nanning;
 
-import java.lang.reflect.Method;
 
-import com.tirsen.nanning.definition.SingletonInterceptor;
 
 /**
  * TODO document NullInterceptor
  *
- * <!-- $Id: NullInterceptor.java,v 1.7 2003-05-11 11:17:17 tirsen Exp $ -->
+ * <!-- $Id: NullInterceptor.java,v 1.8 2003-07-01 16:08:10 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.7 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.8 $
  */
-public class NullInterceptor implements MethodInterceptor, SingletonInterceptor {
+public class NullInterceptor implements MethodInterceptor {
     public Object invoke(Invocation invocation) throws Throwable {
         return invocation.invokeNext();
     }

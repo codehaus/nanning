@@ -3,7 +3,7 @@
     <extend>${basedir}/../project.xml</extend>
     <name>Nanning Contract</name>
     <id>nanning-contract</id>
-    <currentVersion>0.8</currentVersion>
+    <currentVersion>0.9</currentVersion>
     <package>com.tirsen.nanning.cache</package>
     <shortDescription>Design by contract</shortDescription>
     <description>A simple design by contract interceptor</description>

@@ -8,19 +8,18 @@ package com.tirsen.nanning.samples;
 
 import com.tirsen.nanning.Invocation;
 import com.tirsen.nanning.MethodInterceptor;
-import com.tirsen.nanning.definition.SingletonInterceptor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
  * TODO document TraceInterceptor
  *
- * <!-- $Id: TraceInterceptor.java,v 1.10 2003-05-26 05:39:32 tirsen Exp $ -->
+ * <!-- $Id: TraceInterceptor.java,v 1.11 2003-07-01 16:08:10 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.10 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.11 $
  */
-public class TraceInterceptor implements MethodInterceptor, SingletonInterceptor {
+public class TraceInterceptor implements MethodInterceptor {
     private Log logger;
 
     public TraceInterceptor(Log logger) {

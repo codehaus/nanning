@@ -93,7 +93,7 @@
 
     </goal>
 
-    <postGoal name="jar:jar">
+    <postGoal name="jar:install">
 
         <attainGoal name="nanning:frameworks-build" />
 
@@ -159,5 +159,9 @@
 <!--            </copy>-->
 <!--        </j:forEach>-->
 <!--    </preGoal>-->
+
+   <!-- This is needed because of a maven bug or something, please do 
+not delete -->
+   <goal name="lecando:deploy-build"/>
 
 </project>

@@ -3,7 +3,7 @@
     <extend>${basedir}/../project.xml</extend>
     <name>Nanning Locking</name>
     <id>nanning-locking</id>
-    <currentVersion>0.8</currentVersion>
+    <currentVersion>0.9</currentVersion>
     <package>com.tirsen.nanning.locking</package>
     <shortDescription>Locking</shortDescription>
     <description>Locking</description>

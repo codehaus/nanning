@@ -8,8 +8,8 @@
     <groupId>nanning</groupId>
     <organization>
         <name>Jon Tirsen</name>
-        <url>http://codehaus.org</url>
-        <logo>http://images.werken.com/codehaus-plain.gif</logo>
+        <url>http://sourceforge.net/projects/nanning</url>
+        <logo>http://sourceforge.net/sflogo.php?group_id=64968&amp;type=5</logo>
     </organization>
     <inceptionYear>2002</inceptionYear>
     <package>com.tirsen.nanning</package>
@@ -24,18 +24,18 @@
     <issueTrackingUrl>
         http://jira.codehaus.org/secure/BrowseProject.jspa?id=10102
     </issueTrackingUrl>
-    <siteAddress>codehaus.org</siteAddress>
-    <siteDirectory>/www/nanning.codehaus.org</siteDirectory>
+    <siteAddress>shell.sourceforge.net</siteAddress>
+    <siteDirectory>/home/groups/n/na/nanning/htdocs</siteDirectory>
     <distributionDirectory>
         /unknownatthistime
     </distributionDirectory>
 
     <repository>
         <connection>
-            scm:cvs:pserver:anoncvs@cvs.codehaus.org:/cvsroot/nanning:nanning
+            scm:cvs:pserver:anonymous@cvs.sourceforge.net:/cvsroot/nanning:nanning
         </connection>
         <url>
-            http://cvs.codehaus.org/cgi-bin/viewcvs.cgi/nanning/nanning/
+            http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/nanning/nanning/
         </url>
     </repository>
 
@@ -156,12 +156,12 @@
         <dependency>
             <id>qdox</id>
             <version>1.2</version>
-       </dependency>
+        </dependency>
 
         <dependency>
-           <id>commons-logging</id>
-           <version>1.0.2</version>
-       </dependency>
+            <id>commons-logging</id>
+            <version>1.0.2</version>
+        </dependency>
 
         <dependency>
             <id>concurrent</id>
@@ -176,11 +176,6 @@
         <dependency>
             <id>commons-beanutils</id>
             <version>1.5</version>
-       </dependency>
-
-        <dependency>
-            <id>dom4j</id>
-            <version>1.4-dev-8</version>
         </dependency>
 
         <dependency>
@@ -199,12 +194,6 @@
         </dependency>
 
         <dependency>
-          <groupId>commons-jelly</groupId>
-          <artifactId>commons-jelly</artifactId>
-          <version>20030211.141339</version>
-        </dependency>
-
-        <dependency>
             <id>cglib</id>
             <version>1.0</version>
         </dependency>
@@ -219,7 +208,7 @@
     <build>
 
         <nagEmailAddress>
-            tirsen@users.sourceforge.net
+            tirsen@codehaus.org
         </nagEmailAddress>
 
         <sourceDirectory>${basedir}/src/main</sourceDirectory>

@@ -1,9 +1,8 @@
 package com.tirsen.nanning;
 
-import com.tirsen.nanning.definition.SingletonInterceptor;
 import junit.framework.Assert;
 
-public class MockConstructionInterceptor implements ConstructionInterceptor, SingletonInterceptor {
+public class MockConstructionInterceptor implements ConstructionInterceptor {
     private ConstructionInvocation constructionInvocation;
     private Object newTarget;
 
