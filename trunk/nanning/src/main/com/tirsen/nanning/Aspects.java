@@ -18,10 +18,10 @@ import java.util.List;
 /**
  * Facade for accessing some important features of aspected objects and their definitions.
  *
- * <!-- $Id: Aspects.java,v 1.13 2003-01-18 18:27:26 tirsen Exp $ -->
+ * <!-- $Id: Aspects.java,v 1.14 2003-01-23 13:53:14 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.13 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.14 $
  */
 public class Aspects {
     private static ThreadLocal contextAspectRepository = new ThreadLocal();
@@ -74,7 +74,7 @@ public class Aspects {
     }
 
     public static boolean isAspectObject(Object o) {
-        return o == null ? true : Proxy.isProxyClass(o.getClass());
+        return o == null ? false : Proxy.isProxyClass(o.getClass());
     }
 
     public static Object[] getTargets(Object object) {

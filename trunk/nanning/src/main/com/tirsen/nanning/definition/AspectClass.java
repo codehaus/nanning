@@ -16,10 +16,10 @@ import java.lang.reflect.Proxy;
 /**
  * The definition of an aspected object, specifies interfaces, interceptors and target-objects.
  *
- * <!-- $Id: AspectClass.java,v 1.3 2003-01-19 12:09:04 tirsen Exp $ -->
+ * <!-- $Id: AspectClass.java,v 1.4 2003-01-23 13:53:15 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.3 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.4 $
  */
 public class AspectClass {
     private final List aspectDefinitions = new ArrayList();
@@ -44,7 +44,7 @@ public class AspectClass {
     public Object newInstance(Object[] targets) {
         AspectInstance aspectInstance = new AspectInstance(getAspectRepository(), getInterfaceClass());
         try {
-            // iterate the rest of the definitions and add the interceptors of the first on to the rest
+            // iterate the rest of the definitions and addLink the interceptors of the first on to the rest
             for (ListIterator iterator = aspectDefinitions.listIterator(); iterator.hasNext();) {
                 AspectDefinition mixinDefinition = (AspectDefinition) iterator.next();
                 MixinInstance mixinInstance = null;
@@ -83,7 +83,7 @@ public class AspectClass {
         try {
             List instances = new ArrayList(aspectDefinitions.size());
 
-            // iterate the rest of the definitions and add the interceptors of the first on to the rest
+            // iterate the rest of the definitions and addLink the interceptors of the first on to the rest
             for (ListIterator iterator = aspectDefinitions.listIterator(); iterator.hasNext();) {
                 AspectDefinition aspectDefinition = (AspectDefinition) iterator.next();
                 MixinInstance aspectInstance = null;
