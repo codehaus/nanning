@@ -67,7 +67,9 @@
     </goal>
 
     <preGoal name="clean">
-        <attainGoal name="nanning:frameworks-clean"/>
+        <delete>
+        	<fileset dir="." includes="src/frameworks/*/target" />
+        </delete>
     </preGoal>
 
     <goal name="nanning:frameworks-clean">
