@@ -36,7 +36,7 @@ public class RemoteTest extends AbstractAttributesTest {
         serverAspectSystem.addAspect(new MixinAspect(MyStatefulService.class, MyStatefulServiceImpl.class));
         serverAspectSystem.addAspect(new PrevaylerAspect());
 
-        clientMarshaller = new RemoteMarshaller();
+        clientMarshaller = RemoteMarshaller.createClientSideMarshaller();
 
         // init server side
         Aspects.setContextAspectFactory(serverAspectSystem);
@@ -117,10 +117,10 @@ public class RemoteTest extends AbstractAttributesTest {
     }
 
     public void testRemoteMarshallerWithLocalObject() {
-        RemoteMarshaller remoteMarshaller = new RemoteMarshaller();
+        RemoteMarshaller clientMarshaller = RemoteMarshaller.createClientSideMarshaller();
         MyStatefulServiceImpl o = new MyStatefulServiceImpl();
-        Object id = remoteMarshaller.registerID(o);
-        assertSame(o, remoteMarshaller.unmarshal(new Identity(o.getClass(), id)));
+        Object id = clientMarshaller.registerID(o);
+        assertSame(o, clientMarshaller.unmarshal(new Identity(o.getClass(), id)));
     }
 
     public void testIdentity() {
@@ -132,13 +132,13 @@ public class RemoteTest extends AbstractAttributesTest {
     public void testRemoteMarshallerWithRemoteObject() {
         Object service = serverAspectSystem.newInstance(MyStatefulService.class);
 
-        RemoteMarshaller remoteMarshaller = new RemoteMarshaller();
+        RemoteMarshaller clientMarshaller = RemoteMarshaller.createClientSideMarshaller();
         Identity identity = new RemoteIdentity((Class) Aspects.getAspectInstance(service).getClassIdentifier(), new Long(System.currentTimeMillis()), new SocketConnectionManager("localhost", port));
-        Object stub = remoteMarshaller.unmarshal(identity);
+        Object stub = clientMarshaller.unmarshal(identity);
         assertNotNull(stub);
         assertTrue(stub instanceof MyStatefulService);
         assertTrue(Aspects.getAspectInstance(stub).getTargets()[0] instanceof Identity);
         assertEquals(identity, Aspects.getAspectInstance(stub).getTargets()[0]);
-        assertEquals(identity, remoteMarshaller.marshal(stub));
+        assertEquals(identity, clientMarshaller.marshal(stub));
     }
 }

@@ -3,12 +3,18 @@ package com.tirsen.nanning.samples.rmi;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Collections;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 class ObjectTable {
+    private static final Log logger = LogFactory.getLog(ObjectTable.class);
+
     private static final int DEFAULT_TIMEOUT = 60 * 60 * 1000;
 
-    private Map objectToId = new HashMap();
-    private Map idToReference = new HashMap();
+    private Map objectToId = Collections.synchronizedMap(new HashMap());
+    private Map idToReference = Collections.synchronizedMap(new HashMap());
 
     private long currentId = 0;
     private long timeout;
@@ -34,17 +40,20 @@ class ObjectTable {
             for (Iterator i = idToReference.values().iterator(); i.hasNext();) {
                 LocalReference ref = (LocalReference) i.next();
                 if (ref.isStale(timeout)) {
+                    logger.debug("Removing " + ref.getReferred());
                     objectToId.remove(ref.getReferred());
                     i.remove();
                 }
             }
         } catch (Exception ignore) {
+            logger.warn("Got error while cleaning out stale objects (ignored)", ignore);
         }
     }
 
     synchronized Object register(Object o) {
         Object id = objectToId.get(o);
         if (id == null) {
+            logger.debug("Registering " + o);
             id = newId();
             objectToId.put(o, id);
             idToReference.put(id, new LocalReference(o));
@@ -66,6 +75,7 @@ class ObjectTable {
     }
 
     public synchronized void clear() {
+        logger.debug("Clearing");
         objectToId.clear();
         idToReference.clear();
         currentId = 0;

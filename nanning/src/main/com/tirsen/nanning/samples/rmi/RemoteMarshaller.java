@@ -3,7 +3,6 @@ package com.tirsen.nanning.samples.rmi;
 import java.util.Collection;
 import java.util.Iterator;
 
-import com.tirsen.nanning.AspectFactory;
 import com.tirsen.nanning.AspectInstance;
 import com.tirsen.nanning.Aspects;
 import com.tirsen.nanning.MixinInstance;
@@ -16,15 +15,11 @@ import com.tirsen.nanning.samples.prevayler.Marshaller;
 
 public class RemoteMarshaller implements Marshaller {
     private ObjectTable objectTable = new ObjectTable();
-    private AspectFactory aspectFactory;
+    private AspectSystem aspectSystem;
     private ServerConnectionManager connectionManager;
 
-    /**
-     * Constructs client-side marshaller.
-     */
-    public RemoteMarshaller() {
+    public static RemoteMarshaller createClientSideMarshaller() {
         AspectSystem aspectSystem = new AspectSystem();
-        aspectFactory = aspectSystem;
 
         aspectSystem.addPointcut(new AllPointcut(new Advise() {
             public void advise(AspectInstance aspectInstance) {
@@ -33,20 +28,25 @@ public class RemoteMarshaller implements Marshaller {
                 aspectInstance.addMixin(mixinInstance);
             }
         }));
+
+        RemoteMarshaller remoteMarshaller = new RemoteMarshaller();
+
         RemoteAspect aspect = new RemoteAspect();
-        aspect.setMarshaller(this);
+        aspect.setMarshaller(remoteMarshaller);
         aspectSystem.addAspect(aspect);
+        remoteMarshaller.aspectSystem = aspectSystem;
+
+        return remoteMarshaller;
     }
 
-    /**
-     * Constructs server-side marshaller.
-     */
-    public RemoteMarshaller(ServerConnectionManager connectionManager) {
-        this.connectionManager = connectionManager;
+    public static RemoteMarshaller createServerSideMarshaller(ServerConnectionManager connectionManager) {
+        RemoteMarshaller remoteMarshaller = new RemoteMarshaller();
+        remoteMarshaller.connectionManager = connectionManager;
+        return remoteMarshaller;
     }
 
-    public RemoteMarshaller(AspectFactory aspectFactory) {
-        this.aspectFactory = aspectFactory;
+
+    private RemoteMarshaller() {
     }
 
     public Object unmarshal(Object o) {
@@ -54,10 +54,12 @@ public class RemoteMarshaller implements Marshaller {
             Identity identity = (Identity) o;
             Object id = identity.getIdentifier();
             if (!objectTable.isIDRegistered(id)) {
-                // is remote and stub has not been created
-                assert !isServerSide() : "did not find server side object in object table " + o;
+                if (isServerSide()) {
+                    // is remote and stub has not been created
+                    throw new RuntimeException("Did not find remote object on the server side (timeout?): " + o);
+                }
                 Class objectClass = identity.getObjectClass();
-                Object stub = aspectFactory.newInstance(objectClass);
+                Object stub = aspectSystem.newInstance(objectClass);
                 Aspects.getAspectInstance(stub).setTarget(objectClass, identity);
                 return stub;
             } else {
@@ -69,7 +71,7 @@ public class RemoteMarshaller implements Marshaller {
     }
 
     private boolean isServerSide() {
-        return aspectFactory == null;
+        return aspectSystem == null;
     }
 
     public Object marshal(Object o) {
