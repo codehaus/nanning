@@ -19,18 +19,25 @@ public abstract class AbstractAttributesTest extends TestCase {
             attributesCompiled = true;
             attributesDir = new File("target" + File.separator + "attributes");
 
-            compileAttributes(new File("src" + File.separator + "test"));
-            compileAttributes(new File("src" + File.separator + "main"));
-            compileAttributes(new File("src" + File.separator + "frameworks" + File.separator + "contract" + File.separator + "src" + File.separator + "test"));
-            compileAttributes(new File("src" + File.separator + "frameworks" + File.separator + "contract" + File.separator + "src" + File.separator + "main"));
-            compileAttributes(new File(".." + File.separator + "nanning" + File.separator + "src" + File.separator + "main"));
-            compileAttributes(new File(".." + File.separator + "nanning" + File.separator + "src" + File.separator + "test"));
+            compileFromBaseDir(new File("."));
+            compileFromBaseDir(new File(".." + File.separator + "nanning"));
 
             try {
                 Attributes.addSearchPath(attributesDir.toURL());
             } catch (MalformedURLException e) {
                 fail(e.getMessage());
             }
+        }
+    }
+
+    private static void compileFromBaseDir(File baseDir) {
+        compileAttributes(new File(baseDir, "src" + File.separator + "test"));
+        compileAttributes(new File(baseDir, "src" + File.separator + "main"));
+        File[] frameworks = new File(baseDir, "src" + File.separator + "frameworks").listFiles();
+        for (int i = 0; i < frameworks.length; i++) {
+            File framework = frameworks[i];
+            compileAttributes(new File(framework, "src" + File.separator + "test"));
+            compileAttributes(new File(framework, "src" + File.separator + "main"));
         }
     }
 
