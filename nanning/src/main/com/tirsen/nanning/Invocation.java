@@ -12,10 +12,10 @@ import java.lang.reflect.Method;
 /**
  * Description of the current invocation, given to an interceptor upon method-call.
  *
- * <!-- $Id: Invocation.java,v 1.7 2003-03-21 17:11:10 lecando Exp $ -->
+ * <!-- $Id: Invocation.java,v 1.8 2003-06-11 15:13:32 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public interface Invocation {
     /**
@@ -81,4 +81,6 @@ public interface Invocation {
     Class getTargetInterface();
 
     AspectInstance getAspectInstance();
+
+    Object getArg(int arg);
 }

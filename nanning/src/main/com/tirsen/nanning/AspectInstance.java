@@ -31,10 +31,10 @@ import org.apache.commons.collections.Transformer;
  aspectInstance.addMixin(mixinInstance);
  </pre></code>
  *
- * <!-- $Id: AspectInstance.java,v 1.47 2003-06-09 17:40:41 tirsen Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.48 2003-06-11 15:13:31 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.47 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.48 $
  */
 public final class AspectInstance implements InvocationHandler, Serializable {
     static final long serialVersionUID = 5462785783512485056L;
@@ -130,7 +130,7 @@ public final class AspectInstance implements InvocationHandler, Serializable {
      */
     public MixinInstance getMixinForInterface(Class interfaceClass) {
         MixinInstance mixinInstance = (MixinInstance) mixins.get(interfaceClass);
-        assert mixinInstance != null : "there is no mixin for interface " + interfaceClass;
+        assert mixinInstance != null : "there is no mixin for interface " + interfaceClass + " mixins were " + mixins;
         return mixinInstance;
     }
 

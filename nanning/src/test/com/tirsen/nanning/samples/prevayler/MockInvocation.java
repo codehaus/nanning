@@ -18,6 +18,10 @@ public class MockInvocation implements Invocation {
         return null;
     }
 
+    public Object getArg(int arg) {
+        return null;
+    }
+
     public int getCurrentIndex() {
         return 0;
     }
