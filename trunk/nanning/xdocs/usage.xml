@@ -211,5 +211,46 @@ public static class TestFilterMethodsInterceptor implements FilterMethodsInterce
             </subsection>
         </section>
 
+        <section name="Samples">
+            <p>
+                A very small amount of samples is provided, we really need more of this!
+            </p>
+            <subsection name="Design by Contract interceptor">
+                <p>
+                    An experimental Design by Contract-interceptor is provided.
+                    Add <a href="apidocs/com/tirsen/nanning/samples/ContractInterceptor.html">
+                        ContractInterceptor</a>.
+                    to your stack and you will be able to use contracts on interfaces like this:
+                </p>
+                <source>
+/**
+ * Always need to use this-reference, jexl doesn't support "default"-variable.
+ *
+ * @invariant this.getValue() > 0
+ */
+public interface ContractIntf {
+    public int getValue();
+    public void setValue(int value);
+
+    /**
+     * "old this.method()" will be executed before the invocation of the method but used in the
+     * post-condition.
+     *
+     * @requires $0 > 0
+     * @ensures old this.getValue() + $0 == this.getValue()
+     */
+    public void increaseBy(int value);
+}
+                </source>
+                <p>
+                    Tip: use <a
+        href="http://java.sun.com/j2se/1.4.1/docs/api/java/lang/Class.html#desiredAssertionStatus()">
+                        Class.desiredAssertionStatus()</a> to check wheather to add this interceptor or
+                    not, that way you can enable and disable contract-checking in the same way you enable
+                    and disable assertions (java -ea and so on).
+                </p>
+            </subsection>
+        </section>
+
     </body>
 </document>

@@ -13,10 +13,10 @@ import java.lang.reflect.Method;
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: AspectClassTest.java,v 1.2 2002-11-18 20:56:30 tirsen Exp $ -->
+ * <!-- $Id: AspectClassTest.java,v 1.3 2002-11-24 12:29:09 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class AspectClassTest extends TestCase
 {
@@ -182,7 +182,6 @@ public class AspectClassTest extends TestCase
         }
         catch (BlahongaException shouldHappen)
         {
-            System.out.println("shouldHappen = " + shouldHappen);
         }
         catch (Exception e)
         {

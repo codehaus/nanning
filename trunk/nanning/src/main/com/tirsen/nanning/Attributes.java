@@ -28,10 +28,10 @@ import java.util.*;
  * Hmm... wait, a minute, there's some support for this in QDox, maybe that will work...
  * -- jon
 
- * <!-- $Id: Attributes.java,v 1.4 2002-10-31 16:38:56 lecando Exp $ -->
+ * <!-- $Id: Attributes.java,v 1.5 2002-11-24 12:29:09 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.4 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.5 $
  */
 public class Attributes
 {
@@ -76,11 +76,14 @@ public class Attributes
 
                 if (inputStream == null)
                 {
-                    for (Iterator iterator = searchPaths.iterator(); iterator.hasNext();)
+                    for (Iterator iterator = searchPaths.iterator(); iterator.hasNext() && inputStream == null;)
                     {
                         URL searchPath = (URL) iterator.next();
                         URL url = new URL(searchPath, fileName);
-                        inputStream = url.openStream();
+                        try {
+                            inputStream = url.openStream();
+                        } catch (IOException ignore) {
+                        }
                     }
                 }
 
