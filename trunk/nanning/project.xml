@@ -4,7 +4,7 @@
     <name>Nanning Aspects</name>
     <id>nanning</id>
     <logo>/images/nanning.png</logo>
-    <currentVersion>0.5-SNAPSHOT</currentVersion>
+    <currentVersion>0.5</currentVersion>
     <organization>
         <name>Jon Tirsen</name>
         <url>http://sourceforge.net/projects/nanning</url>
