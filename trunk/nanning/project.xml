@@ -104,8 +104,8 @@
         </dependency>
 
         <dependency>
-            <id>commons-threadpool</id>
-            <version>SNAPSHOT</version>
+            <id>concurrent</id>
+            <version>1.3.2</version>
         </dependency>
 
         <dependency>

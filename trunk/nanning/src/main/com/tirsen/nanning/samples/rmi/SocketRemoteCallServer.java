@@ -13,8 +13,7 @@ import javax.security.auth.Subject;
 import com.tirsen.nanning.AspectFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.threadpool.DefaultThreadPool;
-import org.apache.commons.threadpool.ThreadPool;
+import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
 
 public class SocketRemoteCallServer {
     private static final Log logger = LogFactory.getLog(SocketRemoteCallServer.class);
@@ -22,7 +21,7 @@ public class SocketRemoteCallServer {
     private RemoteCallServer remoteCallServer;
     private int port;
     private ServerSocket serverSocket;
-    private ThreadPool threadPool;
+    private PooledExecutor threadPool;
     private int threadPoolSize = 5;
     private boolean doStop;
     private Thread serverThread;
@@ -37,7 +36,7 @@ public class SocketRemoteCallServer {
             connectionManager = new SocketConnectionManager(InetAddress.getLocalHost().getCanonicalHostName(), port);
             remoteCallServer = new RemoteCallServer(connectionManager);
             serverSocket.setSoTimeout(SERVER_SOCKET_TIMEOUT);
-            threadPool = new DefaultThreadPool(threadPoolSize);
+            threadPool = new PooledExecutor(threadPoolSize);
 
             serverThread = new Thread(new Runnable() {
                 public void run() {
@@ -46,9 +45,10 @@ public class SocketRemoteCallServer {
                             try {
                                 Socket socket = serverSocket.accept();
 
-                                threadPool.invokeLater(new SocketCallProcessor(socket));
+                                threadPool.execute(new SocketCallProcessor(socket));
 
                             } catch (SocketTimeoutException ignore) {
+                            } catch (InterruptedException ignore) {
                             } catch (IOException e) {
                                 logger.error("error accepting call", e);
                             }

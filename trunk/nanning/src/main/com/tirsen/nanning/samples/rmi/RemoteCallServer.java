@@ -21,7 +21,7 @@ public class RemoteCallServer {
     private RemoteMarshaller marshaller;
 
     public RemoteCallServer(ServerConnectionManager connectionManager) {
-        marshaller = new RemoteMarshaller(connectionManager);
+        marshaller = RemoteMarshaller.createServerSideMarshaller(connectionManager);
     }
 
     public void setAspectFactory(AspectFactory aspectRepository) {
