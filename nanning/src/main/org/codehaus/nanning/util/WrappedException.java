@@ -25,6 +25,10 @@ public class WrappedException extends RuntimeException {
         this(null, cause);
     }
 
+    public Throwable getCause() {
+        return cause;
+    }
+
     public void printStackTrace() {
         super.printStackTrace();
         if (cause != null) {
