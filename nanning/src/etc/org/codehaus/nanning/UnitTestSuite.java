@@ -27,10 +27,10 @@ import junit.framework.TestSuite;
 /**
  * TODO document UnitTestSuite
  *
- * <!-- $Id: UnitTestSuite.java,v 1.1 2003-07-04 10:53:56 lecando Exp $ -->
+ * <!-- $Id: UnitTestSuite.java,v 1.2 2003-09-09 11:10:26 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class UnitTestSuite {
     ///CLOVER:OFF
@@ -44,7 +44,6 @@ public class UnitTestSuite {
         suite.addTestSuite(AspectInstanceTest.class);
         suite.addTestSuite(ObjectGraphVisitorTest.class);
         suite.addTestSuite(SerializationTest.class);
-        suite.addTestSuite(org.codehaus.nanning.remote.RemoteTest.class);
         suite.addTestSuite(AspectClassTest.class);
         suite.addTestSuite(ConstructionInterceptorTest.class);
         suite.addTestSuite(InheritanceTest.class);

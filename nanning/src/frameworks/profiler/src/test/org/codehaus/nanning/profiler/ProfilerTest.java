@@ -9,6 +9,10 @@ import org.codehaus.nanning.profiler.ProfilerLogger;
 import org.codehaus.nanning.util.OroUtils;
 
 public class ProfilerTest extends AbstractAttributesTest {
+    protected void setUp() throws Exception {
+        super.setUp();
+    }
+
     public void testProfiler() throws Exception {
         Thread thread = new Thread(new Runnable() {
             public void run() {
@@ -16,7 +20,7 @@ public class ProfilerTest extends AbstractAttributesTest {
                 aspectSystem.addAspect(new FindTargetMixinAspect());
                 aspectSystem.addAspect(new InterceptorAspect(P.methodAttribute("profile"), new ProfilerInterceptor()));
                 Profiled profiled = (Profiled) aspectSystem.newInstance(Profiled.class);
-
+                ProfilerInterceptor.setMinDuration(0);
                 profiled.someMethod();
                 profiled.notProfiledMethod();
 
@@ -47,6 +51,5 @@ public class ProfilerTest extends AbstractAttributesTest {
         String log = ProfilerLogger.getProfilerLogger().lastLog;
         assertNotNull(log);
         assertTrue(log.indexOf("delayTwoHundredMillis") > 0);
-
     }
 }

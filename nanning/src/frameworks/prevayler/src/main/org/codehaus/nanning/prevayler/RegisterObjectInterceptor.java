@@ -8,14 +8,13 @@ import org.codehaus.nanning.prevayler.IdentifyingSystem;
 
 
 public class RegisterObjectInterceptor implements ConstructionInterceptor {
-
     public Object construct(ConstructionInvocation invocation) {
         Object object = invocation.getProxy();
 
         if (CurrentPrevayler.isInTransaction()) {
             IdentifyingSystem system = (IdentifyingSystem) CurrentPrevayler.getSystem();
-            if (!system.hasObjectID(object)) {
-                system.registerObjectID(object);
+            if (!((Identifiable) object).hasObjectID()) {
+                system.register(object);
             }
         }
         return object;

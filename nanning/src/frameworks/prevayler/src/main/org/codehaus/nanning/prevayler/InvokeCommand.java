@@ -30,9 +30,9 @@ public class InvokeCommand implements TransactionWithQuery {
         CurrentPrevayler.enterTransaction(system);
 
         IdentifyingSystem identifyingSystem = (IdentifyingSystem) system;
-        if (!identifyingSystem.hasObjectID(identifyingSystem)) {
-            identifyingSystem.registerObjectID(identifyingSystem);
-            if (identifyingSystem.getObjectID(identifyingSystem) != 0) {
+        if (!((Identifiable) identifyingSystem).hasObjectID()) {
+            identifyingSystem.register(identifyingSystem);
+            if (((Identifiable) identifyingSystem).getObjectID() != 0) {
                 throw new AssertionException();
             }
         }
@@ -47,10 +47,9 @@ public class InvokeCommand implements TransactionWithQuery {
             /** Unwrap the invocation target exceptions */
             if (e instanceof InvocationTargetException) {
                 InvocationTargetException invocationTargetException = (InvocationTargetException) e;
-// TODO: fix this
-//                if (invocationTargetException.getCause() instanceof Exception) {
-//                    e = (Exception) e.getCause();
-//                }
+                if (invocationTargetException.getTargetException() instanceof Exception) {
+                    e = (Exception) invocationTargetException.getTargetException();
+                }
             }
             logger.error("Failed to execute command.", e);
 

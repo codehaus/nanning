@@ -14,7 +14,6 @@ public class ProfilerInterceptor implements MethodInterceptor {
     private static long minDuration = 0;
 
     public Object invoke(Invocation invocation) throws Throwable {
-
         Map methodsStartingTime = (Map) threadLocal.get();
         if (methodsStartingTime == null) {
             methodsStartingTime = new HashMap();
@@ -35,5 +34,4 @@ public class ProfilerInterceptor implements MethodInterceptor {
     public static void setMinDuration(long l) {
         minDuration = l;
     }
-
 }

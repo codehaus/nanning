@@ -20,9 +20,6 @@ import org.codehaus.nanning.AssertionException;
  *
  * <p>An AttributesBuilder can only be used to parse <b>one</b> file at a time. If the AttributesBuilder is to be reused
  * to parse another file, the reset() method must be called.</p>
- *
- * @author <a href="joe@truemesh.org">Joe Walnes</a>
- * @version $Revision: 1.2 $
  */
 public class AttributesBuilder implements Builder {
 

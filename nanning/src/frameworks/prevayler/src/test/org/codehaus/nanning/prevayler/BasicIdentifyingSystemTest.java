@@ -7,11 +7,12 @@ import org.codehaus.nanning.prevayler.BasicIdentifyingSystem;
 import org.codehaus.nanning.prevayler.CurrentPrevayler;
 import org.codehaus.nanning.config.AspectSystem;
 import org.codehaus.nanning.config.MixinAspect;
+import org.codehaus.nanning.config.P;
 import junit.framework.TestCase;
 
 public class BasicIdentifyingSystemTest extends TestCase {
     private BasicIdentifyingSystem basicIdentifyingSystem;
-    private Object registredObject;
+    private Identifiable registredObject;
     
     public static interface Interface {}
     public static class Implementation implements Interface, Serializable {}
@@ -21,14 +22,15 @@ public class BasicIdentifyingSystemTest extends TestCase {
 
         AspectSystem aspectSystem = new AspectSystem();
         aspectSystem.addAspect(new MixinAspect(Interface.class, Implementation.class));
+        aspectSystem.addAspect(new MixinAspect(Identifiable.class, IdentifiableImpl.class, P.all()));
         Aspects.setContextAspectFactory(aspectSystem);
 
-        registredObject = Aspects.getCurrentAspectFactory().newInstance(Interface.class);
+        registredObject = (Identifiable) Aspects.getCurrentAspectFactory().newInstance(Interface.class);
 
         basicIdentifyingSystem = new BasicIdentifyingSystem();
 
         CurrentPrevayler.enterTransaction(basicIdentifyingSystem);
-        basicIdentifyingSystem.registerObjectID(registredObject);
+        basicIdentifyingSystem.register(registredObject);
         CurrentPrevayler.exitTransaction();
     }
 
@@ -42,9 +44,9 @@ public class BasicIdentifyingSystemTest extends TestCase {
         BasicIdentifyingSystem readSystem = (BasicIdentifyingSystem) in.readObject();
         
         assertEquals(1, readSystem.getAllRegisteredObjects().size());
-        Object readObject = readSystem.getAllRegisteredObjects().iterator().next();
-        assertTrue(readSystem.hasObjectID(readObject));
-        assertEquals(basicIdentifyingSystem.getObjectID(registredObject), readSystem.getObjectID(readObject));
-        assertSame(readObject, readSystem.getObjectWithID(readSystem.getObjectID(readObject)));
+        Identifiable readObject = (Identifiable) readSystem.getAllRegisteredObjects().iterator().next();
+        assertTrue(readObject.hasObjectID());
+        assertEquals(registredObject.getObjectID(), (readObject.getObjectID()));
+        assertSame(readObject, readSystem.getIdentifiable(readObject.getObjectID()));
     }
 }

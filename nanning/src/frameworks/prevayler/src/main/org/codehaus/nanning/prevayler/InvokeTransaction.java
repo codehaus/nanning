@@ -75,9 +75,9 @@ public class InvokeTransaction implements TransactionWithQuery {
 
     private void registerObjectIDForSystem(Object system) {
         IdentifyingSystem identifyingSystem = (IdentifyingSystem) system;
-        if (!identifyingSystem.hasObjectID(identifyingSystem)) {
-            identifyingSystem.registerObjectID(identifyingSystem);
-            if (identifyingSystem.getObjectID(identifyingSystem) != 0) {
+        if (!((Identifiable) identifyingSystem).hasObjectID()) {
+            identifyingSystem.register(identifyingSystem);
+            if (((Identifiable) identifyingSystem).getObjectID() != 0) {
                 throw new AssertionException();
             }
         }

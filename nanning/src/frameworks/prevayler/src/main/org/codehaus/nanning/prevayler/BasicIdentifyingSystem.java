@@ -1,105 +1,143 @@
 package org.codehaus.nanning.prevayler;
 
+import java.io.*;
+import java.lang.ref.ReferenceQueue;
+import java.lang.ref.SoftReference;
 import java.util.*;
-import java.io.Serializable;
 
-//import org.prevayler.util.clock.AbstractClockedSystem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.nanning.AssertionException;
 
-public class BasicIdentifyingSystem implements IdentifyingSystem, Serializable {
+public class BasicIdentifyingSystem extends IdentifiableImpl implements IdentifyingSystem, Serializable {
     private static final Log logger = LogFactory.getLog(BasicIdentifyingSystem.class);
     static final long serialVersionUID = 4503034161857395426L;
 
-    private Map idToObject = SoftMap.createSoftValuesMap();
-    /**
-     * Rebuild this after xml-serialization.
-     * @xml-serializer-transient
-     */
-    private Map objectToId = SoftMap.createSoftKeysMap();
+    private Map idToObject = new HashMap();
+    private ReferenceQueue queue = new ReferenceQueue();
+    private List readBackValues;
+    KeyRemovalThread keyRemoverThread;
 
     private long nextObjectId = 0;
 
-    public void rebuildKeysMap() {
-        objectToId = SoftMap.createSoftKeysMap();
-        for (Iterator iterator = idToObject.entrySet().iterator(); iterator.hasNext();) {
-            Map.Entry entry = (Map.Entry) iterator.next();
-            Long id = (Long) entry.getKey();
-            Object o = entry.getValue();
-            objectToId.put(o, id);
-        }
+    public BasicIdentifyingSystem() {
+        startKeyRemovalThread();
     }
 
-    public synchronized Object getObjectWithID(long oid) {
-        Object object = idToObject.get(new Long(oid));
-        if (object == null) {
-            throw new AssertionException("could not find object with id " + oid);
+    private void startKeyRemovalThread() {
+        keyRemoverThread = new KeyRemovalThread(new SoftReference(this, queue), idToObject, queue);
+        keyRemoverThread.start();
+    }
+
+    public Identifiable getIdentifiable(long id) {
+        reinitValues();
+        SoftReference reference = getReference(id);
+        if (reference == null || isUpForGC(reference)) {
+            return null;
         }
+
+        Identifiable object = (Identifiable) reference.get();
+        if (object == null) {
+            throw new AssertionException("could not find object with id " + id);
+        }
+        if (!object.hasObjectID()) {
+            throw new AssertionException("object is not registered " + object);
+        }
+
         return object;
     }
 
-    public synchronized long getObjectID(Object object) {
-        Long aLong = (Long) objectToId.get(object);
-        if (aLong == null) {
-            throw new AssertionException("object " + object + " had no object id, use registerObjectID(Object)");
-        }
-        return aLong.longValue();
-    }
-
-    public synchronized boolean hasNoRegisteredObjects() {
-        return objectToId.isEmpty();
-    }
-
-    public synchronized Collection getAllRegisteredObjects() {
-
-        Collection result = new ArrayList();
-        for (Iterator i = objectToId.entrySet().iterator(); i.hasNext();) {
-            try {
-                Map.Entry entry = (Map.Entry) i.next();
-                result.add(entry.getKey());
-            } catch (NoSuchElementException ignore) {
-                /* This sometimes happens with the jakarta ReferenceMap, lets just ignore it and continue */
-            }
-        }
-
-        return result;
-    }
-
-    public synchronized boolean hasObjectID(Object object) {
-        return objectToId.containsKey(object);
-    }
-
-    public synchronized boolean isIDRegistered(long objectId) {
-        return idToObject.containsKey(new Long(objectId));
-    }
-
-    public synchronized long registerObjectID(final Object object) {
+    public long register(Object object) {
+        reinitValues();
         if (!CurrentPrevayler.isInTransaction()) {
             throw new IllegalStateException("You have to be inside a transaction to register objects");
         }
 
-        if (object == null) {
-            throw new AssertionException("can't register null");
-        }
-        if (hasObjectID(object)) {
-            throw new AssertionException("already has ID: " + object);
+
+        if (!(object instanceof Identifiable)) {
+            throw new AssertionException("Object is not instance of Identifiable");
         }
 
-        Long id = getNextId();
-        if (isIDRegistered(id.longValue())) {
-            throw new AssertionException();
+        long id = getNextId();
+
+        Identifiable identifiable = (Identifiable) object;
+        identifiable.setObjectID(id);
+
+        if (isIDRegistered(identifiable.getObjectID())) {
+            throw new AssertionException("Object already registered");
         }
+        register(identifiable);
 
-        idToObject.put(id, object);
-        objectToId.put(object, id);
-
-        logger.debug("registering object " + object + " with id " + id);
-
-        return id.longValue();
+        return id;
     }
 
-    private synchronized Long getNextId() {
-        return new Long(nextObjectId++);
+    public boolean isIDRegistered(long id) {
+        reinitValues();
+        SoftReference reference = getReference(id);
+        if (reference == null || isUpForGC(reference)) {
+            return false;
+        }
+        return idToObject.containsKey(new Long(id));
+    }
+
+    public boolean hasNoRegisteredObjects() {
+        reinitValues();
+        return getAllRegisteredObjects().isEmpty();
+    }
+
+    public Collection getAllRegisteredObjects() {
+        reinitValues();
+        List result = new ArrayList();
+        for (Iterator i = idToObject.values().iterator(); i.hasNext();) {
+            SoftReference reference = (SoftReference) i.next();
+            if (!isUpForGC(reference)) {
+                result.add(reference.get());
+            }
+        }
+        return result;
+    }
+
+    private void register(Identifiable identifiable) {
+        logger.debug("registering object " + identifiable + " with id " + identifiable.getObjectID());
+        idToObject.put(new Long(identifiable.getObjectID()), new IdentifiableSoftReference(identifiable, queue));
+    }
+
+    private boolean isUpForGC(SoftReference reference) {
+        return reference.isEnqueued() || reference.get() == null;
+    }
+
+    private SoftReference getReference(long id) {
+        return (SoftReference) idToObject.get(new Long(id));
+    }
+
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.writeObject(getAllRegisteredObjects());
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        this.idToObject = new HashMap();
+        this.queue = new ReferenceQueue();
+        this.readBackValues = new ArrayList();
+        Collection registeredObjects = (Collection) in.readObject();
+        for (Iterator i = registeredObjects.iterator(); i.hasNext();) {
+            Identifiable identifiable = (Identifiable) i.next();
+            readBackValues.add(identifiable);
+        }
+        startKeyRemovalThread();
+    }
+
+    private void reinitValues() {
+        if (readBackValues == null) {
+            return;
+        }
+        for (Iterator i = readBackValues.iterator(); i.hasNext();) {
+            Identifiable identifiable = (Identifiable) i.next();
+            register(identifiable);
+        }
+        readBackValues = null;
+    }
+
+    private synchronized long getNextId() {
+        return nextObjectId++;
     }
 }
