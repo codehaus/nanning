@@ -4,7 +4,7 @@
     <name>Nanning Aspects</name>
     <id>nanning</id>
     <logo>/images/nanning.png</logo>
-    <currentVersion>0.4</currentVersion>
+    <currentVersion>0.5</currentVersion>
     <organization>
         <url>http://sourceforge.net/projects/nanning</url>
         <logo>http://sourceforge.net/sflogo.php?group_id=64968&amp;type=5</logo>
@@ -38,6 +38,11 @@
     </repository>
 
     <versions>
+        <version>
+            <id>0.4</id>
+            <name>0.4</name>
+            <tag>RELEASE_0_4</tag>
+        </version>
         <version>
             <id>0.3</id>
             <name>0.3</name>
