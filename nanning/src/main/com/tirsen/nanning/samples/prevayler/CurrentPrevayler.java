@@ -57,11 +57,24 @@ public class CurrentPrevayler {
         return ((Integer) isInTransaction.get()).intValue();
     }
 
-    public static void withPrevayler(Prevayler prevayler, Runnable runnable) {
+    public static void withPrevayler(Prevayler prevayler, final Runnable runnable) {
+        try {
+            withPrevayler(prevayler, new PrevaylerAction() {
+                public Object run() throws Exception {
+                    runnable.run();
+                    return null;
+                }
+            });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Object withPrevayler(Prevayler prevayler, PrevaylerAction action) throws Exception {
         Prevayler lastPrevayler = (Prevayler) currentPrevayler.get();
         setPrevayler(prevayler);
         try {
-            runnable.run();
+            return action.run();
         } finally {
             setPrevayler(lastPrevayler);
         }
