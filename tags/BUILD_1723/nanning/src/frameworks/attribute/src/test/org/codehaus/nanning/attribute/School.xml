@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+
+<attributes>
+    <attribute>
+        <name>classAttrib</name>
+        <value>classValue</value>
+    </attribute>
+
+    <attribute>
+        <name>secure</name>
+        <value>true</value>
+    </attribute>
+
+    <field name="name">
+        <attribute>
+            <name>fieldAttrib</name>
+            <value>fieldValue</value>
+        </attribute>
+    </field>
+
+    <field name="director">
+        <attribute>
+            <name>persistance</name>
+            <value>true</value>
+        </attribute>
+    </field>
+
+    <method name="setName">
+        <parameter-type>String</parameter-type>
+        <attribute>
+            <name>methodAttrib</name>
+            <value>methodValue</value>
+        </attribute>
+    </method>
+
+    <method name="hireTeacher">
+        <parameter-type>Teacher</parameter-type>
+        <parameter-type>String</parameter-type>
+        <attribute>
+            <name>secure</name>
+            <value>true</value>
+        </attribute>
+    </method>
+
+    <method name="sackAllTeachers">
+        <attribute>
+            <name>secure</name>
+            <value>false</value>
+        </attribute>
+    </method>
+</attributes>
