@@ -16,13 +16,13 @@ import java.util.*;
 /**
  * TODO document AspectDefinition
  *
- * <!-- $Id: MixinInstance.java,v 1.4 2003-02-12 12:01:21 lecando Exp $ -->
+ * <!-- $Id: MixinInstance.java,v 1.5 2003-02-18 15:17:29 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public final class MixinInstance {
-    private AspectDefinition aspectDefinition;
+
     private Class interfaceClass;
     private Object target;
     private Map methodInterceptors = new HashMap();
@@ -74,10 +74,6 @@ public final class MixinInstance {
             methodInterceptors.put(method, interceptors);
         }
         return interceptors;
-    }
-
-    public AspectDefinition getAspectDefinition() {
-        return aspectDefinition;
     }
 
     class InvocationImpl implements Invocation {
