@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.codehaus.nanning.Aspects;
-import org.codehaus.nanning.locking.SimpleMixinAspect;
 import org.codehaus.nanning.prevayler.MyObject;
 import org.codehaus.nanning.prevayler.MySystem;
 
