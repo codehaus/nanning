@@ -14,10 +14,10 @@ import java.util.ArrayList;
 /**
  * TODO document AspectDefinition
  *
- * <!-- $Id: SideAspectInstance.java,v 1.5 2002-11-30 22:51:45 tirsen Exp $ -->
+ * <!-- $Id: SideAspectInstance.java,v 1.6 2002-12-03 13:55:24 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.5 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.6 $
  */
 class SideAspectInstance {
     private AspectDefinition aspectDefinition;
@@ -73,5 +73,9 @@ class SideAspectInstance {
 
     public Interceptor[] getInterceptorsForMethod(Method method) {
         return methodInterceptors[aspectDefinition.getMethodIndex(method)];
+    }
+
+    public AspectDefinition getAspectDefinition() {
+        return aspectDefinition;
     }
 }

@@ -12,14 +12,18 @@ import java.lang.reflect.Proxy;
 /**
  * The definition of an aspected object, specifies interfaces, interceptors and target-objects.
  *
- * <!-- $Id: AspectClass.java,v 1.13 2002-11-30 22:51:45 tirsen Exp $ -->
+ * <!-- $Id: AspectClass.java,v 1.14 2002-12-03 13:55:24 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.13 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.14 $
  */
-public class AspectClass extends AspectDefinition {
+public class AspectClass {
     private final List aspectDefinitions = new ArrayList();
-    private Map interfacesToInstancesIndex;
+    private Map interfacesToInstancesIndex = new HashMap();
+
+    public AspectClass() {
+        aspectDefinitions.add(new AspectDefinition());
+    }
 
     /**
      * Instantiates an instance with the specified interfaces, interceptors and target-objects.
@@ -52,8 +56,8 @@ public class AspectClass extends AspectDefinition {
 
     protected Object instantiateProxy(AspectInstance aspectInstance, List interfaces) {
         Object proxy = Proxy.newProxyInstance(getClass().getClassLoader(),
-                (Class[]) interfaces.toArray(new Class[0]),
-                aspectInstance);
+                                              (Class[]) interfaces.toArray(new Class[0]),
+                                              aspectInstance);
         return proxy;
     }
 
@@ -63,30 +67,28 @@ public class AspectClass extends AspectDefinition {
             List instances = new ArrayList(aspectDefinitions.size() + 1);
 
             // add the class-specific interface, interceptors and target
-            SideAspectInstance classInterfaceInstance;
+            SideAspectInstance classAspectInstance;
             if (targets != null) {
-                classInterfaceInstance = createAspectInstance(new InterceptorDefinition[0],
-                        new Interceptor[0], targets[0]);
+                classAspectInstance = getClassAspectDefinition().createAspectInstance(null);
             } else {
-                classInterfaceInstance = createAspectInstance(new InterceptorDefinition[0], new Interceptor[0]);
+                classAspectInstance = getClassAspectDefinition().createAspectInstance(null);
             }
-            instances.add(classInterfaceInstance);
-            Interceptor[] classInterceptors = classInterfaceInstance.getAllInterceptors();
+            instances.add(classAspectInstance);
+            Interceptor[] classInterceptors = classAspectInstance.getAllInterceptors();
 
-            for (ListIterator iterator = aspectDefinitions.listIterator(); iterator.hasNext();) {
+            // iterate the rest of the definitions and add the interceptors of the first on to the rest
+            for (ListIterator iterator = aspectDefinitions.listIterator(1); iterator.hasNext();) {
                 AspectDefinition aspectDefinition = (AspectDefinition) iterator.next();
-                SideAspectInstance interfaceInstance = null;
+                SideAspectInstance aspectInstance = null;
                 if (targets != null) {
-                    interfaceInstance =
-                            aspectDefinition.createAspectInstance(getInterceptorDefinitions(),
-                                    classInterceptors,
-                                    targets[iterator.previousIndex() + 1]);
+                    aspectInstance =
+                            aspectDefinition.createAspectInstance(classAspectInstance,
+                                                                  targets[iterator.previousIndex() + 1]);
                 } else {
-                    interfaceInstance =
-                            aspectDefinition.createAspectInstance(getInterceptorDefinitions(),
-                                    classInterceptors);
+                    aspectInstance =
+                            aspectDefinition.createAspectInstance(classAspectInstance);
                 }
-                instances.add(interfaceInstance);
+                instances.add(aspectInstance);
             }
 
             sideAspectInstances = (SideAspectInstance[]) instances.toArray(new SideAspectInstance[0]);
@@ -96,6 +98,10 @@ public class AspectClass extends AspectDefinition {
             throw new AspectException(e);
         }
         return sideAspectInstances;
+    }
+
+    private AspectDefinition getClassAspectDefinition() {
+        return getAspectDefinition(0);
     }
 
     /**
@@ -111,12 +117,15 @@ public class AspectClass extends AspectDefinition {
     }
 
     private void reindexInterfacesToIndex() {
-        interfacesToInstancesIndex = new HashMap();
-        indexInterface(getInterfaceClass(), 0);
+        interfacesToInstancesIndex.clear();
         for (ListIterator iterator = aspectDefinitions.listIterator(); iterator.hasNext();) {
             AspectDefinition aspectDefinition = (AspectDefinition) iterator.next();
-            indexInterface(aspectDefinition.getInterfaceClass(), iterator.previousIndex() + 1);
+            indexInterface(aspectDefinition.getInterfaceClass(), iterator.previousIndex());
         }
+    }
+
+    public Class getInterfaceClass() {
+        return getClassAspectDefinition().getInterfaceClass();
     }
 
     private void indexInterface(Class interfaceClass, int instanceIndex) {
@@ -133,7 +142,7 @@ public class AspectClass extends AspectDefinition {
     }
 
     public void setInterface(Class interfaceClass) {
-        super.setInterface(interfaceClass);
+        getAspectDefinition(0).setInterface(interfaceClass);
         reindexInterfacesToIndex();
     }
 
@@ -143,5 +152,21 @@ public class AspectClass extends AspectDefinition {
             throw new IllegalArgumentException("No such interface for this object: " + interfaceClass.getName());
         }
         return integer.intValue();
+    }
+
+    public void addInterceptor(Class aClass) {
+        getClassAspectDefinition().addInterceptor(aClass);
+    }
+
+    private AspectDefinition getAspectDefinition(int index) {
+        return (AspectDefinition) aspectDefinitions.get(index);
+    }
+
+    public void setTarget(Class aClass) {
+        getClassAspectDefinition().setTarget(aClass);
+    }
+
+    public void addInterceptor(InterceptorDefinition interceptorDefinition) {
+        getClassAspectDefinition().addInterceptor(interceptorDefinition);
     }
 }

@@ -7,27 +7,42 @@
 package com.tirsen.nanning.jelly;
 
 import org.apache.commons.jelly.XMLOutput;
+import org.apache.commons.jelly.TagSupport;
 import com.tirsen.nanning.AspectClass;
 
 /**
  * TODO document AspectClassTag
  *
- * <!-- $Id: AspectClassTag.java,v 1.1 2002-11-03 19:05:32 tirsen Exp $ -->
+ * <!-- $Id: AspectClassTag.java,v 1.2 2002-12-03 13:55:24 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.2 $
  */
 public class AspectClassTag extends AspectTag
 {
+    private AspectClass aspectClass;
+
     public void doTag(XMLOutput xmlOutput) throws Exception
     {
-        aspectDefinition = new AspectClass();
+        aspectClass = new AspectClass();
         invokeBody(xmlOutput);
         ((AspectRepositoryTag) getParent()).getAspectRepository().defineClass(getAspectClass());
     }
 
     public AspectClass getAspectClass()
     {
-        return (AspectClass) getAspectDefinition();
+        return aspectClass;
+    }
+
+    public void setAspectInterface(Class interfaceClass) {
+        aspectClass.setInterface(interfaceClass);
+    }
+
+    public void setTarget(Class targetClass) {
+        aspectClass.setTarget(targetClass);
+    }
+
+    public void addInterceptor(Class interceptorClass) {
+        aspectClass.addInterceptor(interceptorClass);
     }
 }

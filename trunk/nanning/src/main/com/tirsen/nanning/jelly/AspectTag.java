@@ -15,10 +15,10 @@ import com.tirsen.nanning.AspectClass;
 /**
  * TODO document AspectTag
  *
- * <!-- $Id: AspectTag.java,v 1.2 2002-11-30 18:23:56 tirsen Exp $ -->
+ * <!-- $Id: AspectTag.java,v 1.3 2002-12-03 13:55:24 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.2 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.3 $
  */
 public class AspectTag extends TagSupport
 {
@@ -78,5 +78,17 @@ public class AspectTag extends TagSupport
         {
             throw new IllegalStateException("Must be contained within 'aspect-repository' or 'class'.");
         }
+    }
+
+    public void addInterceptor(Class interceptorClass) {
+        aspectDefinition.addInterceptor(interceptorClass);
+    }
+
+    public void setAspectInterface(Class interfaceClass) {
+        aspectDefinition.setInterface(interfaceClass);
+    }
+
+    public void setTarget(Class targetClass) {
+        aspectDefinition.setTarget(targetClass);
     }
 }
