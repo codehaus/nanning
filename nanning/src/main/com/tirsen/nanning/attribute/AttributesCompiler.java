@@ -6,22 +6,21 @@
  */
 package com.tirsen.nanning.attribute;
 
-import java.io.*;
-import java.util.Properties;
-
 import com.thoughtworks.qdox.parser.impl.JFlexLexer;
 import com.thoughtworks.qdox.parser.impl.Parser;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Task;
 
+import java.io.*;
+
 /**
  * TODO document AttributesCompiler
  *
- * <!-- $Id: AttributesCompiler.java,v 1.6 2003-06-09 17:40:41 tirsen Exp $ -->
+ * <!-- $Id: AttributesCompiler.java,v 1.7 2003-06-10 05:26:47 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class AttributesCompiler extends Task {
     private File src;
@@ -72,21 +71,20 @@ public class AttributesCompiler extends Task {
     }
 
     private void createAttributesFile(File javaFile, File attributeFile) throws IOException {
-        ClassAttributes attributes = parseClassAttribute(javaFile);
+        ClassPropertiesHelper attributes = parseClassAttribute(javaFile);
         OutputStream output = new FileOutputStream(attributeFile);
         try {
-            attributes.store(output, javaFile.getName());
+            attributes.storeProperties(output, javaFile.getName());
         } finally {
             output.close();
         }
     }
 
-    ClassAttributes parseClassAttribute(File javaFile) throws IOException {
+    ClassPropertiesHelper parseClassAttribute(File javaFile) throws IOException {
         InputStream input = new FileInputStream(javaFile);
         try {
-            builder.reset();
             new Parser(new JFlexLexer(input), builder).parse();
-            return builder.getClassAttributes();
+            return builder.getClassPropertiesHelper();
         } finally {
             input.close();
         }

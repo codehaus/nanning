@@ -12,23 +12,23 @@ import com.thoughtworks.qdox.parser.structs.MethodDef;
  * QDox Builder implementation for creating Properties containing attributes.
  *
  * <p>This Builder should be fed to the QDox Parser where it shall receive callbacks as a source file is parsed.
- * After the file has been parsed, getEdit() can be called to retrieved the compiled classAttributes of the class.</p>
+ * After the file has been parsed, getEdit() can be called to retrieved the compiled classPropertiesHelper of the class.</p>
  *
  * <p>An AttributesBuilder can only be used to parse <b>one</b> file at a time. If the AttributesBuilder is to be reused
  * to parse another file, the reset() method must be called.</p>
  *
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class AttributesBuilder implements Builder {
 
-    private ClassAttributes classAttributes = new ClassAttributes();
+    private ClassPropertiesHelper classPropertiesHelper = new ClassPropertiesHelper();
 
     private final Properties currentAttributes = new Properties();
 
 
-    // Methods needed to implement Builder that we don't care about.
     public void addPackage(String packageName) {
+        System.out.println("package " + packageName);
     }
 
     public void addImport(String importName) {
@@ -45,7 +45,9 @@ public class AttributesBuilder implements Builder {
     }
 
     public void beginClass(ClassDef def) {
-        addCurrentAttributes(true, null, null);
+        classPropertiesHelper = new ClassPropertiesHelper();
+        classPropertiesHelper.setClassName(def.name);
+        addCurrentAttributes(null, null);
     }
 
     public void addMethod(MethodDef def) {
@@ -68,7 +70,7 @@ public class AttributesBuilder implements Builder {
         }
         method.append(')');
 
-        addCurrentAttributes(false, null, method.toString());
+        addCurrentAttributes(null, method.toString());
     }
 
     private String getTypeWithoutPackage(FieldDef param) {
@@ -80,24 +82,24 @@ public class AttributesBuilder implements Builder {
     }
 
     public void addField(FieldDef def) {
-        addCurrentAttributes(false, def.name, null);
+        addCurrentAttributes(def.name, null);
     }
 
-    private void addCurrentAttributes(boolean isClass, String fieldName, String methodSignature) {
+    private void addCurrentAttributes(String fieldName, String methodSignature) {
         if (currentAttributes.size() > 0) {
             final Iterator keys = currentAttributes.keySet().iterator();
             while (keys.hasNext()) {
                 final String attributeName = (String) keys.next();
                 final String attributeValue = currentAttributes.getProperty(attributeName);
 
-                if (isClass) {
-                    classAttributes.loadClassAttribute(attributeName, attributeValue);
-
-                } else if (fieldName != null) {
-                    classAttributes.loadFieldAttribute(fieldName, attributeName, attributeValue);
+                if (fieldName != null) {
+                    classPropertiesHelper.loadFieldAttribute(fieldName, attributeName, attributeValue);
 
                 } else if (methodSignature != null) {
-                    classAttributes.loadMethodAttribute(methodSignature, attributeName, attributeValue);
+                    classPropertiesHelper.loadMethodAttribute(methodSignature, attributeName, attributeValue);
+
+                } else {
+                    classPropertiesHelper.loadClassAttribute(attributeName, attributeValue);
 
                 }
             }
@@ -105,12 +107,7 @@ public class AttributesBuilder implements Builder {
         }
     }
 
-    public ClassAttributes getClassAttributes() {
-        return classAttributes;
+    public ClassPropertiesHelper getClassPropertiesHelper() {
+        return classPropertiesHelper;
     }
-
-    public void reset() {
-        classAttributes = new ClassAttributes();
-    }
-
 }

@@ -17,9 +17,15 @@ public class AttributesCompilerTest extends TestCase {
                                  "nanning" + File.separator +
                                  "attribute" + File.separator +
                                  "AttributesTestClass.java");
-        ClassAttributes attributes = attributesCompiler.parseClassAttribute(javaFile);
+        ClassPropertiesHelper classPropertiesHelper = attributesCompiler.parseClassAttribute(javaFile);
 
-        attributes.setClass(AttributesTestClass.class);
+//        assertEquals("AttributesTestClass", attributes.getClassName());
+//        assertEquals("com.tirsen.nanning.attribute", attributes.getPackageName());
+
+        ClassAttributes attributes = new ClassAttributes(AttributesTestClass.class);
+        classPropertiesHelper.setTargetClassAttributes(attributes);
+        classPropertiesHelper.transferAttributesToTarget();
+
         assertEquals(AttributesTest.FIELD_VALUE,
                 attributes.getAttribute(AttributesTest.field, AttributesTest.FIELD_ATTRIBUTE));
         assertEquals(AttributesTest.METHOD_VALUE,

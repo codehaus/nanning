@@ -9,15 +9,14 @@ package com.tirsen.nanning.attribute;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 
 /**
  * TODO document AttributesTest
  *
- * <!-- $Id: AttributesTest.java,v 1.9 2003-06-09 17:40:42 tirsen Exp $ -->
+ * <!-- $Id: AttributesTest.java,v 1.10 2003-06-10 05:26:47 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class AttributesTest extends AbstractAttributesTest {
     public static final String CLASS_ATTRIBUTE = "class.attribute";
@@ -119,13 +118,6 @@ public class AttributesTest extends AbstractAttributesTest {
 
         Method fireMethod = Job.class.getMethod("fireAllEmployees", null);
         assertEquals("true", Attributes.getAttribute(fireMethod, "secure"));
-    }
-
-    public void testJoinTail() {
-        String[] parts = "field.field.field.attribute".split("\\.");
-        assertEquals("field.attribute", ClassAttributes.joinTail(parts, 2));
-        parts = "field.field.attribute".split("\\.");
-        assertEquals("attribute", ClassAttributes.joinTail(parts, 2));
     }
 
     public void testHasInheritedAttribute() {

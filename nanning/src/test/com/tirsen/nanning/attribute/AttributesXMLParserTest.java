@@ -18,19 +18,15 @@ import java.lang.reflect.Method;
 /**
  * TODO document AttributesTagHandlerTest
  *
- * <!-- $Id: AttributesXMLParserTest.java,v 1.4 2003-06-09 17:40:42 tirsen Exp $ -->
+ * <!-- $Id: AttributesXMLParserTest.java,v 1.5 2003-06-10 05:26:47 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class AttributesXMLParserTest extends TestCase {
     public void testAttributes() throws IOException, NoSuchMethodException, NoSuchFieldException, SAXException {
-        String resource = Job.class.getName().replace('.', '/') + ".xml";
-        InputStream is =
-                Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
-
         ClassAttributes jobClassAttributes = new ClassAttributes(Job.class);
-        AttributesXMLParser.parseXML(is, jobClassAttributes);
+        new AttributesXMLParser().load(jobClassAttributes);
 
         //---- CHECK com.tirsen.nanning.Job ------------------
 
