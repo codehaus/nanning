@@ -1,10 +1,8 @@
 package com.tirsen.nanning.samples.prevayler;
 
-import java.io.Serializable;
-import java.io.InputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
+import java.io.InputStream;
+import java.io.Serializable;
 import java.util.List;
 
 import com.tirsen.nanning.Aspects;
@@ -14,7 +12,7 @@ import com.tirsen.nanning.attribute.Attributes;
  * TODO document Identity
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class Identity implements Serializable {
     private Class objectClass;

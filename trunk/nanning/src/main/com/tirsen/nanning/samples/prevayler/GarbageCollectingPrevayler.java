@@ -34,13 +34,14 @@ public class GarbageCollectingPrevayler extends SnapshotPrevayler {
         for (Iterator iterator = unreferencedObjects.iterator(); iterator.hasNext();) {
             Object unreferencedObject = iterator.next();
 
-            logger.debug("Unregistering object: " + unreferencedObject);
-            system.unregisterObjectID(unreferencedObject);
-
             if (unreferencedObject instanceof FinalizationCallback) {
+                logger.debug("Finalizing object: " + unreferencedObject);
                 FinalizationCallback finalizationCallback = (FinalizationCallback) unreferencedObject;
                 finalizationCallback.finalizationCallback();
             }
+
+            logger.debug("Unregistering object: " + unreferencedObject);
+            system.unregisterObjectID(unreferencedObject);
         }
     }
 
