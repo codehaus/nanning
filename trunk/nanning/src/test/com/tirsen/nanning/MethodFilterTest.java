@@ -17,10 +17,10 @@ import junit.framework.TestCase;
 /**
  * TODO document MethodFilterTest
  *
- * <!-- $Id: MethodFilterTest.java,v 1.4 2003-03-21 17:11:14 lecando Exp $ -->
+ * <!-- $Id: MethodFilterTest.java,v 1.5 2003-05-09 09:27:51 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 
 public class MethodFilterTest extends TestCase {
@@ -118,7 +118,6 @@ public class MethodFilterTest extends TestCase {
     public static class TestFilterMethodsInterceptor extends BasicInterceptor {
         public Object invoke(Invocation invocation) throws Throwable {
             String methodName = invocation.getMethod().getName();
-            //System.out.println ("method name: " + methodName);
 
             invokedMethods.add(methodName);
             return invocation.invokeNext();
@@ -129,13 +128,11 @@ public class MethodFilterTest extends TestCase {
 
     public static class SomeAspectImpl implements SomeAspect {
         public boolean doIt() {
-            //System.out.println ("I am doing it");
             return true;
         }
 
 
         public boolean doItAgain() {
-            //System.out.println ("I am doing it again");
             return true;
         }
 
