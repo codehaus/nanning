@@ -15,13 +15,18 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 /**
  * TODO document AspectInstance
  *
- * <!-- $Id: AspectInstance.java,v 1.14 2002-11-25 12:17:07 lecando Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.15 2002-11-30 22:51:45 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.14 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.15 $
  */
 class AspectInstance implements InvocationHandler {
     private static final Method OBJECT_EQUALS_METHOD;
+
+    private Object proxy;
+    private final SideAspectInstance[] sideAspectInstances;
+    private final AspectClass aspectClass;
+
 
     static {
         try {
@@ -104,12 +109,7 @@ class AspectInstance implements InvocationHandler {
         }
     }
 
-    private Object proxy;
-    private final SideAspectInstance[] sideAspectInstances;
-    private final AspectClass aspectClass;
-
     public AspectInstance(AspectClass aspectClass, SideAspectInstance[] sideAspectInstances) {
-        this.proxy = proxy;
         this.sideAspectInstances = sideAspectInstances;
         this.aspectClass = aspectClass;
     }

@@ -12,15 +12,15 @@ import java.lang.reflect.Method;
 /**
  * Defines an interface that's to be added to an aspected object.
  *
- * <!-- $Id: AspectDefinition.java,v 1.7 2002-11-25 12:17:07 lecando Exp $ -->
+ * <!-- $Id: AspectDefinition.java,v 1.8 2002-11-30 22:51:45 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.7 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.8 $
  */
 public class AspectDefinition
 {
     private Class interfaceClass;
-    private final List interceptorDefinitions = new ArrayList();
+    private InterceptorDefinition[] interceptorDefinitions = new InterceptorDefinition[0];
     private Class targetClass;
     private Map methodsToIndex;
 
@@ -58,7 +58,10 @@ public class AspectDefinition
      */
     public void addInterceptor(InterceptorDefinition interceptorDefinition)
     {
-        interceptorDefinitions.add(interceptorDefinition);
+        List result = new ArrayList((interceptorDefinitions == null ? 0 : interceptorDefinitions.length) + 1);
+        result.addAll(Arrays.asList(interceptorDefinitions));
+        result.add(interceptorDefinition);
+        interceptorDefinitions = (InterceptorDefinition[]) result.toArray(new InterceptorDefinition[result.size()]);
     }
 
     /**
@@ -75,10 +78,12 @@ public class AspectDefinition
         return targetClass;
     }
 
-    SideAspectInstance createAspectInstance(Interceptor[] classInterceptors)
+    SideAspectInstance createAspectInstance(InterceptorDefinition[] classInterceptorDefinitions,
+                                            Interceptor[] classInterceptors)
             throws IllegalAccessException, InstantiationException
     {
-        return createAspectInstance(classInterceptors, targetClass.newInstance());
+        return createAspectInstance(classInterceptorDefinitions,
+                classInterceptors, targetClass.newInstance());
     }
 
     public Class getInterfaceClass()
@@ -90,7 +95,8 @@ public class AspectDefinition
         return ((Integer) methodsToIndex.get(method)).intValue();
     }
 
-    SideAspectInstance createAspectInstance(Interceptor[] classInterceptors, Object target)
+    SideAspectInstance createAspectInstance(InterceptorDefinition[] classInterceptorDefinitions,
+                                            Interceptor[] classInterceptors, Object target)
             throws InstantiationException, IllegalAccessException {
 
         checkTarget(target);
@@ -98,15 +104,21 @@ public class AspectDefinition
         SideAspectInstance sideAspectInstance = new SideAspectInstance(this);
         sideAspectInstance.setInterface(interfaceClass);
 
-        List instances = new ArrayList(interceptorDefinitions.size() + classInterceptors.length);
+        List instances = new ArrayList(interceptorDefinitions.length + classInterceptors.length);
         instances.addAll(Arrays.asList(classInterceptors));
-        for (Iterator iterator = interceptorDefinitions.iterator(); iterator.hasNext();)
-        {
-            InterceptorDefinition interceptorDefinition = (InterceptorDefinition) iterator.next();
+        for (int i = 0; i < interceptorDefinitions.length; i++) {
+            InterceptorDefinition interceptorDefinition = interceptorDefinitions[i];
             instances.add(interceptorDefinition.newInstance());
         }
         Interceptor[] interceptors = (Interceptor[]) instances.toArray(new Interceptor[instances.size()]);
-        sideAspectInstance.setInterceptors(interceptors);
+        List allDefinitionsList =
+                new ArrayList(classInterceptorDefinitions.length + interceptorDefinitions.length);
+        allDefinitionsList.addAll(Arrays.asList(classInterceptorDefinitions));
+        allDefinitionsList.addAll(Arrays.asList(interceptorDefinitions));
+        InterceptorDefinition[] allDefinitions =
+                (InterceptorDefinition[]) allDefinitionsList.toArray(
+                        new InterceptorDefinition[allDefinitionsList.size()]);
+        sideAspectInstance.setInterceptors(allDefinitions, interceptors);
 
         sideAspectInstance.setTarget(target);
         return sideAspectInstance;
@@ -115,5 +127,9 @@ public class AspectDefinition
     void checkTarget(Object target) {
         assert interfaceClass.isInstance(target) : "target does not implement interface: " + target;
         assert targetClass.isInstance(target) : "target is not an instance of target-class: " + target;
+    }
+
+    protected InterceptorDefinition[] getInterceptorDefinitions() {
+        return interceptorDefinitions;
     }
 }
