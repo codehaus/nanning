@@ -1,21 +1,42 @@
 package com.tirsen.nanning.samples.rmi;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 class ObjectTable {
-    private Map objectToId = new HashMap();
-    private Map idToObject = new HashMap();
-    private long currentId = 0;
+    private static final int DEFAULT_TIMEOUT = 60 * 60 * 1000;
 
-    boolean isIDRegistered(Object id) {
-        return idToObject.containsKey(id);
+    private Map objectToId = new HashMap();
+    private Map idToStampedObject = new HashMap();
+
+    private long currentId = 0;
+    private long timeout;
+
+    public ObjectTable() {
+        this(DEFAULT_TIMEOUT);
+    }
+
+    public ObjectTable(long timeout) {
+        this.timeout = timeout;
     }
 
     Object getFromID(Object id) {
-        Object o = idToObject.get(id);
+        TimeStampedObject o = (TimeStampedObject) idToStampedObject.get(id);
         assert o != null;
-        return o;
+        o.touch();
+        cleanupStale();
+        return o.getObject();
+    }
+
+    private void cleanupStale() {
+        for (Iterator i = idToStampedObject.values().iterator(); i.hasNext();) {
+            TimeStampedObject stampedObject = (TimeStampedObject) i.next();
+            if (stampedObject.isStale()) {
+                objectToId.remove(stampedObject.getObject());
+                i.remove();
+            }
+        }
     }
 
     Object register(Object o) {
@@ -23,7 +44,7 @@ class ObjectTable {
         if (id == null) {
             id = newId();
             objectToId.put(o, id);
-            idToObject.put(id, o);
+            idToStampedObject.put(id, new TimeStampedObject(o, System.currentTimeMillis()));
         }
         return id;
     }
@@ -36,9 +57,41 @@ class ObjectTable {
         return objectToId.containsKey(o);
     }
 
+    boolean isIDRegistered(Object id) {
+        cleanupStale();
+        return idToStampedObject.containsKey(id);
+    }
+
     public void clear() {
         objectToId.clear();
-        idToObject.clear();
+        idToStampedObject.clear();
         currentId = 0;
+    }
+
+    private class TimeStampedObject {
+        private Object object;
+        private long timeStamp;
+
+
+        public TimeStampedObject(Object object, long timeStamp) {
+            this.object = object;
+            this.timeStamp = timeStamp;
+        }
+
+        public long getTimeStamp() {
+            return timeStamp;
+        }
+
+        public Object getObject() {
+            return object;
+        }
+
+        public void touch() {
+            timeStamp = System.currentTimeMillis();
+        }
+
+        public boolean isStale() {
+            return System.currentTimeMillis() - getTimeStamp() >= timeout;
+        }
     }
 }
