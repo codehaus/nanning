@@ -4,6 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.HashSet;
+import java.security.PrivilegedExceptionAction;
+import java.security.AccessController;
+import java.security.PrivilegedActionException;
+
+import javax.security.auth.Subject;
 
 import com.tirsen.nanning.Aspects;
 import com.tirsen.nanning.attribute.AbstractAttributesTest;
@@ -56,6 +62,26 @@ public class RemoteCallServerTest extends AbstractAttributesTest {
     protected void tearDown() throws Exception {
         super.tearDown();
         remoteCallServer.stop();
+    }
+
+    public void testAuthenticatedCall() throws PrivilegedActionException {
+        // server side
+        remoteCallServer.bind("MyStatelessService", serverAspectSystem.newInstance(MyStatelessService.class));
+
+        // client side
+        Subject.doAs(new Subject(false, new HashSet(), new HashSet(), new HashSet()), new PrivilegedExceptionAction() {
+            public Object run() throws Exception {
+                Subject subject = Subject.getSubject(AccessController.getContext());
+                subject.getPrincipals().add(new MyPrincipal("expectedUserName"));
+
+                Naming naming = new Naming(clientMarshaller, new SocketConnectionManager("localhost", port));
+                MyStatelessService myService = (MyStatelessService) naming.lookup("MyStatelessService");
+
+                myService.authenticatedCall("expectedUserName");
+
+                return null;
+            }
+        });
     }
 
     public void testStatelessRemoteCall() throws IOException, ClassNotFoundException {
