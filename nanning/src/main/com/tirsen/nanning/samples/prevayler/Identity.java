@@ -14,7 +14,7 @@ import com.tirsen.nanning.attribute.Attributes;
  * TODO document Identity
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class Identity implements Serializable {
     private Class objectClass;
@@ -54,7 +54,7 @@ public class Identity implements Serializable {
         return Attributes.hasInheritedAttribute(objectClass, "service");
     }
 
-    public static boolean isMarshalByValue(Object o) {
+    public static boolean isPrimitive(Object o) {
         if (o == null) {
             return true;
         } else if (o instanceof Number) {
@@ -68,8 +68,6 @@ public class Identity implements Serializable {
         } else if (o instanceof Boolean) {
             return true;
         } else if (o instanceof List) {
-            return true;
-        } else if (Attributes.hasInheritedAttribute(o.getClass(), "marshal-by-value")) {
             return true;
         } else {
             return false;

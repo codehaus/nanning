@@ -57,28 +57,22 @@ public class IdentifyingCall extends Call {
     }
 
     protected Object marshal(Object o) throws Exception {
-        if (Identity.isMarshalByValue(o)) {
+        if (Identity.isPrimitive(o)) {
             return o;
         } else if (o instanceof InputStream) {
             return new Identity(InputStream.class, IOUtil.toByteArray(((InputStream) o)));
+        } else if (Identity.isService(o.getClass())) {
+            return new Identity(o.getClass(), getClassIdentifier());
+        } else if (Identity.isEntity(o.getClass())) {
+            if (CurrentPrevayler.getSystem().hasObjectID(o)) {
+                return new Identity(o.getClass(), new Long(CurrentPrevayler.getSystem().getObjectID(o)));
+            } else {
+                // object is not part of target prevalent-system, marshal by value and assign ID at execution
+                return o;
+            }
         } else {
-            if (Identity.isService(o.getClass())) {
-                return new Identity(o.getClass(), getClassIdentifier());
-            }
-            if (Identity.isEntity(o.getClass())) {
-                if (CurrentPrevayler.getSystem().hasObjectID(o)) {
-                    return new Identity(o.getClass(), new Long(CurrentPrevayler.getSystem().getObjectID(o)));
-                } else {
-                    // object is not part of target prevalent-system, marshal by value and assign ID at execution
-                    return o;
-                }
-            }
-
+            return o;
         }
-
-        throw new IllegalArgumentException("Can't marshal " + o +
-                                           " could it be an entity or service without the proper attribute?" +
-                                           " (Use 'entity', 'service' or 'marshal-by-value'.)");
     }
 
     private Object[] unmarshalArguments(Object[] args) {
@@ -95,7 +89,7 @@ public class IdentifyingCall extends Call {
     }
 
     private Object unmarshal(Object o) {
-        if (Identity.isMarshalByValue(o)) {
+        if (Identity.isPrimitive(o)) {
             return o;
         } else if (o instanceof Identity) {
             return resolve((Identity) o);
@@ -105,7 +99,7 @@ public class IdentifyingCall extends Call {
             }
             return o;
         } else {
-            throw new IllegalArgumentException("Can't resolve " + o);
+            return o;
         }
     }
 
@@ -154,14 +148,10 @@ public class IdentifyingCall extends Call {
     }
 
     public Subject getSubject() {
-        if (principals == null &&
-                publicCredentials == null &&
-                privateCredentials == null) {
+        if (principals == null && publicCredentials == null && privateCredentials == null) {
             return null;
         } else {
-            return new Subject(false, principals == null ? new HashSet() : principals,
-                               publicCredentials == null ? new HashSet() : publicCredentials,
-                               privateCredentials == null ? new HashSet() : privateCredentials);
+            return new Subject(false, principals == null ? new HashSet() : principals, publicCredentials == null ? new HashSet() : publicCredentials, privateCredentials == null ? new HashSet() : privateCredentials);
         }
     }
 

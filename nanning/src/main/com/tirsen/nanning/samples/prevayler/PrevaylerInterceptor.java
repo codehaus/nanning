@@ -1,5 +1,7 @@
 package com.tirsen.nanning.samples.prevayler;
 
+import java.lang.reflect.Method;
+
 import com.tirsen.nanning.ConstructionInterceptor;
 import com.tirsen.nanning.ConstructionInvocation;
 import com.tirsen.nanning.Invocation;
@@ -7,16 +9,13 @@ import com.tirsen.nanning.attribute.Attributes;
 import com.tirsen.nanning.definition.FilterMethodsInterceptor;
 import com.tirsen.nanning.definition.SingletonInterceptor;
 
-import java.lang.reflect.Method;
-
 /**
  * TODO document PrevaylerInterceptor
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
-public class PrevaylerInterceptor
-        implements SingletonInterceptor, FilterMethodsInterceptor, ConstructionInterceptor {
+public class PrevaylerInterceptor implements SingletonInterceptor, FilterMethodsInterceptor, ConstructionInterceptor {
 
     public boolean interceptsConstructor(Class interfaceClass) {
         return Attributes.hasAttribute(interfaceClass, "entity");
@@ -42,10 +41,10 @@ public class PrevaylerInterceptor
 
     public Object invoke(Invocation invocation) throws Throwable {
         // only first call on objects already in Prevayler should result in a command in the log
-        if (CurrentPrevayler.hasPrevayler() &&
-                !CurrentPrevayler.isInTransaction() &&
-                (Identity.isService(invocation.getTargetInterface()) ||
-                CurrentPrevayler.getSystem().hasObjectID(invocation.getProxy()))) {
+
+        if (CurrentPrevayler.hasPrevayler()
+                && !CurrentPrevayler.isInTransaction()
+                && (Identity.isService(invocation.getTargetInterface()) || CurrentPrevayler.getSystem().hasObjectID(invocation.getProxy()))) {
             CurrentPrevayler.enterTransaction();
             try {
                 InvokeCommand command = new InvokeCommand(invocation);
