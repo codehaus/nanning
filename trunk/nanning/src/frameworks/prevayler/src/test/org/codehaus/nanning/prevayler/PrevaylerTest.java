@@ -16,6 +16,7 @@ import org.codehaus.nanning.attribute.Attributes;
 import org.codehaus.nanning.config.AspectSystem;
 import org.codehaus.nanning.config.FindTargetMixinAspect;
 import org.prevayler.PrevaylerFactory;
+import org.prevayler.Prevayler;
 
 public class PrevaylerTest extends AbstractAttributesTest {
 
@@ -69,6 +70,92 @@ public class PrevaylerTest extends AbstractAttributesTest {
         CurrentPrevayler.withPrevayler(loadedPrevayler, new PrevaylerAction() {
             public Object run() throws Exception {
                 assertEquals("string", currentMySystem().getSimpleString());
+                return null;
+            }
+        });
+    }
+
+    /**
+     * @entity
+     */
+    public static interface CallingBack {
+        /**
+         * @transaction
+         */
+        void callback(CalledBack arg, String valueMadePersistent);
+    }
+
+    public static class CallingBackImpl implements CallingBack, Serializable {
+        public void callback(CalledBack arg, String valueMadePersistent) {
+            arg.setValue(valueMadePersistent);
+            arg.setCallingBack((CallingBack) Aspects.getThis());
+        }
+    }
+
+    /**
+     * @entity
+     */
+    public static interface CalledBack {
+        /**
+         * @transaction
+         */
+        void setValue(String value);
+        String getValue();
+        /**
+         * @transaction
+         */
+        void setCallingBack(CallingBack callingBack);
+        CallingBack getCallingBack();
+    }
+
+    public static class CalledBackImpl implements CalledBack, Serializable {
+        String value;
+        CallingBack callingBack;
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public CallingBack getCallingBack() {
+            return callingBack;
+        }
+
+        public void setCallingBack(CallingBack callingBack) {
+            this.callingBack = callingBack;
+        }
+    }
+
+
+    public void testMethodCallingBackOnArgumentIsMadePersistent() throws Exception {
+        Prevayler prevayler = newPrevayler();
+        final CallingBack callingBack = (CallingBack) aspectFactory.newInstance(CallingBack.class);
+        final CalledBack calledBack = (CalledBack) aspectFactory.newInstance(CalledBack.class);
+
+        CurrentPrevayler.withPrevayler(prevayler, new PrevaylerAction() {
+            public Object run() throws Exception {
+                currentMySystem().add(callingBack);
+                currentMySystem().add(calledBack);
+
+                callingBack.callback(calledBack, "value");
+                assertEquals("value", calledBack.getValue());
+                return null;
+            }
+        });
+
+        final long calledBackId = ((IdentifyingSystem) prevayler.prevalentSystem()).getObjectID(calledBack);
+        final long callingBackId = ((IdentifyingSystem) prevayler.prevalentSystem()).getObjectID(callingBack);
+
+        Prevayler loadedPrevayler = newPrevayler();
+        CurrentPrevayler.withPrevayler(loadedPrevayler, new PrevaylerAction() {
+            public Object run() throws Exception {
+                CalledBack calledBack = (CalledBack) currentMySystem().getObjectWithID(calledBackId);
+                CallingBack callingBack = (CallingBack) currentMySystem().getObjectWithID(callingBackId);
+                assertEquals("value", calledBack.getValue());
+                assertSame(callingBack, calledBack.getCallingBack());
                 return null;
             }
         });

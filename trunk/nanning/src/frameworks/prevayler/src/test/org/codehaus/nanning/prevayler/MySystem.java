@@ -27,4 +27,9 @@ public interface MySystem extends IdentifyingSystem {
     void setSimpleString(String string);
 
     String getSimpleString();
+
+    /**
+     * @transaction
+     */ 
+    void add(Object o);
 }
