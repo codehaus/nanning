@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<project>
+    <extend>${basedir}/../project.xml</extend>
+    <name>Nanning Locking</name>
+    <id>nanning-locking</id>
+    <currentVersion>1.0-beta-1</currentVersion>
+    <package>org.codehaus.nanning.locking</package>
+    <shortDescription>Locking</shortDescription>
+    <description>Locking</description>
+
+    <developers>
+
+        <developer>
+            <name>Jon Tirsen</name>
+            <id>tirsen</id>
+            <organization>Lecando AB</organization>
+        </developer>
+
+    </developers>
+
+</project>
