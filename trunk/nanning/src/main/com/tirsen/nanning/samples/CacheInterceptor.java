@@ -19,7 +19,7 @@ public class CacheInterceptor implements MethodInterceptor, FilterMethodsInterce
      */
     private Map cache = new HashMap();
 
-    public boolean interceptsMethod(MixinInstance mixin, Method method) {
+    public boolean interceptsMethod(Method method) {
         return Attributes.hasAttribute(method, "cache");
     }
 

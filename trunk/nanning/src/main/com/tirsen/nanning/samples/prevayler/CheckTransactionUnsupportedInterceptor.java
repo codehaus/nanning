@@ -28,7 +28,7 @@ public class CheckTransactionUnsupportedInterceptor implements MethodInterceptor
         return invocation.invokeNext();
     }
 
-    public boolean interceptsMethod(MixinInstance mixin, Method method) {
+    public boolean interceptsMethod(Method method) {
         return Attributes.hasAttribute(method, "transaction");
     }
 }

@@ -14,10 +14,10 @@ import java.util.*;
 /**
  * TODO document AspectDefinition
  *
- * <!-- $Id: MixinInstance.java,v 1.12 2003-05-11 11:17:17 tirsen Exp $ -->
+ * <!-- $Id: MixinInstance.java,v 1.13 2003-05-11 13:40:52 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public final class MixinInstance {
     private Class interfaceClass;
@@ -166,7 +166,7 @@ public final class MixinInstance {
             Method method = methods[i];
             if (interceptor instanceof FilterMethodsInterceptor) {
                 FilterMethodsInterceptor filterMethodsInterceptor = (FilterMethodsInterceptor) interceptor;
-                if (filterMethodsInterceptor.interceptsMethod(this, method)) {
+                if (filterMethodsInterceptor.interceptsMethod(method)) {
                     addInterceptor(method, (MethodInterceptor) interceptor);
                 }
             } else {
