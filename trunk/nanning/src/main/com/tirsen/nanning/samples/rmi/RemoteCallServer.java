@@ -1,15 +1,9 @@
 package com.tirsen.nanning.samples.rmi;
 
-import java.io.*;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketTimeoutException;
 import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
+import java.io.*;
 
 import javax.security.auth.Subject;
 
@@ -18,62 +12,18 @@ import com.tirsen.nanning.Aspects;
 import com.tirsen.nanning.samples.prevayler.MarshallingCall;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.threadpool.DefaultThreadPool;
-import org.apache.commons.threadpool.ThreadPool;
 
 public class RemoteCallServer {
-    private static final Log logger = LogFactory.getLog(RemoteCallServer.class);
-
+    private static final Log logger = LogFactory.getLog(SocketRemoteCallServer.class);
     private AspectFactory aspectRepository;
-    private int port;
-    private ServerSocket serverSocket;
-    private ThreadPool threadPool;
-    private int threadPoolSize = 5;
-    private boolean doStop;
-    private Thread serverThread;
-    public static final int SERVER_SOCKET_TIMEOUT = 1000;
     private Map naming = new HashMap();
-    private RemoteMarshaller marshaller = new RemoteMarshaller();
+    private RemoteMarshaller marshaller;
 
-    public void start() {
-        try {
-            assert port != 0 : "port not specified";
-            logger.info("starting RMI-server on port " + port);
-            serverSocket = new ServerSocket(port);
-            marshaller = new RemoteMarshaller(InetAddress.getLocalHost().getCanonicalHostName(), port);
-            serverSocket.setSoTimeout(SERVER_SOCKET_TIMEOUT);
-            threadPool = new DefaultThreadPool(threadPoolSize);
-
-            serverThread = new Thread(new Runnable() {
-                public void run() {
-                    try {
-                        while (!doStop) {
-                            try {
-                                Socket socket = serverSocket.accept();
-
-                                threadPool.invokeLater(new CallProcessor(socket));
-
-                            } catch (SocketTimeoutException ignore) {
-                            } catch (IOException e) {
-                                logger.error("error accepting call", e);
-                            }
-                        }
-                    } finally {
-                        try {
-                            serverSocket.close();
-                        } catch (IOException e) {
-                            logger.warn("could not close server", e);
-                        }
-                    }
-                }
-            });
-            serverThread.start();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public RemoteCallServer(ServerConnectionManager connectionManager) {
+        marshaller = new RemoteMarshaller(connectionManager);
     }
 
-    private void processCall(Socket socket) {
+    public void processCall(InputStream commandStream, OutputStream resultStream) {
         Aspects.setContextAspectFactory(aspectRepository);
         Subject subject = Subject.getSubject(AccessController.getContext());
         if (subject != null) {
@@ -83,44 +33,41 @@ public class RemoteCallServer {
         }
 
         try {
-            OutputStream outputStream = socket.getOutputStream();
-            InputStream inputStream = socket.getInputStream();
-
-            ObjectInputStream input = new ObjectInputStream(inputStream);
+            ObjectInputStream input = new ObjectInputStream(commandStream);
             Object command = input.readObject();
 
-            Object result;
+            Object result = processCall(command);
 
-            if (command instanceof MarshallingCall) {
-                MarshallingCall call = (MarshallingCall) command;
-
-                result = processRemoteCall(call);
-
-            } else if (command instanceof NamingLookup) {
-                NamingLookup namingLookup = (NamingLookup) command;
-
-                result = processNamingLookup(namingLookup);
-            } else {
-                result = new ExceptionThrown(new RuntimeException("No such command exception."));
-            }
-
-            result = marshaller.marshal(result);
-
-            ObjectOutputStream output = new ObjectOutputStream(outputStream);
+            ObjectOutputStream output = new ObjectOutputStream(resultStream);
             output.writeObject(result);
-            output.close();
+            output.flush();
 
         } catch (IOException e) {
             logger.error("error communicating with client", e);
         } catch (ClassNotFoundException e) {
             logger.error("error communicating with client", e);
-        } finally {
-            try {
-                socket.close();
-            } catch (IOException e) {
-                logger.error("error closing socket", e);
-            }
         }
+    }
+
+
+    private Object processCall(Object command) {
+        Object result;
+        if (command instanceof MarshallingCall) {
+            MarshallingCall call = (MarshallingCall) command;
+
+            result = processRemoteCall(call);
+
+        } else if (command instanceof NamingLookup) {
+            NamingLookup namingLookup = (NamingLookup) command;
+
+            result = processNamingLookup(namingLookup);
+        } else {
+            result = new ExceptionThrown(new RuntimeException("No such command exception."));
+        }
+
+        result = marshaller.marshal(result);
+
+        return result;
     }
 
     private Object processNamingLookup(NamingLookup namingLookup) {
@@ -146,53 +93,11 @@ public class RemoteCallServer {
         this.aspectRepository = aspectRepository;
     }
 
-    public void setPort(int port) {
-        this.port = port;
-    }
-
-    public void stop() {
-        if (serverThread == null) {
-            return;
-        }
-
-        doStop = true;
-        try {
-            serverThread.join(SERVER_SOCKET_TIMEOUT + 1);
-        } catch (InterruptedException e) {
-            logger.warn("could not stop server properly");
-        }
-    }
-
     public void bind(String name, Object o) {
         naming.put(name, o);
     }
 
     public void reset() {
         marshaller.reset();
-    }
-
-    private class CallProcessor implements Runnable {
-        private final Socket socket;
-
-        public CallProcessor(Socket socket) {
-            this.socket = socket;
-        }
-
-        public void run() {
-            // run completely unauthenticated
-            Subject.doAs(new Subject(true, new HashSet(), new HashSet(), new HashSet()), new PrivilegedAction() {
-                public Object run() {
-                    try {
-                        processCall(socket);
-                    } finally {
-                        try {
-                            socket.close();
-                        } catch (IOException e) {
-                        }
-                    }
-                    return null;
-                }
-            });
-        }
     }
 }

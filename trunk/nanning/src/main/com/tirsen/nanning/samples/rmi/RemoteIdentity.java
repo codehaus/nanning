@@ -3,21 +3,15 @@ package com.tirsen.nanning.samples.rmi;
 import com.tirsen.nanning.samples.prevayler.Identity;
 
 public class RemoteIdentity extends Identity {
-    private String hostname;
-    private int port;
+    private ServerConnectionManager connectionManager;
 
-    public RemoteIdentity(Class objectClass, Object identifier, String hostname, int port) {
+    public RemoteIdentity(Class objectClass, Object identifier, ServerConnectionManager connectionManager) {
         super(objectClass, identifier);
-        this.hostname = hostname;
-        this.port = port;
+        this.connectionManager = connectionManager;
     }
 
-    public String getHostname() {
-        return hostname;
-    }
-
-    public int getPort() {
-        return port;
+    public ServerConnectionManager getConnectionManager() {
+        return connectionManager;
     }
 
     public boolean equals(Object o) {
@@ -27,16 +21,14 @@ public class RemoteIdentity extends Identity {
 
         final RemoteIdentity remoteIdentity = (RemoteIdentity) o;
 
-        if (port != remoteIdentity.port) return false;
-        if (hostname != null ? !hostname.equals(remoteIdentity.hostname) : remoteIdentity.hostname != null) return false;
+        if (connectionManager != null ? !connectionManager.equals(remoteIdentity.connectionManager) : remoteIdentity.connectionManager != null) return false;
 
         return true;
     }
 
     public int hashCode() {
         int result = super.hashCode();
-        result = 29 * result + (hostname != null ? hostname.hashCode() : 0);
-        result = 29 * result + port;
+        result = 29 * result + (connectionManager != null ? connectionManager.hashCode() : 0);
         return result;
     }
 }
