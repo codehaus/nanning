@@ -23,13 +23,18 @@ public interface MySystem extends IdentifyingSystem {
 
     /**
      * @transaction
-     */ 
+     */
     void setSimpleString(String string);
 
     String getSimpleString();
 
     /**
      * @transaction
-     */ 
+     */
+    String changeAndReturnPreviousValue(PrevaylerTest.ObjectWithValue objectWithValue, String newValue);
+
+    /**
+     * @transaction
+     */
     void add(Object o);
 }

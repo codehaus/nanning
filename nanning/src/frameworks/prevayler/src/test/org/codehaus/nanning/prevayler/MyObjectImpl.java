@@ -3,7 +3,7 @@ package org.codehaus.nanning.prevayler;
 import org.codehaus.nanning.prevayler.MyObject;
 
 public class MyObjectImpl implements MyObject {
-    private String value;
+    private String value = "initialValue";
     private MyObject myObject;
     private boolean wasFinalized;
 

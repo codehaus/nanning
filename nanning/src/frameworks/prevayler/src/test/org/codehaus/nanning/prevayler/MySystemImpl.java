@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.codehaus.nanning.Aspects;
+import org.codehaus.nanning.locking.SimpleMixinAspect;
 import org.codehaus.nanning.prevayler.MyObject;
 import org.codehaus.nanning.prevayler.MySystem;
 
@@ -50,5 +51,11 @@ public class MySystemImpl extends BasicIdentifyingSystem implements MySystem, Se
 
     public void setSimpleString(String simpleString) {
         this.simpleString = simpleString;
+    }
+
+    public String changeAndReturnPreviousValue(PrevaylerTest.ObjectWithValue objectWithValue, String newValue) {
+        String retval = objectWithValue.getValue();
+        objectWithValue.setValue(newValue);
+        return retval;
     }
 }

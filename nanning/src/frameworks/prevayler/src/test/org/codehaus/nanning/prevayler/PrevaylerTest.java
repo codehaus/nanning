@@ -13,14 +13,17 @@ import org.codehaus.nanning.Aspects;
 import org.codehaus.nanning.Mixin;
 import org.codehaus.nanning.attribute.AbstractAttributesTest;
 import org.codehaus.nanning.attribute.Attributes;
-import org.codehaus.nanning.config.AspectSystem;
-import org.codehaus.nanning.config.FindTargetMixinAspect;
+import org.codehaus.nanning.config.*;
 import org.prevayler.PrevaylerFactory;
 import org.prevayler.Prevayler;
 
 public class PrevaylerTest extends AbstractAttributesTest {
 
-    private AspectFactory aspectFactory;
+
+
+
+
+    private AspectSystem aspectSystem;
 
     private File prevaylerDir;
 
@@ -36,8 +39,8 @@ public class PrevaylerTest extends AbstractAttributesTest {
         aspectSystem.addAspect(new FindTargetMixinAspect());
         aspectSystem.addAspect(new PrevaylerAspect());
 
-        aspectFactory = aspectSystem;
-        Aspects.setContextAspectFactory(aspectFactory);
+        this.aspectSystem = aspectSystem;
+        Aspects.setContextAspectFactory(this.aspectSystem);
 
         prevaylerDir = File.createTempFile("test", "");
         prevaylerDir.delete();
@@ -132,8 +135,8 @@ public class PrevaylerTest extends AbstractAttributesTest {
 
     public void testMethodCallingBackOnArgumentIsMadePersistent() throws Exception {
         Prevayler prevayler = newPrevayler();
-        final CallingBack callingBack = (CallingBack) aspectFactory.newInstance(CallingBack.class);
-        final CalledBack calledBack = (CalledBack) aspectFactory.newInstance(CalledBack.class);
+        final CallingBack callingBack = (CallingBack) aspectSystem.newInstance(CallingBack.class);
+        final CalledBack calledBack = (CalledBack) aspectSystem.newInstance(CalledBack.class);
 
         CurrentPrevayler.withPrevayler(prevayler, new PrevaylerAction() {
             public Object run() throws Exception {
@@ -161,7 +164,44 @@ public class PrevaylerTest extends AbstractAttributesTest {
         });
     }
 
+    /**
+     * @entity
+     */
+    public interface ObjectWithValue
+    {
+        String getValue();
 
+        /**
+         * @transaction
+         */
+        void setValue(String freddl);
+    }
+
+    public static class ObjectWithValueImpl implements ObjectWithValue, Serializable
+    {
+        String value = "initialValue";
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+    }
+
+//    public void testChangeAndReturnPreviousValue() throws Exception {
+//        // JIRA: NAN-11
+//        final CountingPrevayler prevayler = newPrevayler();
+//        CurrentPrevayler.withPrevayler(prevayler, new PrevaylerAction() {
+//            public Object run() throws Exception {
+//                ObjectWithValue o = (ObjectWithValue) aspectSystem.newInstance(ObjectWithValue.class);
+//                assertEquals("initialValue", o.getValue());
+//                assertEquals("initialValue", currentMySystem().changeAndReturnPreviousValue(o, "FREDDL"));
+//                return null;
+//            }
+//        });
+//    }
 
     /**
      * Big badass functional test. I hate it, I want to kill it...
@@ -181,10 +221,10 @@ public class PrevaylerTest extends AbstractAttributesTest {
                 insideObject.setValue("newValue");
                 prevayler.assertNumberOfCommands(3);
 
-                MyObject outsideObject = (MyObject) aspectFactory.newInstance(MyObject.class);
+                MyObject outsideObject = (MyObject) aspectSystem.newInstance(MyObject.class);
                 prevayler.assertNumberOfCommands("no command when object created outside prevayler", 3);
 
-                MyObject outsideNestedObject = (MyObject) aspectFactory.newInstance(MyObject.class);
+                MyObject outsideNestedObject = (MyObject) aspectSystem.newInstance(MyObject.class);
                 prevayler.assertNumberOfCommands("no command when object created outside prevayler", 3);
 
                 outsideObject.setMyObject(outsideNestedObject);
@@ -244,7 +284,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
     }
 
     public void testABC() throws ClassNotFoundException, IOException, NoSuchMethodException {
-        AspectInstance aspectInstance = Aspects.getAspectInstance(aspectFactory.newInstance(MyObject.class));
+        AspectInstance aspectInstance = Aspects.getAspectInstance(aspectSystem.newInstance(MyObject.class));
         Mixin mixinInstance = (Mixin) aspectInstance.getMixins().iterator().next();
 
         Method setValue = MyObject.class.getDeclaredMethod("setValue", new Class[]{String.class});
@@ -270,9 +310,9 @@ public class PrevaylerTest extends AbstractAttributesTest {
         CountingPrevayler prevayler = newPrevayler();
         CurrentPrevayler.withPrevayler(prevayler, new Runnable() {
             public void run() {
-                MyObject myObject = (MyObject) aspectFactory.newInstance(MyObject.class);
+                MyObject myObject = (MyObject) aspectSystem.newInstance(MyObject.class);
                 currentMySystem().setMyObject(myObject);
-                myObject.setMyObject((MyObject) aspectFactory.newInstance(MyObject.class));
+                myObject.setMyObject((MyObject) aspectSystem.newInstance(MyObject.class));
                 assertEquals("two MyObjects should have been created", 2, currentMySystem().getAllObjects().size());
             }
         });
@@ -301,7 +341,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
     }
 
     public void testSerialization() throws IOException, ClassNotFoundException {
-        MyObject myObject = (MyObject) aspectFactory.newInstance(MyObject.class);
+        MyObject myObject = (MyObject) aspectSystem.newInstance(MyObject.class);
         myObject.setValue("value");
         IdentityHashMap identityHashMap = new IdentityHashMap();
         identityHashMap.put(myObject, new Long(1));
@@ -318,8 +358,8 @@ public class PrevaylerTest extends AbstractAttributesTest {
     }
 
 //    public void testOptionalDataException() throws IOException, ClassNotFoundException {
-//        MySystem mySystem = (MySystem) aspectFactory.newInstance(MySystem.class);
-//        mySystem.registerObjectID(aspectFactory.newInstance(MyObject.class));
+//        MySystem mySystem = (MySystem) aspectSystem.newInstance(MySystem.class);
+//        mySystem.registerObjectID(aspectSystem.newInstance(MyObject.class));
 //        assertEquals(1, mySystem.getObjectID(mySystem.getAllRegisteredObjects().iterator().next()));
 //        mySystem = (MySystem) serialize(mySystem);
 //        mySystem = (MySystem) serialize(mySystem);
@@ -340,7 +380,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
 
     private CountingPrevayler newPrevayler() throws IOException, ClassNotFoundException {
         CountingPrevayler prevayler = new CountingPrevayler(
-                PrevaylerFactory.createPrevayler(aspectFactory.newInstance(MySystem.class),
+                PrevaylerFactory.createPrevayler(aspectSystem.newInstance(MySystem.class),
                         prevaylerDir.getAbsolutePath()));
         return prevayler;
     }
@@ -348,7 +388,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
     public void testUnsupportedTransaction() {
         assertTrue(CheckTransactionUnsupportedInterceptor.isTransactionsSupported());
         TestUnsupportedTransaction testUnsupportedTransaction =
-                (TestUnsupportedTransaction) aspectFactory.newInstance(TestUnsupportedTransaction.class);
+                (TestUnsupportedTransaction) aspectSystem.newInstance(TestUnsupportedTransaction.class);
         try {
             testUnsupportedTransaction.callWithUnsupportedTransaction();
             fail();
