@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.tirsen.nanning.Aspects;
-c
+
 public class IdentifyingMarshaller implements Marshaller {
     public Object marshal(Object o) {
         if (Identity.isPrimitive(o)) {

@@ -6,15 +6,17 @@
  */
 package com.tirsen.nanning;
 
+import java.lang.reflect.Proxy;
+
 import junit.framework.TestCase;
 
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: AspectInstanceTest.java,v 1.3 2003-03-21 17:11:14 lecando Exp $ -->
+ * <!-- $Id: AspectInstanceTest.java,v 1.4 2003-03-27 18:19:36 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class AspectInstanceTest extends TestCase {
     public static class BlahongaException extends RuntimeException {
@@ -44,6 +46,11 @@ public class AspectInstanceTest extends TestCase {
         } catch (Exception e) {
             fail();
         }
+    }
+
+    public void testGetRealClass() {
+        assertSame(Intf.class,
+                   Aspects.getRealClass(Proxy.getProxyClass(AspectInstanceTest.class.getClassLoader(), new Class[] { Intf.class })));
     }
 
     public void testSideAspectAndAspectsOnProxy() throws IllegalAccessException, InstantiationException, NoSuchMethodException {
