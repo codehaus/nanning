@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<document>
+
+    <properties>
+        <author email="tirsen@codehaus.org">Jon Tirsen</author>
+        <title>Nanning Aspects</title>
+    </properties>
+
+    <body>
+
+        <section name="Aspect System">
+            <p>
+             If the AspectInstance is the runtime API, the AspectSystem is the configuration-time API. It is used each time an AspectInstance is created (which is each time an aspectified object is instantiated).
+            </p>
+            <p>
+             An AspectSystem is used by initialized by instantiating it and loading it with aspects, it should thereafter be stored in some globally accessible place such as a static variable or the ServletContext. It is thereafter used to create each aspectified object in the system by passing in the main class (the classIdentifier) and allowing the registered aspects to add mixins and interceptors based on the main class.
+            </p>
+            <p>
+            Example, creating an AspectSystem and instantiating an object:
+            </p>
+                <source><![CDATA[
+AspectSystem aspectSystem = new AspectSystem();
+aspectSystem.addAspect(new FindTargetMixinAspect()); // see below
+// ...add additional aspects...
+MainClass proxy = (MainClass) aspectSystem.newInstance(Main.class); // the proxy is returned from newInstance, not the AspectInstance
+]]></source>
+             
+             <p>
+             A useful aspect is the FindTargetMixinAspect which adds a mixin based on the main class by searching for a class of the same name with "Impl" appended to the class-name (this is configurable). For example, if a main class named Main is passed to <tt>newInstance</tt> a mixin is added with the interface Main and the target MainImpl
+            </p>
+            <p>
+				See the API documentation for <a href="api/org/codehaus/nanning/config/AspectSystem.html">org.codehaus.nanning.config.AspectSystem</a> and <a href="api/org/codehaus/nanning/config/FindTargetMixinAspect.html">org.codehaus.nanning.config.FindTargetMixinAspect</a>.
+            </p>
+        </section>
+        
+        <section name="Pointcut">
+            <p>
+            A pointcut is used to define on what join-points an advice or introduction is supposed to be applied. A join-point is where the aspect-code joins the ordinary code, or put with other words where the aspect-code is weaved together with the ordinary code.
+            </p>
+            <p>
+            In Nanning a pointcut is used to define what methods an interceptor should be added to, and what aspect-instances a mixin should be introduced on. The helper class P is used to create pointcuts of variying complexity.
+            </p>
+            <p>
+				Example, creating an pointcut based on regular expression on the methods name and adding an interceptor:
+            </p>
+                <source><![CDATA[
+Pointcut pointcut = P.methodName("set.*");
+AspectInstance aspectInstance = new AspectInstance();
+pointcut.advice(aspectInstance, new MethodInterceptor() {
+	public void invoke(Invocation invocation) {
+		return invocation.invokeNext();
+	}
+});
+]]></source>
+            <p>
+				See the API documentation for <a href="api/org/codehaus/nanning/config/Pointcut.html">org.codehaus.nanning.config.Pointcut</a> and <a href="api/org/codehaus/nanning/config/P.html">org.codehaus.nanning.config.P</a>.
+            </p>
+        </section>
+
+    </body>
+</document>

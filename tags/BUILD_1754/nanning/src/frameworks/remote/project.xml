@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<project>
+    <extend>${basedir}/../project.xml</extend>
+    <name>Nanning Remote</name>
+    <id>nanning-remote</id>
+    <currentVersion>1.0-beta-1</currentVersion>
+    <package>org.codehaus.nanning.remote</package>
+    <shortDescription>Profiler</shortDescription>
+    <description></description>
+
+    <developers>
+
+        <developer>
+            <name>Jon Tirsen</name>
+            <id>tirsen</id>
+            <organization>Lecando AB</organization>
+        </developer>
+
+        <developer>
+            <name>Lecando AB</name>
+            <id>lecando</id>
+            <organization>Lecando AB</organization>
+        </developer>
+
+    </developers>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>nanning</groupId>
+            <artifactId>nanning-prevayler</artifactId>
+            <version>1.0-beta-1</version>
+        </dependency>
+
+        <dependency>
+            <id>prevayler</id>
+            <version>2.00.000-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <id>concurrent</id>
+            <version>1.3.2</version>
+        </dependency>
+
+    </dependencies>
+
+</project>
