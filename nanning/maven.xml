@@ -7,6 +7,24 @@
 
     <preGoal name="dist:prepare-bin-filesystem">
         <attainGoal name="site:generate"/>
+
+        <mkdir dir="${maven.dist.bin.assembly.dir}"/>
+
+        <!-- copy them all to ${maven.dist.bin.assembly.dir}/reference/plugins/${plugin.id}/ -->
+        <ant:fileScanner var="frameworkProjects">
+            <fileset dir="${basedir}">
+                <include name="src/frameworks/*/project.xml"/>
+            </fileset>
+        </ant:fileScanner>
+        <j:forEach items="${frameworkProjects.iterator()}" var="framework">
+            <j:set var="frameworkName" value="${framework.parentFile.name}"/>
+            <mkdir dir="${maven.dist.bin.assembly.dir}"/>
+            <copy toDir="${maven.dist.bin.assembly.dir}/frameworks/${frameworkName}/">
+                <fileset dir="${basedir}/src/frameworks/${frameworkName}/target">
+                    <include name="*.jar" />
+                </fileset>
+            </copy
+        </j:forEach>
     </preGoal>
 
     <postGoal name="dist:prepare-src-filesystem">
