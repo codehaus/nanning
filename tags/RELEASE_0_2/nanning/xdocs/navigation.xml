@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Maven">
+
+    <title>Maven</title>
+
+    <body>
+        <links>
+            <item name="wiki" href="http://nanning.snipsnap.org"/>
+            <item name="jutopia" href="http://www.freeroller.net/page/tirsen"/>
+            <item name="Random Thoughts" href="http://www.dreambean.com/"/>
+            <item name="Maven" href="http://jakarta.apache.org/turbine/maven/"/>
+            <item name="QDox" href="http://qdox.sourceforge.net/"/>
+            <item name="Jelly" href="http://jakarta.apache.org/commons/sandbox/jelly"/>
+        </links>
+        <menu name="Nanning Aspects">
+            <item name="Overview" href="/overview.html"/>
+            <item name="Usage" href="/usage.html"/>
+            <item name="Building" href="/building.html"/>
+        </menu>
+    </body>
+</project>

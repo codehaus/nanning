@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<document>
+
+    <properties>
+        <author email="tirsen@users.sourceforge.net">Jon Tirsen</author>
+        <title>Nanning Aspects</title>
+    </properties>
+
+    <body>
+
+        <section name="Nanning Aspects">
+            <p>WARNING! The documentation has not been properly updated for the latest quite major refactoring. It does
+                not at the moment properly document Nanning.</p>
+
+            <p>There is now a blog/wiki for Nanning located at
+                <a href="http://nanning.snipsnap.org">http://nanning.snipsnap.org</a>. It's based on
+                <a href="http://snipsnap.org">SnipSnap</a>.</p>
+
+            <p>We're occasinally hanging out at the Werken IRC server. Connect a suitable IRC-client to <tt>irc.werken.com</tt>
+               channel <tt>#nanning</tt>.</p>
+
+            <p>Nanning Aspects is a simple yet scaleable aspect-oriented framework for Java.</p>
+
+            <p>Nanning is also nice "little" town in Guanxi province in southern China. It's about 1-2
+                million inhabitants which barely makes it a town by chinese standards. It is not to be
+                confused with the much larger Nanking/Nanjing.</p>
+        </section>
+
+    </body>
+</document>
