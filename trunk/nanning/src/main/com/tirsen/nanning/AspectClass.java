@@ -12,10 +12,10 @@ import java.lang.reflect.Proxy;
 /**
  * The definition of an aspected object, specifies interfaces, interceptors and target-objects.
  *
- * <!-- $Id: AspectClass.java,v 1.16 2002-12-08 12:57:45 tirsen Exp $ -->
+ * <!-- $Id: AspectClass.java,v 1.17 2002-12-11 10:57:52 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.16 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.17 $
  */
 public class AspectClass {
     private final List aspectDefinitions = new ArrayList();
@@ -62,29 +62,18 @@ public class AspectClass {
     SideAspectInstance[] instantiateSideAspects(Object[] targets) {
         SideAspectInstance[] sideAspectInstances;
         try {
-            List instances = new ArrayList(aspectDefinitions.size() + 1);
-
-            // add the class-specific interface, interceptors and target
-            SideAspectInstance classAspectInstance;
-            if (targets != null) {
-                classAspectInstance = getClassAspectDefinition().createAspectInstance(null);
-            } else {
-                classAspectInstance = getClassAspectDefinition().createAspectInstance(null);
-            }
-            instances.add(classAspectInstance);
-            Interceptor[] classInterceptors = classAspectInstance.getAllInterceptors();
+            List instances = new ArrayList(aspectDefinitions.size());
 
             // iterate the rest of the definitions and add the interceptors of the first on to the rest
-            for (ListIterator iterator = aspectDefinitions.listIterator(1); iterator.hasNext();) {
+            for (ListIterator iterator = aspectDefinitions.listIterator(); iterator.hasNext();) {
                 AspectDefinition aspectDefinition = (AspectDefinition) iterator.next();
                 SideAspectInstance aspectInstance = null;
                 if (targets != null) {
                     aspectInstance =
-                            aspectDefinition.createAspectInstance(classAspectInstance,
-                                                                  targets[iterator.previousIndex() + 1]);
+                            aspectDefinition.createAspectInstance(targets[iterator.nextIndex()]);
                 } else {
                     aspectInstance =
-                            aspectDefinition.createAspectInstance(classAspectInstance);
+                            aspectDefinition.createAspectInstance();
                 }
                 instances.add(aspectInstance);
             }

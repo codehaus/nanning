@@ -8,15 +8,13 @@ package com.tirsen.nanning;
 
 import junit.framework.TestCase;
 
-import java.lang.reflect.Method;
-
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: AspectClassTest.java,v 1.6 2002-12-03 17:21:00 lecando Exp $ -->
+ * <!-- $Id: AspectClassTest.java,v 1.7 2002-12-11 10:57:52 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class AspectClassTest extends TestCase
 {
@@ -84,15 +82,15 @@ public class AspectClassTest extends TestCase
         MockInterceptor classInterceptor = (MockInterceptor) (Aspects.getInterceptors(bigMomma, Intf.class)[0]);
         classInterceptor.expectAtIndex(0);
         classInterceptor.expectNumberOfInterceptors(2);
-        classInterceptor.expectCalledTimes(2);
+        classInterceptor.expectCalledTimes(1);
         classInterceptor.expectProxy(bigMomma);
         classInterceptor.expectMethod(Intf.class.getMethod("call", null));
         classInterceptor.expectTarget(target);
 
         SideAspectImpl sideTarget = (SideAspectImpl) Aspects.getTarget(bigMomma, SideAspect.class);
-        MockInterceptor sideInterceptor = (MockInterceptor) (Aspects.getInterceptors(bigMomma, SideAspect.class)[3]);
-        sideInterceptor.expectAtIndex(3);
-        sideInterceptor.expectNumberOfInterceptors(4);
+        MockInterceptor sideInterceptor = (MockInterceptor) (Aspects.getInterceptors(bigMomma, SideAspect.class)[1]);
+        sideInterceptor.expectAtIndex(1);
+        sideInterceptor.expectNumberOfInterceptors(2);
         sideInterceptor.expectCalledTimes(1);
         sideInterceptor.expectProxy(bigMomma);
         sideInterceptor.expectMethod(SideAspect.class.getMethod("sideCall", null));
@@ -103,7 +101,7 @@ public class AspectClassTest extends TestCase
         // this calls the side-target, the class-interceptor and the side-interceptor
         classInterceptor.expectTarget(null);
         classInterceptor.expectMethod(null);
-        classInterceptor.expectNumberOfInterceptors(4);
+        classInterceptor.expectNumberOfInterceptors(2);
         ((SideAspect) bigMomma).sideCall();
 
         classInterceptor.verify();

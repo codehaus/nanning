@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 import com.tirsen.nanning.AspectRepository;
 
-public class MySystem implements PrevalentSystem {
+public class MySystem implements IdentifyingSystem {
     private AlarmClock clock;
     private List objects = new ArrayList();
 
@@ -24,15 +24,15 @@ public class MySystem implements PrevalentSystem {
         return objects;
     }
 
-    public void addObject(Object o) {
-        objects.add(o);
+    public void registerOID(Object object) {
+        objects.add(object);
     }
 
     public int getOID(Object object) {
         return objects.indexOf(object);
     }
 
-    public Object getObject(int oid) {
+    public Object getObjectWithID(int oid) {
         return objects.get(oid);
     }
 }
