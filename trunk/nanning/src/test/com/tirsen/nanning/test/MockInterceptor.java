@@ -15,10 +15,10 @@ import java.lang.reflect.Method;
 /**
  * TODO document MockInterceptor
  *
- * <!-- $Id: MockInterceptor.java,v 1.2 2002-10-28 18:51:01 tirsen Exp $ -->
+ * <!-- $Id: MockInterceptor.java,v 1.3 2002-11-03 18:45:47 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class MockInterceptor implements Interceptor
 {
@@ -33,7 +33,6 @@ public class MockInterceptor implements Interceptor
     private int actualAtIndex;
     private int expectNumberOfInterceptors = -1;
     private int actualNumberOfInterceptors;
-    private String name;
 
     public MockInterceptor()
     {
@@ -47,6 +46,14 @@ public class MockInterceptor implements Interceptor
             Assert.assertEquals("was not called correct number of times", expectCalledTimes, calledTimes);
         }
         Assert.assertSame("expectProxy was not correct during call", expectProxy, actualProxy);
+
+        // reset after verify
+        expectCalledTimes = -1;
+        expectAtIndex = -1;
+        expectMethod = null;
+        expectNumberOfInterceptors = -1;
+        expectProxy = null;
+        expectTarget = null;
     }
 
     public Object invoke(Invocation invocation) throws Throwable

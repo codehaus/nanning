@@ -56,6 +56,10 @@
                 </p>
                 <ul>
                     <li>
+                        Almost no support for inheritance at all. For example you can't even call methods
+                        that are inherited in your interfaces.
+                    </li>
+                    <li>
                         Method-selectors that selects what methods an interceptor should intercept.
                     </li>
                     <li>

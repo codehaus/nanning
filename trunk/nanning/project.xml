@@ -88,6 +88,11 @@
     </dependency>
 
     <dependency>
+      <id>commons-lang</id>
+      <version>1.0</version>
+    </dependency>
+
+    <dependency>
       <id>dom4j</id>
       <version>1.4-dev-7</version>
     </dependency>
@@ -135,12 +140,6 @@
 
 
       <resources>
-        <includes>
-          <include>**/*.xml</include>
-        </includes>
-      </resources>
-
-      <unitTest>
         <includes>
           <include>**/*.xml</include>
         </includes>

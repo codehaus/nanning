@@ -15,10 +15,10 @@ import com.tirsen.nanning.Interceptor;
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: AspectClassTest.java,v 1.7 2002-11-03 17:14:28 tirsen Exp $ -->
+ * <!-- $Id: AspectClassTest.java,v 1.8 2002-11-03 18:45:47 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class AspectClassTest extends TestCase
 {
@@ -109,6 +109,7 @@ public class AspectClassTest extends TestCase
     public static void verifySideAspect(Object bigMomma) throws NoSuchMethodException
     {
         Impl target = (Impl) Aspects.getTarget(bigMomma, Intf.class);
+        target.expectThis(bigMomma);
         MockInterceptor classInterceptor = (MockInterceptor) (Aspects.getInterceptors(bigMomma, Intf.class)[0]);
         classInterceptor.expectAtIndex(0);
         classInterceptor.expectNumberOfInterceptors(2);
