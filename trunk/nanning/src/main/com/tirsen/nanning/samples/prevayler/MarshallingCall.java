@@ -13,6 +13,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
 public class MarshallingCall extends Call {
+    static final long serialVersionUID = -8607314000649422353L;
+    
     private transient Marshaller marshaller;
 
     private Set principals;

@@ -5,6 +5,8 @@ import org.apache.commons.logging.LogFactory;
 import org.prevayler.AlarmClock;
 
 import java.util.*;
+import java.io.ObjectInputStream;
+import java.io.IOException;
 
 public class BasicIdentifyingSystem implements IdentifyingSystem {
     static final long serialVersionUID = 4503034161857395426L;
@@ -17,11 +19,24 @@ public class BasicIdentifyingSystem implements IdentifyingSystem {
      */
     private Map idToObject = new HashMap();
     /**
+     * If serializing this and then serializing the serialized object again it will fail with an OptionalDataException,
+     * thus I need to make this transient and reconstruct it from idToObject again.
      * @weak
      */
-    private Map objectToId = new IdentityHashMap();
+    private transient Map objectToId = new IdentityHashMap();
 
     private long nextObjectId = 0;
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        objectToId = new IdentityHashMap();
+        for (Iterator iterator = idToObject.entrySet().iterator(); iterator.hasNext();) {
+            Map.Entry entry = (Map.Entry) iterator.next();
+            Long id = (Long) entry.getKey();
+            Object o = entry.getValue();
+            objectToId.put(o, id);
+        }
+    }
 
     public void clock(AlarmClock alarmClock) {
         this.clock = alarmClock;

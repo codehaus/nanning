@@ -1,7 +1,6 @@
 package com.tirsen.nanning.samples.prevayler;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.Collection;
 
 import com.tirsen.nanning.AspectFactory;
@@ -157,6 +156,23 @@ public class PrevaylerTest extends AbstractAttributesTest {
             }
         });
 
+    }
+
+    public void testOptionalDataException() throws IOException, ClassNotFoundException {
+        MySystem mySystem = (MySystem) aspectFactory.newInstance(MySystem.class);
+        mySystem.registerObjectID(aspectFactory.newInstance(MyObject.class));
+        assertEquals(1, mySystem.getObjectID(mySystem.getAllRegisteredObjects().iterator().next()));
+        mySystem = (MySystem) serialize(mySystem);
+        mySystem = (MySystem) serialize(mySystem);
+        assertEquals(1, mySystem.getObjectID(mySystem.getAllRegisteredObjects().iterator().next()));
+        assertEquals(2, mySystem.getAllRegisteredObjects().size());
+    }
+
+    private Object serialize(Object o) throws IOException, ClassNotFoundException {
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(buffer);
+        objectOutputStream.writeObject(o);
+        return new ObjectInputStream(new ByteArrayInputStream(buffer.toByteArray())).readObject();
     }
 
     public void testFinalizationCallback() throws Exception {
