@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+
+<attributes xsi:noNamespaceSchemaLocation="attributes.xsd"
+            xmlns=""
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
+
+    <class name = "com.tirsen.nanning.School">
+
+        <attribute>
+            <name>classAttrib</name>
+            <value>classValue</value>
+        </attribute>
+
+        <attribute>
+            <name>secure</name>
+            <value>true</value>
+        </attribute>
+
+        <field name = "name">
+            <attribute>
+                <name>fieldAttrib</name>
+                <value>fieldValue</value>
+            </attribute>
+        </field>
+
+        <field name = "director">
+            <attribute>
+                <name>persistance</name>
+                <value>true</value>
+            </attribute>
+        </field>
+
+        <method name = "setName">
+            <arg>
+                <type>String</type>
+            </arg>
+            <attribute>
+                <name>methodAttrib</name>
+                <value>methodValue</value>
+            </attribute>
+        </method>
+
+        <method name = "hireTeacher">
+            <arg>
+                <type>Teacher</type>
+            </arg>
+            <arg>
+                <type>String</type>
+            </arg>
+            <attribute>
+                <name>secure</name>
+                <value>true</value>
+            </attribute>
+        </method>
+
+        <method name = "sackAllTeachers">
+            <attribute>
+                <name>secure</name>
+                <value>false</value>
+            </attribute>
+        </method>
+
+    </class>
+    <class name = "com.tirsen.nanning.Job">
+
+        <attribute>
+            <name>persistant</name>
+            <value>true</value>
+        </attribute>
+
+        <attribute>
+            <name>secure</name>
+            <value>true</value>
+        </attribute>
+
+        <field name = "description">
+            <attribute>
+                <name>persistant</name>
+                <value>true</value>
+            </attribute>
+        </field>
+
+        <field name = "boss">
+            <attribute>
+                <name>bastard</name>
+                <value>true</value>
+            </attribute>
+        </field>
+
+        <method name = "fireAllEmployees">
+            <attribute>
+                <name>secure</name>
+                <value>true</value>
+            </attribute>
+        </method>
+
+        <method name = "hireEmployee">
+            <arg>
+                <type>Employee</type>
+            </arg>
+            <attribute>
+                <name>secure</name>
+                <value>false</value>
+            </attribute>
+        </method>
+    </class>
+</attributes>
