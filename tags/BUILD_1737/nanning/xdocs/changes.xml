@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Changes</title>
+        <author email="tirsen@codehaus.org">Jon Tirsen</author>
+    </properties>
+
+    <body>
+
+        <release version="0.9" date="In CVS">
+            <action dev="tirsen" type="update">
+                Rewrote and expanded the Pointcut-framework,
+                see <a href="xref-test/org/codehaus/nanning/config/PointcutTest.html">P</a>-class.
+            </action>
+            <action dev="tirsen" type="update">
+                Renamed MixinInstance to Mixin.
+            </action>
+            <action dev="tirsen" type="update">
+                Changed root-package from com.tirsen to org.codehaus.
+            </action>
+            <action dev="tirsen" type="update">
+                Moved all frameworks out of the core.
+            </action>
+            <action dev="tirsen" type="update">
+                Removed all dependencies (except compile-time attribute-dependencies) from core.
+            </action>
+            <action dev="tirsen" type="update">
+                Various additional clean up.
+            </action>
+        </release>
+
+    </body>
+</document>
+
