@@ -9,16 +9,15 @@ package com.tirsen.nanning.attribute;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-
-import org.apache.commons.lang.StringUtils;
+import java.util.Arrays;
 
 /**
  * TODO document AttributesTest
  *
- * <!-- $Id: AttributesTest.java,v 1.7 2003-05-20 07:45:08 lecando Exp $ -->
+ * <!-- $Id: AttributesTest.java,v 1.8 2003-05-26 05:39:32 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.7 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.8 $
  */
 public class AttributesTest extends AbstractAttributesTest {
     private Method method;
@@ -111,9 +110,9 @@ public class AttributesTest extends AbstractAttributesTest {
     }
 
     public void testJoinTail() {
-        String[] parts = StringUtils.split("field.field.field.attribute", ".");
+        String[] parts = "field.field.field.attribute".split("\\.");
         assertEquals("field.attribute", ClassAttributes.joinTail(parts, 2));
-        parts = StringUtils.split("field.field.attribute", ".");
+        parts = "field.field.attribute".split("\\.");
         assertEquals("attribute", ClassAttributes.joinTail(parts, 2));
     }
 

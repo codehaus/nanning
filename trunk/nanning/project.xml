@@ -140,13 +140,13 @@
 
         <dependency>
             <id>qdox</id>
-            <version>1.1</version>
-        </dependency>
+            <version>1.2</version>
+       </dependency>
 
         <dependency>
-            <id>commons-logging</id>
-            <version>1.0.2</version>
-        </dependency>
+           <id>commons-logging</id>
+           <version>1.0.2</version>
+       </dependency>
 
         <dependency>
             <id>concurrent</id>
@@ -161,12 +161,7 @@
         <dependency>
             <id>commons-beanutils</id>
             <version>1.5</version>
-        </dependency>
-
-        <dependency>
-            <id>commons-lang</id>
-            <version>1.0</version>
-        </dependency>
+       </dependency>
 
         <dependency>
             <id>dom4j</id>
@@ -189,11 +184,6 @@
         </dependency>
 
         <dependency>
-            <id>log4j</id>
-            <version>1.2.8</version>
-        </dependency>
-
-        <dependency>
             <id>ognl</id>
             <version>2.3.2</version>
         </dependency>
@@ -206,7 +196,7 @@
 
     </dependencies>
 
-    <build>p
+    <build>
 
         <nagEmailAddress>
             tirsen@users.sourceforge.net

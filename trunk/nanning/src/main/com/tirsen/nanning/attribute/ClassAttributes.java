@@ -2,18 +2,11 @@ package com.tirsen.nanning.attribute;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 public class ClassAttributes {
-    private static final Log logger = LogFactory.getLog(ClassAttributes.class);
-
     private Class aClass;
     private Map classAttributes;
     private Map fieldAttributes;
@@ -32,7 +25,7 @@ public class ClassAttributes {
                 Map.Entry entry = (Map.Entry) iterator.next();
                 String propertyName = (String) entry.getKey();
                 Object attributeValue = entry.getValue();
-                String[] parts = StringUtils.split(propertyName, ".");
+                String[] parts = propertyName.split("\\.");
                 if ("class".equals(parts[0])) {
                     classAttributes.put(joinTail(parts, 1), attributeValue);
                 } else if ("field".equals(parts[0])) {
@@ -41,8 +34,7 @@ public class ClassAttributes {
                         Field field = aClass.getDeclaredField(fieldName);
                         getMap(fieldAttributes, field).put(joinTail(parts, 2), attributeValue);
                     } catch (Exception e) {
-                        assert false : "Could not find field: " + fieldName;
-                        logger.warn("Could not find field: " + fieldName, e);
+                        throw new AttributeException("Error while loading attributes, could not find field: " + fieldName, e);
                     }
                 } else if ("method".equals(parts[0])) {
                     String methodSignature = parts[1];
@@ -50,10 +42,10 @@ public class ClassAttributes {
                     if (method != null) {
                         getMap(methodAttributes, method).put(joinTail(parts, 2), attributeValue);
                     } else {
-                        logger.warn("could not find method for " + methodSignature);
+                        throw new AttributeException("Error while loading attributes, could not find method: " + methodSignature);
                     }
                 } else {
-                    assert false : "invalid property " + propertyName;
+                    throw new AttributeException("Invalid property " + propertyName);
                 }
             }
         }
@@ -113,7 +105,15 @@ public class ClassAttributes {
         return getMap(methodAttributes, method).containsKey(attribute);
     }
 
-    public static Object joinTail(String[] parts, int firstIndex) {
-        return StringUtils.join(Arrays.asList(parts).subList(firstIndex, parts.length).iterator(), ".");
+    public static String joinTail(String[] parts, int firstIndex) {
+        StringBuffer result = new StringBuffer();
+        for (int i = firstIndex; i < parts.length; i++) {
+            String part = parts[i];
+            result.append(part);
+            if (i < parts.length - 1) {
+                result.append(".");
+            }
+        }
+        return result.toString();
     }
 }

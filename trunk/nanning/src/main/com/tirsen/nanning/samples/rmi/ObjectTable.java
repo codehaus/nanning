@@ -1,12 +1,12 @@
 package com.tirsen.nanning.samples.rmi;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Collections;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 class ObjectTable {
     private static final Log logger = LogFactory.getLog(ObjectTable.class);
@@ -40,7 +40,9 @@ class ObjectTable {
             for (Iterator i = idToReference.values().iterator(); i.hasNext();) {
                 LocalReference ref = (LocalReference) i.next();
                 if (ref.isStale(timeout)) {
-                    logger.debug("Removing " + ref.getReferred());
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("Removing " + ref.getReferred());
+                    }
                     objectToId.remove(ref.getReferred());
                     i.remove();
                 }
@@ -53,7 +55,9 @@ class ObjectTable {
     synchronized Object register(Object o) {
         Object id = objectToId.get(o);
         if (id == null) {
-            logger.debug("Registering " + o);
+            if (logger.isDebugEnabled()) {
+                logger.debug("Registering " + o);
+            }
             id = newId();
             objectToId.put(o, id);
             idToReference.put(id, new LocalReference(o));
@@ -75,7 +79,9 @@ class ObjectTable {
     }
 
     public synchronized void clear() {
-        logger.debug("Clearing");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Clearing");
+        }
         objectToId.clear();
         idToReference.clear();
         currentId = 0;

@@ -9,15 +9,15 @@ import java.util.List;
 import javax.security.auth.Subject;
 
 import com.tirsen.nanning.Invocation;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.prevayler.util.clock.ClockedSystem;
 import org.prevayler.util.clock.ClockedTransaction;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class InvokeCommand extends ClockedTransaction {
+    private static final Log logger = LogFactory.getLog(InvokeCommand.class);
     static final long serialVersionUID = 320681517664792343L;
 
-    private static final Log logger = LogFactory.getLog(InvokeCommand.class);
     private AuthenticatedCall call;
 
     public InvokeCommand(Invocation invocation, boolean resolveEntities) throws Exception {

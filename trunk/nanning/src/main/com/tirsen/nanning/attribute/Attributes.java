@@ -14,9 +14,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * TODO document Attributes
  *
@@ -28,15 +25,13 @@ import org.apache.commons.logging.LogFactory;
  * Hmm... wait, a minute, there's some support for this in QDox, maybe that will work...
  * -- jon
 
- * <!-- $Id: Attributes.java,v 1.11 2003-05-20 07:45:08 lecando Exp $ -->
+ * <!-- $Id: Attributes.java,v 1.12 2003-05-26 05:39:32 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.11 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.12 $
  */
 
 public class Attributes {
-    private static final Log logger = LogFactory.getLog(Attributes.class);
-
     private static List searchPaths = new ArrayList();
     private static Map propertiesCache = new HashMap();
     private static Map methodPropertyNameCache = new HashMap();
@@ -87,15 +82,17 @@ public class Attributes {
                     found = true;
                 }
 
-                if (!found) {
-                    logger.debug("could not find attributes for " + klass + " on classpath or in " + searchPaths);
-                }
+//                if (!found) {
+//                    logger.debug("could not find attributes for " + klass + " on classpath or in " + searchPaths);
+//                }
             } catch (MalformedURLException e) {
-                throw new RuntimeException("Error fetching properties for " + klass, e);
+                throw new AttributeException("Error fetching properties for " + klass, e);
             } catch (IOException e) {
-                throw new RuntimeException("Error fetching properties for " + klass, e);
+                throw new AttributeException("Error fetching properties for " + klass, e);
+            } catch (AttributeException e) {
+                throw e;
             } catch (Exception e) {
-                throw new RuntimeException("Error fetching properties for " + klass, e);
+                throw new AttributeException("Error fetching properties for " + klass, e);
             } finally {
                 if (inputStream != null) {
                     try {

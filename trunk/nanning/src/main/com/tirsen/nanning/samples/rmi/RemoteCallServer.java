@@ -14,8 +14,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 public class RemoteCallServer {
-    private static final Log logger = LogFactory.getLog(SocketRemoteCallServer.class);
-    
+    private static final Log logger = LogFactory.getLog(RemoteCallServer.class);
+
     private AspectFactory aspectFactory;
     private Map naming = new HashMap();
     private RemoteMarshaller marshaller;

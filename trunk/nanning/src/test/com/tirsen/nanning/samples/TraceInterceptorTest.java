@@ -6,80 +6,34 @@
  */
 package com.tirsen.nanning.samples;
 
-import java.net.URL;
-import java.net.URLClassLoader;
+import com.tirsen.nanning.config.AspectSystem;
+import com.tirsen.nanning.config.InterceptorAspect;
+import com.tirsen.nanning.config.Introductor;
+import junit.framework.TestCase;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.apache.commons.logging.impl.SimpleLog;
+import org.apache.commons.logging.impl.NoOpLog;
 import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogConfigurationException;
-import org.apache.commons.logging.LogFactory;
-import com.tirsen.nanning.config.AspectSystem;
-import com.tirsen.nanning.config.Aspect;
-import com.tirsen.nanning.config.Introductor;
-import com.tirsen.nanning.AspectInstance;
-import com.tirsen.nanning.MixinInstance;
 
 /**
  * TODO document TraceInterceptorTest
  *
- * <!-- $Id: TraceInterceptorTest.java,v 1.9 2003-05-11 11:17:17 tirsen Exp $ -->
+ * <!-- $Id: TraceInterceptorTest.java,v 1.10 2003-05-26 05:39:32 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class TraceInterceptorTest extends TestCase {
-    private ClassLoader prevContextClassLoader;
-    private String prevFactory;
-
-    public static class MockLogFactory extends LogFactory {
-        private MockLog mockLog = new MockLog();
-
-        public Log getInstance(Class aClass) throws LogConfigurationException {
-            return getMockLog();
-        }
-
-        public MockLog getMockLog() {
-            return mockLog;
-        }
-
-        ///CLOVER:OFF
-        public Object getAttribute(String s) {
-            return null;
-        }
-
-        public String[] getAttributeNames() {
-            return new String[0];
-        }
-
-        public Log getInstance(String s) throws LogConfigurationException {
-            return null;
-        }
-
-        public void release() {
-        }
-
-        public void removeAttribute(String s) {
-        }
-
-        public void setAttribute(String s, Object o) {
-        }
-        ///CLOVER:ON
-    }
-
-    public static class MockLog implements Log {
+    public static class MockLogger implements Log {
         private List expectMessages = new ArrayList();
         private List actualMessages = new ArrayList();
 
         public void error(Object message, Throwable throwable) {
-            String m = "ERROR " + message;
-            actualMessages.add(m);
-        }
-
-        public void trace(Object message) {
-            actualMessages.add(String.valueOf(message));
+            actualMessages.add("ERROR " + message);
         }
 
         public void debug(Object message) {
@@ -106,12 +60,9 @@ public class TraceInterceptorTest extends TestCase {
             expectMessages.clear();
         }
 
-        ///CLOVER:OFF
-        public void trace(Object o, Throwable throwable) {
-        }
-
+///CLOVER:OFF
         public boolean isDebugEnabled() {
-            return false;
+            return true;
         }
 
         public boolean isErrorEnabled() {
@@ -132,6 +83,12 @@ public class TraceInterceptorTest extends TestCase {
 
         public boolean isWarnEnabled() {
             return false;
+        }
+
+        public void trace(Object o) {
+        }
+
+        public void trace(Object o, Throwable throwable) {
         }
 
         public void debug(Object o, Throwable throwable) {
@@ -160,25 +117,6 @@ public class TraceInterceptorTest extends TestCase {
         ///CLOVER:ON
     }
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        // hack into commons-logging to intercept logging for test
-        prevContextClassLoader = Thread.currentThread().getContextClassLoader();
-        Thread.currentThread().setContextClassLoader(new URLClassLoader(new URL[0]));
-        prevFactory = System.getProperty(LogFactory.FACTORY_PROPERTY);
-        System.setProperty(LogFactory.FACTORY_PROPERTY,
-                           "com.tirsen.nanning.samples.TraceInterceptorTest$MockLogFactory");
-    }
-
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        // clean up hack for next tests
-        Thread.currentThread().setContextClassLoader(prevContextClassLoader);
-        if (prevFactory != null) {
-            System.setProperty(LogFactory.FACTORY_PROPERTY, prevFactory);
-        }
-    }
-
     public static interface Intf {
         String call(String arg, String arg2);
     }
@@ -197,25 +135,14 @@ public class TraceInterceptorTest extends TestCase {
 
     public void testLogInterceptor() throws InstantiationException, IllegalAccessException {
         AspectSystem system = new AspectSystem();
-        system.addAspect(new Aspect() {
-            public void adviseMixin(AspectInstance aspectInstance, MixinInstance mixin) {
-                mixin.addInterceptor(new TraceInterceptor());
-            }
-
-            public void advise(AspectInstance aspectInstance) {
-            }
-
-            public void introduce(AspectInstance aspectInstance) {
-            }
-        });
+        MockLogger mockLogger = new MockLogger();
+        system.addAspect(new InterceptorAspect(new TraceInterceptor(mockLogger)));
         system.addAspect(new Introductor(Intf.class, Impl.class));
 
-        assertTrue("failed to patch into commons-logging", LogFactory.getFactory() instanceof MockLogFactory);
-        MockLog mockLog = ((MockLogFactory) LogFactory.getFactory()).getMockLog();
-        mockLog.expectAddMessage(">>> call(hej, svej)");
-        mockLog.expectAddMessage("<<< call(hej, svej), took");
+        mockLogger.expectAddMessage(">>> call(hej, svej)");
+        mockLogger.expectAddMessage("<<< call(hej, svej), took");
         Intf intf = (Intf) system.newInstance(Intf.class);
         intf.call("hej", "svej");
-        mockLog.verify();
+        mockLogger.verify();
     }
 }

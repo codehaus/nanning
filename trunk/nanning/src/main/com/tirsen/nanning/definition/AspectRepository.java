@@ -15,25 +15,23 @@ import java.util.Map;
 
 import com.tirsen.nanning.AspectFactory;
 import com.tirsen.nanning.AspectInstance;
+import com.tirsen.nanning.AspectException;
 import com.tirsen.nanning.jelly.AspectTagLibrary;
 import org.apache.commons.jelly.JellyContext;
 import org.apache.commons.jelly.XMLOutput;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * TODO document AspectRepository
  *
- * <!-- $Id: AspectRepository.java,v 1.12 2003-05-22 20:18:32 tirsen Exp $ -->
+ * <!-- $Id: AspectRepository.java,v 1.13 2003-05-26 05:39:32 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  * 
  * @deprecated please use the new {@link com.tirsen.nanning.config.AspectSystem} framework instead.
  */
 public class AspectRepository implements AspectFactory {
     private static AspectRepository instance;
-    private static final Log logger = LogFactory.getLog(AspectRepository.class);
 
     protected final Map interceptorDefinitions = new HashMap();
     protected final Map aspectDefinitions = new HashMap();
@@ -83,7 +81,7 @@ public class AspectRepository implements AspectFactory {
             try {
                 instance.configure(AspectRepository.class.getResource("/aspect-repository.xml"));
             } catch (Exception e) {
-                logger.warn("failed to configure default instance");
+                throw new AspectException("failed to configure default instance");
             }
         }
         return instance;
