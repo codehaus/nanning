@@ -13,7 +13,7 @@ import org.prevayler.implementation.SnapshotPrevayler;
 
 public class PrevaylerTest extends TestCase {
 
-    private static AspectRepository aspectRepository;
+    private AspectRepository aspectRepository;
 
     private File prevaylerDir;
 
@@ -24,13 +24,15 @@ public class PrevaylerTest extends TestCase {
 
         aspectRepository = new AspectRepository();
 
-        aspectRepository.defineInterceptor(new InterceptorDefinition(PrevaylerInterceptor.class));
+        AspectRepository aspectRepository1 = new AspectRepository();
+        aspectRepository1.defineInterceptor(new InterceptorDefinition(PrevaylerInterceptor.class));
 
         AspectClass aspectClass = new AspectClass();
         aspectClass.setInterface(MyObject.class);
-        aspectClass.addInterceptor(aspectRepository.getInterceptor(PrevaylerInterceptor.class));
+        aspectClass.addInterceptor(aspectRepository1.getInterceptor(PrevaylerInterceptor.class));
         aspectClass.setTarget(MyObjectImpl.class);
-        aspectRepository.defineClass(aspectClass);
+        aspectRepository1.defineClass(aspectClass);
+        aspectRepository = aspectRepository1;
 
         CurrentPrevayler.setAspectRepository(aspectRepository);
 
