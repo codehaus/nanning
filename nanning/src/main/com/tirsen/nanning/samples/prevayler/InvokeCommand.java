@@ -12,8 +12,10 @@ import com.tirsen.nanning.Invocation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.prevayler.util.TransactionWithQuery;
+import org.prevayler.util.clock.ClockedTransaction;
+import org.prevayler.util.clock.ClockedSystem;
 
-public class InvokeCommand extends TransactionWithQuery {
+public class InvokeCommand extends ClockedTransaction {
     static final long serialVersionUID = 320681517664792343L;
 
     private static final Log logger = LogFactory.getLog(InvokeCommand.class);
@@ -23,7 +25,7 @@ public class InvokeCommand extends TransactionWithQuery {
         call = new AuthenticatedCall(invocation);
     }
 
-    protected Object executeAndQuery(Object system) throws Exception {
+    protected Object executeClocked(ClockedSystem system) throws Exception {
         Object prev = null;
         if (CurrentPrevayler.isInitialized()) {
             prev = CurrentPrevayler.getSystem();

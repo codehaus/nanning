@@ -5,8 +5,9 @@ import java.util.Collection;
 import java.util.ArrayList;
 
 import com.tirsen.nanning.Aspects;
+import org.prevayler.util.clock.AbstractClockedSystem;
 
-public class MySystemImpl implements MySystem, Serializable {
+public class MySystemImpl extends AbstractClockedSystem implements MySystem, Serializable {
     private MyObject myObject;
 
     public MyObject createMyObject() {
