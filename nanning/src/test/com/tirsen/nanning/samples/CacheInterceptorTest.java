@@ -33,16 +33,18 @@ public class CacheInterceptorTest extends AbstractAttributesTest {
         });
         CacheTestCalculations cacheTestCalculations = (CacheTestCalculations) aspectInstance.getProxy();
 
+        // non-cached call
         assertFalse(wasCalled);
         assertEquals(0, cacheTestCalculations.someHeavyCalculation(0), 0);
         assertTrue(wasCalled);
 
+        // cached call
         wasCalled = false;
         assertEquals(0, cacheTestCalculations.someHeavyCalculation(0), 0);
         assertFalse(wasCalled);
 
+        // flush cache and non-cached call
         cacheInterceptor.clearCache();
-
         wasCalled = false;
         assertEquals(0, cacheTestCalculations.someHeavyCalculation(0), 0);
         assertTrue(wasCalled);
