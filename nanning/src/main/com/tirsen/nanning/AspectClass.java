@@ -7,14 +7,15 @@
 package com.tirsen.nanning;
 
 import java.util.*;
+import java.lang.reflect.Proxy;
 
 /**
  * The definition of an aspected object, specifies interfaces, interceptors and target-objects.
  *
- * <!-- $Id: AspectClass.java,v 1.8 2002-11-06 17:50:05 tirsen Exp $ -->
+ * <!-- $Id: AspectClass.java,v 1.9 2002-11-17 14:03:33 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class AspectClass extends AspectDefinition
 {
@@ -30,10 +31,29 @@ public class AspectClass extends AspectDefinition
      */
     public Object newInstance()
     {
-        AspectInstance aspectInstance =
-                new AspectInstance(this);
+        SideAspectInstance[] sideAspectInstances = instantiateSideAspects();
 
-        return aspectInstance.createProxy();
+        AspectInstance aspectInstance = new AspectInstance(this, sideAspectInstances);
+
+        List interfaces = new ArrayList(sideAspectInstances.length);
+        for (int i = 0; i < sideAspectInstances.length; i++)
+        {
+            SideAspectInstance interfaceInstance = sideAspectInstances[i];
+            interfaces.add(interfaceInstance.getInterfaceClass());
+        }
+
+        Object proxy = instantiateProxy(aspectInstance, interfaces);
+
+        aspectInstance.setProxy(proxy);
+
+        return proxy;
+    }
+
+    protected Object instantiateProxy(AspectInstance aspectInstance, List interfaces) {
+        Object proxy = Proxy.newProxyInstance(getClass().getClassLoader(),
+                        (Class[]) interfaces.toArray(new Class[0]),
+                        aspectInstance);
+        return proxy;
     }
 
     SideAspectInstance[] instantiateSideAspects()

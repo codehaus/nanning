@@ -6,14 +6,16 @@
  */
 package com.tirsen.nanning;
 
+import java.lang.reflect.Method;
+
 
 /**
  * Intercepts calls on an interface on it's way to the target, these are nested "on top" of the target.
  *
- * <!-- $Id: Interceptor.java,v 1.3 2002-10-30 20:10:54 tirsen Exp $ -->
+ * <!-- $Id: Interceptor.java,v 1.4 2002-11-17 14:03:34 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public interface Interceptor
 {

@@ -4,18 +4,21 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
-package com.tirsen.nanning.test;
+package com.tirsen.nanning;
 
 import junit.framework.TestCase;
 import com.tirsen.nanning.*;
+import com.tirsen.nanning.test.*;
+
+import java.lang.reflect.Method;
 
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: AspectClassTest.java,v 1.11 2002-11-17 14:03:34 tirsen Exp $ -->
+ * <!-- $Id: AspectClassTest.java,v 1.1 2002-11-17 14:03:34 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.1 $
  */
 public class AspectClassTest extends TestCase
 {
@@ -111,6 +114,57 @@ public class AspectClassTest extends TestCase
         proxy.call();
     }
 
+    public static class TestFilterMethodsInterceptor implements FilterMethodsInterceptor
+    {
+        public boolean interceptsMethod(Method method)
+        {
+            return method.getName().equals("interceptThis");
+        }
+
+        public Object invoke(Invocation invocation) throws Throwable
+        {
+            if(!invocation.getMethod().getName().equals("interceptThis"))
+            {
+                fail("should not intercept " + invocation.getMethod());
+            }
+            return invocation.invokeNext();
+        }
+    }
+
+    public static interface TestFilterIntf
+    {
+        void interceptThis();
+        void dontInterceptThis();
+    }
+
+    public static class TestFilterImpl implements TestFilterIntf
+    {
+        public void interceptThis()
+        {
+        }
+
+        public void dontInterceptThis()
+        {
+        }
+    }
+
+    public void testFilterMethods()
+    {
+        AspectClass aspectClass = new AspectClass();
+        aspectClass.setInterface(TestFilterIntf.class);
+        aspectClass.addInterceptor(TestFilterMethodsInterceptor.class);
+        aspectClass.setTarget(TestFilterImpl.class);
+        TestFilterIntf instance = (TestFilterIntf) aspectClass.newInstance();
+        instance.interceptThis();
+        try
+        {
+            instance.dontInterceptThis();
+        }
+        catch (Throwable doesntWorkYet)
+        {
+        }
+    }
+
     public void testThrowsCorrectExceptions()
     {
         AspectClass aspectClass = new AspectClass();
@@ -163,7 +217,6 @@ public class AspectClassTest extends TestCase
         assertEquals(2, Aspects.getInterceptors(bigMomma).length);
 
         verifySideAspect(bigMomma);
-
     }
 
     public static void verifySideAspect(Object bigMomma) throws NoSuchMethodException

@@ -18,10 +18,10 @@ import java.util.List;
 /**
  * TODO document AspectInstance
  *
- * <!-- $Id: AspectInstance.java,v 1.10 2002-11-06 17:50:06 tirsen Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.11 2002-11-17 14:03:34 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 class AspectInstance implements InvocationHandler
 {
@@ -116,10 +116,14 @@ class AspectInstance implements InvocationHandler
     private final SideAspectInstance[] sideAspectInstances;
     private final AspectClass aspectClass;
 
-    public AspectInstance(AspectClass aspectClass)
-    {
+    public AspectInstance(AspectClass aspectClass, SideAspectInstance[] sideAspectInstances) {
+        this.proxy = proxy;
+        this.sideAspectInstances = sideAspectInstances;
         this.aspectClass = aspectClass;
-        this.sideAspectInstances = aspectClass.instantiateSideAspects();
+    }
+
+    void setProxy(Object proxy) {
+        this.proxy = proxy;
     }
 
     public Object invoke(Object proxy, Method method, Object[] args)
@@ -148,20 +152,6 @@ class AspectInstance implements InvocationHandler
             // I take care of all calls to Object (such as equals, toString and so on)
             return method.invoke(this, args);
         }
-    }
-
-    Object createProxy()
-    {
-        List interfaces = new ArrayList(sideAspectInstances.length);
-        for (int i = 0; i < sideAspectInstances.length; i++)
-        {
-            SideAspectInstance interfaceInstance = sideAspectInstances[i];
-            interfaces.add(interfaceInstance.getInterfaceClass());
-        }
-
-        return proxy = Proxy.newProxyInstance(getClass().getClassLoader(),
-                (Class[]) interfaces.toArray(new Class[0]),
-                this);
     }
 
     Object getTarget(Class interfaceClass)

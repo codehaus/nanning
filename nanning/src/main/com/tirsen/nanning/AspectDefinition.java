@@ -13,10 +13,10 @@ import java.util.Iterator;
 /**
  * Defines an interface that's to be added to an aspected object.
  *
- * <!-- $Id: AspectDefinition.java,v 1.3 2002-10-28 18:51:00 tirsen Exp $ -->
+ * <!-- $Id: AspectDefinition.java,v 1.4 2002-11-17 14:03:33 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class AspectDefinition
 {
@@ -35,7 +35,8 @@ public class AspectDefinition
     }
 
     /**
-     * Adds an interceptor to the chain of interceptors.
+     * Adds an interceptor to the chain of interceptors. Note: if you use this utility-method (that automatically
+     * creates an {@link InterceptorDefinition}) stateless interceptors 
      *
      * @param interceptorClass
      */
