@@ -6,25 +6,23 @@
  */
 package com.tirsen.nanning.test;
 
-import com.tirsen.nanning.Aspect;
-import com.tirsen.nanning.AspectContext;
+import com.tirsen.nanning.Interceptor;
+import com.tirsen.nanning.Invocation;
 import junit.framework.Assert;
-
-import java.lang.reflect.Method;
 
 /**
  * TODO document MockAspect
  *
- * <!-- $Id: MockAspect.java,v 1.1.1.1 2002-10-20 09:33:53 tirsen Exp $ -->
+ * <!-- $Id: MockAspect.java,v 1.2 2002-10-21 21:07:31 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1.1.1 $
+ * @version $Revision: 1.2 $
  */
-public class MockAspect implements Aspect
+public class MockAspect implements Interceptor
 {
     private boolean called;
-    private Object realObject;
-    private Object actualRealObject;
+    private Object target;
+    private Object actualTarget;
     private Object proxy;
     private Object actualProxy;
 
@@ -35,21 +33,49 @@ public class MockAspect implements Aspect
     public void verify()
     {
         Assert.assertTrue("was never called", called);
-        Assert.assertSame("real object was not correct during call", realObject, actualRealObject);
-        Assert.assertSame("proxy was not correct during call", proxy, actualProxy);
+        if (target != null)
+        {
+            Assert.assertSame("real object was not correct during call", target, actualTarget);
+        }
+        if (proxy != null)
+        {
+            Assert.assertSame("proxy was not correct during call", proxy, actualProxy);
+        }
     }
 
-    public Object invoke(Method method, Object[] args, AspectContext context) throws Throwable
+    public Object invoke(Invocation invocation) throws Throwable
     {
         called = true;
-        actualRealObject = context.getRealObject();
-        actualProxy = context.getProxy();
-        return context.invokeNext(method, args, context);
+        actualTarget = invocation.getTarget();
+        actualProxy = invocation.getProxy();
+        
+        int index = invocation.getCurrentIndex();
+        Assert.assertSame(this, invocation.getAspect(invocation.getCurrentIndex()));
+
+        // check that getNumberOfAspects is correct
+        int numberOfAspects = invocation.getNumberOfAspects();
+        invocation.getAspect(numberOfAspects - 1); // should work...
+        try
+        {
+            invocation.getAspect(numberOfAspects); // should not work...
+            ///CLOVER:OFF
+            Assert.fail("Invocation.getNumberOfAspects doesn't work.");
+            ///CLOVER:ON
+        }
+        catch (Exception shouldHappen)
+        {
+        }
+
+        Assert.assertEquals(Intf.class.getMethod("call", null), invocation.getMethod());
+
+        Assert.assertNull(invocation.getArgs());
+
+        return invocation.invokeNext(invocation);
     }
 
-    public void expectRealObject(Object o)
+    public void expectTarget(Object o)
     {
-        realObject = o;
+        target = o;
     }
 
     public void expectProxy(Object proxy)

@@ -2,16 +2,18 @@ Create a proxy behind an interface that actually calls the implementation of the
 
 Make the proxy a set of handlers in a list that calls each other. (done)
 
-Performance-tests. Implemented via time-boxed unit-tests.
+Performance-tests. Implemented via time-boxed unit-tests. (done)
 
-Access to the actual object and the call-stack from the aspects.
+Access to the actual object and the call-stack from the aspects. (done)
+
+Some kind of configuration through Java API.
 
 Implement state-management for aspects:
 1) Stateless. One aspect-instance per configuration for the whole system.
 2) State-per-call. Pool of aspect-instances that's allocated per call.
 3) Stateful. One aspect-instance per object-instance.
 
-Aspects able to filter methods they don't want to listen too (when added _only_).
+Aspects able to filter methods they don't want to intercept too (when added _only_).
 
 Some kind of configuration. XML?
 Aspects are bound to classes.
