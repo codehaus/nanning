@@ -13,16 +13,16 @@ import java.util.Iterator;
 /**
  * Defines an interface that's to be added to an aspected object.
  *
- * <!-- $Id: AspectDefinition.java,v 1.2 2002-10-27 12:36:41 tirsen Exp $ -->
+ * <!-- $Id: AspectDefinition.java,v 1.3 2002-10-28 18:51:00 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class AspectDefinition
 {
-    protected Class interfaceClass;
-    protected List interceptorDefinitions = new ArrayList();
-    protected Class targetClass;
+    private Class interfaceClass;
+    private final List interceptorDefinitions = new ArrayList();
+    private Class targetClass;
 
     /**
      * Specify interface to use.

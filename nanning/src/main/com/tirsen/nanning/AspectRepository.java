@@ -6,24 +6,22 @@
  */
 package com.tirsen.nanning;
 
-import com.tirsen.nanning.test.Intf;
-
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * TODO document AspectRepository
  *
- * <!-- $Id: AspectRepository.java,v 1.1 2002-10-27 12:36:41 tirsen Exp $ -->
+ * <!-- $Id: AspectRepository.java,v 1.2 2002-10-28 18:51:00 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class AspectRepository
 {
-    public Map interceptorDefinitions = new HashMap();
-    public Map aspectDefinitions = new HashMap();
-    public Map aspectClasses = new HashMap();
+    private final Map interceptorDefinitions = new HashMap();
+    private final Map aspectDefinitions = new HashMap();
+    private final Map aspectClasses = new HashMap();
 
     public void defineInterceptor(InterceptorDefinition interceptorDefinition)
     {

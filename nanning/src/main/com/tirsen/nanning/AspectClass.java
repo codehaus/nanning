@@ -14,14 +14,14 @@ import java.util.List;
 /**
  * The definition of an aspected object, specifies interfaces, interceptors and target-objects.
  *
- * <!-- $Id: AspectClass.java,v 1.4 2002-10-27 12:13:17 tirsen Exp $ -->
+ * <!-- $Id: AspectClass.java,v 1.5 2002-10-28 18:51:00 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class AspectClass extends AspectDefinition
 {
-    private List aspectDefinitions = new ArrayList();
+    private final List aspectDefinitions = new ArrayList();
 
     /**
      * Instantiates an instance with the specified interfaces, interceptors and target-objects.

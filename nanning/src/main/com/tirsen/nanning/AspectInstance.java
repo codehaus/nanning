@@ -16,19 +16,19 @@ import java.util.List;
 /**
  * TODO document AspectInstance
  *
- * <!-- $Id: AspectInstance.java,v 1.4 2002-10-27 12:13:18 tirsen Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.5 2002-10-28 18:51:00 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 class AspectInstance implements InvocationHandler
 {
     class InvocationImpl implements Invocation
     {
         private int index = -1;
-        private Method method;
-        private Object[] args;
-        private SideAspectInstance interfaceInstance;
+        private final Method method;
+        private final Object[] args;
+        private final SideAspectInstance interfaceInstance;
 
         public InvocationImpl(Method method, Object[] args, SideAspectInstance interfaceInstance)
         {
@@ -88,8 +88,8 @@ class AspectInstance implements InvocationHandler
     }
 
     private Object proxy;
-    private SideAspectInstance[] interfaceInstances;
-    private HashMap interfacesToInstancesIndex;
+    private final SideAspectInstance[] interfaceInstances;
+    private final HashMap interfacesToInstancesIndex;
 
     public AspectInstance(SideAspectInstance[] interfaceInstances)
     {
@@ -133,13 +133,13 @@ class AspectInstance implements InvocationHandler
         return interfaceInstance.getTarget();
     }
 
-    public Interceptor[] getProxyInterceptors()
+    Interceptor[] getProxyInterceptors()
     {
         // the actual class-specific interface-instance is at the first position
         return interfaceInstances[0].getInterceptors();
     }
 
-    public Interceptor[] getInterceptors(Class interfaceClass)
+    Interceptor[] getInterceptors(Class interfaceClass)
     {
         SideAspectInstance interfaceInstance = (SideAspectInstance) interfacesToInstancesIndex.get(interfaceClass);
         return interfaceInstance.getInterceptors();
