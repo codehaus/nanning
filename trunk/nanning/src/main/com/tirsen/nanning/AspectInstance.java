@@ -15,17 +15,26 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 /**
  * TODO document AspectInstance
  *
- * <!-- $Id: AspectInstance.java,v 1.18 2002-12-11 15:11:55 lecando Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.19 2002-12-12 08:27:57 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
-class AspectInstance implements InvocationHandler {
+class AspectInstance implements InvocationHandler, Externalizable {
     private static final Method OBJECT_EQUALS_METHOD;
 
     private Object proxy;
     private SideAspectInstance[] sideAspectInstances;
     private AspectClass aspectClass;
+
+    /**
+     * Used during serialization only.
+     */
+    private Class serializeInterfaceClass;
+    /**
+     * Used during serialization only.
+     */
+    private Object[] serializeTargets;
 
 
     static {
@@ -37,6 +46,9 @@ class AspectInstance implements InvocationHandler {
     }
 
     static ThreadLocal currentThis = new ThreadLocal();
+
+    public AspectInstance() {
+    }
 
     public AspectInstance(AspectClass aspectClass, SideAspectInstance[] sideAspectInstances) {
         this.sideAspectInstances = sideAspectInstances;
@@ -121,5 +133,20 @@ class AspectInstance implements InvocationHandler {
             targets[i] = sideAspectInstance.getTarget();
         }
         return targets;
+    }
+
+    private Object readResolve() {
+        return Aspects.getAspectInstance(
+                Aspects.getCurrentAspectRepository().newInstance(serializeInterfaceClass, serializeTargets));
+    }
+
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeObject(sideAspectInstances[0].getInterfaceClass());
+        out.writeObject(getTargets());
+    }
+
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        serializeInterfaceClass = (Class) in.readObject();
+        serializeTargets = (Object[]) in.readObject();
     }
 }

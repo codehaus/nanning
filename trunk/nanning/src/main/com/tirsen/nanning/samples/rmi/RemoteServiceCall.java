@@ -27,9 +27,9 @@ public class RemoteServiceCall extends Call {
     }
 
     public static Object marshal(Object object) {
-        if(Aspects.isAspectObject(object)) {
-            object = new SerializableAspectInstance(object);
-        }
+//        if(Aspects.isAspectObject(object)) {
+//            object = new SerializableAspectInstance(object);
+//        }
         return object;
     }
 
@@ -38,9 +38,9 @@ public class RemoteServiceCall extends Call {
     }
 
     public static Object unmarshal(Object object) {
-        if(object instanceof SerializableAspectInstance) {
-            object = ((SerializableAspectInstance) object).getObject();
-        }
+//        if(object instanceof SerializableAspectInstance) {
+//            object = ((SerializableAspectInstance) object).getObject();
+//        }
         return object;
     }
 }
