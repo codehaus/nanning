@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<aspect-repository>
+    <aspect>
+        <interface>
+            org.codehaus.nanning.definition.TestMixin
+        </interface>
+        <interceptor>
+            org.codehaus.nanning.definition.NullInterceptor
+        </interceptor>
+        <interceptor>
+            org.codehaus.nanning.definition.MockInterceptor
+        </interceptor>
+        <target>
+            org.codehaus.nanning.definition.TestMixinImpl
+        </target>
+    </aspect>
+    <class>
+        <interface>
+            org.codehaus.nanning.definition.Intf
+        </interface>
+        <interceptor>
+            org.codehaus.nanning.definition.MockInterceptor
+        </interceptor>
+        <interceptor>
+            org.codehaus.nanning.definition.NullInterceptor
+        </interceptor>
+        <target>
+            org.codehaus.nanning.definition.IntfImpl
+        </target>
+
+        <aspect interface="org.codehaus.nanning.definition.TestMixin" />
+    </class>
+</aspect-repository>
