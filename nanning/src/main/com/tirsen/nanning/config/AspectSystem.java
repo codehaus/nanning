@@ -21,7 +21,7 @@ public class AspectSystem implements AspectFactory {
     private AspectInstance createAspectInstance(Class classIdentifier) {
         AspectInstance aspectInstance = new AspectInstance(this, classIdentifier);
 
-        introduceMixin(aspectInstance);
+        introduceMixins(aspectInstance);
         adviceConstruction(aspectInstance);
         advice(aspectInstance);
 
@@ -32,16 +32,7 @@ public class AspectSystem implements AspectFactory {
         for (Iterator aspectIterator = aspects.iterator(); aspectIterator.hasNext();) {
             Aspect aspect = (Aspect) aspectIterator.next();
 
-            Object result = aspect.adviseConstruction(aspectInstance);
-            if (result instanceof Collection) {
-                Collection interceptors = (Collection) result;
-                for (Iterator i = interceptors.iterator(); i.hasNext();) {
-                    ConstructionInterceptor interceptor = (ConstructionInterceptor) i.next();
-                    aspectInstance.addConstructionInterceptor(interceptor);
-                }
-            } else if (result != null) {
-                aspectInstance.addConstructionInterceptor((ConstructionInterceptor) result);
-            }
+            aspect.advise(aspectInstance);
         }
     }
 
@@ -51,33 +42,15 @@ public class AspectSystem implements AspectFactory {
 
             for (Iterator aspectIterator = aspects.iterator(); aspectIterator.hasNext();) {
                 Aspect aspect = (Aspect) aspectIterator.next();
-
-                Object result = aspect.advise(aspectInstance, mixinInstance);
-                if (result instanceof Collection) {
-                    Collection interceptors = (Collection) result;
-                    for (Iterator i = interceptors.iterator(); i.hasNext();) {
-                        mixinInstance.addInterceptor(aspectInstance, (Interceptor) i.next());
-                    }
-                } else if (result != null) {
-                    mixinInstance.addInterceptor(aspectInstance, (Interceptor) result);
-                }
+                aspect.adviseMixin(aspectInstance, mixinInstance);
             }
         }
     }
 
-    private void introduceMixin(AspectInstance aspectInstance) {
+    private void introduceMixins(AspectInstance aspectInstance) {
         for (Iterator iterator = aspects.iterator(); iterator.hasNext();) {
             Aspect aspect = (Aspect) iterator.next();
-            Object result = aspect.introduce(aspectInstance);
-            if (result instanceof Collection) {
-                Collection mixins = (Collection) result;
-                for (Iterator i = mixins.iterator(); i.hasNext();) {
-                    MixinInstance mixinInstance = (MixinInstance) i.next();
-                    aspectInstance.addMixin(mixinInstance);
-                }
-            } else if (result != null) {
-                aspectInstance.addMixin((MixinInstance) result);
-            }
+            aspect.introduce(aspectInstance);
         }
     }
 

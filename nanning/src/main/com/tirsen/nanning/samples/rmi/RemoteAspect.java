@@ -17,10 +17,6 @@ import com.tirsen.nanning.samples.prevayler.MarshallingCall;
 public class RemoteAspect implements Aspect, MethodInterceptor {
     private Marshaller marshaller;
 
-    public boolean interceptsMethod(AspectInstance aspectInstance, MixinInstance mixin, Method method) {
-        return true;
-    }
-
     public Object invoke(Invocation invocation) throws Throwable {
         RemoteIdentity remoteIdentity = (RemoteIdentity) invocation.getTarget();
 
@@ -61,15 +57,13 @@ public class RemoteAspect implements Aspect, MethodInterceptor {
         this.marshaller = marshaller;
     }
 
-    public Object introduce(AspectInstance aspectInstance) {
-        return null;
+    public void introduce(AspectInstance aspectInstance) {
     }
 
-    public Object advise(AspectInstance aspectInstance, MixinInstance mixin) {
-        return this;
+    public void adviseMixin(AspectInstance aspectInstance, MixinInstance mixin) {
+        mixin.addInterceptor(this);
     }
 
-    public Object adviseConstruction(AspectInstance aspectInstance) {
-        return null;
+    public void advise(AspectInstance aspectInstance) {
     }
 }

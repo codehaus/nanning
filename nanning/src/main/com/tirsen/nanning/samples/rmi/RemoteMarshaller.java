@@ -21,18 +21,16 @@ public class RemoteMarshaller implements Marshaller {
         AspectSystem aspectSystem = new AspectSystem();
 
         aspectSystem.addAspect(new Aspect() {
-            public Object advise(AspectInstance aspectInstance, MixinInstance mixin) {
-                return null;
+            public void adviseMixin(AspectInstance aspectInstance, MixinInstance mixin) {
             }
 
-            public Object adviseConstruction(AspectInstance aspectInstance) {
-                return null;
+            public void advise(AspectInstance aspectInstance) {
             }
 
-            public Object introduce(AspectInstance aspectInstance) {
+            public void introduce(AspectInstance aspectInstance) {
                 MixinInstance mixinInstance = new MixinInstance();
                 mixinInstance.setInterfaceClass(aspectInstance.getClassIdentifier());
-                return mixinInstance;
+                aspectInstance.addMixin(mixinInstance);
             }
         });
 

@@ -16,8 +16,8 @@ public class FindTargetMixinAspect implements Aspect {
         this.implementationSuffix = implementationSuffix;
     }
 
-    public Object introduce(AspectInstance aspectInstance) {
-        MixinInstance mixinInstance = new MixinInstance();
+    public void introduce(AspectInstance aspectInstance) {
+        MixinInstance mixin = new MixinInstance();
 
         Class interfaceClass = aspectInstance.getClassIdentifier();
         Class targetClass = findImpl(interfaceClass);
@@ -28,17 +28,15 @@ public class FindTargetMixinAspect implements Aspect {
             throw new AspectException("Could not instantiate target " + targetClass, e);
         }
 
-        mixinInstance.setInterfaceClass(interfaceClass);
-        mixinInstance.setTarget(target);
-        return mixinInstance;
+        mixin.setInterfaceClass(interfaceClass);
+        mixin.setTarget(target);
+        aspectInstance.addMixin(mixin);
     }
 
-    public Object advise(AspectInstance aspectInstance, MixinInstance mixin) {
-        return null;
+    public void adviseMixin(AspectInstance aspectInstance, MixinInstance mixin) {
     }
 
-    public Object adviseConstruction(AspectInstance aspectInstance) {
-        return null;
+    public void advise(AspectInstance aspectInstance) {
     }
 
     private Class findImpl(Class interfaceClass) {

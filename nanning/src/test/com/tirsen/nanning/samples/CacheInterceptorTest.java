@@ -52,10 +52,10 @@ public class CacheInterceptorTest extends AbstractAttributesTest {
 
     public void testFilterMethod() throws NoSuchMethodException {
         assertTrue(cacheInterceptor.interceptsMethod(
-                null, null,
+                null,
                 someHeavyCalculationMethod));
         assertFalse(cacheInterceptor.interceptsMethod(
-                null, null,
+                null,
                 Object.class.getMethod("toString", null)));
     }
 }

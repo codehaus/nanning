@@ -13,17 +13,13 @@ import com.tirsen.nanning.definition.SingletonInterceptor;
 /**
  * TODO document NullInterceptor
  *
- * <!-- $Id: NullInterceptor.java,v 1.6 2003-05-09 14:57:49 lecando Exp $ -->
+ * <!-- $Id: NullInterceptor.java,v 1.7 2003-05-11 11:17:17 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.6 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.7 $
  */
 public class NullInterceptor implements MethodInterceptor, SingletonInterceptor {
     public Object invoke(Invocation invocation) throws Throwable {
         return invocation.invokeNext();
-    }
-
-    public boolean interceptsMethod(AspectInstance aspectInstance, MixinInstance mixin, Method method) {
-        return true;
     }
 }

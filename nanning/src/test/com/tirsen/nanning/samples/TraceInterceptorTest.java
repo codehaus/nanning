@@ -25,10 +25,10 @@ import com.tirsen.nanning.MixinInstance;
 /**
  * TODO document TraceInterceptorTest
  *
- * <!-- $Id: TraceInterceptorTest.java,v 1.8 2003-05-09 14:57:50 lecando Exp $ -->
+ * <!-- $Id: TraceInterceptorTest.java,v 1.9 2003-05-11 11:17:17 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.8 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.9 $
  */
 public class TraceInterceptorTest extends TestCase {
     private ClassLoader prevContextClassLoader;
@@ -198,16 +198,14 @@ public class TraceInterceptorTest extends TestCase {
     public void testLogInterceptor() throws InstantiationException, IllegalAccessException {
         AspectSystem system = new AspectSystem();
         system.addAspect(new Aspect() {
-            public Object advise(AspectInstance aspectInstance, MixinInstance mixin) {
-                return new TraceInterceptor();
+            public void adviseMixin(AspectInstance aspectInstance, MixinInstance mixin) {
+                mixin.addInterceptor(new TraceInterceptor());
             }
 
-            public Object adviseConstruction(AspectInstance aspectInstance) {
-                return null;
+            public void advise(AspectInstance aspectInstance) {
             }
 
-            public Object introduce(AspectInstance aspectInstance) {
-                return null;
+            public void introduce(AspectInstance aspectInstance) {
             }
         });
         system.addAspect(new Introductor(Intf.class, Impl.class));
