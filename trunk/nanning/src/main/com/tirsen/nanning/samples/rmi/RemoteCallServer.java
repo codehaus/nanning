@@ -24,6 +24,10 @@ public class RemoteCallServer {
         marshaller = new RemoteMarshaller(connectionManager);
     }
 
+    public void setAspectFactory(AspectFactory aspectRepository) {
+        this.aspectFactory = aspectRepository;
+    }
+
     public void processCall(InputStream commandStream, OutputStream resultStream) {
         Aspects.setContextAspectFactory(aspectFactory);
         Subject subject = Subject.getSubject(AccessController.getContext());
@@ -94,10 +98,6 @@ public class RemoteCallServer {
             result = new ExceptionThrown(e);
         }
         return result;
-    }
-
-    public void setAspectFactory(AspectFactory aspectRepository) {
-        this.aspectFactory = aspectRepository;
     }
 
     public void bind(String name, Object o) {

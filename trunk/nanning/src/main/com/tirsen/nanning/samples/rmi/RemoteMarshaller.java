@@ -24,6 +24,8 @@ public class RemoteMarshaller implements Marshaller {
      */
     public RemoteMarshaller() {
         AspectSystem aspectSystem = new AspectSystem();
+        aspectFactory = aspectSystem;
+
         aspectSystem.addPointcut(new AllPointcut(new Advise() {
             public void advise(AspectInstance aspectInstance) {
                 MixinInstance mixinInstance = new MixinInstance();
@@ -34,7 +36,6 @@ public class RemoteMarshaller implements Marshaller {
         RemoteAspect aspect = new RemoteAspect();
         aspect.setMarshaller(this);
         aspectSystem.addAspect(aspect);
-        aspectFactory = aspectSystem;
     }
 
     /**

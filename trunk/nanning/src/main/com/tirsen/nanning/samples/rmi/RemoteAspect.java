@@ -48,7 +48,6 @@ public class RemoteAspect extends PointcutAspect implements MethodInterceptor {
                 if (throwable == null) {
                     throwable = new RuntimeException("Remote error but exception was null");
                 }
-                StackTraceElement
                 throw throwable.fillInStackTrace();
             }
             return result;
