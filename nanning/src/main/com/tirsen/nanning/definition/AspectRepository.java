@@ -23,10 +23,10 @@ import org.apache.commons.logging.LogFactory;
 /**
  * TODO document AspectRepository
  *
- * <!-- $Id: AspectRepository.java,v 1.6 2003-03-21 17:11:11 lecando Exp $ -->
+ * <!-- $Id: AspectRepository.java,v 1.7 2003-04-16 13:56:00 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class AspectRepository implements AspectFactory {
     private static AspectRepository instance;
@@ -117,11 +117,11 @@ public class AspectRepository implements AspectFactory {
         return aspectClasses.values();
     }
 
-    public Object newInstance(Object aspectInterface) {
+    public Object newInstance(Class aspectInterface) {
         return newInstance(aspectInterface, null);
     }
 
-    public Object newInstance(Object aspectInterface, Object[] targets) {
+    public Object newInstance(Class aspectInterface, Object[] targets) {
         assert aspectInterface instanceof Class : "aspect-classes are identified by the interface-class of their first mixin";
         Object instance = getClass((Class) aspectInterface).newInstance(targets);
         return instance;

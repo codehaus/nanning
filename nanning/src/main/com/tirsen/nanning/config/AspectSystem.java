@@ -20,7 +20,7 @@ public class AspectSystem implements AspectFactory {
         aspects.add(new PointcutAspect(pointcut));
     }
 
-    public Object newInstance(Object classIdentifier) {
+    public Object newInstance(Class classIdentifier) {
         AspectInstance aspectInstance = new AspectInstance(this, classIdentifier);
         for (Iterator iterator = aspects.iterator(); iterator.hasNext();) {
             Aspect aspect = (Aspect) iterator.next();
@@ -29,7 +29,7 @@ public class AspectSystem implements AspectFactory {
         return aspectInstance.getProxy();
     }
 
-    public Object newInstance(Object classIdentifier, Object[] targets) {
+    public Object newInstance(Class classIdentifier, Object[] targets) {
         Object object = newInstance(classIdentifier);
         List targetsList = new ArrayList(Arrays.asList(targets));
         Collection mixins = Aspects.getAspectInstance(object).getMixins();

@@ -11,7 +11,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * TODO document Identity
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public class Identity implements Serializable {
     static final long serialVersionUID = 716500751463534855L;
@@ -34,7 +34,7 @@ public class Identity implements Serializable {
 
     public Object resolve(AspectFactory aspectFactory, IdentifyingSystem system) {
         if (isStatelessService(objectClass)) {
-            return aspectFactory.newInstance(identifier);
+            return aspectFactory.newInstance((Class) identifier);
         }
         if (isEntity(objectClass)) {
             long oid = ((Long) identifier).longValue();

@@ -9,11 +9,11 @@ import com.tirsen.nanning.attribute.AbstractAttributesTest;
 public class SerializationTest extends AbstractAttributesTest {
     public void testChangedAspectFactoryBetweenSerializations() throws IOException, ClassNotFoundException {
         AspectFactory singleAspectFactory = new AspectFactory() {
-            public Object newInstance(Object classIdentifier) {
+            public Object newInstance(Class classIdentifier) {
                 return createSingleMixin().getProxy();
             }
 
-            public Object newInstance(Object classIdentifier, Object[] targets) {
+            public Object newInstance(Class classIdentifier, Object[] targets) {
                 AspectInstance aspectInstance = createSingleMixin();
                 aspectInstance.setTarget(Intf.class, targets[0]);
                 return aspectInstance.getProxy();
@@ -21,11 +21,11 @@ public class SerializationTest extends AbstractAttributesTest {
         };
 
         AspectFactory multipleAspectFactory = new AspectFactory() {
-            public Object newInstance(Object classIdentifier) {
+            public Object newInstance(Class classIdentifier) {
                 return createMultiMixin().getProxy();
             }
 
-            public Object newInstance(Object classIdentifier, Object[] targets) {
+            public Object newInstance(Class classIdentifier, Object[] targets) {
                 AspectInstance aspectInstance = createMultiMixin();
                 aspectInstance.setTarget(Intf.class, targets[0]);
                 if (targets.length > 1) {

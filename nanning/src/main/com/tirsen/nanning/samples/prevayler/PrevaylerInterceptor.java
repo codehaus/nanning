@@ -13,7 +13,7 @@ import com.tirsen.nanning.definition.SingletonInterceptor;
  * TODO document PrevaylerInterceptor
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public class PrevaylerInterceptor implements SingletonInterceptor, FilterMethodsInterceptor, ConstructionInterceptor {
 
@@ -33,7 +33,7 @@ public class PrevaylerInterceptor implements SingletonInterceptor, FilterMethods
         // only give object ID's if they are created inside Prevayler
         if (CurrentPrevayler.isInTransaction()) {
             if (!CurrentPrevayler.getSystem().hasObjectID(object)) {
-                CurrentPrevayler.getSystem().registerObjectID(invocation.getProxy());
+                CurrentPrevayler.getSystem().registerObjectID(object);
             }
         }
         return object;
