@@ -23,5 +23,13 @@ public abstract class AbstractPointcut implements Pointcut {
         return (Method[]) methods.toArray(new Method[methods.size()]);
     }
 
+    public boolean adviseInstance(AspectInstance instance) {
+        return true;
+    }
+
+    public boolean adviseMixin(MixinInstance mixin) {
+        return true;
+    }
+
     protected abstract boolean adviseMethod(Method method);
 }

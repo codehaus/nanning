@@ -16,10 +16,12 @@ import com.tirsen.nanning.ConstructionInterceptor;
 /**
  * The definition of an aspected object, specifies interfaces, interceptors and target-objects.
  *
- * <!-- $Id: AspectClass.java,v 1.9 2003-05-11 13:40:52 tirsen Exp $ -->
+ * <!-- $Id: AspectClass.java,v 1.10 2003-05-22 20:18:32 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
+ *
+ * @deprecated please use the new {@link com.tirsen.nanning.config.AspectSystem} framework instead.
  */
 public class AspectClass {
     private final List aspectDefinitions = new ArrayList();

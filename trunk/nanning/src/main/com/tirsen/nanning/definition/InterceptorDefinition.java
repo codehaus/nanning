@@ -17,10 +17,12 @@ import com.tirsen.nanning.*;
 /**
  * TODO document InterceptorDefinition
  *
- * <!-- $Id: InterceptorDefinition.java,v 1.6 2003-05-11 13:40:52 tirsen Exp $ -->
+ * <!-- $Id: InterceptorDefinition.java,v 1.7 2003-05-22 20:18:32 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
+ *
+ * @deprecated please use the new {@link com.tirsen.nanning.config.AspectSystem} framework instead.
  */
 public class InterceptorDefinition {
     private final Class interceptorClass;

@@ -31,4 +31,12 @@ public class Introductor implements Aspect {
         }
         aspectInstance.addMixin(mixinInstance);
     }
+
+    public Class getInterfaceClass() {
+        return interfaceClass;
+    }
+
+    public Class getTargetClass() {
+        return targetClass;
+    }
 }

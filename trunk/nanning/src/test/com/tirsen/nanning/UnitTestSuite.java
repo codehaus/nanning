@@ -16,6 +16,7 @@ import com.tirsen.nanning.samples.rmi.RemoteTest;
 import com.tirsen.nanning.samples.CacheTest;
 import com.tirsen.nanning.samples.CacheInterceptorTest;
 import com.tirsen.nanning.samples.ProfilerTest;
+import com.tirsen.nanning.xml.AspectSystemParserTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -23,10 +24,10 @@ import junit.framework.TestSuite;
 /**
  * TODO document UnitTestSuite
  *
- * <!-- $Id: UnitTestSuite.java,v 1.18 2003-05-11 14:49:15 tirsen Exp $ -->
+ * <!-- $Id: UnitTestSuite.java,v 1.19 2003-05-22 20:18:35 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public class UnitTestSuite {
     ///CLOVER:OFF
@@ -59,6 +60,8 @@ public class UnitTestSuite {
         suite.addTestSuite(AspectSystemTest.class);
         suite.addTestSuite(PointcutTest.class);
         suite.addTestSuite(InterceptorAspectTest.class);
+
+        suite.addTestSuite(AspectSystemParserTest.class);
         return suite;
     }
     ///CLOVER:ON

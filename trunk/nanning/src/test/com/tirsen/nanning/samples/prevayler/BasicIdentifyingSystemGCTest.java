@@ -28,7 +28,9 @@ public class BasicIdentifyingSystemGCTest extends TestCase {
 
         TestUtils.gc();
 
-        assertFalse(basicIdentifyingSystem.isIDRegistered(objectID));
+        assertFalse("this test uses a trick to provoke a garbage collect of a specific object, " +
+                    "in some situations it fails even if it's not necessarily an error", 
+                basicIdentifyingSystem.isIDRegistered(objectID));
         assertTrue(basicIdentifyingSystem.hasNoRegisteredObjects());
     }
 }

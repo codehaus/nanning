@@ -24,10 +24,12 @@ import org.apache.commons.logging.LogFactory;
 /**
  * TODO document AspectRepository
  *
- * <!-- $Id: AspectRepository.java,v 1.11 2003-05-12 13:43:53 lecando Exp $ -->
+ * <!-- $Id: AspectRepository.java,v 1.12 2003-05-22 20:18:32 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.11 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.12 $
+ * 
+ * @deprecated please use the new {@link com.tirsen.nanning.config.AspectSystem} framework instead.
  */
 public class AspectRepository implements AspectFactory {
     private static AspectRepository instance;

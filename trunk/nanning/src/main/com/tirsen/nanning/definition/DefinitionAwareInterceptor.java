@@ -14,12 +14,13 @@ import com.tirsen.nanning.MethodInterceptor;
  *
  * TODO document DefinitionAwareInterceptor
  *
- * <!-- $Id: DefinitionAwareInterceptor.java,v 1.4 2003-05-11 13:40:52 tirsen Exp $ -->
+ * <!-- $Id: DefinitionAwareInterceptor.java,v 1.5 2003-05-22 20:18:32 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
+ *
+ * @deprecated please use the new {@link com.tirsen.nanning.config.AspectSystem} framework instead.
  */
-
 public interface DefinitionAwareInterceptor extends MethodInterceptor {
     void setInterceptorDefinition(InterceptorDefinition interceptorDefinition);
 }

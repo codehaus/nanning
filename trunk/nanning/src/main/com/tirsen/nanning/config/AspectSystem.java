@@ -28,7 +28,7 @@ public class AspectSystem implements AspectFactory {
         return aspectInstance;
     }
 
-    private void advice(AspectInstance aspectInstance) {
+    protected void advice(AspectInstance aspectInstance) {
         for (Iterator aspectIterator = aspects.iterator(); aspectIterator.hasNext();) {
             Aspect aspect = (Aspect) aspectIterator.next();
 
@@ -36,7 +36,7 @@ public class AspectSystem implements AspectFactory {
         }
     }
 
-    private void adviceMixins(AspectInstance aspectInstance) {
+    protected void adviceMixins(AspectInstance aspectInstance) {
         for (Iterator mixinIterator = aspectInstance.getMixins().iterator(); mixinIterator.hasNext();) {
             MixinInstance mixinInstance = (MixinInstance) mixinIterator.next();
 
@@ -47,7 +47,7 @@ public class AspectSystem implements AspectFactory {
         }
     }
 
-    private void introduce(AspectInstance aspectInstance) {
+    protected void introduce(AspectInstance aspectInstance) {
         for (Iterator iterator = aspects.iterator(); iterator.hasNext();) {
             Aspect aspect = (Aspect) iterator.next();
             aspect.introduce(aspectInstance);
@@ -56,5 +56,9 @@ public class AspectSystem implements AspectFactory {
 
     public void reinitialize(AspectInstance aspectInstance) {
         adviceMixins(aspectInstance);
+    }
+
+    public List getAspects() {
+        return Collections.unmodifiableList(aspects);
     }
 }

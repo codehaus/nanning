@@ -7,6 +7,7 @@ import com.tirsen.nanning.Invocation;
 import junit.framework.TestCase;
 
 import java.lang.reflect.Method;
+import java.util.Collections;
 
 public class InterceptorAspectTest extends TestCase {
     private AspectInstance instance;
@@ -17,6 +18,7 @@ public class InterceptorAspectTest extends TestCase {
 
     public static interface Interface {
         void method();
+
         void method2();
     }
 
@@ -41,13 +43,17 @@ public class InterceptorAspectTest extends TestCase {
 
     public void testSingleton() {
         InterceptorAspect interceptorAspect = new InterceptorAspect(interceptor);
-        interceptorAspect.adviseMixin(instance, mixin);
-        assertTrue(mixin.getAllInterceptors().contains(interceptor));
+        assertEquals(InterceptorAspect.SINGLETON, interceptorAspect.getStateManagement());
+        interceptorAspect.advise(instance);
+        assertEquals(Collections.singleton(interceptor), mixin.getAllInterceptors());
+        assertEquals(Collections.singletonList(interceptor), mixin.getInterceptorsForMethod(method));
+        assertEquals(Collections.singletonList(interceptor), mixin.getInterceptorsForMethod(method2));
     }
 
     public void testPerMethod() {
         InterceptorAspect interceptorAspect = new InterceptorAspect(NOPInterceptor.class, InterceptorAspect.PER_METHOD);
-        interceptorAspect.adviseMixin(instance, mixin);
+        assertEquals(InterceptorAspect.PER_METHOD, interceptorAspect.getStateManagement());
+        interceptorAspect.advise(instance);
         assertEquals(2, mixin.getAllInterceptors().size());
         NOPInterceptor interceptor = (NOPInterceptor) mixin.getInterceptorsForMethod(method).get(0);
         NOPInterceptor interceptor2 = (NOPInterceptor) mixin.getInterceptorsForMethod(method2).get(0);
@@ -61,7 +67,7 @@ public class InterceptorAspectTest extends TestCase {
             }
         }, interceptor);
         assertEquals(0, interceptorAspect.getMethodsToAdvise(instance, mixin).length);
-        interceptorAspect.adviseMixin(instance, mixin);
+        interceptorAspect.advise(instance);
         assertEquals(0, mixin.getAllInterceptors().size());
     }
 
