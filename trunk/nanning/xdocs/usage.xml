@@ -135,7 +135,7 @@ assertEquals("argMethodValue", Attributes.getAttribute(argMethod, "methodAttribu
 <aspect-repository>
     <aspect>
         <interface>
-            com.tirsen.nanning.SideAspect
+            com.tirsen.nanning.TestMixin
         </interface>
         <interceptor>
             com.tirsen.nanning.NullInterceptor
@@ -144,7 +144,7 @@ assertEquals("argMethodValue", Attributes.getAttribute(argMethod, "methodAttribu
             com.tirsen.nanning.MockInterceptor
         </interceptor>
         <target>
-            com.tirsen.nanning.SideAspectImpl
+            com.tirsen.nanning.TestMixinImpl
         </target>
     </aspect>
     <class>
@@ -161,7 +161,7 @@ assertEquals("argMethodValue", Attributes.getAttribute(argMethod, "methodAttribu
             com.tirsen.nanning.Impl
         </target>
 
-        <aspect interface="com.tirsen.nanning.SideAspect" />
+        <aspect interface="com.tirsen.nanning.TestMixin" />
     </class>
 </aspect-repository>
                 ]]></source>

@@ -13,10 +13,10 @@ import junit.framework.TestCase;
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: AspectClassTest.java,v 1.9 2003-01-24 13:29:30 tirsen Exp $ -->
+ * <!-- $Id: AspectClassTest.java,v 1.10 2003-02-06 20:33:42 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class AspectClassTest extends TestCase
 {
@@ -64,10 +64,10 @@ public class AspectClassTest extends TestCase
         aspectClass.addInterceptor(NullInterceptor.class);
         aspectClass.setTarget(Impl.class);
         AspectDefinition aspectDefinition = new AspectDefinition();
-        aspectDefinition.setInterface(SideAspect.class);
+        aspectDefinition.setInterface(TestMixin.class);
         aspectDefinition.addInterceptor(NullInterceptor.class);
         aspectDefinition.addInterceptor(MockInterceptor.class);
-        aspectDefinition.setTarget(SideAspectImpl.class);
+        aspectDefinition.setTarget(TestMixinImpl.class);
         aspectClass.addAspect(aspectDefinition);
 
         Object bigMomma = aspectClass.newInstance();
@@ -90,14 +90,14 @@ public class AspectClassTest extends TestCase
         classInterceptor.expectMethod(Intf.class.getMethod("call", null));
         classInterceptor.expectTarget(target);
 
-        SideAspectImpl sideTarget = (SideAspectImpl) Aspects.getTarget(bigMomma, SideAspect.class);
+        TestMixinImpl sideTarget = (TestMixinImpl) Aspects.getTarget(bigMomma, TestMixin.class);
         MockInterceptor sideInterceptor =
-                (MockInterceptor) (Aspects.getInterceptors(bigMomma, SideAspect.class.getMethod("sideCall", null))[1]);
+                (MockInterceptor) (Aspects.getInterceptors(bigMomma, TestMixin.class.getMethod("mixinCall", null))[1]);
         sideInterceptor.expectAtIndex(1);
         sideInterceptor.expectNumberOfInterceptors(2);
         sideInterceptor.expectCalledTimes(1);
         sideInterceptor.expectProxy(bigMomma);
-        sideInterceptor.expectMethod(SideAspect.class.getMethod("sideCall", null));
+        sideInterceptor.expectMethod(TestMixin.class.getMethod("mixinCall", null));
         sideInterceptor.expectTarget(sideTarget);
 
         // this calls the class-target and the class-interceptor
@@ -106,7 +106,7 @@ public class AspectClassTest extends TestCase
         classInterceptor.expectTarget(null);
         classInterceptor.expectMethod(null);
         classInterceptor.expectNumberOfInterceptors(2);
-        ((SideAspect) bigMomma).sideCall();
+        ((TestMixin) bigMomma).mixinCall();
 
         classInterceptor.verify();
         target.verify();

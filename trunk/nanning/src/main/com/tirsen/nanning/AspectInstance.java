@@ -24,10 +24,10 @@ import java.util.*;
 /**
  * TODO document AspectInstance
  *
- * <!-- $Id: AspectInstance.java,v 1.24 2003-01-24 13:29:29 tirsen Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.25 2003-02-06 20:33:41 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  */
 public class AspectInstance implements InvocationHandler, Externalizable {
     private Object proxy;
@@ -51,8 +51,8 @@ public class AspectInstance implements InvocationHandler, Externalizable {
     public AspectInstance() {
     }
 
-    public AspectInstance(AspectRepository aspectRepository, Object classIdentifier) {
-        this.aspectFactory = aspectRepository;
+    public AspectInstance(AspectFactory aspectFactory, Object classIdentifier) {
+        this.aspectFactory = aspectFactory;
         this.classIdentifier = classIdentifier;
     }
 
@@ -118,7 +118,7 @@ public class AspectInstance implements InvocationHandler, Externalizable {
 
     private MixinInstance getMixinForInterface(Class interfaceClass) {
         MixinInstance mixinInstance = (MixinInstance) mixins.get(interfaceClass);
-        assert mixinInstance != null : "there is not mixin for interface " + interfaceClass;
+        assert mixinInstance != null : "there is no mixin for interface " + interfaceClass;
         return mixinInstance;
     }
 
@@ -279,5 +279,16 @@ public class AspectInstance implements InvocationHandler, Externalizable {
                 .append("class", classIdentifier)
                 .append("mixins", mixinsList)
                 .toString() + "}";
+    }
+
+    public Collection getMixins() {
+        return Collections.unmodifiableCollection(mixinsList);
+    }
+
+    public void addConstructionInterceptor(ConstructionInterceptor constructionInterceptor) {
+        if (constructionInterceptors == null) {
+            constructionInterceptors = new ArrayList();
+        }
+        constructionInterceptors.add(constructionInterceptor);
     }
 }

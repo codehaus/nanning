@@ -12,11 +12,11 @@ public class InheritanceTest extends TestCase {
     public static class InheritedImpl extends Impl implements InheritedIntf {
     }
 
-    public static interface InheritedSideAspect extends Intf, SideAspect
+    public static interface InheritedSideAspect extends Intf, TestMixin
     {
     }
 
-    public static class InheritedSideAspectImpl extends SideAspectImpl implements InheritedSideAspect
+    public static class InheritedSideAspectImpl extends TestMixinImpl implements InheritedSideAspect
     {
         public void call() {
             fail("should never be called");

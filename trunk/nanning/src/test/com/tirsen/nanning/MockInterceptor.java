@@ -13,13 +13,12 @@ import java.lang.reflect.Method;
 /**
  * TODO document MockInterceptor
  *
- * <!-- $Id: MockInterceptor.java,v 1.3 2003-01-24 13:29:30 tirsen Exp $ -->
+ * <!-- $Id: MockInterceptor.java,v 1.4 2003-02-06 20:33:42 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
-public class MockInterceptor implements MethodInterceptor
-{
+public class MockInterceptor implements MethodInterceptor {
     private Object expectTarget;
     private Object actualTarget;
     private Object expectProxy;
@@ -32,18 +31,17 @@ public class MockInterceptor implements MethodInterceptor
     private int expectNumberOfInterceptors = -1;
     private int actualNumberOfInterceptors;
 
-    public MockInterceptor()
-    {
+    public MockInterceptor() {
     }
 
-    public void verify()
-    {
+    public void verify() {
         Assert.assertTrue("was never called", calledTimes != 0);
-        if (expectCalledTimes != -1)
-        {
+        if (expectCalledTimes != -1) {
             Assert.assertEquals("was not called correct number of times", expectCalledTimes, calledTimes);
         }
-        Assert.assertSame("expectProxy was not correct during call", expectProxy, actualProxy);
+        if (expectProxy != null) {
+            Assert.assertSame("expectProxy was not correct during call", expectProxy, actualProxy);
+        }
 
         // reset after verify
         expectCalledTimes = -1;
@@ -54,8 +52,7 @@ public class MockInterceptor implements MethodInterceptor
         expectTarget = null;
     }
 
-    public Object invoke(Invocation invocation) throws Throwable
-    {
+    public Object invoke(Invocation invocation) throws Throwable {
         calledTimes++;
         actualTarget = invocation.getTarget();
         actualProxy = invocation.getProxy();
@@ -67,35 +64,28 @@ public class MockInterceptor implements MethodInterceptor
         // check that getNumberOfInterceptors is correct
         actualNumberOfInterceptors = invocation.getNumberOfInterceptors();
         invocation.getInterceptor(actualNumberOfInterceptors - 1); // should work...
-        try
-        {
+        try {
             invocation.getInterceptor(actualNumberOfInterceptors); // should not work...
             ///CLOVER:OFF
             Assert.fail("Invocation.getNumberOfInterceptors doesn't work.");
             ///CLOVER:ON
-        }
-        catch (Exception shouldHappen)
-        {
+        } catch (Exception shouldHappen) {
         }
 
-        if (expectTarget != null)
-        {
-            Assert.assertSame("real object was not correct during sideCall", expectTarget, actualTarget);
+        if (expectTarget != null) {
+            Assert.assertSame("real object was not correct during mixinCall", expectTarget, actualTarget);
         }
-        if (expectMethod != null)
-        {
+        if (expectMethod != null) {
             Assert.assertEquals(expectMethod, invocation.getMethod());
         }
 
         Assert.assertNull(invocation.getArgs());
 
-        if (expectAtIndex != -1)
-        {
+        if (expectAtIndex != -1) {
             Assert.assertEquals("interceptor not at correct index during call",
                     expectAtIndex, actualAtIndex);
         }
-        if (expectNumberOfInterceptors != -1)
-        {
+        if (expectNumberOfInterceptors != -1) {
             Assert.assertEquals("number of interceptor not at correct index during call",
                     expectNumberOfInterceptors, actualNumberOfInterceptors);
         }
@@ -103,23 +93,19 @@ public class MockInterceptor implements MethodInterceptor
         return invocation.invokeNext();
     }
 
-    public void expectTarget(Object o)
-    {
+    public void expectTarget(Object o) {
         expectTarget = o;
     }
 
-    public void expectMethod(Method expectMethod)
-    {
+    public void expectMethod(Method expectMethod) {
         this.expectMethod = expectMethod;
     }
 
-    public void expectProxy(Object proxy)
-    {
+    public void expectProxy(Object proxy) {
         this.expectProxy = proxy;
     }
 
-    public void expectCalledTimes(int i)
-    {
+    public void expectCalledTimes(int i) {
         this.expectCalledTimes = i;
     }
 
@@ -127,13 +113,11 @@ public class MockInterceptor implements MethodInterceptor
      * What index should this interceptor be at when called.
      * @param index
      */
-    public void expectAtIndex(int index)
-    {
+    public void expectAtIndex(int index) {
         this.expectAtIndex = index;
     }
 
-    public void expectNumberOfInterceptors(int index)
-    {
+    public void expectNumberOfInterceptors(int index) {
         this.expectNumberOfInterceptors = index;
     }
 }

@@ -3,7 +3,7 @@
 <aspect-repository>
     <aspect>
         <interface>
-            com.tirsen.nanning.SideAspect
+            com.tirsen.nanning.TestMixin
         </interface>
         <interceptor>
             com.tirsen.nanning.NullInterceptor
@@ -12,7 +12,7 @@
             com.tirsen.nanning.MockInterceptor
         </interceptor>
         <target>
-            com.tirsen.nanning.SideAspectImpl
+            com.tirsen.nanning.TestMixinImpl
         </target>
     </aspect>
     <class>
@@ -29,6 +29,6 @@
             com.tirsen.nanning.Impl
         </target>
 
-        <aspect interface="com.tirsen.nanning.SideAspect" />
+        <aspect interface="com.tirsen.nanning.TestMixin" />
     </class>
 </aspect-repository>

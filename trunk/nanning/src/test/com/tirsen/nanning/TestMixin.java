@@ -7,14 +7,14 @@
 package com.tirsen.nanning;
 
 /**
- * TODO document SideAspect
+ * TODO document TestMixin
  *
- * <!-- $Id: SideAspect.java,v 1.1 2002-11-17 14:03:34 tirsen Exp $ -->
+ * <!-- $Id: TestMixin.java,v 1.1 2003-02-06 20:33:42 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
  * @version $Revision: 1.1 $
  */
-public interface SideAspect
+public interface TestMixin
 {
-    void sideCall();
+    void mixinCall();
 }

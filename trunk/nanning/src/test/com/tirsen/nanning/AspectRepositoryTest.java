@@ -12,10 +12,10 @@ import junit.framework.TestCase;
 /**
  * TODO document AspectRepositoryTest
  *
- * <!-- $Id: AspectRepositoryTest.java,v 1.6 2003-01-24 13:29:30 tirsen Exp $ -->
+ * <!-- $Id: AspectRepositoryTest.java,v 1.7 2003-02-06 20:33:42 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class AspectRepositoryTest extends TestCase {
     public void testEmpty() {
@@ -50,13 +50,13 @@ public class AspectRepositoryTest extends TestCase {
 
         {
             AspectDefinition aspectDefinition = new AspectDefinition();
-            aspectDefinition.setInterface(SideAspect.class);
+            aspectDefinition.setInterface(TestMixin.class);
             aspectDefinition.addInterceptor(aspectRepository.getInterceptor(MockInterceptor.class));
             aspectDefinition.addInterceptor(aspectRepository.getInterceptor(NullInterceptor.class));
-            aspectDefinition.setTarget(SideAspectImpl.class);
+            aspectDefinition.setTarget(TestMixinImpl.class);
             aspectRepository.defineAspect(aspectDefinition);
 
-            assertSame(aspectDefinition, aspectRepository.getAspect(SideAspect.class));
+            assertSame(aspectDefinition, aspectRepository.getAspect(TestMixin.class));
         }
 
         {
@@ -65,7 +65,7 @@ public class AspectRepositoryTest extends TestCase {
             aspectClass.addInterceptor(aspectRepository.getInterceptor(MockInterceptor.class));
             aspectClass.addInterceptor(aspectRepository.getInterceptor(NullInterceptor.class));
             aspectClass.setTarget(Impl.class);
-            aspectClass.addAspect(aspectRepository.getAspect(SideAspect.class));
+            aspectClass.addAspect(aspectRepository.getAspect(TestMixin.class));
             aspectRepository.defineClass(aspectClass);
 
             assertSame(aspectClass, aspectRepository.getClass(Intf.class));
