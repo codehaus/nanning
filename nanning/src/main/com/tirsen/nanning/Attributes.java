@@ -28,10 +28,10 @@ import java.util.*;
  * Hmm... wait, a minute, there's some support for this in QDox, maybe that will work...
  * -- jon
 
- * <!-- $Id: Attributes.java,v 1.9 2002-12-04 07:45:32 tirsen Exp $ -->
+ * <!-- $Id: Attributes.java,v 1.10 2002-12-08 12:57:45 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 
 public class Attributes
@@ -54,10 +54,8 @@ public class Attributes
 
     private static String getProperty(Class klass, String key)
     {
-        System.out.println("key = " + key);
         Properties properties = getProperties(klass);
         String value = properties.getProperty(key);
-        System.out.println("value = " + value);
         return value;
     }
 

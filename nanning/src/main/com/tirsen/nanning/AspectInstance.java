@@ -14,10 +14,10 @@ import java.lang.reflect.Method;
 /**
  * TODO document AspectInstance
  *
- * <!-- $Id: AspectInstance.java,v 1.16 2002-12-03 17:04:35 lecando Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.17 2002-12-08 12:57:45 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.16 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.17 $
  */
 class AspectInstance implements InvocationHandler {
     private static final Method OBJECT_EQUALS_METHOD;
@@ -42,16 +42,16 @@ class AspectInstance implements InvocationHandler {
         this.aspectClass = aspectClass;
     }
 
-    void init(Object proxy) {
-        this.proxy = proxy;
-        invokeConstructor();
+    Object init(Object proxy) {
+        return this.proxy = invokeConstructor(proxy);
     }
 
-    private void invokeConstructor() {
+    private Object invokeConstructor(Object proxy) {
         for (int i = 0; i < sideAspectInstances.length; i++) {
             SideAspectInstance sideAspectInstance = sideAspectInstances[i];
-            sideAspectInstance.invokeConstructor(proxy);
+            proxy = sideAspectInstance.invokeConstructor(proxy);
         }
+        return proxy;
     }
 
     public Object invoke(Object proxy, Method method, Object[] args)

@@ -18,7 +18,13 @@ public class MyConstructCommand implements ConstructCommand {
     }
 
     public Serializable execute(PrevalentSystem prevalentSystem) throws Exception {
-        PrevaylerTest.getNoPrevaylerAspectRepository().newInstance(interfaceClass);
-        return null;
+        PrevaylerTest.getPrevaylerInterceptor().enterTransaction();
+        try {
+            Object o = PrevaylerTest.getAspectRepository().newInstance(interfaceClass);
+            ((MySystem) prevalentSystem).addObject(o);
+            return (Serializable) o;
+        } finally {
+            PrevaylerTest.getPrevaylerInterceptor().exitTransaction();
+        }
     }
 }

@@ -15,10 +15,10 @@ import org.apache.commons.logging.LogFactory;
 /**
  * TODO document TraceInterceptor
  *
- * <!-- $Id: TraceInterceptor.java,v 1.4 2002-12-03 17:14:56 lecando Exp $ -->
+ * <!-- $Id: TraceInterceptor.java,v 1.5 2002-12-08 12:57:45 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.4 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.5 $
  */
 public class TraceInterceptor implements MethodInterceptor, SingletonInterceptor
 {
@@ -53,13 +53,13 @@ public class TraceInterceptor implements MethodInterceptor, SingletonInterceptor
         catch (Throwable e)
         {
             watch.stop();
-            log.error("<<< " + methodCallMessage + " threw exception, took " + watch.getTimeSpent() + " ms", e);
+            log.error("<<< " + methodCallMessage + " threw exception, took " + (int) watch.getTimeSpent() + " ms", e);
             throw e;
         }
         finally
         {
             watch.stop();
-            log.debug("<<< " + methodCallMessage + ", took " + watch.getTimeSpent() + " ms, result " + result);
+            log.debug("<<< " + methodCallMessage + ", took " + (int) watch.getTimeSpent() + " ms, result " + result);
         }
     }
 }

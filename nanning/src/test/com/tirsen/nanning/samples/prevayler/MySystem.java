@@ -23,4 +23,16 @@ public class MySystem implements PrevalentSystem {
     public List getObjects() {
         return objects;
     }
+
+    public void addObject(Object o) {
+        objects.add(o);
+    }
+
+    public int getOID(Object object) {
+        return objects.indexOf(object);
+    }
+
+    public Object getObject(int oid) {
+        return objects.get(oid);
+    }
 }

@@ -21,10 +21,10 @@ import com.tirsen.nanning.Attributes;
 /**
  * TODO document AttributesTest
  *
- * <!-- $Id: AttributesTest.java,v 1.3 2002-12-04 07:45:33 tirsen Exp $ -->
+ * <!-- $Id: AttributesTest.java,v 1.4 2002-12-08 12:57:45 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class AttributesTest extends TestCase
 {
@@ -69,7 +69,7 @@ public class AttributesTest extends TestCase
     }
 
     public static void compileAttributes() {
-        if (attributesCompiled) {
+        if (!attributesCompiled) {
             attributesCompiled = true;
             File targetDir = new File("target" + File.separator + "attributes");
             try {
