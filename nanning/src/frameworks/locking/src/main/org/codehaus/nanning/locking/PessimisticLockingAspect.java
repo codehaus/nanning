@@ -3,19 +3,17 @@ package org.codehaus.nanning.locking;
 import org.codehaus.nanning.AspectInstance;
 import org.codehaus.nanning.Invocation;
 import org.codehaus.nanning.MethodInterceptor;
-import org.codehaus.nanning.MixinInstance;
-import org.codehaus.nanning.config.AllPointcut;
+import org.codehaus.nanning.config.P;
 import org.codehaus.nanning.config.Pointcut;
 
 public class PessimisticLockingAspect extends SimpleMixinAspect implements Lockable {
     private boolean islocked;
     private Pointcut lockingPointcut;
-
-    public PessimisticLockingAspect() {
-    }
+    private Pointcut lockingPointcutExcludingLockable;
 
     public PessimisticLockingAspect(Pointcut lockingPointcut) {
         this.lockingPointcut = lockingPointcut;
+        lockingPointcutExcludingLockable = P.and(this.lockingPointcut, P.not(P.isMixinInterface(Lockable.class)));
     }
 
     public void lock() {
@@ -30,25 +28,8 @@ public class PessimisticLockingAspect extends SimpleMixinAspect implements Locka
         return lockable.isLocked();
     }
 
-    /**
-     * Override to change methods that requires lock-checks in a subclass.
-     * @return Pointcut defining what methods require lock-checks.
-     */
-    protected Pointcut lockingPointcut() {
-        return lockingPointcut;
-    }
-
     protected void doAdvise(AspectInstance aspectInstance) {
-        // remove methods in Locking-mixin, otherwise it won't be possible to unlock a locked object 
-        Pointcut pointcut =
-                P.and(lockingPointcut(),
-                        new AllPointcut() {
-                            public boolean adviseMixin(MixinInstance mixin) {
-                                return mixin.getInterfaceClass() != Lockable.class;
-                            }
-                        });
-
-        pointcut.advise(aspectInstance, new MethodInterceptor() {
+        lockingPointcutExcludingLockable.advise(aspectInstance, new MethodInterceptor() {
             public Object invoke(Invocation invocation) throws Throwable {
                 if (islocked) {
                     throw new LockedException();

@@ -1,19 +1,15 @@
 package org.codehaus.nanning.prevayler;
 
-import java.lang.reflect.Method;
-
 import org.codehaus.nanning.AspectInstance;
-import org.codehaus.nanning.MixinInstance;
-import org.codehaus.nanning.prevayler.CheckTransactionUnsupportedInterceptor;
-import org.codehaus.nanning.attribute.Attributes;
 import org.codehaus.nanning.config.Aspect;
-import org.codehaus.nanning.config.AttributePointcut;
+import org.codehaus.nanning.config.P;
+import org.codehaus.nanning.config.Pointcut;
 
 /**
  * TODO document PrevaylerInterceptor
  *
  * @author <a href="mailto:jon_tirsen@yahoo.org">Jon Tirsen</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class PrevaylerAspect implements Aspect {
     private TransactionUnsupportedInterceptor unsupportedInterceptor;
@@ -21,8 +17,8 @@ public class PrevaylerAspect implements Aspect {
     private PrevaylerInterceptor prevaylerInterceptor;
     private RegisterObjectInterceptor registerObjectInterceptor;
     
-    private AttributePointcut transactionUnsupportedPointcut = new AttributePointcut("transaction-unsupported");
-    private AttributePointcut transactionPointcut = new AttributePointcut("transaction");
+    private Pointcut transactionUnsupportedPointcut = P.methodAttribute("transaction-unsupported");
+    private Pointcut transactionPointcut = P.methodAttribute("transaction");
 
     public PrevaylerAspect() {
         this(false);

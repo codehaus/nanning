@@ -78,12 +78,11 @@ public class InterceptorAspectTest extends TestCase {
     }
 
     public void testFalsePointcut() {
-        InterceptorAspect interceptorAspect = new InterceptorAspect(new AbstractPointcut() {
-            public boolean adviseMethod(Method method) {
+        InterceptorAspect interceptorAspect = new InterceptorAspect(new Pointcut() {
+            public boolean adviseMethod(AspectInstance instance, MixinInstance mixin, Method method) {
                 return false;
             }
         }, interceptor);
-        assertEquals(0, interceptorAspect.getMethodsToAdvise(instance, mixin).length);
         interceptorAspect.advise(instance);
         assertEquals(0, mixin.getAllInterceptors().size());
     }

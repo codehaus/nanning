@@ -1,18 +1,12 @@
 package org.codehaus.nanning.locking;
 
+import junit.framework.TestCase;
 import org.codehaus.nanning.AspectInstance;
 import org.codehaus.nanning.MixinInstance;
-import org.codehaus.nanning.config.AllPointcut;
-import org.codehaus.nanning.config.Pointcut;
-import org.codehaus.nanning.config.AspectSystem;
-import junit.framework.TestCase;
+import org.codehaus.nanning.config.P;
 
 public class PessimisticLockingAspectTest extends TestCase {
-    private PessimisticLockingAspect lockAspect = new PessimisticLockingAspect() {
-        protected Pointcut lockingPointcut() {
-            return new AllPointcut();
-        }
-    };
+    private PessimisticLockingAspect lockAspect = new PessimisticLockingAspect(P.all());
 
     public static interface Interface {
         void method();
@@ -40,11 +34,6 @@ public class PessimisticLockingAspectTest extends TestCase {
     }
 
     public void testIntroduce() {
-        PessimisticLockingAspect lockAspect = new PessimisticLockingAspect() {
-            protected Pointcut lockingPointcut() {
-                return new AllPointcut();
-            }
-        };
         AspectInstance instance = createLockAspectedInstance(null);
         assertEquals(2, instance.getMixins().size());
         MixinInstance mixin = instance.getMixinForInterface(Lockable.class);

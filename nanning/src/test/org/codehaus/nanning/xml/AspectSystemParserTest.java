@@ -62,8 +62,8 @@ public class AspectSystemParserTest extends TestCase {
                 "</interceptor></aspect-system>";
         AspectSystem aspectSystem = aspectSystemParser.parse(xml);
         InterceptorAspect interceptorAspect = (InterceptorAspect) aspectSystem.getAspects().get(0);
-        assertTrue(interceptorAspect.getPointcut() instanceof AttributePointcut);
-        AttributePointcut attributePointcut = (AttributePointcut) interceptorAspect.getPointcut();
+        assertTrue(interceptorAspect.getPointcut() instanceof P.MethodAttribute);
+        P.MethodAttribute attributePointcut = (P.MethodAttribute) interceptorAspect.getPointcut();
         assertEquals("attribute", attributePointcut.getAttribute());
     }
 

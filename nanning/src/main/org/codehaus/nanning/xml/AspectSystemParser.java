@@ -77,7 +77,7 @@ public class AspectSystemParser {
     }
 
     private Pointcut parsePointcut(Element pointcutElement) {
-        return new AttributePointcut(pointcutElement.getAttribute("attribute"));
+        return P.methodAttribute(pointcutElement.getAttribute("attribute"));
     }
 
     private Aspect parseAspect(Element element) {

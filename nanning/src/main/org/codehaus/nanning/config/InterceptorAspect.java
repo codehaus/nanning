@@ -18,11 +18,11 @@ public class InterceptorAspect implements Aspect {
     private Pointcut pointcut;
 
     public InterceptorAspect(MethodInterceptor interceptor) {
-        this(new AllPointcut(), interceptor);
+        this(P.all(), interceptor);
     }
 
     public InterceptorAspect(Class interceptorClass, int stateManagement) {
-        this(new AllPointcut(), interceptorClass, stateManagement);
+        this(P.all(), interceptorClass, stateManagement);
     }
 
     public InterceptorAspect(Pointcut pointcut, Class interceptorClass, int stateManagement) {
@@ -66,10 +66,6 @@ public class InterceptorAspect implements Aspect {
     }
 
     public void introduce(AspectInstance instance) {
-    }
-
-    Method[] getMethodsToAdvise(AspectInstance instance, MixinInstance mixin) {
-        return pointcut.methodsToAdvise(instance, mixin);
     }
 
     public void advise(AspectInstance instance) {
