@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class ClassAttributes {
+
     private Class aClass;
     private Map classAttributes;
     private Map fieldAttributes;
@@ -34,7 +35,7 @@ public class ClassAttributes {
                         Field field = aClass.getDeclaredField(fieldName);
                         getMap(fieldAttributes, field).put(joinTail(parts, 2), attributeValue);
                     } catch (Exception e) {
-                        throw new AttributeException("Error while loading attributes, could not find field: " + fieldName, e);
+                        throw new AttributeException("Error while loading attributes, could not find field: " + fieldName + " for class " + aClass.getName(), e);
                     }
                 } else if ("method".equals(parts[0])) {
                     String methodSignature = parts[1];
@@ -42,7 +43,7 @@ public class ClassAttributes {
                     if (method != null) {
                         getMap(methodAttributes, method).put(joinTail(parts, 2), attributeValue);
                     } else {
-                        throw new AttributeException("Error while loading attributes, could not find method: " + methodSignature);
+                        throw new AttributeException("Error while loading attributes, could not find method: " + methodSignature + " for class " + aClass.getName());
                     }
                 } else {
                     throw new AttributeException("Invalid property " + propertyName);
