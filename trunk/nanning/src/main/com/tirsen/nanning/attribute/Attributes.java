@@ -28,10 +28,10 @@ import org.apache.commons.logging.LogFactory;
  * Hmm... wait, a minute, there's some support for this in QDox, maybe that will work...
  * -- jon
 
- * <!-- $Id: Attributes.java,v 1.8 2003-03-21 17:11:10 lecando Exp $ -->
+ * <!-- $Id: Attributes.java,v 1.9 2003-03-24 07:37:57 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 
 public class Attributes {
@@ -265,5 +265,9 @@ public class Attributes {
             classAttributesCache.put(aClass, classAttributes);
         }
         return classAttributes;
+    }
+
+    public static URL[] getSearchPath() {
+        return (URL[]) searchPaths.toArray(new URL[0]);
     }
 }

@@ -13,7 +13,7 @@ import com.tirsen.nanning.definition.SingletonInterceptor;
  * TODO document PrevaylerInterceptor
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public class PrevaylerInterceptor implements SingletonInterceptor, FilterMethodsInterceptor, ConstructionInterceptor {
 
@@ -40,7 +40,13 @@ public class PrevaylerInterceptor implements SingletonInterceptor, FilterMethods
     }
 
     public Object invoke(Invocation invocation) throws Throwable {
-        // only first call on objects already in Prevayler should result in a command in the log
+        /*
+        only first call on objects already in Prevayler should result in a command in the log
+        ie. the following conditions should be met:
+        1. there should be an active Prevayler
+        2. there should NOT be a current transaction
+        3. the target of the call has an object id in the current prevayler OR if the target is a service
+        */
 
         if (CurrentPrevayler.hasPrevayler()
                 && !CurrentPrevayler.isInTransaction()
