@@ -8,16 +8,13 @@ package com.tirsen.nanning;
 
 import java.lang.reflect.Proxy;
 
-import com.lecando.lcms.framework.CheckInitializedInterceptor;
-
-
 /**
  * Facade for accessing some important features of aspected objects and their definitions.
  *
- * <!-- $Id: Aspects.java,v 1.8 2002-11-22 17:22:09 lecando Exp $ -->
+ * <!-- $Id: Aspects.java,v 1.9 2002-11-24 12:29:09 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.8 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.9 $
  */
 public class Aspects
 {

@@ -9,16 +9,17 @@ package com.tirsen.nanning;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import com.tirsen.nanning.samples.TraceInterceptorTest;
+import com.tirsen.nanning.samples.ContractInterceptorTest;
 import com.tirsen.nanning.*;
 
 
 /**
  * TODO document UnitTestSuite
  *
- * <!-- $Id: UnitTestSuite.java,v 1.2 2002-11-18 20:56:30 tirsen Exp $ -->
+ * <!-- $Id: UnitTestSuite.java,v 1.3 2002-11-24 12:29:09 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class UnitTestSuite
 {
@@ -32,6 +33,7 @@ public class UnitTestSuite
         suite.addTestSuite(AttributesTest.class);
         suite.addTestSuite(TraceInterceptorTest.class);
         suite.addTestSuite(AspectsTest.class);
+        suite.addTestSuite(ContractInterceptorTest.class);
         return suite;
     }
     ///CLOVER:ON
