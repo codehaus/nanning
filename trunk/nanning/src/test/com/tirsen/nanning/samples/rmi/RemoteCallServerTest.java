@@ -52,8 +52,8 @@ public class RemoteCallServerTest extends AbstractAttributesTest {
         CurrentPrevayler.withPrevayler(prevayler, new Runnable() {
             public void run() {
                 // start server, server-threads will inherit the prevayler and the context-aspect-factory from this thread
-                remoteCallServer.setAspectFactory(serverAspectSystem);
                 remoteCallServer.start();
+                remoteCallServer.setAspectFactory(serverAspectSystem);
             }
         });
     }
@@ -64,7 +64,6 @@ public class RemoteCallServerTest extends AbstractAttributesTest {
     }
 
     public void testAuthenticatedCall() throws PrivilegedActionException {
-        System.out.println("1");
         // server side
         remoteCallServer.bind("MyStatelessService", serverAspectSystem.newInstance(MyStatelessService.class));
 
@@ -85,7 +84,6 @@ public class RemoteCallServerTest extends AbstractAttributesTest {
     }
 
     public void testStatelessRemoteCall() throws IOException, ClassNotFoundException {
-        System.out.println("2");
         // server side
         remoteCallServer.bind("MyStatelessService", serverAspectSystem.newInstance(MyStatelessService.class));
 
@@ -125,7 +123,6 @@ public class RemoteCallServerTest extends AbstractAttributesTest {
     }
 
     public void testStatefulRemoteCall() throws IOException, ClassNotFoundException {
-        System.out.println("3");
         // server side
         remoteCallServer.bind("MyStatefulService", serverAspectSystem.newInstance(MyStatefulService.class));
 
