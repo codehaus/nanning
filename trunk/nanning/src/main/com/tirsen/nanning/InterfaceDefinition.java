@@ -13,10 +13,10 @@ import java.util.Iterator;
 /**
  * Defines an interface that's to be added to an aspected object.
  *
- * <!-- $Id: InterfaceDefinition.java,v 1.2 2002-10-22 18:56:25 tirsen Exp $ -->
+ * <!-- $Id: InterfaceDefinition.java,v 1.3 2002-10-23 21:26:43 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class InterfaceDefinition
 {
@@ -58,11 +58,16 @@ public class InterfaceDefinition
     {
         InterfaceInstance interfaceInstance = new InterfaceInstance();
         interfaceInstance.setInterface(interfaceClass);
+
+        List instances = new ArrayList(aspectClasses.size());
         for (Iterator iterator = aspectClasses.iterator(); iterator.hasNext();)
         {
             Class aspectClass = (Class) iterator.next();
-            interfaceInstance.addInterspector(aspectClass.newInstance());
+            instances.add(aspectClass.newInstance());
         }
+        Interceptor[] interceptors = (Interceptor[]) instances.toArray(new Interceptor[instances.size()]);
+        interfaceInstance.setInterceptors(interceptors);
+
         interfaceInstance.setTarget(targetClass.newInstance());
         return interfaceInstance;
     }

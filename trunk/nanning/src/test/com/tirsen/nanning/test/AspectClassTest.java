@@ -15,10 +15,10 @@ import com.tirsen.nanning.Interceptor;
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: AspectClassTest.java,v 1.1 2002-10-22 18:28:09 tirsen Exp $ -->
+ * <!-- $Id: AspectClassTest.java,v 1.2 2002-10-23 21:26:43 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class AspectClassTest extends TestCase
 {
@@ -50,6 +50,32 @@ public class AspectClassTest extends TestCase
         impl.verify();
         aspect.verify();
         aspect2.verify();
+    }
+
+    public void testAspectsOnProxy() throws InstantiationException, IllegalAccessException
+    {
+        AspectClass aspectClass = AspectClass.create();
+        InterfaceDefinition interfaceDefinition = new InterfaceDefinition();
+        interfaceDefinition.setInterface(Intf.class);
+        interfaceDefinition.addInterceptor(MockAspect.class);
+        interfaceDefinition.setTarget(Impl.class);
+        aspectClass.addInterface(interfaceDefinition);
+        aspectClass.addInterceptor(MockAspect.class);
+
+        Intf proxy = (Intf) aspectClass.newInstance();
+
+        assertEquals(2, Aspects.getInterceptors(proxy, Intf.class).length);
+        MockAspect intfInterceptor = (MockAspect) Aspects.getInterceptors(proxy, Intf.class)[0];
+        MockAspect proxyInterceptor = (MockAspect) Aspects.getInterceptors(proxy)[0];
+
+        intfInterceptor.expectCalledTimes(1);
+        intfInterceptor.expectProxy(proxy);
+        proxyInterceptor.expectProxy(proxy);
+
+        proxy.call();
+
+        intfInterceptor.verify();
+        proxyInterceptor.verify();
     }
 
     public void testSideAspect() throws IllegalAccessException, InstantiationException, NoSuchMethodException

@@ -12,15 +12,22 @@ import java.lang.reflect.Proxy;
 /**
  * Facade for accessing some important features of aspected objects and their definitions.
  *
- * <!-- $Id: Aspects.java,v 1.3 2002-10-22 18:56:25 tirsen Exp $ -->
+ * <!-- $Id: Aspects.java,v 1.4 2002-10-23 21:26:43 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class Aspects
 {
-    private Aspects()
+    /**
+     * Gets the interceptors that belongs to the proxy
+     *
+     * @param proxy
+     * @return the interceptors.
+     */
+    public static Interceptor[] getInterceptors(Object proxy)
     {
+        return getAspectInstance(proxy).getProxyInterceptors();
     }
 
     /**

@@ -6,43 +6,107 @@
  */
 package com.tirsen.nanning;
 
-import org.apache.commons.collections.FastHashMap;
-
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * TODO document AspectInstance
  *
- * <!-- $Id: AspectInstance.java,v 1.2 2002-10-22 18:56:25 tirsen Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.3 2002-10-23 21:26:43 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 class AspectInstance implements InvocationHandler
 {
+    /**
+     * The interceptors for the instance <em>itself</em>. This field is actually redundant, but we'll keep it for now.
+     */
+    private Interceptor[] proxyInterceptors;
+
+    class InvocationImpl implements Invocation
+    {
+        private int index = -1;
+        private Method method;
+        private Object[] args;
+        private InterfaceInstance interfaceInstance;
+
+        public InvocationImpl(Method method, Object[] args, InterfaceInstance interfaceInstance)
+        {
+            this.method = method;
+            this.args = args;
+            this.interfaceInstance = interfaceInstance;
+        }
+
+        public Object invokeNext() throws Throwable
+        {
+            index++;
+            Interceptor[] interceptors = interfaceInstance.getInterceptors();
+            if(index < interceptors.length)
+            {
+                return interceptors[index].invoke(this);
+            }
+            else
+            {
+                return method.invoke(interfaceInstance.getTarget(), args);
+            }
+        }
+
+        public Interceptor getInterceptor(int index)
+        {
+            return interfaceInstance.getInterceptors()[index];
+        }
+
+        public Object getTarget()
+        {
+            return interfaceInstance.getTarget();
+        }
+
+        public Object getProxy()
+        {
+            return proxy;
+        }
+
+        public int getCurrentIndex()
+        {
+            return index;
+        }
+
+        public int getNumberOfInterceptors()
+        {
+            return interfaceInstance.getInterceptors().length;
+        }
+
+        public Method getMethod()
+        {
+            return method;
+        }
+
+        public Object[] getArgs()
+        {
+            return args;
+        }
+    }
+
     private Object proxy;
     private InterfaceInstance[] interfaceInstances;
-    private AspectClass aspectClass;
-    private FastHashMap interfacesToInstancesIndex;
+    private HashMap interfacesToInstancesIndex;
 
-    AspectInstance(AspectClass aspectClass, InterfaceInstance[] interfaceInstances)
+    public AspectInstance(Interceptor[] interceptors, InterfaceInstance[] interfaceInstances)
     {
-        this.aspectClass = aspectClass;
+        this.proxyInterceptors = interceptors;
         this.interfaceInstances = interfaceInstances;
-
         // index this up for faster invocations
-        interfacesToInstancesIndex = new FastHashMap();
+        interfacesToInstancesIndex = new HashMap();
         for (int i = 0; i < interfaceInstances.length; i++)
         {
             InterfaceInstance interfaceInstance = interfaceInstances[i];
             interfacesToInstancesIndex.put(interfaceInstance.getInterfaceClass(), interfaceInstance);
         }
-        interfacesToInstancesIndex.setFast(true);
     }
 
     public Object invoke(Object proxy, Method method, Object[] args)
@@ -50,10 +114,8 @@ class AspectInstance implements InvocationHandler
     {
         Class interfaceClass = method.getDeclaringClass();
         InterfaceInstance interfaceInstance = (InterfaceInstance) interfacesToInstancesIndex.get(interfaceClass);
-        Interceptor[] interceptors = interfaceInstance.getInterceptors();
-        Object target = interfaceInstance.getTarget();
 
-        Invocation invocation = new InvocationImpl(proxy, method, args, interceptors, target);
+        Invocation invocation = new InvocationImpl(method, args, interfaceInstance);
         return invocation.invokeNext();
     }
 
@@ -75,6 +137,11 @@ class AspectInstance implements InvocationHandler
     {
         InterfaceInstance interfaceInstance = (InterfaceInstance) interfacesToInstancesIndex.get(interfaceClass);
         return interfaceInstance.getTarget();
+    }
+
+    public Interceptor[] getProxyInterceptors()
+    {
+        return proxyInterceptors;
     }
 
     public Interceptor[] getInterceptors(Class interfaceClass)

@@ -13,10 +13,10 @@ import junit.framework.TestCase;
 /**
  * TODO document PerformanceTest
  *
- * <!-- $Id: PerformanceTest.java,v 1.2 2002-10-22 18:28:09 tirsen Exp $ -->
+ * <!-- $Id: PerformanceTest.java,v 1.3 2002-10-23 21:26:43 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class PerformanceTest extends TestCase
 {
@@ -33,8 +33,8 @@ public class PerformanceTest extends TestCase
         Intf intf = (Intf) aspectClass.newInstance();
 
         int numberOfInvocations = 100000;
-        double maxMemoryPerInvocation = 4;
-        double maxTimePerInvocation = 0.003; // this is exceptionally high due to clover...
+        double maxMemoryPerInvocation = 1;
+        double maxTimePerInvocation = 0.004; // this is exceptionally high due to clover...
 
         ///CLOVER:OFF
         System.gc();
@@ -66,7 +66,7 @@ public class PerformanceTest extends TestCase
     public void testInstanceFootprint() throws IllegalAccessException, InstantiationException
     {
         int numberOfInstances = 1000;
-        int timesBiggerTolerance = 8;
+        int timesBiggerTolerance = 19;
 
         // allocate a set of ordinary instances and check for footprint
         Impl[] impls = new Impl[numberOfInstances];
@@ -80,6 +80,7 @@ public class PerformanceTest extends TestCase
             impls[i] = new Impl();
         }
 
+        System.gc();
         long memory = startMemory - Runtime.getRuntime().freeMemory();
         ///CLOVER:ON
 
@@ -102,11 +103,13 @@ public class PerformanceTest extends TestCase
         System.gc();
         startMemory = Runtime.getRuntime().freeMemory();
 
+        Object[] objects = new Object[numberOfInstances];
         for (int i = 0; i < numberOfInstances; i++)
         {
-            aspectClass.newInstance();
+            objects[i] = aspectClass.newInstance();
         }
 
+        System.gc();
         memory = startMemory - Runtime.getRuntime().freeMemory();
         ///CLOVER:ON
 
