@@ -15,7 +15,7 @@ public class MockConstructionInterceptor implements ConstructionInterceptor, Sin
         return invocation.getProxy();
     }
 
-    public boolean interceptsConstructor(Class interfaceClass) {
+    public boolean interceptsConstructor(Class klass) {
         return true;
     }
 

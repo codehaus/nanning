@@ -12,19 +12,23 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.tirsen.nanning.definition.AspectClass;
 import junit.framework.TestCase;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogConfigurationException;
 import org.apache.commons.logging.LogFactory;
+import com.tirsen.nanning.config.AspectSystem;
+import com.tirsen.nanning.config.Aspect;
+import com.tirsen.nanning.config.Introductor;
+import com.tirsen.nanning.AspectInstance;
+import com.tirsen.nanning.MixinInstance;
 
 /**
  * TODO document TraceInterceptorTest
  *
- * <!-- $Id: TraceInterceptorTest.java,v 1.7 2003-03-21 17:11:15 lecando Exp $ -->
+ * <!-- $Id: TraceInterceptorTest.java,v 1.8 2003-05-09 14:57:50 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class TraceInterceptorTest extends TestCase {
     private ClassLoader prevContextClassLoader;
@@ -192,31 +196,28 @@ public class TraceInterceptorTest extends TestCase {
     }
 
     public void testLogInterceptor() throws InstantiationException, IllegalAccessException {
-        AspectClass aspectClass = new AspectClass();
-        aspectClass.setInterface(Intf.class);
-        aspectClass.addInterceptor(TraceInterceptor.class);
-        aspectClass.setTarget(Impl.class);
+        AspectSystem system = new AspectSystem();
+        system.addAspect(new Aspect() {
+            public Object advise(AspectInstance aspectInstance, MixinInstance mixin) {
+                return new TraceInterceptor();
+            }
+
+            public Object adviseConstruction(AspectInstance aspectInstance) {
+                return null;
+            }
+
+            public Object introduce(AspectInstance aspectInstance) {
+                return null;
+            }
+        });
+        system.addAspect(new Introductor(Intf.class, Impl.class));
 
         assertTrue("failed to patch into commons-logging", LogFactory.getFactory() instanceof MockLogFactory);
         MockLog mockLog = ((MockLogFactory) LogFactory.getFactory()).getMockLog();
         mockLog.expectAddMessage(">>> call(hej, svej)");
         mockLog.expectAddMessage("<<< call(hej, svej), took");
-        Intf intf = (Intf) aspectClass.newInstance();
+        Intf intf = (Intf) system.newInstance(Intf.class);
         intf.call("hej", "svej");
-        mockLog.verify();
-
-        mockLog.reset();
-        aspectClass.setTarget(ErrorImpl.class);
-        mockLog.expectAddMessage(">>> call(hej, svej)");
-        mockLog.expectAddMessage("ERROR <<< call(hej, svej) threw exception, took");
-        intf = (Intf) aspectClass.newInstance();
-        try {
-            intf.call("hej", "svej");
-            ///CLOVER:OFF
-            fail("exception not thrown");
-            ///CLOVER:ON
-        } catch (Exception shouldHappen) {
-        }
         mockLog.verify();
     }
 }

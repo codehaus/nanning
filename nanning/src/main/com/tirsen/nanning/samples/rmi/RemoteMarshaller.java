@@ -7,8 +7,7 @@ import com.tirsen.nanning.AspectInstance;
 import com.tirsen.nanning.Aspects;
 import com.tirsen.nanning.MixinInstance;
 import com.tirsen.nanning.attribute.Attributes;
-import com.tirsen.nanning.config.Advise;
-import com.tirsen.nanning.config.AllPointcut;
+import com.tirsen.nanning.config.Aspect;
 import com.tirsen.nanning.config.AspectSystem;
 import com.tirsen.nanning.samples.prevayler.Identity;
 import com.tirsen.nanning.samples.prevayler.Marshaller;
@@ -21,13 +20,21 @@ public class RemoteMarshaller implements Marshaller {
     public static RemoteMarshaller createClientSideMarshaller() {
         AspectSystem aspectSystem = new AspectSystem();
 
-        aspectSystem.addPointcut(new AllPointcut(new Advise() {
-            public void advise(AspectInstance aspectInstance) {
-                MixinInstance mixinInstance = new MixinInstance();
-                mixinInstance.setInterfaceClass((Class) aspectInstance.getClassIdentifier());
-                aspectInstance.addMixin(mixinInstance);
+        aspectSystem.addAspect(new Aspect() {
+            public Object advise(AspectInstance aspectInstance, MixinInstance mixin) {
+                return null;
             }
-        }));
+
+            public Object adviseConstruction(AspectInstance aspectInstance) {
+                return null;
+            }
+
+            public Object introduce(AspectInstance aspectInstance) {
+                MixinInstance mixinInstance = new MixinInstance();
+                mixinInstance.setInterfaceClass(aspectInstance.getClassIdentifier());
+                return mixinInstance;
+            }
+        });
 
         RemoteMarshaller remoteMarshaller = new RemoteMarshaller();
 
@@ -83,7 +90,7 @@ public class RemoteMarshaller implements Marshaller {
             if (isRemoteStub(o)) {
                 return getSingleMixinTarget(o);
             } else {
-                return new RemoteIdentity((Class) Aspects.getAspectInstance(o).getClassIdentifier(), registerID(o),
+                return new RemoteIdentity(Aspects.getAspectInstance(o).getClassIdentifier(), registerID(o),
                                           connectionManager);
             }
         } else {

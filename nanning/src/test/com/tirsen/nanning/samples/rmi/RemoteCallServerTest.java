@@ -6,8 +6,10 @@ import java.io.IOException;
 import com.tirsen.nanning.Aspects;
 import com.tirsen.nanning.attribute.AbstractAttributesTest;
 import com.tirsen.nanning.config.AspectSystem;
-import com.tirsen.nanning.config.MixinAspect;
-import com.tirsen.nanning.samples.prevayler.*;
+import com.tirsen.nanning.config.FindTargetMixinAspect;
+import com.tirsen.nanning.samples.prevayler.CurrentPrevayler;
+import com.tirsen.nanning.samples.prevayler.MySystem;
+import com.tirsen.nanning.samples.prevayler.PrevaylerAspect;
 import org.prevayler.implementation.SnapshotPrevayler;
 
 public class RemoteCallServerTest extends AbstractAttributesTest {
@@ -26,10 +28,7 @@ public class RemoteCallServerTest extends AbstractAttributesTest {
         prevaylerDir.mkdirs();
 
         serverAspectSystem = new AspectSystem();
-        serverAspectSystem.addAspect(new MixinAspect(MyObject.class, MyObjectImpl.class));
-        serverAspectSystem.addAspect(new MixinAspect(MySystem.class, MySystemImpl.class));
-        serverAspectSystem.addAspect(new MixinAspect(MyStatelessService.class, MyStatelessServiceImpl.class));
-        serverAspectSystem.addAspect(new MixinAspect(MyStatefulService.class, MyStatefulServiceImpl.class));
+        serverAspectSystem.addAspect(new FindTargetMixinAspect());
         serverAspectSystem.addAspect(new PrevaylerAspect());
 
         clientMarshaller = RemoteMarshaller.createClientSideMarshaller();

@@ -13,12 +13,12 @@ import junit.framework.Assert;
 /**
  * TODO document Impl
  *
- * <!-- $Id: Impl.java,v 1.4 2003-03-21 17:11:14 lecando Exp $ -->
+ * <!-- $Id: IntfImpl.java,v 1.1 2003-05-09 14:57:49 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.1 $
  */
-public class Impl implements Intf, Serializable {
+public class IntfImpl implements Intf, Serializable {
     private boolean called;
     private Object expectThis;
     private Object actualThis;

@@ -1,28 +1,66 @@
 package com.tirsen.nanning.config;
 
-import java.lang.reflect.Method;
-
 import com.tirsen.nanning.*;
-import com.tirsen.nanning.attribute.Attributes;
 import junit.framework.TestCase;
 
-public class Def2Test extends TestCase {
+public class AspectSystemTest extends TestCase {
+
     public void test() throws NoSuchMethodException {
         AspectSystem aspectSystem = new AspectSystem();
-        aspectSystem.addAspect(AspectSystem.mixin(Intf.class, Impl.class));
-        aspectSystem.addPointcut(new AllPointcut(new AddMixinAdvise(TestMixin.class, TestMixinImpl.class)));
-        aspectSystem.addAspect(AspectSystem.interceptor(MockInterceptor.class));
-        NullInterceptor nullInterceptor = new NullInterceptor();
-        aspectSystem.addAspect(AspectSystem.interceptor(nullInterceptor));
-        MockConstructionInterceptor constructionInterceptor = new MockConstructionInterceptor();
-        aspectSystem.addPointcut(new AllPointcut(new ConstructionInterceptorAdvise(constructionInterceptor)));
+        aspectSystem.addAspect(new FindTargetMixinAspect());
+        aspectSystem.addAspect(new Introductor(TestMixin.class, TestMixinImpl.class));
+        aspectSystem.addAspect(new Aspect() {
+            private MockInterceptor mockInterceptor = new MockInterceptor();
+
+            public Object advise(AspectInstance aspectInstance, MixinInstance mixin) {
+                return mockInterceptor;
+            }
+
+            public Object adviseConstruction(AspectInstance aspectInstance) {
+                return null;
+            }
+
+            public Object introduce(AspectInstance aspectInstance) {
+                return null;
+            } 
+        });
+        final NullInterceptor nullInterceptor = new NullInterceptor();
+        aspectSystem.addAspect(new Aspect() {
+            public Object advise(AspectInstance aspectInstance, MixinInstance mixin) {
+                return nullInterceptor;
+            }
+
+            public Object adviseConstruction(AspectInstance aspectInstance) {
+                return null;
+            }
+
+            public Object introduce(AspectInstance aspectInstance) {
+                return null;
+            }
+        });
+        final MockConstructionInterceptor constructionInterceptor = new MockConstructionInterceptor();
+
+        aspectSystem.addAspect(new Aspect() {
+            public Object introduce(AspectInstance aspectInstance) {
+                return null;
+            }
+
+            public Object advise(AspectInstance aspectInstance, MixinInstance mixin) {
+                return null;
+            }
+
+            public Object adviseConstruction(AspectInstance aspectInstance) {
+                return constructionInterceptor;
+            }
+        });
 
         Object bigMomma = aspectSystem.newInstance(Intf.class);
         assertTrue(Aspects.isAspectObject(bigMomma));
         assertTrue(bigMomma instanceof Intf);
         assertTrue(bigMomma instanceof TestMixin);
 
-        assertEquals(3, Aspects.getInterceptors(bigMomma).length);
+        System.out.println("Aspects.getInterceptors(bigMomma) = " + Aspects.getInterceptors(bigMomma));
+        assertEquals(3, Aspects.getInterceptors(bigMomma).size());
 
         constructionInterceptor.verify();
 
@@ -44,13 +82,25 @@ public class Def2Test extends TestCase {
     public static interface IntfSub extends Intf {
     }
 
-    public static class ImplSub extends Impl {
+    public static class IntfSubImpl extends IntfImpl {
     }
 
     public void testInheritance() throws NoSuchMethodException {
         AspectSystem aspectSystem = new AspectSystem();
-        aspectSystem.addAspect(AspectSystem.mixin(IntfSub.class, ImplSub.class));
-        aspectSystem.addAspect(AspectSystem.interceptor(new NullInterceptor()));
+        aspectSystem.addAspect(new FindTargetMixinAspect());
+        aspectSystem.addAspect(new Aspect() {
+            public Object advise(AspectInstance aspectInstance, MixinInstance mixin) {
+                return new NullInterceptor();
+            }
+
+            public Object adviseConstruction(AspectInstance aspectInstance) {
+                return null;
+            }
+
+            public Object introduce(AspectInstance aspectInstance) {
+                return null;
+            }
+        });
         Object bigMomma = aspectSystem.newInstance(IntfSub.class);
 
         assertEquals(1,
@@ -60,9 +110,9 @@ public class Def2Test extends TestCase {
 
     public void testCreateWithTargets() {
         AspectSystem aspectSystem = new AspectSystem();
-        aspectSystem.addAspect(AspectSystem.mixin(Intf.class, Impl.class));
-        aspectSystem.addPointcut(new AllPointcut(new AddMixinAdvise(TestMixin.class, TestMixinImpl.class)));
-        Impl impl = new Impl();
+        aspectSystem.addAspect(new FindTargetMixinAspect());
+        aspectSystem.addAspect(new Introductor(TestMixin.class, TestMixinImpl.class));
+        IntfImpl impl = new IntfImpl();
         TestMixinImpl testMixin = new TestMixinImpl();
 
         Object bigMomma = aspectSystem.newInstance(Intf.class, new Object[]{impl, testMixin});
@@ -90,14 +140,5 @@ public class Def2Test extends TestCase {
     }
 
     public static interface C extends Sub, Base {
-    }
-
-    public void testGetAllMethods() throws NoSuchMethodException {
-        assertEquals(12, PointcutAspect.getAllMethods(Object.class).length);
-        assertEquals(1, PointcutAspect.getAllMethods(Base.class).length);
-        assertEquals(1, PointcutAspect.getAllMethods(Sub.class).length);
-        assertEquals(1, PointcutAspect.getAllMethods(C.class).length);
-        
-        assertEquals(1, PointcutAspect.getAllMethods(C.class).length);
     }
 }
