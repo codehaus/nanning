@@ -156,8 +156,17 @@
         </j:file>
 
     </preGoal>
+    
+    <goal name="i-hate-jelly">
+    <echo>${nanning.frameworks.skip}</echo> 
+    <echo>${nanning.frameworks.skip != null}</echo> 
+    <echo>${"" == ""}</echo> 
+    </goal>
 
     <preGoal name="xdoc">
+    
+    <echo>${nanning.frameworks.skip}</echo> 
+    <echo>${nanning.frameworks.skip==null}</echo> 
 
         <j:if test="${nanning.frameworks.skip == null}">
 

@@ -1,12 +1,13 @@
 package org.codehaus.nanning.prevayler;
 
 import java.util.*;
+import java.io.Serializable;
 
-import org.prevayler.util.clock.AbstractClockedSystem;
+//import org.prevayler.util.clock.AbstractClockedSystem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class BasicIdentifyingSystem extends AbstractClockedSystem implements IdentifyingSystem {
+public class BasicIdentifyingSystem implements IdentifyingSystem, Serializable {
     private static final Log logger = LogFactory.getLog(BasicIdentifyingSystem.class);
     static final long serialVersionUID = 4503034161857395426L;
 

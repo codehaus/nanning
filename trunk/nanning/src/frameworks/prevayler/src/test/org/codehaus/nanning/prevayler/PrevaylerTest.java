@@ -15,6 +15,7 @@ import org.codehaus.nanning.attribute.AbstractAttributesTest;
 import org.codehaus.nanning.attribute.Attributes;
 import org.codehaus.nanning.config.AspectSystem;
 import org.codehaus.nanning.config.FindTargetMixinAspect;
+import org.prevayler.PrevaylerFactory;
 
 public class PrevaylerTest extends AbstractAttributesTest {
 
@@ -24,6 +25,11 @@ public class PrevaylerTest extends AbstractAttributesTest {
 
     protected void setUp() throws Exception {
         super.setUp();
+
+        assertTrue("attributes not compiled or not on classpath (add 'target/attributes' to classpath)",
+                PrevaylerUtils.isTransactional(MySystem.class.getMethod("setMyObject", new Class[]{MyObject.class})));
+        assertTrue("attributes not compiled or not on classpath (add 'target/attributes' to classpath)",
+                PrevaylerUtils.isTransactional(MySystem.class.getMethod("setSimpleString", new Class[]{String.class})));
 
         AspectSystem aspectSystem = new AspectSystem();
         aspectSystem.addAspect(new FindTargetMixinAspect());
@@ -42,15 +48,47 @@ public class PrevaylerTest extends AbstractAttributesTest {
         prevaylerDir.delete();
     }
 
-    public void test() throws IOException, ClassNotFoundException {
+    public void testMethodCallWithSimpleStringIsPersisted() throws Exception {
         final CountingPrevayler prevayler = newPrevayler();
-        CurrentPrevayler.withPrevayler(prevayler, new Runnable() {
-            public void run() {
+        CurrentPrevayler.withPrevayler(prevayler, new PrevaylerAction() {
+            public Object run() throws Exception {
+                assertFalse(currentMySystem().hasObjectID(currentMySystem()));
+                currentMySystem().setSimpleString("string");
+                InvokeCommand invokeCommand = (InvokeCommand) prevayler.getTransaction(0);
+                IdentifyingCall call = (IdentifyingCall) invokeCommand.getCall();
+                assertTrue(call.marshal(currentMySystem()) instanceof Identity);
+                assertTrue(call.target instanceof Identity);
+                assertEquals("string", call.args[0]);
+
+                prevayler.assertTransactionLog("setSimpleString");
+                assertEquals("string", currentMySystem().getSimpleString());
+                return null;
+            }
+        });
+        final CountingPrevayler loadedPrevayler = newPrevayler();
+        CurrentPrevayler.withPrevayler(loadedPrevayler, new PrevaylerAction() {
+            public Object run() throws Exception {
+                assertEquals("string", currentMySystem().getSimpleString());
+                return null;
+            }
+        });
+    }
+
+
+
+    /**
+     * Big badass functional test. I hate it, I want to kill it...
+     */
+    public void test() throws Exception {
+        final CountingPrevayler prevayler = newPrevayler();
+        CurrentPrevayler.withPrevayler(prevayler, new PrevaylerAction() {
+            public Object run() throws NoSuchMethodException {
                 MyObject insideObject = currentMySystem().createMyObject();
                 prevayler.assertNumberOfCommands("create should not result in a command", 0);
                 currentMySystem().setMyObject(insideObject);
-                prevayler.assertNumberOfCommands("set should result in one command only", 1);
+                prevayler.assertTransactionLog("setMyObject");
 
+                assertTrue("Prevayler is lost after first transaction", CurrentPrevayler.hasPrevayler());
                 insideObject.setValue("oldValue");
                 prevayler.assertNumberOfCommands(2);
                 insideObject.setValue("newValue");
@@ -64,8 +102,8 @@ public class PrevaylerTest extends AbstractAttributesTest {
 
                 outsideObject.setMyObject(outsideNestedObject);
                 prevayler.assertNumberOfCommands("commands operating on objects outside prevayler still generates " +
-                                                 "commands (they shouldn't really but we haven't implemented that yet)",
-                                                 4);
+                        "commands (they shouldn't really but we haven't implemented that yet)",
+                        4);
 
                 // mixing prevayler and non-prevayler stuff the other way around will mess things up
                 // uncomment this line and watch the nice little assert failure
@@ -87,6 +125,8 @@ public class PrevaylerTest extends AbstractAttributesTest {
                 assertNotNull(insideObject);
                 assertEquals("value not correct", "newValue", insideObject.getValue());
                 assertNotNull(insideObject.getMyObject());
+
+                return null;
             }
         });
 
@@ -94,7 +134,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
         checkMySystem();
 
         // reload database with snapshot
-        ((org.codehaus.nanning.prevayler.CheckpointPrevayler) prevayler.getWrappedPrevayler()).checkpoint();
+        prevayler.takeSnapshot();
         checkMySystem();
     }
 
@@ -151,7 +191,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
         });
 
         // restoring
-        ((org.codehaus.nanning.prevayler.CheckpointPrevayler) prevayler.getWrappedPrevayler()).checkpoint();
+        prevayler.takeSnapshot();
         prevayler = newPrevayler();
         CurrentPrevayler.withPrevayler(prevayler, new Runnable() {
             public void run() {
@@ -163,8 +203,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
         });
 
         // restoring and garbage collecting
-        ((org.codehaus.nanning.prevayler.CheckpointPrevayler) prevayler.getWrappedPrevayler()).checkpoint();
-
+        prevayler.takeSnapshot();
         prevayler = newPrevayler();
         CurrentPrevayler.withPrevayler(prevayler, new Runnable() {
             public void run() {
@@ -213,8 +252,9 @@ public class PrevaylerTest extends AbstractAttributesTest {
     }
 
     private CountingPrevayler newPrevayler() throws IOException, ClassNotFoundException {
-        CountingPrevayler prevayler = new CountingPrevayler(new org.codehaus.nanning.prevayler.CheckpointPrevayler(aspectFactory.newInstance(MySystem.class),
-                                                                                    prevaylerDir.getAbsolutePath()));
+        CountingPrevayler prevayler = new CountingPrevayler(
+                PrevaylerFactory.createPrevayler(aspectFactory.newInstance(MySystem.class),
+                        prevaylerDir.getAbsolutePath()));
         return prevayler;
     }
 

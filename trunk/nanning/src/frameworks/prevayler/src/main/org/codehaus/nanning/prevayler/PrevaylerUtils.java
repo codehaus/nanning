@@ -2,6 +2,8 @@ package org.codehaus.nanning.prevayler;
 
 import org.codehaus.nanning.attribute.Attributes;
 
+import java.lang.reflect.Method;
+
 public class PrevaylerUtils {
     static boolean isEntity(Class objectClass) {
         return Attributes.hasInheritedAttribute(objectClass, "entity");
@@ -39,5 +41,9 @@ public class PrevaylerUtils {
 
     public static boolean isPersistent(Class objectClass) {
         return isService(objectClass) || isEntity(objectClass);
+    }
+
+    public static boolean isTransactional(Method method) {
+        return Attributes.hasAttribute(method, "transaction");
     }
 }

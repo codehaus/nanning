@@ -12,21 +12,10 @@ import org.codehaus.nanning.attribute.Attributes;
  * TODO document PrevaylerInterceptor
  *
  * @author <a href="mailto:jon_tirsen@yahoo.org">Jon Tirs?n</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class PrevaylerInterceptor implements MethodInterceptor {
-    private boolean resolveEntities;
-
-    public PrevaylerInterceptor(boolean resolveEntities) {
-        this.resolveEntities = resolveEntities;
-    }
-
-    public boolean interceptsConstructor(Class interfaceClass) {
-        return Attributes.hasAttribute(interfaceClass, "entity");
-    }
-
-    public boolean interceptsMethod(Method method) {
-        return Attributes.hasAttribute(method, "transaction");
+    public PrevaylerInterceptor() {
     }
 
     public Object invoke(Invocation invocation) throws Throwable {
@@ -43,13 +32,8 @@ public class PrevaylerInterceptor implements MethodInterceptor {
                 && (PrevaylerUtils.isService(invocation.getTargetInterface()) ||
                 PrevaylerUtils.isEntity(invocation.getTargetInterface())))
         {
-            CurrentPrevayler.enterTransaction();
-            try {
-                InvokeCommand command = new InvokeCommand(invocation, resolveEntities);
-                return command.executeUsing(CurrentPrevayler.getPrevayler());
-            } finally {
-                CurrentPrevayler.exitTransaction();
-            }
+            InvokeCommand command = new InvokeCommand(invocation);
+            return CurrentPrevayler.getPrevayler().execute(command);
         } else {
             return invocation.invokeNext();
         }

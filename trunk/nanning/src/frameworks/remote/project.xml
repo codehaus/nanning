@@ -29,12 +29,12 @@
         <dependency>
             <groupId>nanning</groupId>
             <artifactId>nanning-prevayler</artifactId>
-            <version>0.9</version>
+            <version>1.0-beta-1</version>
         </dependency>
 
         <dependency>
             <id>prevayler</id>
-            <version>2.00.000dev2</version>
+            <version>2.00.000-SNAPSHOT</version>
         </dependency>
 
         <dependency>

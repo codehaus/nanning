@@ -27,16 +27,15 @@ public class IdentifyingMarshallerTest extends AbstractAttributesTest {
         system = new TestSystem();
         entity = (MyObject) aspectSystem.newInstance(MyObject.class);
         system.setEntity(entity);
-        CurrentPrevayler.enterTransaction();
+        CurrentPrevayler.enterTransaction(system);
         entityId = system.registerObjectID(entity);
         CurrentPrevayler.exitTransaction();
 
         marshaller = new IdentifyingMarshaller();
-        CurrentPrevayler.setSystem(system);
+        CurrentPrevayler.enterTransaction(system);
     }
 
     protected void tearDown() throws Exception {
-        CurrentPrevayler.setSystem(null);
         while (CurrentPrevayler.isInTransaction()) {
             CurrentPrevayler.exitTransaction();
         }
@@ -75,7 +74,7 @@ public class IdentifyingMarshallerTest extends AbstractAttributesTest {
         Object object = aspectSystem.newInstance(MyObject.class);
         assertSame("Unregistered entity should be marshalled by value", object, marshaller.marshal(object));
         assertFalse(system.hasObjectID(object));
-        CurrentPrevayler.enterTransaction();
+        CurrentPrevayler.enterTransaction(system);
         assertSame("Unregistered entity should be marshalled by value", object, marshaller.unmarshal(object));
         CurrentPrevayler.exitTransaction();
         assertTrue(system.hasObjectID(object));
@@ -90,7 +89,7 @@ public class IdentifyingMarshallerTest extends AbstractAttributesTest {
         assertFalse(system.hasObjectID(object1));
         assertFalse(system.hasObjectID(object2));
 
-        CurrentPrevayler.enterTransaction();
+        CurrentPrevayler.enterTransaction(system);
         marshaller.unmarshal(object1);
         CurrentPrevayler.exitTransaction();
         assertTrue(system.hasObjectID(object1));
@@ -105,7 +104,7 @@ public class IdentifyingMarshallerTest extends AbstractAttributesTest {
         MyObject object2 = (MyObject) aspectSystem.newInstance(MyObject.class);
         object1.setMyObject(object2);
 
-        CurrentPrevayler.enterTransaction();
+        CurrentPrevayler.enterTransaction(system);
         system.registerObjectID(object2);
 
         marshaller.marshal(object1);

@@ -14,8 +14,10 @@
         <menu name="Nanning Aspects">
             <item name="Overview" href="/overview.html"/>
             <item name="Download" href="/download.html"/>
-            <item name="Building" href="/building.html"/>
-            <item name="Usage" href="/usage.html"/>
+            <item name="Usage" href="/usage.html">
+            	<item name="AspectInstance" href="/aspect-instance.html" />
+            	<item name="AspectSystem" href="/aspect-system.html" />
+            </item>
             <item name="Frameworks" href="/frameworks/index.html"/>
             <item name="Changes" href="/changes-report.html"/>
             <item name="FAQ" href="/faq.html"/>

@@ -17,12 +17,35 @@ import java.util.List;
 import java.util.Iterator;
 
 /**
- * TODO document AttributesCompiler
+ * Compiles attributes from java sources, use as an ant task or directly from java.
+ * <p>
+ * Example usage as Ant task: <pre>
+        <taskdef name="attributes-compiler" classname="org.codehaus.nanning.attributes.AttributesCompiler"
+            classpath="path/to/lib/nanning-version.jar:path/to/lib/qdox-1.2.jar" />
+        <attributes-compiler src="path/to/java/files" dest="path/to/compile/target" />
+</pre>
+ * <p>
+ * Example usage directly from Java: <pre>
+        AttributesCompiler attributesCompiler = new AttributesCompiler();
+        attributesCompiler.setSrc(source);
+        attributesCompiler.setDest(attributesDir);
+        attributesCompiler.execute();
+</pre>
  *
- * <!-- $Id: AttributesCompiler.java,v 1.1 2003-07-04 10:53:59 lecando Exp $ -->
+ * After compilation, the destination-directory needs to be included in the classpath.
+ * <p>
+ * To use under Maven, add a preGoal to java:compile and test:compile that executes
+ * the above ant-code.
+ * <p> 
+ * To use directly in JUnit (without the need for external recompilation
+ * good for execution within an IDE), write an abstract base-class for your 
+ * tests that executes the above Java-code to compile your attributes before 
+ * the actual tests are executed.
  *
- * @author $Author: lecando $
- * @version $Revision: 1.1 $
+ * <!-- $Id: AttributesCompiler.java,v 1.2 2003-08-10 16:18:18 tirsen Exp $ -->
+ *
+ * @author $Author: tirsen $
+ * @version $Revision: 1.2 $
  */
 public class AttributesCompiler extends Task {
     private File src;

@@ -37,7 +37,7 @@ public class MarshallingCall extends AuthenticatedCall {
     protected void setInvocation(Invocation invocation) throws Exception {
         super.setInvocation(invocation);
         target = marshal(target);
-        args = marshalArguments(invocation.getArgs());
+        args = marshalArguments(args);
     }
 
     protected Object[] marshalArguments(Object[] args) throws Exception {

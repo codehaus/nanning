@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.codehaus.nanning.AspectFactory;
 import org.codehaus.nanning.AspectInstance;
-import org.codehaus.nanning.Mixin;
 
 public class AspectSystem implements AspectFactory {
     private List aspects = new ArrayList();

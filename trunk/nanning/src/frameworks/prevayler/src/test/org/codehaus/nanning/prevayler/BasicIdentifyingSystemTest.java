@@ -27,7 +27,7 @@ public class BasicIdentifyingSystemTest extends TestCase {
 
         basicIdentifyingSystem = new BasicIdentifyingSystem();
 
-        CurrentPrevayler.enterTransaction();
+        CurrentPrevayler.enterTransaction(basicIdentifyingSystem);
         basicIdentifyingSystem.registerObjectID(registredObject);
         CurrentPrevayler.exitTransaction();
     }

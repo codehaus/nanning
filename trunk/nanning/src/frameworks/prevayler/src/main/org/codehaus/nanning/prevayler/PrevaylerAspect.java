@@ -9,7 +9,7 @@ import org.codehaus.nanning.config.Pointcut;
  * TODO document PrevaylerInterceptor
  *
  * @author <a href="mailto:jon_tirsen@yahoo.org">Jon Tirsen</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class PrevaylerAspect implements Aspect {
     private TransactionUnsupportedInterceptor unsupportedInterceptor;
@@ -21,17 +21,10 @@ public class PrevaylerAspect implements Aspect {
     private Pointcut transactionPointcut = P.methodAttribute("transaction");
 
     public PrevaylerAspect() {
-        this(false);
-    }
-
-    public PrevaylerAspect(boolean useIdentification) {
         unsupportedInterceptor = new TransactionUnsupportedInterceptor();
         checkUnsupportedInterceptor = new CheckTransactionUnsupportedInterceptor();
-        prevaylerInterceptor = new PrevaylerInterceptor(useIdentification);
-        
-        if (useIdentification) {
-            registerObjectInterceptor = new RegisterObjectInterceptor();
-        }
+        prevaylerInterceptor = new PrevaylerInterceptor();
+        registerObjectInterceptor = new RegisterObjectInterceptor();
     }
     
     public void advise(AspectInstance aspectInstance) {

@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import org.codehaus.nanning.Aspects;
 import org.codehaus.nanning.prevayler.MyObject;
 import org.codehaus.nanning.prevayler.MySystem;
-import org.prevayler.util.clock.AbstractClockedSystem;
 
-public class MySystemImpl extends AbstractClockedSystem implements MySystem, Serializable {
+public class MySystemImpl extends BasicIdentifyingSystem implements MySystem, Serializable {
     private MyObject myObject;
+    private String simpleString;
 
     public MyObject createMyObject() {
         return (MyObject) Aspects.getCurrentAspectFactory().newInstance(MyObject.class);
@@ -36,5 +36,13 @@ public class MySystemImpl extends AbstractClockedSystem implements MySystem, Ser
         }
         result.add(myObject);
         addAllObjects(result, myObject.getMyObject());
+    }
+
+    public String getSimpleString() {
+        return simpleString;
+    }
+
+    public void setSimpleString(String simpleString) {
+        this.simpleString = simpleString;
     }
 }
