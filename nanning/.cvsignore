@@ -1,7 +1,7 @@
 target
-*.ipr
-*.iws
 *.log*
 junit*
 .classpath
 .project
+*.ipr
+*.iws
