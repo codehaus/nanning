@@ -12,6 +12,7 @@ import com.tirsen.nanning.Invocation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.prevayler.util.clock.ClockedSystem;
+import org.prevayler.util.clock.ClockedTransaction;
 
 public class InvokeCommand extends ClockedTransaction {
     static final long serialVersionUID = 320681517664792343L;
