@@ -16,10 +16,12 @@ public class AddMixinAdvise extends Advise {
     public void advise(AspectInstance aspectInstance) {
         MixinInstance mixinInstance = new MixinInstance();
         mixinInstance.setInterfaceClass(interfaceClass);
-        try {
-            mixinInstance.setTarget(targetClass.newInstance());
-        } catch (Exception e) {
-            throw new AspectException("could not instantiate target " + e);
+        if (targetClass != null) {
+            try {
+                mixinInstance.setTarget(targetClass.newInstance());
+            } catch (Exception e) {
+                throw new AspectException("could not instantiate target " + e);
+            }
         }
         aspectInstance.addMixin(mixinInstance);
     }

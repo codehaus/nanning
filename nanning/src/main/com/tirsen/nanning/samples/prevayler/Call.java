@@ -17,7 +17,14 @@ public class Call implements Serializable {
     private Class[] parameterTypes;
     private String methodName;
 
-    public Call(Invocation invocation) {
+    public Call(Invocation invocation) throws Exception {
+        setInvocation(invocation);
+    }
+
+    public Call() {
+    }
+
+    protected void setInvocation(Invocation invocation) throws Exception {
         classIdentifier = invocation.getAspectInstance().getClassIdentifier();
         interfaceClass = invocation.getTargetInterface();
         methodName = invocation.getMethod().getName();

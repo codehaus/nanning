@@ -1,18 +1,20 @@
 package com.tirsen.nanning.samples.rmi;
 
-import com.tirsen.nanning.AspectFactory;
-import com.tirsen.nanning.Aspects;
-import com.tirsen.nanning.samples.prevayler.Call;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.threadpool.DefaultThreadPool;
-import org.apache.commons.threadpool.ThreadPool;
-
 import java.io.*;
 import java.lang.reflect.Method;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.tirsen.nanning.AspectFactory;
+import com.tirsen.nanning.Aspects;
+import com.tirsen.nanning.samples.prevayler.MarshallingCall;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.threadpool.DefaultThreadPool;
+import org.apache.commons.threadpool.ThreadPool;
 
 public class RemoteCallServer {
     private static final Log logger = LogFactory.getLog(RemoteCallServer.class);
@@ -23,59 +25,83 @@ public class RemoteCallServer {
     private ThreadPool threadPool;
     private int threadPoolSize = 5;
     private boolean doStop;
+    private Thread serverThread;
+    public static final int SERVER_SOCKET_TIMEOUT = 1000;
+    private Map naming = new HashMap();
+    private RemoteMarshaller marshaller = new RemoteMarshaller();
 
     public void start() {
         try {
+            assert port != 0 : "port not specified";
+            logger.info("starting RMI-server on port " + port);
             serverSocket = new ServerSocket(port);
-            serverSocket.setSoTimeout(1000);
+            serverSocket.setSoTimeout(SERVER_SOCKET_TIMEOUT);
             threadPool = new DefaultThreadPool(threadPoolSize);
 
-            Thread acceptThread = new Thread(new Runnable() {
+            serverThread = new Thread(new Runnable() {
                 public void run() {
-                    while (!doStop) {
+                    try {
+                        while (!doStop) {
+                            try {
+                                Socket socket = serverSocket.accept();
+
+                                threadPool.invokeLater(new CallProcessor(socket));
+
+                            } catch (SocketTimeoutException ignore) {
+                            } catch (IOException e) {
+                                logger.error("error accepting call", e);
+                            }
+                        }
+                    } finally {
                         try {
-                            final Socket socket = serverSocket.accept();
-
-                            threadPool.invokeLater(
-                                    new Runnable() {
-                                        public void run() {
-                                            processCall(socket);
-                                        }
-                                    }
-                            );
-
-                        } catch (SocketTimeoutException ignore) {
+                            serverSocket.close();
                         } catch (IOException e) {
-                            logger.error("error accepting call", e);
+                            logger.warn("could not close server", e);
                         }
                     }
                 }
             });
-            acceptThread.start();
+            serverThread.start();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     private void processCall(Socket socket) {
-        try {
-            Aspects.setContextAspectFactory(aspectRepository);
+        Aspects.setContextAspectFactory(aspectRepository);
 
+        try {
             OutputStream outputStream = socket.getOutputStream();
             InputStream inputStream = socket.getInputStream();
 
             ObjectInputStream input = new ObjectInputStream(inputStream);
-            Call call = (Call) input.readObject();
-            Method method = call.getMethod();
+            Object command = input.readObject();
 
-            Object service = aspectRepository.newInstance(call.getClassIdentifier());
-            Object result = method.invoke(service, call.getArgs());
+            Object result;
+
+            if (command instanceof MarshallingCall) {
+                MarshallingCall call = (MarshallingCall) command;
+
+                result = processRemoteCall(call);
+
+            } else if (command instanceof NamingLookup) {
+                NamingLookup namingLookup = (NamingLookup) command;
+
+                result = processNamingLookup(namingLookup);
+            } else {
+                result = new ExceptionThrown(new RuntimeException("No such command exception."));
+            }
+
+            result = marshaller.marshal(result);
 
             ObjectOutputStream output = new ObjectOutputStream(outputStream);
             output.writeObject(result);
             output.close();
-        } catch (Exception e) {
-            logger.error("error executing call", e);
+
+        } catch (IOException e) {
+            logger.error("error communicating with client", e);
+        } catch (ClassNotFoundException e) {
+            logger.error("error communicating with client", e);
         } finally {
             try {
                 socket.close();
@@ -85,7 +111,29 @@ public class RemoteCallServer {
         }
     }
 
-    public void setAspectRepository(AspectFactory aspectRepository) {
+    private Object processNamingLookup(NamingLookup namingLookup) {
+        Object result;
+        String name = namingLookup.getName();
+        result = naming.get(name);
+        return result;
+    }
+
+    private Object processRemoteCall(MarshallingCall call) {
+        Object result;
+        try {
+            call.setMarshaller(marshaller);
+            Method method = call.getMethod();
+
+            Object target = call.getTarget();
+            result = method.invoke(target, call.getArgs());
+        } catch (Throwable e) {
+            logger.error("error executing call", e);
+            result = new ExceptionThrown(e);
+        }
+        return result;
+    }
+
+    public void setAspectFactory(AspectFactory aspectRepository) {
         this.aspectRepository = aspectRepository;
     }
 
@@ -95,5 +143,33 @@ public class RemoteCallServer {
 
     public void stop() {
         doStop = true;
+        try {
+            serverThread.join(SERVER_SOCKET_TIMEOUT + 1);
+        } catch (InterruptedException e) {
+            logger.warn("could not stop server properly");
+        }
+    }
+
+    public void bind(String name, Object o) {
+        naming.put(name, o);
+    }
+
+    private class CallProcessor implements Runnable {
+        private final Socket socket;
+
+        public CallProcessor(Socket socket) {
+            this.socket = socket;
+        }
+
+        public void run() {
+            try {
+                processCall(socket);
+            } finally {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                }
+            }
+        }
     }
 }

@@ -15,14 +15,14 @@ import java.util.Set;
 /**
  * Facade for accessing some important features of aspected objects and their definitions.
  *
- * <!-- $Id: Aspects.java,v 1.17 2003-02-20 15:35:58 lecando Exp $ -->
+ * <!-- $Id: Aspects.java,v 1.18 2003-03-03 10:07:33 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public class Aspects {
     private static ThreadLocal contextAspectRepository = new InheritableThreadLocal();
-    static ThreadLocal currentThis = new ThreadLocal();
+    static ThreadLocal currentThis = new InheritableThreadLocal();
 
     /**
      * Gets the interceptors that belongs to the proxy
@@ -99,8 +99,8 @@ public class Aspects {
         }
     }
 
-    public static void setContextAspectFactory(AspectFactory aspectRepository) {
-        contextAspectRepository.set(aspectRepository);
+    public static void setContextAspectFactory(AspectFactory factory) {
+        contextAspectRepository.set(factory);
     }
 
     public static MethodInterceptor[] getInterceptors(Object proxy, Method method) {
