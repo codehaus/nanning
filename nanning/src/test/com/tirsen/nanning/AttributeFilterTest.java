@@ -10,10 +10,10 @@ import java.util.List;
 /**
  * TODO document AttributesTest
  *
- * <!-- $Id: AttributeFilterTest.java,v 1.4 2003-01-24 13:29:30 tirsen Exp $ -->
+ * <!-- $Id: AttributeFilterTest.java,v 1.5 2003-03-12 16:01:44 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.4 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.5 $
  */
 public class AttributeFilterTest  extends AbstractAttributesTest {
     private static List expectedMethods;
@@ -34,7 +34,7 @@ public class AttributeFilterTest  extends AbstractAttributesTest {
         // expected methods
         expectedMethods.add("doItAgain");
         expectedMethods.add("oupsIDidItAgain");
-        //create the aspect and run the methods
+        //create the aspect and execute the methods
         SomeAspect aspect = (SomeAspect) createAspectProxy();
         aspect.doIt();
         aspect.doItAgain();

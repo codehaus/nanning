@@ -13,13 +13,13 @@ import java.util.Properties;
  * QDox Builder implementation for creating Properties containing attributes.
  *
  * <p>This Builder should be fed to the QDox Parser where it shall receive callbacks as a source file is parsed.
- * After the file has been parsed, getProperties() can be called to retrieved the compiled properties of the class.</p>
+ * After the file has been parsed, getEdit() can be called to retrieved the compiled properties of the class.</p>
  *
  * <p>An AttributesBuilder can only be used to parse <b>one</b> file at a time. If the AttributesBuilder is to be reused
  * to parse another file, the reset() method must be called.</p>
  *
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class AttributesBuilder implements Builder {
 

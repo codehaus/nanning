@@ -71,7 +71,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
                 // mixing prevayler and non-prevayler stuff the other way around will mess things up
                 // uncomment this line and watch the nice little assert failure
                 // there's another line in checkMySystem() that explains the real problem
-                //outsideNestedObject.setMyObject(insideObject);
+//                outsideNestedObject.setMyObject(insideObject);
 
                 insideObject.setMyObject(outsideObject);
                 prevayler.assertNumberOfCommands(
@@ -116,7 +116,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
                 // this will not hold if you mix objects created inside prevayler with those created outside
                 // this object will not be identified correctly in the command and you will have two copies of the
                 // "same" object
-                //assertSame(myObject, myObject.getMyObject().getMyObject().getMyObject());
+//                assertSame(myObject, myObject.getMyObject().getMyObject().getMyObject());
             }
         });
     }

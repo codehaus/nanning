@@ -12,7 +12,7 @@ import org.apache.commons.io.IOUtil;
 import com.tirsen.nanning.Aspects;
 import com.tirsen.nanning.Interceptor;
 
-public class IdentifyingMarshaller implements Marshaller, Serializable {
+public class IdentifyingMarshaller implements Marshaller {
     public Object marshal(Object o) {
         if (Identity.isPrimitive(o)) {
             return o;
@@ -34,6 +34,10 @@ public class IdentifyingMarshaller implements Marshaller, Serializable {
         } else {
             return o;
         }
+    }
+
+    private boolean containsObjectID(Object o) {
+        return false;
     }
 
     public Object unmarshal(Object o) {
