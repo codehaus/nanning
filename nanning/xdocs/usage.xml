@@ -185,10 +185,7 @@ Object bigMomma = AspectRepository.getInstance().newInstance(Intf.class);
                     <a href="http://jakarta.apache.org/commons/sandbox/jelly">Jelly</a>-script, which means
                     you can probably do all sorts of crazy things and probably also embed Nanning-aspects
                     inside other Jelly-scripts. I haven't had time to test all the implications of this
-                    feature but I guess it's kind of cool. I guess this also breaks the "simplest thing that
-                    could possibly work"-design I usually prefer but codewise it was just slightly more
-                    or just as complex as parsing the XML by hand, mostly due to Jelly being designed so
-                    well.
+                    feature but I guess it's kind of cool.
                 </p>
             </subsection>
 

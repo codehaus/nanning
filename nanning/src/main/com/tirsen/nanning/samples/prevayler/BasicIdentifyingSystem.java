@@ -22,8 +22,7 @@ public class BasicIdentifyingSystem implements IdentifyingSystem {
     }
 
     public long getObjectID(Object object) {
-        assert hasObjectID(object);
-        objects.add(object);
+        assert hasObjectID(object) : "object had no ID";
         return (long) objects.indexOf(object);
     }
 
@@ -31,13 +30,17 @@ public class BasicIdentifyingSystem implements IdentifyingSystem {
         return objects.contains(object);
     }
 
-    public void registerObjectID(Object o) {
-        objects.add(o);
+    public long registerObjectID(Object object) {
+        System.out.println("registering object " + object);
+        assert !hasObjectID(object) : "already has ID";
+        objects.add(object);
+        return (long) objects.indexOf(object);
     }
 
     public Object getObjectWithID(long oid) {
-        Object o = objects.get((int) oid);
-        assert o != null : "could not find object with id " + oid;
-        return o;
+        Object object = objects.get((int) oid);
+        assert object != null : "could not find object with id " + oid;
+        assert hasObjectID(object);
+        return object;
     }
 }

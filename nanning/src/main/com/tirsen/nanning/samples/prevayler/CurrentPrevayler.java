@@ -12,37 +12,53 @@ import java.util.Stack;
  * same time.
  */
 public class CurrentPrevayler {
-    private static ThreadLocal currentPrevayler = new ThreadLocal() {
+    private static ThreadLocal isInTransaction = new ThreadLocal() {
         protected Object initialValue() {
-            return new Stack();
+            return new Integer(0);
         }
     };
+    private static ThreadLocal currentPrevayler = new InheritableThreadLocal();
+    private static ThreadLocal currentSystem = new InheritableThreadLocal();
 
     public static IdentifyingSystem getSystem() {
-        return (IdentifyingSystem) ((Stack) currentPrevayler.get()).peek();
+        IdentifyingSystem identifyingSystem = (IdentifyingSystem) currentSystem.get();
+        assert identifyingSystem != null : "Prevayler not initialized for this thread, no current system";
+        return identifyingSystem;
     }
 
     public static void setSystem(IdentifyingSystem system) {
-        PrevaylerInterceptor.getPrevaylerInterceptor().setSystem(system);
+        currentSystem.set(system);
     }
 
     public static Prevayler getPrevayler() {
-        return PrevaylerInterceptor.getPrevaylerInterceptor().getPrevayler();
+        Prevayler prevayler = (Prevayler) currentPrevayler.get();
+        assert prevayler != null : "Prevayler not initialized for this thread, no current Prevayler";
+        return prevayler;
     }
 
     public static void setPrevayler(Prevayler prevayler) {
-        PrevaylerInterceptor.getPrevaylerInterceptor().setPrevayler(prevayler);
+        currentPrevayler.set(prevayler);
+        setSystem((IdentifyingSystem) prevayler.system());
     }
 
-    public static void enterCommand(IdentifyingSystem prevalentSystem) {
-        ((Stack) currentPrevayler.get()).push(prevalentSystem);
+    static boolean isReplaying() {
+        return getSystem() != null;
     }
 
-    public static void exitCommand() {
-        ((Stack) currentPrevayler.get()).pop();
+    public static void enterTransaction() {
+        isInTransaction.set(new Integer(transactionCount() + 1));
     }
 
-    public static boolean isInCommand() {
-        return !((Stack) currentPrevayler.get()).isEmpty();
+    public static void exitTransaction() {
+        assert isInTransaction() : "not in transaction";
+        isInTransaction.set(new Integer(transactionCount() - 1));
+    }
+
+    public static boolean isInTransaction() {
+        return transactionCount() != 0;
+    }
+
+    private static int transactionCount() {
+        return ((Integer) isInTransaction.get()).intValue();
     }
 }

@@ -24,13 +24,14 @@ public class ConstructCommand implements Command {
 
     public Serializable execute(PrevalentSystem prevalentSystem) throws Exception {
         logger.debug("executing " + this + " on system " + prevalentSystem);
-        CurrentPrevayler.enterCommand((IdentifyingSystem) prevalentSystem);
+        CurrentPrevayler.setSystem((IdentifyingSystem) prevalentSystem);
+        CurrentPrevayler.enterTransaction();
         try {
             Object o = Aspects.getCurrentAspectFactory().newInstance(classIdentifier);
             assert CurrentPrevayler.getSystem().hasObjectID(o);
             return (Serializable) o;
         } finally {
-            CurrentPrevayler.exitCommand();
+            CurrentPrevayler.exitTransaction();
         }
     }
 

@@ -149,6 +149,11 @@
             <version>1.2.6</version>
         </dependency>
 
+        <dependency>
+            <id>ognl</id>
+            <version>2.3.2</version>
+        </dependency>
+
     </dependencies>
 
     <build>

@@ -65,10 +65,10 @@ public class IdentifyingCall extends Call {
     }
 
     protected Identity identify(Object object) {
-        if (Attributes.hasAttribute(getInterfaceClass(), "service")) {
+        if (Attributes.hasInheritedAttribute(getInterfaceClass(), "service")) {
             return null;
         }
-        if (object instanceof Identifiable) {
+        if (Attributes.hasInheritedAttribute(getInterfaceClass(), "entity")) {
             return new Identity(object.getClass(), new Long(CurrentPrevayler.getSystem().getObjectID(object)));
         }
 
@@ -76,10 +76,10 @@ public class IdentifyingCall extends Call {
     }
 
     protected Object resolve(Identity identity) {
-        if (Identifiable.class.isAssignableFrom(identity.getObjectClass())) {
-            return CurrentPrevayler.getSystem().getObjectWithID(((Long) identity.getIdentifier()).intValue());
+        if (Attributes.hasInheritedAttribute(identity.getObjectClass(), "entity")) {
+            return CurrentPrevayler.getSystem().getObjectWithID(((Long) identity.getIdentifier()).longValue());
         }
-        throw new IllegalArgumentException("Can't resolve " + identity.getObjectClass());
+        throw new IllegalArgumentException("Can't resolve objects of " + identity.getObjectClass());
     }
 
     public Object[] getArgs() {

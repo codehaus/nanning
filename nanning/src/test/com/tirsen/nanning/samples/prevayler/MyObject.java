@@ -3,13 +3,18 @@ package com.tirsen.nanning.samples.prevayler;
 import java.io.Serializable;
 
 /**
- * @instantiation-is-prevayler-command
+ * @entity
  */
-public interface MyObject extends Serializable, Identifiable {
+public interface MyObject extends Serializable {
     String getAttribute();
 
     /**
-     * @prevayler-command
+     * @transaction
      */
     void setAttribute(String attribute);
+
+    /**
+     * @transaction
+     */
+    void setMyObject(MyObject myObject);
 }

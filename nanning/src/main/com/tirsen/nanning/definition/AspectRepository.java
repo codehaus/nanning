@@ -24,10 +24,10 @@ import com.tirsen.nanning.Aspects;
 /**
  * TODO document AspectRepository
  *
- * <!-- $Id: AspectRepository.java,v 1.2 2003-01-16 11:01:23 lecando Exp $ -->
+ * <!-- $Id: AspectRepository.java,v 1.3 2003-01-18 18:27:26 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.2 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.3 $
  */
 public class AspectRepository implements AspectFactory {
     private static AspectRepository instance;
@@ -126,10 +126,6 @@ public class AspectRepository implements AspectFactory {
         assert aspectInterface instanceof Class : "aspect-classes are identified by the interface-class of their first mixin";
         Object instance = getClass((Class) aspectInterface).newInstance(targets);
         return instance;
-    }
-
-    public static AspectRepository getCurrentAspectRepository() {
-        return (AspectRepository) Aspects.getCurrentAspectFactory();
     }
 
 }
