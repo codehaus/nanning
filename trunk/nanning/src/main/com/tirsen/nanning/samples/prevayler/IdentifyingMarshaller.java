@@ -61,7 +61,7 @@ public class IdentifyingMarshaller implements Marshaller, Serializable {
 
     private Object resolve(Identity identity) {
         Class objectClass = identity.getObjectClass();
-         if (Identity.isStatelessService(objectClass)) {
+        if (Identity.isStatelessService(objectClass)) {
             return Aspects.getCurrentAspectFactory().newInstance((Class) identity.getIdentifier());
         }
         if (Identity.isEntity(objectClass)) {
@@ -72,11 +72,11 @@ public class IdentifyingMarshaller implements Marshaller, Serializable {
         throw new IllegalArgumentException("Can't resolve objects of " + objectClass);
     }
 
-    private void registerObjectIDsRecursive(Object o) {
+    private void registerObjectIDsRecursive(final Object objectToRegister) {
         final IdentifyingSystem system = getSystem();
         final Set registeredObjects = new HashSet();
 
-        ObjectGraphVisitor.visit(o, new ObjectGraphVisitor() {
+        ObjectGraphVisitor.visit(objectToRegister, new ObjectGraphVisitor() {
             protected void visit(Object o) {
                 if (o instanceof AccessibleObject) {
                     return;
@@ -88,10 +88,9 @@ public class IdentifyingMarshaller implements Marshaller, Serializable {
                     return;
                 }
                 if (!registeredObjects.contains(o) && Identity.isEntity(o.getClass())) {
-                    if (system.hasObjectID(o)) {
-                        throw new IllegalArgumentException("you're mixing object in prevayler with objects outside, this will lead to unpredictable results, " +
-                                                           "so I've banished that sort of behaviour with this assert here, the object that was inside prevayler was " + o);
-                    }
+                    assert !system.hasObjectID(o) : "you're mixing objects in prevayler with objects outside, this will lead to unpredictable results, " +
+                            "so I've banished that sort of behaviour with this assert here" +
+                            "(the object that was inside prevayler was " + o + " the object that was outside was " + objectToRegister + ")";
 
                     system.registerObjectID(o);
                     registeredObjects.add(o);
