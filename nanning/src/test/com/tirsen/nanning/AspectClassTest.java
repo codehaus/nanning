@@ -13,10 +13,10 @@ import java.lang.reflect.Method;
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: AspectClassTest.java,v 1.4 2002-11-30 18:23:56 tirsen Exp $ -->
+ * <!-- $Id: AspectClassTest.java,v 1.5 2002-11-30 22:51:45 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class AspectClassTest extends TestCase
 {
@@ -32,20 +32,20 @@ public class AspectClassTest extends TestCase
         Impl impl = (Impl) Aspects.getTarget(intf, Intf.class);
 
         Interceptor[] interceptors = Aspects.getInterceptors(intf, Intf.class);
-        MockInterceptor aspect = (MockInterceptor) interceptors[0];
-        MockInterceptor aspect2 = (MockInterceptor) interceptors[1];
+        MockInterceptor interceptor = (MockInterceptor) interceptors[0];
+        MockInterceptor interceptor2 = (MockInterceptor) interceptors[1];
 
-        aspect.expectTarget(impl);
-        aspect.expectProxy(intf);
-        aspect.expectMethod(Intf.class.getMethod("call", null));
-        aspect2.expectTarget(impl);
-        aspect2.expectProxy(intf);
-        aspect2.expectMethod(Intf.class.getMethod("call", null));
+        interceptor.expectTarget(impl);
+        interceptor.expectProxy(intf);
+        interceptor.expectMethod(Intf.class.getMethod("call", null));
+        interceptor2.expectTarget(impl);
+        interceptor2.expectProxy(intf);
+        interceptor2.expectMethod(Intf.class.getMethod("call", null));
 
         intf.call();
         impl.verify();
-        aspect.verify();
-        aspect2.verify();
+        interceptor.verify();
+        interceptor2.verify();
     }
 
     public static class BlahongaException extends RuntimeException

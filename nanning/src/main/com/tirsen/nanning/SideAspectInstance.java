@@ -14,10 +14,10 @@ import java.util.ArrayList;
 /**
  * TODO document AspectDefinition
  *
- * <!-- $Id: SideAspectInstance.java,v 1.4 2002-11-25 12:17:07 lecando Exp $ -->
+ * <!-- $Id: SideAspectInstance.java,v 1.5 2002-11-30 22:51:45 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.4 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.5 $
  */
 class SideAspectInstance {
     private AspectDefinition aspectDefinition;
@@ -47,7 +47,8 @@ class SideAspectInstance {
         return interceptors;
     }
 
-    void setInterceptors(Interceptor[] interceptors) {
+    void setInterceptors(InterceptorDefinition[] interceptorDefinitions, Interceptor[] interceptors)
+            throws InstantiationException, IllegalAccessException {
         this.interceptors = interceptors;
         Method[] methods = aspectDefinition.getInterfaceClass().getMethods();
         methodInterceptors = new Interceptor[methods.length][];
@@ -56,11 +57,7 @@ class SideAspectInstance {
             Method method = methods[methodIndex];
             for (int interceptorIndex = 0; interceptorIndex < interceptors.length; interceptorIndex++) {
                 Interceptor interceptor = interceptors[interceptorIndex];
-                if (interceptor instanceof FilterMethodsInterceptor) {
-                    if (((FilterMethodsInterceptor) interceptor).interceptsMethod(method)) {
-                        interceptorsForMethod.add(interceptor);
-                    }
-                } else {
+                if (interceptorDefinitions[interceptorIndex].interceptsMethod(method)) {
                     interceptorsForMethod.add(interceptor);
                 }
             }

@@ -15,10 +15,10 @@ import junit.framework.TestCase;
 /**
  * TODO document PerformanceTest
  *
- * <!-- $Id: PerformanceTest.java,v 1.3 2002-11-30 18:23:56 tirsen Exp $ -->
+ * <!-- $Id: PerformanceTest.java,v 1.4 2002-11-30 22:51:45 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class PerformanceTest extends TestCase
 {
@@ -26,17 +26,12 @@ public class PerformanceTest extends TestCase
     {
         // these are exceptionally high due to Clover...
         double maxMemoryPerInvocation = 1.6;
+        double timesSlowerTolerance = 41;
         double maxTimePerInvocation = 0.012;
 
-        AspectClass aspectClass = new AspectClass();
-        aspectClass.setInterface(Intf.class);
-        aspectClass.addInterceptor(NullInterceptor.class);
-        aspectClass.addInterceptor(NullInterceptor.class);
-        aspectClass.setTarget(Impl.class);
-
-        Intf intf = (Intf) aspectClass.newInstance();
-
         int numberOfInvocations = 100000;
+
+        Intf intf = new Impl();
 
         ///CLOVER:OFF
         System.gc();
@@ -48,26 +43,57 @@ public class PerformanceTest extends TestCase
             intf.call();
         }
 
-        long time = System.currentTimeMillis() - startTime;
-        long memory = startMemory - Runtime.getRuntime().freeMemory();
+        long ordinaryTime = System.currentTimeMillis() - startTime;
+        long ordinaryMemory = startMemory - Runtime.getRuntime().freeMemory();
         ///CLOVER:ON
 
-        double timePerInvocation = time / (double) numberOfInvocations;
-        double memoryPerInvocation = memory / (double) numberOfInvocations;
+        AspectClass aspectClass = new AspectClass();
+        aspectClass.setInterface(Intf.class);
+        aspectClass.addInterceptor(NullInterceptor.class);
+        aspectClass.addInterceptor(NullInterceptor.class);
+        aspectClass.setTarget(Impl.class);
+
+        intf = (Intf) aspectClass.newInstance();
+
+        ///CLOVER:OFF
+        System.gc();
+        startMemory = Runtime.getRuntime().freeMemory();
+        startTime = System.currentTimeMillis();
+
+        for (int i = 0; i < numberOfInvocations; i++)
+        {
+            intf.call();
+        }
+
+        long aspectsTime = System.currentTimeMillis() - startTime;
+        long aspectsMemory = startMemory - Runtime.getRuntime().freeMemory();
+        ///CLOVER:ON
+
+        double timesSlower = aspectsTime/ (double) ordinaryTime;
+        double timesMoreMemory = aspectsMemory / (double) ordinaryMemory;
+
+        double timePerInvocation = aspectsTime / (double) numberOfInvocations;
+        double memoryPerInvocation = aspectsMemory / (double) numberOfInvocations;
 
         System.out.println();
-        System.out.println("time = " + time);
-        System.out.println("memory = " + memory);
+        System.out.println("timesSlower = " + timesSlower);
+        System.out.println("timesMoreMemory = " + timesMoreMemory);
+        System.out.println("ordinaryTime = " + ordinaryTime);
+        System.out.println("ordinaryMemory = " + ordinaryMemory);
+        System.out.println("aspectsTime = " + aspectsTime);
+        System.out.println("aspectsMemory = " + aspectsMemory);
         System.out.println("memoryPerInvocation = " + memoryPerInvocation);
         System.out.println("timePerInvocation = " + timePerInvocation);
 
         assertTrue("memory per invocation exceeded", memoryPerInvocation < maxMemoryPerInvocation);
         assertTrue("time per invocation exceeded", timePerInvocation < maxTimePerInvocation);
+        assertTrue("time per invocation exceeded", timesSlowerTolerance > timesSlower);
     }
 
-    public void testInstanceFootprint() throws IllegalAccessException, InstantiationException
+    public void testInstantiation() throws IllegalAccessException, InstantiationException
     {
-        int timesBiggerTolerance = 8;
+        int timesBiggerTolerance = 69;
+        int timesSlowerTolerance = 6;
 
         int numberOfInstances = 1000;
 
@@ -77,6 +103,7 @@ public class PerformanceTest extends TestCase
         ///CLOVER:OFF
         System.gc();
         long startMemory = Runtime.getRuntime().freeMemory();
+        long startTime = System.currentTimeMillis();
 
         for (int i = 0; i < numberOfInstances; i++)
         {
@@ -84,10 +111,11 @@ public class PerformanceTest extends TestCase
         }
 
         System.gc();
-        long memory = startMemory - Runtime.getRuntime().freeMemory();
+        long ordinaryTime = System.currentTimeMillis() - startTime;
+        long ordinaryMemory = startMemory - Runtime.getRuntime().freeMemory();
         ///CLOVER:ON
 
-        double memoryPerOrdinaryInstance = memory / (double) numberOfInstances;
+        double memoryPerOrdinaryInstance = ordinaryMemory / (double) numberOfInstances;
 
         // determine max-memory per aspect-instance compared to ordinary instances
         double maxMemoryPerInstance = memoryPerOrdinaryInstance * timesBiggerTolerance;
@@ -103,6 +131,7 @@ public class PerformanceTest extends TestCase
         ///CLOVER:OFF
         System.gc();
         startMemory = Runtime.getRuntime().freeMemory();
+        startTime = System.currentTimeMillis();
 
         Object[] objects = new Object[numberOfInstances];
         for (int i = 0; i < numberOfInstances; i++)
@@ -111,17 +140,27 @@ public class PerformanceTest extends TestCase
         }
 
         System.gc();
-        memory = startMemory - Runtime.getRuntime().freeMemory();
+        long aspectsTime = System.currentTimeMillis() - startTime;
+        long memory = startMemory - Runtime.getRuntime().freeMemory();
         ///CLOVER:ON
 
         double memoryPerInstance = memory / (double) numberOfInstances;
+
+        double timesBigger = memory / (double) ordinaryMemory;
+        double timesSlower = aspectsTime / (double) ordinaryTime;
+
         System.out.println();
+        System.out.println("ordinaryTime = " + ordinaryTime);
+        System.out.println("aspectsTime = " + aspectsTime);
+        System.out.println("times slower = " + timesSlower);
+
         System.out.println("memory = " + memory);
         System.out.println("memoryPerOrdinaryInstance = " + memoryPerOrdinaryInstance);
         System.out.println("maxMemoryPerInstance = " + maxMemoryPerInstance);
-        System.out.println("times bigger = " + memoryPerInstance / memoryPerOrdinaryInstance);
+        System.out.println("times bigger = " + timesBigger);
         System.out.println("memoryPerInstance = " + memoryPerInstance);
 
-        assertTrue("memory per instance exceeded", memoryPerInstance < maxMemoryPerInstance);
+        assertTrue("memory per instance exceeded", timesBiggerTolerance > timesBigger);
+        assertTrue("time per instantiation exceeded", timesSlowerTolerance > timesSlower);
     }
 }

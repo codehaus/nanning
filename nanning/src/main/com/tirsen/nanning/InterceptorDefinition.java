@@ -8,19 +8,24 @@ package com.tirsen.nanning;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Set;
+import java.util.HashSet;
+import java.lang.reflect.Method;
 
 /**
  * TODO document InterceptorDefinition
  *
- * <!-- $Id: InterceptorDefinition.java,v 1.5 2002-11-30 18:23:56 tirsen Exp $ -->
+ * <!-- $Id: InterceptorDefinition.java,v 1.6 2002-11-30 22:51:45 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class InterceptorDefinition {
     private final Class interceptorClass;
     private Interceptor statelessInterceptorSingleton;
     private Map mapAttributes;
+    private Set negativeCache = new HashSet();
+    private Set positiveCache = new HashSet();
 
     public InterceptorDefinition(Class interceptorClass) {
         this.interceptorClass = interceptorClass;
@@ -58,5 +63,27 @@ public class InterceptorDefinition {
         else {
             return mapAttributes.get(name);
         }
+    }
+
+    public boolean interceptsMethod(Method method) throws InstantiationException, IllegalAccessException {
+        if(negativeCache.contains(method)) {
+            return false;
+        }
+        if(positiveCache.contains(method)) {
+            return true;
+        }
+
+        Interceptor interceptor = newInstance();
+        if (interceptor instanceof FilterMethodsInterceptor) {
+            if (((FilterMethodsInterceptor) interceptor).interceptsMethod(method)) {
+                positiveCache.add(method);
+                return true;
+            }
+        } else {
+            positiveCache.add(method);
+            return true;
+        }
+        negativeCache.add(interceptor);
+        return false;
     }
 }
