@@ -12,7 +12,7 @@
         <logo>http://sourceforge.net/sflogo.php?group_id=64968&amp;type=5</logo>
     </organization>
     <inceptionYear>2002</inceptionYear>
-    <package>com.tirsen.nanning</package>
+    <package>org.codehaus.nanning</package>
 
     <shortDescription>Nanning is a simple yet scaleable aspect-oriented framework.</shortDescription>
 
