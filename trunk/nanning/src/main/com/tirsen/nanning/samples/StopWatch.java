@@ -3,13 +3,14 @@ package com.tirsen.nanning.samples;
 public class StopWatch {
     ///CLOVER:OFF
 
+    public static final double MILLIS_PER_SECOND = 1000;
+    public static final int BYTES_PER_K = 1024;
+    
     private long startMemory;
     private long startTime;
     private long time;
     private long memory;
-    private static final double MILLIS_PER_SECOND = 1000;
     private boolean stopped = false;
-    private static final int BYTES_PER_K = 1024;
 
     public StopWatch() {
         this(false);
