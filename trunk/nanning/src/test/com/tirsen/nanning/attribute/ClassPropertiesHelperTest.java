@@ -3,6 +3,7 @@ package com.tirsen.nanning.attribute;
 import junit.framework.TestCase;
 
 import java.lang.reflect.Proxy;
+import java.io.File;
 
 public class ClassPropertiesHelperTest extends TestCase {
     private ClassPropertiesHelper classPropertiesHelper;
@@ -61,7 +62,13 @@ public class ClassPropertiesHelperTest extends TestCase {
     }
 
 
-
+    public void testGetFileName() {
+        File baseDir = new File(".");
+        classPropertiesHelper.setPackageName("package.name");
+        classPropertiesHelper.setClassName("ClassName");
+        assertEquals(new File(baseDir, "package" + File.separator + "name" + File.separator + "ClassName.attributes"),
+                     classPropertiesHelper.getAttributeFile(baseDir));
+    }
 
 
 }

@@ -10,6 +10,7 @@ import com.tirsen.nanning.attribute.AttributesTest;
 import com.tirsen.nanning.attribute.AttributesXMLParserTest;
 import com.tirsen.nanning.attribute.AttributesCompilerTest;
 import com.tirsen.nanning.attribute.ClassPropertiesHelperTest;
+import com.tirsen.nanning.attribute.AttributesBuilderTest;
 import com.tirsen.nanning.config.AspectSystemTest;
 import com.tirsen.nanning.config.PointcutTest;
 import com.tirsen.nanning.config.InterceptorAspectTest;
@@ -37,7 +38,7 @@ public class UnitTestSuite {
         TestSuite suite = new TestSuite();
 
         suite.addTestSuite(ClassPropertiesHelperTest.class);
-        suite.addTestSuite(AttributesCompilerTest.class);
+        suite.addTestSuite(AttributesBuilderTest.class);
         suite.addTestSuite(AttributesXMLParserTest.class);
 
         suite.addTestSuite(AspectInstanceTest.class);

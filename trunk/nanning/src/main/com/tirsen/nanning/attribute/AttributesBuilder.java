@@ -2,6 +2,9 @@ package com.tirsen.nanning.attribute;
 
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.List;
+import java.util.Stack;
+import java.util.ArrayList;
 
 import com.thoughtworks.qdox.parser.Builder;
 import com.thoughtworks.qdox.parser.structs.ClassDef;
@@ -18,17 +21,18 @@ import com.thoughtworks.qdox.parser.structs.MethodDef;
  * to parse another file, the reset() method must be called.</p>
  *
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class AttributesBuilder implements Builder {
 
-    private ClassPropertiesHelper classPropertiesHelper = new ClassPropertiesHelper();
-
     private final Properties currentAttributes = new Properties();
+    private Stack classPropertiesHelperStack = new Stack();
+    private List classPropertiesHelpers = new ArrayList();
+    private String packageName;
 
 
     public void addPackage(String packageName) {
-        System.out.println("package " + packageName);
+        this.packageName = packageName;
     }
 
     public void addImport(String importName) {
@@ -38,6 +42,7 @@ public class AttributesBuilder implements Builder {
     }
 
     public void endClass() {
+        classPropertiesHelperStack.pop();
     }
 
     public void addJavaDocTag(String tag, String text) {
@@ -45,9 +50,22 @@ public class AttributesBuilder implements Builder {
     }
 
     public void beginClass(ClassDef def) {
-        classPropertiesHelper = new ClassPropertiesHelper();
-        classPropertiesHelper.setClassName(def.name);
+        String baseClassName = "";
+        if (!classPropertiesHelperStack.isEmpty()) {
+            baseClassName = classPropertiesHelper().getClassName() + "$";
+        }
+
+        classPropertiesHelperStack.push(new ClassPropertiesHelper());
+        classPropertiesHelpers.add(classPropertiesHelper());
+
+        classPropertiesHelper().setClassName(baseClassName + def.name);
+
+        classPropertiesHelper().setPackageName(packageName);
         addCurrentAttributes(null, null);
+    }
+
+    private ClassPropertiesHelper classPropertiesHelper() {
+        return (ClassPropertiesHelper) classPropertiesHelperStack.peek();
     }
 
     public void addMethod(MethodDef def) {
@@ -93,13 +111,13 @@ public class AttributesBuilder implements Builder {
                 final String attributeValue = currentAttributes.getProperty(attributeName);
 
                 if (fieldName != null) {
-                    classPropertiesHelper.loadFieldAttribute(fieldName, attributeName, attributeValue);
+                    classPropertiesHelper().loadFieldAttribute(fieldName, attributeName, attributeValue);
 
                 } else if (methodSignature != null) {
-                    classPropertiesHelper.loadMethodAttribute(methodSignature, attributeName, attributeValue);
+                    classPropertiesHelper().loadMethodAttribute(methodSignature, attributeName, attributeValue);
 
                 } else {
-                    classPropertiesHelper.loadClassAttribute(attributeName, attributeValue);
+                    classPropertiesHelper().loadClassAttribute(attributeName, attributeValue);
 
                 }
             }
@@ -107,7 +125,14 @@ public class AttributesBuilder implements Builder {
         }
     }
 
-    public ClassPropertiesHelper getClassPropertiesHelper() {
-        return classPropertiesHelper;
+    public List getClassPropertiesHelper() {
+        assert classPropertiesHelperStack.isEmpty();
+        return classPropertiesHelpers;
+    }
+
+    public void reset() {
+        assert classPropertiesHelperStack.isEmpty();
+        classPropertiesHelperStack.clear();
+        classPropertiesHelpers.clear();
     }
 }

@@ -9,10 +9,10 @@ package com.tirsen.nanning.attribute;
 /**
  * TODO document AttributesTestClass
  *
- * <!-- $Id: AttributesTestClass.java,v 1.6 2003-06-09 17:40:42 tirsen Exp $ -->
+ * <!-- $Id: AttributesTestClass.java,v 1.7 2003-06-10 11:28:15 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.6 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.7 $
  *
  * @class.attribute classValue
  */
@@ -23,6 +23,10 @@ public class AttributesTestClass implements AttributesTestInterface {
      * @inner.attribute innerValue
      */
     public static class InnerClass {
+        /**
+         * @inner.field.attribute innerFieldValue
+         */
+        String innerField;
     }
 
     /**
