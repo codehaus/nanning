@@ -13,25 +13,42 @@ import junit.framework.TestCase;
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: AspectInstanceTest.java,v 1.4 2003-03-27 18:19:36 lecando Exp $ -->
+ * <!-- $Id: AspectInstanceTest.java,v 1.5 2003-04-14 17:32:58 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.4 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.5 $
  */
 public class AspectInstanceTest extends TestCase {
+    public void testEmptyAspectInstance() {
+        AspectInstance instance = new AspectInstance();
+        Object proxy = instance.getProxy();
+        // test some of the methods from java.lang.Object
+        assertNotNull(proxy);
+        assertNotNull(proxy.toString());
+    }
+
+    public void testAspectInstanceWithOneMixin() {
+        AspectInstance instance = new AspectInstance();
+        instance.addMixin(new MixinInstance(Intf.class, new Impl()));
+        Object proxy = instance.getProxy();
+        assertTrue(proxy instanceof Intf);
+        Intf intf = (Intf) proxy;
+        intf.call();
+    }
+
     public static class BlahongaException extends RuntimeException {
     }
 
     public void testThrowsCorrectExceptions() {
-        AspectInstance aspectInstance = new AspectInstance();
-        MixinInstance mixinInstance = new MixinInstance();
-        mixinInstance.setInterfaceClass(Intf.class);
-        mixinInstance.addInterceptor(new MockInterceptor());
-        mixinInstance.addInterceptor(new MockInterceptor());
-        mixinInstance.setTarget(new Impl());
-        aspectInstance.addMixin(mixinInstance);
+        AspectInstance instance = new AspectInstance();
+        MixinInstance mixin = new MixinInstance();
+        mixin.setInterfaceClass(Intf.class);
+        mixin.addInterceptor(new MockInterceptor());
+        mixin.addInterceptor(new MockInterceptor());
+        mixin.setTarget(new Impl());
+        instance.addMixin(mixin);
 
-        Intf proxy = (Intf) aspectInstance.getProxy();
+        Intf proxy = (Intf) instance.getProxy();
 
         Aspects.setTarget(proxy, Intf.class, new Impl() {
             public void call() {
@@ -109,7 +126,7 @@ public class AspectInstanceTest extends TestCase {
         sideTarget.verify();
     }
 
-    public void testNoAspects() throws IllegalAccessException, InstantiationException {
+    public void testNoInterceptors() throws IllegalAccessException, InstantiationException {
         AspectInstance aspectInstance = new AspectInstance();
         MixinInstance mixinInstance = new MixinInstance();
         mixinInstance.setInterfaceClass(Intf.class);

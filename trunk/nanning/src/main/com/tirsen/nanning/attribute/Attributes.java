@@ -28,10 +28,10 @@ import org.apache.commons.logging.LogFactory;
  * Hmm... wait, a minute, there's some support for this in QDox, maybe that will work...
  * -- jon
 
- * <!-- $Id: Attributes.java,v 1.9 2003-03-24 07:37:57 lecando Exp $ -->
+ * <!-- $Id: Attributes.java,v 1.10 2003-04-14 17:32:55 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.9 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.10 $
  */
 
 public class Attributes {
@@ -143,7 +143,11 @@ public class Attributes {
             for (int i = 0; i < parameterTypes.length; i++) {
                 Class parameterType = parameterTypes[i];
                 String type = parameterType.getName();
-                stringBuffer.append(type.substring(type.lastIndexOf('.') + 1));
+                type = type.substring(type.lastIndexOf('.') + 1);
+                if (type.lastIndexOf(';') != -1) {
+                    type = type.substring(0, type.lastIndexOf(';'));
+                }
+                stringBuffer.append(type);
                 if (i + 1 < parameterTypes.length) {
                     stringBuffer.append(',');
                 }

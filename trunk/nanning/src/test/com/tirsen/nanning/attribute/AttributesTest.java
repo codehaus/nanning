@@ -15,10 +15,10 @@ import org.apache.commons.lang.StringUtils;
 /**
  * TODO document AttributesTest
  *
- * <!-- $Id: AttributesTest.java,v 1.5 2003-02-20 15:36:06 lecando Exp $ -->
+ * <!-- $Id: AttributesTest.java,v 1.6 2003-04-14 17:33:00 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.5 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.6 $
  */
 public class AttributesTest extends AbstractAttributesTest {
 
@@ -27,18 +27,26 @@ public class AttributesTest extends AbstractAttributesTest {
         assertEquals("classValue", classAttributes.getAttribute("class.attribute"));
         assertTrue(classAttributes.hasAttribute("class.attribute"));
         assertFalse(classAttributes.hasAttribute("stupid.attribute"));
+
         Field field = AttributesTestClass.class.getDeclaredField("field");
         assertEquals("fieldValue", classAttributes.getAttribute(field, "field.attribute"));
         assertTrue(classAttributes.hasAttribute(field, "field.attribute"));
         assertFalse(classAttributes.hasAttribute(field, "stupid.attribute"));
+
         Method method = AttributesTestClass.class.getMethod("method", null);
         assertEquals("methodValue", classAttributes.getAttribute(method, "method.attribute"));
         assertTrue(classAttributes.hasAttribute(method, "method.attribute"));
         assertFalse(classAttributes.hasAttribute(method, "stupid.attribute"));
+
         Method argMethod = AttributesTestClass.class.getMethod("method", new Class[]{String.class, String.class});
         assertEquals("argMethodValue", classAttributes.getAttribute(argMethod, "method.attribute"));
         assertTrue(classAttributes.hasAttribute(argMethod, "method.attribute"));
         assertFalse(classAttributes.hasAttribute(argMethod, "stupid.attribute"));
+
+        Method arrayArgMethod = AttributesTestClass.class.getMethod("method", new Class[]{String[].class});
+        assertTrue(classAttributes.hasAttribute(arrayArgMethod, "method.attribute"));
+        assertFalse(classAttributes.hasAttribute(arrayArgMethod, "stupid.attribute"));
+        assertEquals("arrayArgMethodValue", classAttributes.getAttribute(arrayArgMethod, "method.attribute"));
     }
 
     public void testAttributes() throws IOException, NoSuchMethodException, NoSuchFieldException {

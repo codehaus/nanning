@@ -3,6 +3,7 @@
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
+ * (C) 2003 Jon Tirsen
  */
 package com.tirsen.nanning;
 
@@ -21,12 +22,22 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
 /**
- * TODO document AspectInstance
+ * The central concept of the Nanning Core, contains mixins.
+ * Use like this:
+ * <pre><code>
+        AspectInstance aspectInstance = new AspectInstance();
+        MixinInstance mixinInstance = new MixinInstance();
+        mixinInstance.setInterfaceClass(Intf.class);
+        mixinInstance.addInterceptor(new MockInterceptor());
+        mixinInstance.addInterceptor(new NullInterceptor());
+        mixinInstance.setTarget(new Impl());
+        aspectInstance.addMixin(mixinInstance);
+</pre></code>
  *
- * <!-- $Id: AspectInstance.java,v 1.32 2003-03-25 07:52:51 lecando Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.33 2003-04-14 17:32:54 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.32 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.33 $
  */
 public final class AspectInstance implements InvocationHandler, Externalizable {
     static final long serialVersionUID = 5462785783512485056L;
@@ -123,6 +134,11 @@ public final class AspectInstance implements InvocationHandler, Externalizable {
         return interfaceInstance.getAllInterceptors();
     }
 
+    /**
+     * Returns the mixin with the specified interface.
+     * @param interfaceClass
+     * @return
+     */
     public MixinInstance getMixinForInterface(Class interfaceClass) {
         MixinInstance mixinInstance = (MixinInstance) mixins.get(interfaceClass);
         assert mixinInstance != null : "there is no mixin for interface " + interfaceClass;
@@ -166,6 +182,10 @@ public final class AspectInstance implements InvocationHandler, Externalizable {
         return classIdentifier;
     }
 
+    /**
+     * Adds a mixin.
+     * @param mixinInstance
+     */
     public void addMixin(MixinInstance mixinInstance) {
         assert proxy == null : "Can't addLink mixins when proxy has been created.";
         Class interfaceClass = mixinInstance.getInterfaceClass();
@@ -194,6 +214,11 @@ public final class AspectInstance implements InvocationHandler, Externalizable {
         }
     }
 
+    /**
+     * Returns all the interceptors referenced by this aspect instance. That is all interceptors of all methods of
+     * all mixins, invluding the construction-interceptors.
+     * @return
+     */
     public Set getAllInterceptors() {
         Set result = new LinkedHashSet();
         if (constructionInterceptors != null) {
@@ -210,10 +235,20 @@ public final class AspectInstance implements InvocationHandler, Externalizable {
         return result;
     }
 
+    /**
+     * Returns the interceptors of the specified method, searches in the mixin for the interface that the method
+     * has been declared on.
+     * @param method
+     * @return
+     */
     public List getInterceptorsForMethod(Method method) {
         return getMixinForInterface(method.getDeclaringClass()).getInterceptorsForMethod(method);
     }
 
+    /**
+     * Returns the AspectFactory used to create and configure this AspectInstance (if set by the AspectFactory).
+     * @return
+     */
     public final AspectFactory getAspectFactory() {
         return aspectFactory;
     }
@@ -274,10 +309,19 @@ public final class AspectInstance implements InvocationHandler, Externalizable {
                 .toString() + "}";
     }
 
+    /**
+     * Returns all mixins defined on this AspectInstance.
+     * @return
+     */
     public Collection getMixins() {
         return Collections.unmodifiableCollection(mixinsList);
     }
 
+    /**
+     * Adds a ConstructionInterceptor, the interceptor will be invoked when creating the proxy in {@link #getProxy()}.
+     *
+     * @param constructionInterceptor
+     */
     public void addConstructionInterceptor(ConstructionInterceptor constructionInterceptor) {
         if (constructionInterceptors == null) {
             constructionInterceptors = new ArrayList();

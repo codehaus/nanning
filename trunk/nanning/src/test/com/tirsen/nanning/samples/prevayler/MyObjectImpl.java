@@ -25,6 +25,9 @@ public class MyObjectImpl implements MyObject {
         return wasFinalized;
     }
 
+    public void setABC(String[] abc) {
+    }
+
     public void finalizationCallback() {
         this.wasFinalized = true;
     }

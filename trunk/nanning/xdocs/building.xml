@@ -10,7 +10,7 @@
 
         <section name="Building">
             <p>
-                Check out the sources from <a href="">here</a>.
+                Check out the sources from <a href="http://sourceforge.net/cvs/?group_id=64968">here</a>.
                 Build it with <a href="http://jakarta.apache.org/maven">Maven</a>.
             </p>
         </section>
