@@ -3,6 +3,7 @@ package com.tirsen.nanning.samples.prevayler;
 import java.io.Serializable;
 
 /**
+ * @remote
  * @entity
  */
 public interface MyObject extends Serializable {

@@ -94,6 +94,7 @@ public class RemoteMarshaller implements Marshaller {
         } else {
             assert Aspects.isAspectObject(o) ? !isRemoteStub(o) : true
                     : o + " was remote stub but did not have 'remote'-attribute";
+            assert !(o instanceof RemoteIdentity); 
         }
 
         return o;
