@@ -1,68 +1,21 @@
 <?xml version="1.0"?>
 <project>
-    <pomVersion>3</pomVersion>
-    <name>Nanning Aspects</name>
-    <groupId>nanning</groupId>
-    <id>nanning</id>
+    <extend>${basedir}/../../project.xml</extend>
+
     <logo>/../../images/nanning.png</logo>
-    <currentVersion>0.4</currentVersion>
+    <currentVersion>0.9</currentVersion>
+    <groupId>nanning</groupId>
     <organization>
         <name>Jon Tirsen</name>
-        <url>http://sourceforge.net/projects/nanning</url>
-        <logo>http://sourceforge.net/sflogo.php?group_id=64968&amp;type=5</logo>
+        <url>http://codehaus.org/</url>
+        <logo>http://images.werken.com/codehaus-plain.gif</logo>
     </organization>
     <inceptionYear>2002</inceptionYear>
-    <package>org.codehaus.nanning</package>
 
-    <shortDescription>Nanning is a simple yet scaleable aspect-oriented framework.</shortDescription>
-
-    <description>
-        Nanning is a simple yet scaleable aspect-oriented framework in Java it can be used to replace EJB in J2EE.
-    </description>
-
-    <url>http://nanning.sourceforge.net</url>
+    <url>http://nanning.codehaus.org</url>
     <issueTrackingUrl>
         http://jira.codehaus.org/secure/BrowseProject.jspa?id=10102
     </issueTrackingUrl>
-    <siteAddress>Sourceforge</siteAddress>
-    <siteDirectory>/home/groups/n/na/nanning/htdocs</siteDirectory>
-    <distributionDirectory>
-        /unknownatthistime
-    </distributionDirectory>
-
-    <repository>
-        <connection>
-            scm:cvs:pserver:anonymous@cvs.nanning.sourceforge.net:/cvsroot/nanning:nanning
-        </connection>
-        <url>
-            http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/nanning/nanning/
-        </url>
-    </repository>
-
-    <mailingLists>
-        <mailingList>
-            <name>Nanning Developer List</name>
-            <subscribe>http://lists.sourceforge.net/mailman/listinfo/nanning-developer</subscribe>
-            <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/nanning-developer</unsubscribe>
-            <archive>http://lists.sourceforge.net/mailman/listinfo/nanning-developer</archive>
-        </mailingList>
-    </mailingLists>
-
-    <developers>
-
-        <developer>
-            <name>Jon Tirsen</name>
-            <id>tirsen</id>
-            <organization>Lecando AB</organization>
-        </developer>
-
-        <developer>
-            <name>Lecando AB</name>
-            <id>lecando</id>
-            <organization>Lecando AB</organization>
-        </developer>
-
-    </developers>
 
     <dependencies>
 

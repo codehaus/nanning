@@ -2,7 +2,7 @@
 <document>
 
     <properties>
-        <author email="tirsen@users.sourceforge.net">Jon Tirsen</author>
+        <author email="tirsen@codehaus.org">Jon Tirsen</author>
         <title>Nanning Aspects</title>
     </properties>
 
@@ -21,7 +21,7 @@
             <p>Report bugs to our
                 <a href="http://jira.codehaus.org/secure/BrowseProject.jspa?id=10102">bug tracker</a>.</p>
 
-            <p>We're occasinally hanging out at the Codehaus IRC server. Connect a suitable IRC-client to
+            <p>We're occasionally hanging out at the Codehaus IRC server. Connect a suitable IRC-client to
                 <tt>irc.codehaus.org</tt> channel <tt>#nanning</tt>.</p>
         </section>
 

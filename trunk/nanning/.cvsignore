@@ -1,4 +1,4 @@
 target
 nanning.i*
-*.log
+*.log*
 junit*

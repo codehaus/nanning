@@ -99,66 +99,75 @@
 
     </postGoal>
 
-<!--    <preGoal name="xdoc:transform">-->
+    <preGoal name="xdoc:transform">
         <!-- use a template to create the plugins home page
              if it's an xdoc, it must be done before xdoc:transform
              and should generate to ${maven.gen.docs}/frameworks/index.xml-->
-<!--        <mkdir dir="${maven.gen.docs}/frameworks/"/>-->
-<!--        <j:file name="${maven.gen.docs}/frameworks/index.xml"-->
-<!--            prettyPrint="true">-->
-<!--            <document>-->
-<!--                <properties>-->
-<!--                    <title>Nanning Frameworks</title>-->
-<!--                    <author email="tirsen@users.sourceforge.net">Jon Tirsen</author>-->
-<!--                </properties>-->
-<!--                <body>-->
-<!--                    <section name="Frameworks">-->
-<!--                        <p>-->
-<!--                            The following frameworks are built on top of core Nanning. Some are applications of AOP and-->
-<!--                            can be used as samples, some are higher-level frameworks for using Nanning. This is also-->
-<!--                            used as a sandbox for components being developed and not yet ready for prime time.-->
-<!--                        </p>-->
-<!--                        <ul>-->
-<!--                            <ant:fileScanner var="frameworkProjects">-->
-<!--                                <fileset dir="${basedir}">-->
-<!--                                    <include name="src/frameworks/*/project.xml"/>-->
-<!--                                </fileset>-->
-<!--                            </ant:fileScanner>-->
-<!--                            <j:forEach items="${frameworkProjects.iterator()}" var="framework">-->
-<!--                                <j:set var="frameworkName" value="${framework.parentFile.name}"/>-->
-<!--                                <li>-->
-<!--                                    <a href="./${frameworkName}/index.html">${frameworkName}</a>-->
-<!--                                </li>-->
-<!--                            </j:forEach>-->
-<!--                        </ul>-->
-<!--                    </section>-->
-<!--                </body>-->
-<!--            </document>-->
-<!--        </j:file>-->
-<!---->
-<!--    </preGoal>-->
+        <mkdir dir="${maven.gen.docs}/frameworks/"/>
+        <j:file name="${maven.gen.docs}/frameworks/index.xml"
+            prettyPrint="true">
+            <document>
+                <properties>
+                    <title>Nanning Frameworks</title>
+                    <author email="tirsen@users.sourceforge.net">Jon Tirsen</author>
+                </properties>
+                <body>
+                    <section name="Frameworks">
+                        <p>
+                            The following frameworks are built on top of core Nanning. Some are applications of AOP and
+                            can be used as samples, some are higher-level frameworks for using Nanning. This is also
+                            used as a sandbox for components being developed and not yet ready for prime time.
+                        </p>
+                        <ul>
+                            <ant:fileScanner var="frameworkProjects">
+                                <fileset dir="${basedir}">
+                                    <include name="src/frameworks/*/project.xml"/>
+                                </fileset>
+                            </ant:fileScanner>
+                            <j:forEach items="${frameworkProjects.iterator()}" var="framework">
+                                <j:set var="frameworkName" value="${framework.parentFile.name}"/>
+                                <li>
+                                    <a href="./${frameworkName}/index.html">${frameworkName}</a>
+                                </li>
+                            </j:forEach>
+                        </ul>
+                    </section>
+                </body>
+            </document>
+        </j:file>
 
-<!--    <preGoal name="xdoc">-->
-<!---->
-<!--        <attainGoal name="nanning:frameworks-docs"/>-->
+    </preGoal>
+
+    <preGoal name="xdoc">
+
+        <maven:reactor
+            basedir="${basedir}/src/frameworks"
+            includes="*/project.xml"
+            goals="site"
+            banner="Generating site for"
+            ignoreFailures="false"
+            />
 
         <!-- create the parent directory for the docs -->
-<!--        <mkdir dir="${maven.docs.dest}/frameworks"/>-->
+        <mkdir dir="${maven.docs.dest}/frameworks"/>
 
         <!-- copy them all to ${maven.docs.dest}/reference/plugins/${plugin.id}/ -->
-<!--        <ant:fileScanner var="frameworkProjects">-->
-<!--            <fileset dir="${basedir}">-->
-<!--                <include name="src/frameworks/*/project.xml"/>-->
-<!--            </fileset>-->
-<!--        </ant:fileScanner>-->
-<!--        <j:forEach items="${frameworkProjects.iterator()}" var="framework">-->
-<!--            <j:set var="frameworkName" value="${framework.parentFile.name}"/>-->
-<!--            <mkdir dir="${maven.docs.dest}/frameworks/${frameworkName}/"/>-->
-<!--            <copy toDir="${maven.docs.dest}/frameworks/${frameworkName}/">-->
-<!--                <fileset dir="${basedir}/src/frameworks/${frameworkName}/target/docs/"/>-->
-<!--            </copy>-->
-<!--        </j:forEach>-->
-<!--    </preGoal>-->
+        <ant:fileScanner var="frameworkProjects">
+            <fileset dir="${basedir}">
+                <include name="src/frameworks/*/project.xml"/>
+            </fileset>
+        </ant:fileScanner>
+        <j:forEach items="${frameworkProjects.iterator()}" var="framework">
+            <j:set var="frameworkName" value="${framework.parentFile.name}"/>
+            <mkdir dir="${maven.docs.dest}/frameworks/${frameworkName}/"/>
+            <copy toDir="${maven.docs.dest}/frameworks/${frameworkName}/">
+                <fileset dir="${basedir}/src/frameworks/${frameworkName}/target/docs/">
+                    <include name="**"/>
+                </fileset>
+            </copy>
+        </j:forEach>
+
+    </preGoal>
 
     <!-- This is needed because of a maven bug or something, please do not delete -->
     <goal name="lecando:deploy-build"/>
