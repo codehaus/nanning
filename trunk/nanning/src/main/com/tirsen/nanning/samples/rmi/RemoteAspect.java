@@ -61,10 +61,7 @@ public class RemoteAspect implements Aspect, MethodInterceptor {
     public void introduce(AspectInstance aspectInstance) {
     }
 
-    public void adviseMixin(AspectInstance aspectInstance, MixinInstance mixin) {
-        mixin.addInterceptor(this);
-    }
-
     public void advise(AspectInstance aspectInstance) {
+        aspectInstance.addInterceptor(this);
     }
 }

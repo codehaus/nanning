@@ -1,5 +1,7 @@
 package com.tirsen.nanning.config;
 
+import java.util.Iterator;
+
 import com.tirsen.nanning.*;
 import junit.framework.TestCase;
 
@@ -9,38 +11,13 @@ public class AspectSystemTest extends TestCase {
         AspectSystem aspectSystem = new AspectSystem();
         aspectSystem.addAspect(new FindTargetMixinAspect());
         aspectSystem.addAspect(new Introductor(TestMixin.class, TestMixinImpl.class));
-        aspectSystem.addAspect(new Aspect() {
-            private MockInterceptor mockInterceptor = new MockInterceptor();
-
-            public void adviseMixin(AspectInstance aspectInstance, MixinInstance mixin) {
-                mixin.addInterceptor(mockInterceptor);
-            }
-
-            public void advise(AspectInstance aspectInstance) {
-            }
-
-            public void introduce(AspectInstance aspectInstance) {
-            }
-        });
+        aspectSystem.addAspect(new InterceptorAspect(new MockInterceptor()));
         final NullInterceptor nullInterceptor = new NullInterceptor();
-        aspectSystem.addAspect(new Aspect() {
-            public void adviseMixin(AspectInstance aspectInstance, MixinInstance mixin) {
-                mixin.addInterceptor(nullInterceptor);
-            }
-
-            public void advise(AspectInstance aspectInstance) {
-            }
-
-            public void introduce(AspectInstance aspectInstance) {
-            }
-        });
+        aspectSystem.addAspect(new InterceptorAspect(nullInterceptor));
         final MockConstructionInterceptor constructionInterceptor = new MockConstructionInterceptor();
 
         aspectSystem.addAspect(new Aspect() {
             public void introduce(AspectInstance aspectInstance) {
-            }
-
-            public void adviseMixin(AspectInstance aspectInstance, MixinInstance mixin) {
             }
 
             public void advise(AspectInstance aspectInstance) {
@@ -81,17 +58,7 @@ public class AspectSystemTest extends TestCase {
     public void testInheritance() throws NoSuchMethodException {
         AspectSystem aspectSystem = new AspectSystem();
         aspectSystem.addAspect(new FindTargetMixinAspect());
-        aspectSystem.addAspect(new Aspect() {
-            public void adviseMixin(AspectInstance aspectInstance, MixinInstance mixin) {
-                mixin.addInterceptor(new NullInterceptor());
-            }
-
-            public void advise(AspectInstance aspectInstance) {
-            }
-
-            public void introduce(AspectInstance aspectInstance) {
-            }
-        });
+        aspectSystem.addAspect(new InterceptorAspect(NullInterceptor.class, InterceptorAspect.PER_METHOD));
         Object bigMomma = aspectSystem.newInstance(IntfSub.class);
 
         assertEquals(1,

@@ -41,9 +41,6 @@ public class FindTargetMixinAspect implements Aspect {
         aspectInstance.addMixin(mixin);
     }
 
-    public void adviseMixin(AspectInstance aspectInstance, MixinInstance mixin) {
-    }
-
     public void advise(AspectInstance aspectInstance) {
     }
 

@@ -8,7 +8,7 @@ import java.io.Serializable;
  * TODO document Identity
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsen</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public class Identity implements Serializable {
     static final long serialVersionUID = 716500751463534855L;
@@ -27,36 +27,6 @@ public class Identity implements Serializable {
 
     public Object getIdentifier() {
         return identifier;
-    }
-
-    static boolean isEntity(Class objectClass) {
-        return Attributes.hasInheritedAttribute(objectClass, "entity");
-    }
-
-    public static boolean isStatelessService(Class objectClass) {
-        return Attributes.hasInheritedAttribute(objectClass, "service");
-    }
-
-    public static boolean isStatefulService(Class objectClass) {
-        return Attributes.hasInheritedAttribute(objectClass, "stateful-service");
-    }
-
-    public static boolean isPrimitive(Object o) {
-        if (o == null) {
-            return true;
-        } else if (o instanceof Number) {
-            return true;
-        } else if (o instanceof String) {
-            return true;
-        } else if (o instanceof Character) {
-            return true;
-        } else if (o instanceof Class) {
-            return true;
-        } else if (o instanceof Boolean) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public boolean equals(Object o) {
@@ -82,7 +52,4 @@ public class Identity implements Serializable {
         return this + "[objectClass=" + objectClass + ",identifier=" + identifier + "]";
     }
 
-    public static boolean isService(Class objectClass) {
-        return isStatelessService(objectClass) || isStatefulService(objectClass);
-    }
 }

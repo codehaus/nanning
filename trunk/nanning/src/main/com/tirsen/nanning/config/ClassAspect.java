@@ -20,12 +20,6 @@ public class ClassAspect extends AspectSystem implements Aspect {
         return classIdentifier.equals(aspectInstance.getClassIdentifier());
     }
 
-    public void adviseMixin(AspectInstance aspectInstance, MixinInstance mixin) {
-        if (shouldConfigure(aspectInstance)) {
-            adviceMixins(aspectInstance);
-        }
-    }
-
     public void advise(AspectInstance aspectInstance) {
         if (shouldConfigure(aspectInstance)) {
             super.advice(aspectInstance);

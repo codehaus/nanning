@@ -120,8 +120,10 @@ public class PrevaylerTest extends AbstractAttributesTest {
     public void testABC() throws ClassNotFoundException, IOException, NoSuchMethodException {
         AspectInstance aspectInstance = Aspects.getAspectInstance(aspectFactory.newInstance(MyObject.class));
         MixinInstance mixinInstance = (MixinInstance) aspectInstance.getMixins().iterator().next();
+
         Method setValue = MyObject.class.getDeclaredMethod("setValue", new Class[]{String.class});
         assertEquals(2, mixinInstance.getInterceptorsForMethod(setValue).size());
+
         Method setABC = MyObject.class.getDeclaredMethod("setABC", new Class[]{String[].class});
         assertTrue(Attributes.getAttributes(MyObject.class).hasAttribute(setABC, "transaction"));
         assertTrue(Attributes.hasAttribute(setABC, "transaction"));

@@ -52,10 +52,6 @@ public abstract class SimpleMixinAspect implements Aspect, Cloneable {
         }
     }
 
-    public void adviseMixin(AspectInstance aspectInstance, MixinInstance mixin) {
-
-    }
-
     public void advise(AspectInstance aspectInstance) {
         Object target = aspectInstance.getMixinForInterface(interfaceClass).getTarget();
         if (target == this) {

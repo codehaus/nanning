@@ -12,17 +12,17 @@ public class IdentifyingMarshaller implements Marshaller, Serializable {
     static final long serialVersionUID = 7285806267400465332L;
 
     public Object marshal(Object o) {
-        if (Identity.isPrimitive(o)) {
+        if (PrevaylerUtils.isPrimitive(o)) {
             return o;
 
-        } else if (Identity.isStatefulService(o.getClass())) {
+        } else if (PrevaylerUtils.isStatefulService(o.getClass())) {
             assert o instanceof Serializable : "Stateful services must be serializable";
             return o;
 
-        } else if (Identity.isStatelessService(o.getClass())) {
+        } else if (PrevaylerUtils.isStatelessService(o.getClass())) {
             return new Identity(o.getClass(), Aspects.getAspectInstance(o).getClassIdentifier());
 
-        } else if (Identity.isEntity(o.getClass())) {
+        } else if (PrevaylerUtils.isEntity(o.getClass())) {
             if (getSystem().hasObjectID(o)) {
                 return new Identity(Aspects.getAspectInstance(o).getClassIdentifier(), new Long(getSystem().getObjectID(o)));
             } else {
@@ -36,13 +36,13 @@ public class IdentifyingMarshaller implements Marshaller, Serializable {
     }
 
     public Object unmarshal(Object o) {
-        if (Identity.isPrimitive(o)) {
+        if (PrevaylerUtils.isPrimitive(o)) {
             return o;
 
         } else if (o instanceof Identity) {
             return resolve((Identity) o);
 
-        } else if (Identity.isEntity(o.getClass())) {
+        } else if (PrevaylerUtils.isEntity(o.getClass())) {
             if (!getSystem().hasObjectID(o)) {
                 registerObjectIDsRecursive(o);
             }
@@ -61,10 +61,10 @@ public class IdentifyingMarshaller implements Marshaller, Serializable {
 
     private Object resolve(Identity identity) {
         Class objectClass = identity.getObjectClass();
-        if (Identity.isStatelessService(objectClass)) {
+        if (PrevaylerUtils.isStatelessService(objectClass)) {
             return Aspects.getCurrentAspectFactory().newInstance((Class) identity.getIdentifier());
         }
-        if (Identity.isEntity(objectClass)) {
+        if (PrevaylerUtils.isEntity(objectClass)) {
             long oid = ((Long) identity.getIdentifier()).longValue();
             assert getSystem().isIDRegistered(oid) : "object of type " + Aspects.getRealClass(objectClass) + " had invalid object id " + oid;
             return getSystem().getObjectWithID(oid);
@@ -84,10 +84,10 @@ public class IdentifyingMarshaller implements Marshaller, Serializable {
                 if (o instanceof Date) {
                     return;
                 }
-                if (Identity.isPrimitive(o)) {
+                if (PrevaylerUtils.isPrimitive(o)) {
                     return;
                 }
-                if (!registeredObjects.contains(o) && Identity.isEntity(o.getClass())) {
+                if (!registeredObjects.contains(o) && PrevaylerUtils.isEntity(o.getClass())) {
                     assert !system.hasObjectID(o) : "you're mixing objects in prevayler with objects outside, this will lead to unpredictable results, " +
                             "so I've banished that sort of behaviour with this assert here" +
                             "(the object that was inside prevayler was " + o + " the object that was outside was " + objectToRegister + ")";

@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import com.tirsen.nanning.*;
 import com.tirsen.nanning.attribute.Attributes;
 
-public class CheckTransactionUnsupportedInterceptor implements MethodInterceptor, FilterMethodsInterceptor {
+public class CheckTransactionUnsupportedInterceptor implements MethodInterceptor {
     private static ThreadLocal transactionsUnsupported = new ThreadLocal();
 
     static boolean isTransactionsSupported() {
@@ -26,9 +26,5 @@ public class CheckTransactionUnsupportedInterceptor implements MethodInterceptor
         }
 
         return invocation.invokeNext();
-    }
-
-    public boolean interceptsMethod(Method method) {
-        return Attributes.hasAttribute(method, "transaction");
     }
 }

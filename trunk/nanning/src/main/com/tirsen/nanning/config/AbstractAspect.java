@@ -7,9 +7,6 @@ public abstract class AbstractAspect implements Aspect {
     public void advise(AspectInstance aspectInstance) {
     }
 
-    public void adviseMixin(AspectInstance aspectInstance, MixinInstance mixin) {
-    }
-
     public void introduce(AspectInstance aspectInstance) {
     }
 }
