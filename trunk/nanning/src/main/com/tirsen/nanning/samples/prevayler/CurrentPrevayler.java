@@ -1,6 +1,7 @@
 package com.tirsen.nanning.samples.prevayler;
 
 import org.prevayler.Prevayler;
+import org.prevayler.PrevalentSystem;
 
 public class CurrentPrevayler {
     private static ThreadLocal isInTransaction = new ThreadLocal() {
@@ -16,13 +17,21 @@ public class CurrentPrevayler {
     }
 
     public static IdentifyingSystem getSystem() {
-        IdentifyingSystem identifyingSystem = (IdentifyingSystem) currentSystem.get();
+        IdentifyingSystem identifyingSystem;
+        if (hasPrevayler()) {
+            identifyingSystem = (IdentifyingSystem) getPrevayler().system();
+        } else {
+            identifyingSystem = (IdentifyingSystem) currentSystem.get();
+        }
         assert identifyingSystem != null : "Prevayler not initialized for this thread, no current system";
         return identifyingSystem;
     }
 
     public static void setSystem(IdentifyingSystem system) {
         currentSystem.set(system);
+        if (system != null) {
+            setPrevayler(null);
+        }
     }
 
     public static Prevayler getPrevayler() {
@@ -33,7 +42,9 @@ public class CurrentPrevayler {
 
     public static void setPrevayler(Prevayler prevayler) {
         currentPrevayler.set(prevayler);
-        setSystem(prevayler == null ? null : (IdentifyingSystem) prevayler.system());
+        if (prevayler != null) {
+            setSystem(null);
+        }
     }
 
     public static boolean isReplaying() {
@@ -82,5 +93,9 @@ public class CurrentPrevayler {
 
     public static boolean hasPrevayler() {
         return currentPrevayler.get() != null;
+    }
+
+    public static boolean hasSystem() {
+        return hasPrevayler() || currentSystem.get() != null;
     }
 }

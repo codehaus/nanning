@@ -28,10 +28,10 @@ import java.util.*;
  * Hmm... wait, a minute, there's some support for this in QDox, maybe that will work...
  * -- jon
 
- * <!-- $Id: Attributes.java,v 1.5 2003-01-19 22:47:07 tirsen Exp $ -->
+ * <!-- $Id: Attributes.java,v 1.6 2003-02-21 13:44:39 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.5 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.6 $
  */
 
 public class Attributes {
@@ -172,11 +172,45 @@ public class Attributes {
     }
 
     public static boolean hasAttribute(Method method, String attribute) {
-        return getAttributes(method.getDeclaringClass()).hasAttribute(method, attribute);
+        return hasAttribute(method.getDeclaringClass(), method, attribute);
+    }
+
+    private static boolean hasAttribute(Class aClass, Method method, String attribute) {
+        return getAttributes(aClass).hasAttribute(method, attribute);
     }
 
     public static boolean hasAttribute(Field field, String attribute) {
-        return getAttributes(field.getDeclaringClass()).hasAttribute(field, attribute);
+        return hasAttribute(field.getDeclaringClass(), field, attribute);
+    }
+
+    private static boolean hasAttribute(Class aClass, Field field, String attribute) {
+        return getAttributes(aClass).hasAttribute(field, attribute);
+    }
+
+    public static boolean hasInheritedAttribute(Field field, String attribute) {
+        return hasInheritedAttribute(field.getDeclaringClass(), field, attribute);
+    }
+
+    public static boolean hasInheritedAttribute(Class aClass, Field field, String attribute) {
+        if (aClass == null) {
+            return false;
+        }
+
+        if (hasAttribute(aClass, field, attribute)) {
+            return true;
+        } else {
+            if (hasInheritedAttribute(aClass.getSuperclass(), field, attribute)) {
+                return true;
+            }
+            Class[] interfaces = aClass.getInterfaces();
+            for (int i = 0; i < interfaces.length; i++) {
+                Class anInterface = interfaces[i];
+                if(hasInheritedAttribute(anInterface, field, attribute)) {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
     public static String getInheritedAttribute(Class aClass, String attribute) {
