@@ -8,7 +8,13 @@
 
     <body>
 
+        <section name="Out of date">
+            This documentation is a bit out of date. For better documentation please see the
+            <a href="http://nanning.snipsnap.org">wiki</a>. This documentation will be updated before the 1.0 release.
+        </section>
+
         <section name="Usage">
+
             <subsection name="Building an aspected object">
                 <p>
                     This builds an aspected object consisting of two mixins one implementing the interface Intf and the
@@ -38,35 +44,6 @@ intf.call();
 SideAspect sideAspect = (SideAspect) intf;
 sideAspect.call();
                 ]]></source>
-            </subsection>
-            <subsection name="Using AspectClass">
-                <p>
-                    This is the older format for instantiating aspected objects. This example builds a configuration
-                    object that can be used to instantiate an aspected object.
-                </p>
-                <source><![CDATA[
-AspectClass aspectClass = new AspectClass();
-aspectClass.setInterface(Intf.class);
-aspectClass.addInterceptor(MockInterceptor.class);
-aspectClass.addInterceptor(NullInterceptor.class);
-aspectClass.setTarget(Impl.class);
-AspectDefinition aspectDefinition = new AspectDefinition();
-aspectDefinition.setInterface(SideAspect.class);
-aspectDefinition.addInterceptor(NullInterceptor.class);
-aspectDefinition.addInterceptor(MockInterceptor.class);
-aspectDefinition.setTarget(SideAspectImpl.class);
-aspectClass.addSideAspect(aspectDefinition);
-
-Object bigMomma = aspectClass.newInstance();
-
-// cast it to the interface you want to call, caveat: method-names must not conflict
-((Intf) bigMomma).call();
-((SideAspect) bigMomma).sideCall();
-                ]]></source>
-                <p>
-                    Nanning also has an <a href="#Configuration file format">XML-configuration format</a>
-                    if that's what you prefer.
-                </p>
             </subsection>
 
             <subsection name="Using runtime attributes">
@@ -128,141 +105,10 @@ assertEquals("argMethodValue", Attributes.getAttribute(argMethod, "methodAttribu
 
             <subsection name="Configuration file format">
                 <p>
-                    If you prefer XML over Java you can create a configuration file with the following
-                    format:
-                </p>
-                <source><![CDATA[
-<aspect-repository>
-    <aspect>
-        <interface>
-            org.codehaus.nanning.TestMixin
-        </interface>
-        <interceptor>
-            org.codehaus.nanning.NullInterceptor
-        </interceptor>
-        <interceptor>
-            org.codehaus.nanning.MockInterceptor
-        </interceptor>
-        <target>
-            org.codehaus.nanning.TestMixinImpl
-        </target>
-    </aspect>
-    <class>
-        <interface>
-            org.codehaus.nanning.Intf
-        </interface>
-        <interceptor>
-            org.codehaus.nanning.MockInterceptor
-        </interceptor>
-        <interceptor>
-            org.codehaus.nanning.NullInterceptor
-        </interceptor>
-        <target>
-            org.codehaus.nanning.Impl
-        </target>
-
-        <aspect interface="org.codehaus.nanning.TestMixin" />
-    </class>
-</aspect-repository>
-                ]]></source>
-                <p>
-                    Access the configuration with code along the following lines:
-                </p>
-                <source><![CDATA[
-AspectRepository aspectRepository = new AspectRepository();
-aspectRepository.configure(AspectRepositoryTest.class.getResource("aspect-repository-test.xml"));
-Object bigMomma = aspectRepository.newInstance(Intf.class);
-                ]]></source>
-                <p>
-                    Or if you want to cheat you can name the file "aspect-repository.xml" and put it
-                    in your classpath. In that case your code would look more like:
-                </p>
-                <source><![CDATA[
-Object bigMomma = AspectRepository.getInstance().newInstance(Intf.class);
-                ]]></source>
-                <p>
-                    Oh, forgot to mention... The configuration file is actually a
-                    <a href="http://jakarta.apache.org/commons/sandbox/jelly">Jelly</a>-script, which means
-                    you can probably do all sorts of crazy things and probably also embed Nanning-aspects
-                    inside other Jelly-scripts. I haven't had time to test all the implications of this
-                    feature but I guess it's kind of cool.
+                    The XML based format is documented <a href="http://nanning.snipsnap.org/space/xml+based+configuration">here</a>.
                 </p>
             </subsection>
 
-            <subsection name="Singleton interceptors">
-                <p>
-                    If you're interceptor does not keep state implement the marker-interface
-                    <a href="apidocs/org/tirsen/nanning/SingletonInterceptor.html">SingletonInterceptor</a>.
-                    If you do Nanning will only instantiate one instance and use that as the interceptor
-                    for the whole system. Example:
-                </p>
-                <source><![CDATA[
-public class NullInterceptor implements SingletonInterceptor
-{
-    public Object invoke(Invocation invocation) throws Throwable
-    {
-        return invocation.invokeNext();
-    }
-}
-                ]]></source>
-            </subsection>
-
-            <subsection name="Method filtering">
-                <p>
-                    Preliminary method filtering has also been implemented. If your interceptor likes to
-                    filter out the methods that it will intercept implement
-                    <a href="apidocs/org/tirsen/nanning/FilterMethodsInterceptor.html">
-                        FilterMethodsInterceptor</a>. If you return <code>false</code> to the call to
-                    <a href="apidocs/org/tirsen/nanning/FilterMethodsInterceptor.html#interceptsMethod(java.lang.reflect.Method)">
-                        FilterMethodsInterceptor.interceptsMethod</a> your interceptor will not be called
-                    for that method.
-                </p>
-                <source><![CDATA[
-public static class TestFilterMethodsInterceptor implements FilterMethodsInterceptor
-{
-    public boolean interceptsMethod(Method method)
-    {
-        return method.getName().equals("interceptThis");
-    }
-
-    public Object invoke(Invocation invocation) throws Throwable
-    {
-        if(!invocation.getMethod().getName().equals("interceptThis"))
-        {
-            fail("should not intercept " + invocation.getMethod());
-        }
-        return invocation.invokeNext();
-    }
-}
-                ]]></source>
-            </subsection>
-            <subsection name="Method name filters">
-                Filtering what methods an interceptor should intercept depending on its name by setting
-                the attribute "methodNameFilter" on the InterceptorDefinition to a regular expression that
-                the method name must match. (NOTE: your interceptor must extend BasicInterceptor,
-                where this behaviour is implemented). In this example only methods whose name contains
-                "Again" are intercepted (regular expression .*Again.*).
-                <source><![CDATA[
-AspectClass aspectClass = new AspectClass();
-aspectClass.setInterface(SomeAspect.class);
-InterceptorDefinition interceptorDefinition = new InterceptorDefinition(TestFilterMethodsInterceptor.class);
-// set the regular expression that method-name must match
-interceptorDefinition.setAttribute("methodNameFilter", ".*Again.*");
-aspectClass.addInterceptor(interceptorDefinition);
-aspectClass.setTarget(SomeAspectImpl.class);
-
-SomeAspect someAspect = (SomeAspect) aspectClass.newInstance();
-Object proxy = createAspectProxy();
-
-SomeAspect aspect = (SomeAspect) proxy;
-
-aspect.doIt(); // will NOT be called
-aspect.doItAgain(); // WILL be called
-aspect.oupsIDidItAgain(); // WILL be called
-                ]]></source>
-                An attribute called "methodNameFilter" on the interceptor-class accomplishes the same thing. There is
-                currently no support for specifying this in the XML-configuration.
-            </subsection>
         </section>
 
     </body>

@@ -4,7 +4,7 @@
     <name>Nanning Prevayler</name>
     <id>nanning-prevayler</id>
     <currentVersion>0.9</currentVersion>
-    <package>org.codehaus.nanning.cache</package>
+    <package>org.codehaus.nanning.prevayler</package>
     <shortDescription>Profiler</shortDescription>
     <description></description>
 

@@ -5,7 +5,7 @@
     <id>nanning-cache</id>
     <currentVersion>0.9</currentVersion>
     <package>org.codehaus.nanning.cache</package>
-    <shortDescription>Profiler</shortDescription>
+    <shortDescription>Cache</shortDescription>
     <description></description>
 
     <developers>

@@ -5,7 +5,7 @@
     <id>nanning-definition</id>
     <currentVersion>0.9</currentVersion>
     <package>org.codehaus.nanning.definition</package>
-    <shortDescription>Profiler</shortDescription>
+    <shortDescription>Definition</shortDescription>
     <description>The older deprecated definition format and API</description>
 
     <developers>
