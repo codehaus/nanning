@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Arrays;
 
 public class ClassAttributes {
     private static final Log logger = LogFactory.getLog(ClassAttributes.class);
@@ -33,24 +34,21 @@ public class ClassAttributes {
                 Object attributeValue = entry.getValue();
                 String[] parts = StringUtils.split(propertyName, ".");
                 if ("class".equals(parts[0])) {
-                    assert parts.length == 2 : "can't handle attributes with dots at the moment: " + propertyName;
-                    classAttributes.put(parts[1], attributeValue);
+                    classAttributes.put(joinTail(parts, 1), attributeValue);
                 } else if ("field".equals(parts[0])) {
-                    assert parts.length == 3 : "can't handle attributes with dots at the moment: " + propertyName;
                     String fieldName = parts[1];
                     try {
                         Field field = aClass.getDeclaredField(fieldName);
-                        getMap(fieldAttributes, field).put(parts[2], attributeValue);
+                        getMap(fieldAttributes, field).put(joinTail(parts, 2), attributeValue);
                     } catch (Exception e) {
                         assert false : "Could not find field: " + fieldName;
                         logger.warn("Could not find field: " + fieldName, e);
                     }
                 } else if ("method".equals(parts[0])) {
-                    assert parts.length == 3 : "can't handle attributes with dots at the moment: " + propertyName;
                     String methodSignature = parts[1];
                     Method method = findMethod(methodSignature);
                     if (method != null) {
-                        getMap(methodAttributes, method).put(parts[2], attributeValue);
+                        getMap(methodAttributes, method).put(joinTail(parts, 2), attributeValue);
                     } else {
                         logger.warn("could not find method for " + methodSignature);
                     }
@@ -113,5 +111,9 @@ public class ClassAttributes {
     public boolean hasAttribute(Method method, String attribute) {
         maybeLoadAttributes();
         return getMap(methodAttributes, method).containsKey(attribute);
+    }
+
+    public static Object joinTail(String[] parts, int firstIndex) {
+        return StringUtils.join(Arrays.asList(parts).subList(firstIndex, parts.length).iterator(), ".");
     }
 }

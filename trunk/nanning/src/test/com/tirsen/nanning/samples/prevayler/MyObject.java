@@ -6,12 +6,12 @@ import java.io.Serializable;
  * @entity
  */
 public interface MyObject extends Serializable, FinalizationCallback {
-    String getAttribute();
+    String getValue();
 
     /**
      * @transaction
      */
-    void setAttribute(String attribute);
+    void setValue(String attribute);
 
     /**
      * @transaction

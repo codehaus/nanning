@@ -1,18 +1,16 @@
 package com.tirsen.nanning.samples.prevayler;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+
 import com.tirsen.nanning.AspectFactory;
 import com.tirsen.nanning.Aspects;
 import com.tirsen.nanning.attribute.AbstractAttributesTest;
 import com.tirsen.nanning.config.AspectSystem;
 import com.tirsen.nanning.config.MixinAspect;
-import org.prevayler.Command;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.List;
-import java.util.Collection;
-import java.util.Iterator;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 
 public class PrevaylerTest extends AbstractAttributesTest {
 
@@ -51,9 +49,9 @@ public class PrevaylerTest extends AbstractAttributesTest {
                 prevayler.assertNumberOfCommands("set should result in one command only", 2);
                 assertTrue("should have gotten an object ID", currentMySystem().hasObjectID(insideObject));
 
-                insideObject.setAttribute("oldValue");
+                insideObject.setValue("oldValue");
                 prevayler.assertNumberOfCommands(3);
-                insideObject.setAttribute("newValue");
+                insideObject.setValue("newValue");
                 prevayler.assertNumberOfCommands(4);
 
                 MyObject outsideObject = (MyObject) aspectFactory.newInstance(MyObject.class);
@@ -86,9 +84,14 @@ public class PrevaylerTest extends AbstractAttributesTest {
 
                 Collection  objects = currentMySystem().getAllRegisteredObjects();
                 assertEquals("objects not created ", 4, objects.size());
-                Iterator iterator = objects.iterator(); iterator.next();
-                insideObject = (MyObject) iterator.next();
-                assertEquals("attribute not correct value", "newValue", insideObject.getAttribute());
+                final MyObject objectToFind = insideObject;
+                insideObject = (MyObject) CollectionUtils.find(objects, new Predicate() {
+                    public boolean evaluate(Object o) {
+                        return o == objectToFind;
+                    }
+                });
+                assertNotNull(insideObject);
+                assertEquals("value not correct", "newValue", insideObject.getValue());
                 assertNotNull(insideObject.getMyObject());
             }
         });
@@ -107,9 +110,8 @@ public class PrevaylerTest extends AbstractAttributesTest {
             public void run() {
                 Collection objects = currentMySystem().getAllRegisteredObjects();
                 assertEquals("objects not persisted", 4, objects.size());
-                Iterator iterator = objects.iterator(); iterator.next();
-                MyObject myObject = (MyObject) iterator.next();
-                assertEquals("property not correct value", "newValue", myObject.getAttribute());
+                MyObject myObject = (MyObject) currentMySystem().getObjectWithID(1);
+                assertEquals("property not correct value", "newValue", myObject.getValue());
                 prevayler.assertNumberOfCommands("just checking, should be no commands", 0);
 
                 // this will not hold if you mix objects created inside prevayler with those created outside

@@ -4,11 +4,13 @@ import junit.framework.TestCase;
 import com.tirsen.nanning.samples.prevayler.ObjectGraphVisitor;
 
 public class ObjectGraphVisitorTest extends TestCase {
-    public static class A {
+
+    public static class ABase {
         B[] array = { new B(), new B() };
         B b = new B();
         Object nullField = null;
-
+    }
+    public static class A extends ABase {
         public String toString() {
             return "A";
         }

@@ -6,8 +6,6 @@
  */
 package com.tirsen.nanning;
 
-import com.tirsen.nanning.definition.AspectDefinition;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -16,13 +14,12 @@ import java.util.*;
 /**
  * TODO document AspectDefinition
  *
- * <!-- $Id: MixinInstance.java,v 1.5 2003-02-18 15:17:29 lecando Exp $ -->
+ * <!-- $Id: MixinInstance.java,v 1.6 2003-02-20 15:35:59 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public final class MixinInstance {
-
     private Class interfaceClass;
     private Object target;
     private Map methodInterceptors = new HashMap();
@@ -190,26 +187,7 @@ public final class MixinInstance {
         return interfaceClass.getMethods();
     }
 
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof MixinInstance)) return false;
-
-        final MixinInstance mixinInstance = (MixinInstance) o;
-
-        if (!interfaceClass.equals(mixinInstance.interfaceClass)) return false;
-        if (target != null ? !target.equals(mixinInstance.target) : mixinInstance.target != null) return false;
-
-        return true;
-    }
-
-    public int hashCode() {
-        int result;
-        result = interfaceClass.hashCode();
-        result = 29 * result + (target != null ? target.hashCode() : 0);
-        return result;
-    }
-
     public String toString() {
-        return getTarget().toString();
+        return "mixin{" + getTarget().toString() + "}";
     }
 }

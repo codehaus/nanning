@@ -9,30 +9,30 @@ package com.tirsen.nanning.attribute;
 /**
  * TODO document AttributesTestClass
  *
- * <!-- $Id: AttributesTestClass.java,v 1.1 2003-01-12 13:25:40 tirsen Exp $ -->
+ * <!-- $Id: AttributesTestClass.java,v 1.2 2003-02-20 15:36:06 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.2 $
  *
- * @classAttribute classValue
+ * @class.attribute classValue
  */
 public class AttributesTestClass
 {
     ///CLOVER:OFF
     /**
-     * @fieldAttribute fieldValue
+     * @field.attribute fieldValue
      */
     public String field;
 
     /**
-     * @methodAttribute methodValue
+     * @method.attribute methodValue
      */
     public void method()
     {
     }
 
     /**
-     * @methodAttribute argMethodValue
+     * @method.attribute argMethodValue
      */
     public void method(String arg, String arg2)
     {

@@ -3,6 +3,7 @@ package com.tirsen.nanning.config;
 import com.tirsen.nanning.AspectInstance;
 import com.tirsen.nanning.Interceptor;
 import com.tirsen.nanning.MixinInstance;
+import com.tirsen.nanning.AspectException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +48,7 @@ public class PointcutAspect implements Aspect {
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException("Could not instantiate interceptor", e);
+            throw new AspectException("Could not process aspect " + this, e);
         }
     }
 }

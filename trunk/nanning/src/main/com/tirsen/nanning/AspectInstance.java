@@ -23,10 +23,10 @@ import org.apache.commons.lang.builder.ToStringStyle;
 /**
  * TODO document AspectInstance
  *
- * <!-- $Id: AspectInstance.java,v 1.27 2003-02-18 15:17:28 lecando Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.28 2003-02-20 15:35:58 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  */
 public final class AspectInstance implements InvocationHandler, Externalizable {
     static final long serialVersionUID = 5462785783512485056L;
@@ -139,7 +139,10 @@ public final class AspectInstance implements InvocationHandler, Externalizable {
     private Object readResolve() {
         AspectFactory currentAspectFactory = Aspects.getCurrentAspectFactory();
         assert currentAspectFactory != null : "context AspectFactory not specified, it is not possible to deserialize " + this;
-        return Aspects.getAspectInstance(currentAspectFactory.newInstance(serializeClassIdentifier, serializeTargets));
+        assert serializeClassIdentifier != null && serializeTargets != null;
+        AspectInstance aspectInstance = Aspects.getAspectInstance(currentAspectFactory.newInstance(serializeClassIdentifier, serializeTargets));
+        assert aspectInstance != null;
+        return aspectInstance;
     }
 
     public void writeExternal(ObjectOutput out) throws IOException {
@@ -208,25 +211,6 @@ public final class AspectInstance implements InvocationHandler, Externalizable {
         return aspectFactory;
     }
 
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof AspectInstance)) return false;
-
-        final AspectInstance aspectInstance = (AspectInstance) o;
-
-        if (classIdentifier != null ? !classIdentifier.equals(aspectInstance.classIdentifier) : aspectInstance.classIdentifier != null) return false;
-        if (!mixinsList.equals(aspectInstance.mixinsList)) return false;
-
-        return true;
-    }
-
-    public int hashCode() {
-        int result;
-        result = mixinsList.hashCode();
-        result = 29 * result + (classIdentifier != null ? classIdentifier.hashCode() : 0);
-        return result;
-    }
-
     public final class ConstructionInvocationImpl implements ConstructionInvocation {
         private Object proxy;
         private Class interfaceClass;
@@ -275,9 +259,9 @@ public final class AspectInstance implements InvocationHandler, Externalizable {
 
     public String toString() {
         if (mixinsList.size() == 1) {
-            return "nanning{" + mixinsList.get(0).toString() + "}";
+            return "aspect{" + mixinsList.get(0).toString() + "}";
         }
-        return "nanning{" + new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE)
+        return "aspect{" + new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE)
                 .append("class", classIdentifier)
                 .append("mixins", mixinsList)
                 .toString() + "}";

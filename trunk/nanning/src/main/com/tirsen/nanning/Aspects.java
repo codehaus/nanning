@@ -15,10 +15,10 @@ import java.util.Set;
 /**
  * Facade for accessing some important features of aspected objects and their definitions.
  *
- * <!-- $Id: Aspects.java,v 1.16 2003-01-29 14:24:24 lecando Exp $ -->
+ * <!-- $Id: Aspects.java,v 1.17 2003-02-20 15:35:58 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public class Aspects {
     private static ThreadLocal contextAspectRepository = new InheritableThreadLocal();
@@ -59,7 +59,9 @@ public class Aspects {
     }
 
     public static AspectInstance getAspectInstance(Object proxy) {
-        return (AspectInstance) Proxy.getInvocationHandler(proxy);
+        AspectInstance aspectInstance = (AspectInstance) Proxy.getInvocationHandler(proxy);
+        assert aspectInstance != null;
+        return aspectInstance;
     }
 
     public static void setTarget(Object proxy, Class interfaceClass, Object target) {

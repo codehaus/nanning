@@ -18,10 +18,10 @@ import java.util.Properties;
 /**
  * TODO document AttributesCompiler
  *
- * <!-- $Id: AttributesCompiler.java,v 1.3 2003-01-24 13:29:30 tirsen Exp $ -->
+ * <!-- $Id: AttributesCompiler.java,v 1.4 2003-02-20 15:35:59 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.3 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.4 $
  */
 public class AttributesCompiler extends Task {
 	private File src;
@@ -38,13 +38,18 @@ public class AttributesCompiler extends Task {
 
 	public void execute() {
 		try {
-			System.out.println("Compiling attributes for " + src + " into " + dest);
+            boolean hasCompiled = false;
+
 			String[] files = getJavaFiles();
 			for (int i = 0; i < files.length; i++) {
 				final File javaFile = new File(src, files[i]);
 				final File attributeFile = getAttributeFile(files[i]);
-				if (!attributeFile.exists() || attributeFile.lastModified() < javaFile.lastModified()) {
+                if (!attributeFile.exists() || attributeFile.lastModified() < javaFile.lastModified()) {
 					createAttributesFile(javaFile, attributeFile);
+                    if (!hasCompiled) {
+                        System.out.println("Compiling attributes for " + src + " into " + dest);
+                        hasCompiled = true;
+                    }
 				}
 			}
 		} catch (IOException e) {

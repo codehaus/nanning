@@ -6,21 +6,21 @@
  */
 package com.tirsen.nanning;
 
+import java.lang.reflect.Method;
+
 import com.tirsen.nanning.attribute.AbstractAttributesTest;
 import com.tirsen.nanning.attribute.Attributes;
 import com.tirsen.nanning.attribute.AttributesTestClass;
 import com.tirsen.nanning.definition.AspectClass;
 import com.tirsen.nanning.samples.StopWatch;
 
-import java.lang.reflect.Method;
-
 /**
  * TODO document PerformanceTest
  *
- * <!-- $Id: PerformanceTest.java,v 1.13 2003-01-24 13:29:30 tirsen Exp $ -->
+ * <!-- $Id: PerformanceTest.java,v 1.14 2003-02-20 15:36:05 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.13 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.14 $
  */
 public class PerformanceTest extends AbstractAttributesTest
 {
