@@ -59,6 +59,10 @@ public class BasicIdentifyingSystem implements IdentifyingSystem {
         return objectToId.containsKey(object);
     }
 
+    public boolean isIDRegistered(long objectId) {
+        return idToObject.containsKey(new Long(objectId));
+    }
+
     public void unregisterObjectID(Object o) {
         assert hasObjectID(o) : "object is not registered";
         assert o != null;
