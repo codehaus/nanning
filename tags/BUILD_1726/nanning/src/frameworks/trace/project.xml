@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<project>
+    <extend>${basedir}/../project.xml</extend>
+    <name>Nanning Trace</name>
+    <id>nanning-trace</id>
+    <currentVersion>0.9</currentVersion>
+    <package>org.codehaus.nanning.cache</package>
+    <shortDescription>Profiler</shortDescription>
+    <description></description>
+
+    <developers>
+
+        <developer>
+            <name>Jon Tirsen</name>
+            <id>tirsen</id>
+            <organization>Lecando AB</organization>
+        </developer>
+
+        <developer>
+            <name>Lecando AB</name>
+            <id>lecando</id>
+            <organization>Lecando AB</organization>
+        </developer>
+
+    </developers>
+
+    <dependencies>
+
+    </dependencies>
+
+</project>
