@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+
+<attributes>
+
+    <attribute>
+        <name>persistant</name>
+        <value>true</value>
+    </attribute>
+
+    <attribute>
+        <name>secure</name>
+        <value>true</value>
+    </attribute>
+
+    <field name="description">
+        <attribute>
+            <name>persistant</name>
+            <value>true</value>
+        </attribute>
+    </field>
+
+    <field name="boss">
+        <attribute>
+            <name>bastard</name>
+            <value>true</value>
+        </attribute>
+    </field>
+
+    <method name="fireAllEmployees">
+        <attribute>
+            <name>secure</name>
+            <value>true</value>
+        </attribute>
+    </method>
+
+    <method name="hireEmployee">
+        <parameter-type>String</parameter-type>
+        <parameter-type>Employee</parameter-type>
+        <attribute>
+            <name>secure</name>
+            <value>false</value>
+        </attribute>
+    </method>
+</attributes>
