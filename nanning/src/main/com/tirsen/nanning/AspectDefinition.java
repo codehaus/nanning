@@ -6,23 +6,23 @@
  */
 package com.tirsen.nanning;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
+import java.lang.reflect.Method;
 
 /**
  * Defines an interface that's to be added to an aspected object.
  *
- * <!-- $Id: AspectDefinition.java,v 1.4 2002-11-17 14:03:33 tirsen Exp $ -->
+ * <!-- $Id: AspectDefinition.java,v 1.5 2002-11-18 20:56:30 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class AspectDefinition
 {
     private Class interfaceClass;
     private final List interceptorDefinitions = new ArrayList();
     private Class targetClass;
+    private Map methodsToIndex;
 
     /**
      * Specify interface to use.
@@ -32,6 +32,12 @@ public class AspectDefinition
     public void setInterface(Class interfaceClass)
     {
         this.interfaceClass = interfaceClass;
+        methodsToIndex = new HashMap();
+        Method[] methods = interfaceClass.getMethods();
+        for (int i = 0; i < methods.length; i++) {
+            Method method = methods[i];
+            methodsToIndex.put(method, new Integer(i));
+        }
     }
 
     /**
@@ -65,26 +71,32 @@ public class AspectDefinition
         this.targetClass = targetClass;
     }
 
-    SideAspectInstance createInterfaceInstance() throws IllegalAccessException, InstantiationException
+    SideAspectInstance createAspectInstance(Interceptor[] topInterceptors)
+            throws IllegalAccessException, InstantiationException
     {
-        SideAspectInstance interfaceInstance = new SideAspectInstance();
-        interfaceInstance.setInterface(interfaceClass);
+        SideAspectInstance sideAspectInstance = new SideAspectInstance(this);
+        sideAspectInstance.setInterface(interfaceClass);
 
-        List instances = new ArrayList(interceptorDefinitions.size());
+        List instances = new ArrayList(interceptorDefinitions.size() + topInterceptors.length);
+        instances.addAll(Arrays.asList(topInterceptors));
         for (Iterator iterator = interceptorDefinitions.iterator(); iterator.hasNext();)
         {
             InterceptorDefinition interceptorDefinition = (InterceptorDefinition) iterator.next();
             instances.add(interceptorDefinition.newInstance());
         }
         Interceptor[] interceptors = (Interceptor[]) instances.toArray(new Interceptor[instances.size()]);
-        interfaceInstance.setInterceptors(interceptors);
+        sideAspectInstance.setInterceptors(interceptors);
 
-        interfaceInstance.setTarget(targetClass.newInstance());
-        return interfaceInstance;
+        sideAspectInstance.setTarget(targetClass.newInstance());
+        return sideAspectInstance;
     }
 
     public Class getInterfaceClass()
     {
         return interfaceClass;
+    }
+
+    public int getMethodIndex(Method method) {
+        return ((Integer) methodsToIndex.get(method)).intValue();
     }
 }

@@ -12,14 +12,14 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
 
 /**
- * TODO document LogInterceptor
+ * TODO document TraceInterceptor
  *
- * <!-- $Id: LogInterceptor.java,v 1.3 2002-10-30 20:10:54 tirsen Exp $ -->
+ * <!-- $Id: TraceInterceptor.java,v 1.1 2002-11-18 20:56:30 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.1 $
  */
-public class LogInterceptor implements Interceptor
+public class TraceInterceptor implements Interceptor
 {
     public Object invoke(Invocation invocation) throws Throwable
     {

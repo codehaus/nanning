@@ -7,16 +7,14 @@
 package com.tirsen.nanning;
 
 import junit.framework.TestCase;
-import com.tirsen.nanning.*;
-import com.tirsen.nanning.test.*;
 
 /**
  * TODO document AspectRepositoryTest
  *
- * <!-- $Id: AspectRepositoryTest.java,v 1.1 2002-11-17 14:03:34 tirsen Exp $ -->
+ * <!-- $Id: AspectRepositoryTest.java,v 1.2 2002-11-18 20:56:30 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class AspectRepositoryTest extends TestCase
 {

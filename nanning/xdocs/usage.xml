@@ -175,6 +175,36 @@ public class NullInterceptor implements SingletonInterceptor
 }
                 ]]></source>
             </subsection>
+
+            <subsection name="Method filtering">
+                <p>
+                    Preliminary method filtering has also been implemented. If your interceptor likes to
+                    filter out the methods that it will intercept implement
+                    <a href="apidocs/com/tirsen/nanning/FilterMethodsInterceptor.html">
+                        FilterMethodsInterceptor</a>. If you return <code>false</code> to the call to
+                    <a href="apidocs/com/tirsen/nanning/FilterMethodsInterceptor.html#interceptsMethod(java.lang.reflect.Method)">
+                        FilterMethodsInterceptor.interceptsMethod</a> your interceptor will not be called
+                    for that method.
+                </p>
+                <source><![CDATA[
+public static class TestFilterMethodsInterceptor implements FilterMethodsInterceptor
+{
+    public boolean interceptsMethod(Method method)
+    {
+        return method.getName().equals("interceptThis");
+    }
+
+    public Object invoke(Invocation invocation) throws Throwable
+    {
+        if(!invocation.getMethod().getName().equals("interceptThis"))
+        {
+            fail("should not intercept " + invocation.getMethod());
+        }
+        return invocation.invokeNext();
+    }
+}
+                ]]></source>
+            </subsection>
         </section>
 
     </body>

@@ -6,48 +6,74 @@
  */
 package com.tirsen.nanning;
 
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.ArrayList;
+
 
 /**
  * TODO document AspectDefinition
  *
- * <!-- $Id: SideAspectInstance.java,v 1.2 2002-10-30 20:10:54 tirsen Exp $ -->
+ * <!-- $Id: SideAspectInstance.java,v 1.3 2002-11-18 20:56:30 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
-class SideAspectInstance
-{
+class SideAspectInstance {
+    private AspectDefinition aspectDefinition;
     private Class interfaceClass;
     private Interceptor[] interceptors;
     private Object target;
+    private Interceptor[][] methodInterceptors;
 
-    public void setInterface(Class interfaceClass)
-    {
+    public SideAspectInstance(AspectDefinition aspectDefinition) {
+        this.aspectDefinition = aspectDefinition;
+    }
+
+    public void setInterface(Class interfaceClass) {
         this.interfaceClass = interfaceClass;
     }
 
-    void setInterceptors(Interceptor[] interceptors)
-    {
-        this.interceptors = interceptors;
-    }
-
-    public void setTarget(Object target)
-    {
+    public void setTarget(Object target) {
         this.target = target;
     }
 
-    public Class getInterfaceClass()
-    {
+    public Class getInterfaceClass() {
         return interfaceClass;
     }
 
-    public Interceptor[] getInterceptors()
-    {
+    public Interceptor[] getAllInterceptors() {
         return interceptors;
     }
 
-    public Object getTarget()
-    {
+    void setInterceptors(Interceptor[] interceptors) {
+        this.interceptors = interceptors;
+        Method[] methods = aspectDefinition.getInterfaceClass().getMethods();
+        methodInterceptors = new Interceptor[methods.length][];
+        List interceptorsForMethod = new ArrayList(methods.length);
+        for (int methodIndex = 0; methodIndex < methods.length; methodIndex++) {
+            Method method = methods[methodIndex];
+            for (int interceptorIndex = 0; interceptorIndex < interceptors.length; interceptorIndex++) {
+                Interceptor interceptor = interceptors[interceptorIndex];
+                if (interceptor instanceof FilterMethodsInterceptor) {
+                    if (((FilterMethodsInterceptor) interceptor).interceptsMethod(method)) {
+                        interceptorsForMethod.add(interceptor);
+                    }
+                } else {
+                    interceptorsForMethod.add(interceptor);
+                }
+            }
+            methodInterceptors[methodIndex] =
+                    (Interceptor[]) interceptorsForMethod.toArray(new Interceptor[interceptorsForMethod.size()]);
+            interceptorsForMethod.clear();
+        }
+    }
+
+    public Object getTarget() {
         return target;
+    }
+
+    public Interceptor[] getInterceptorsForMethod(Method method) {
+        return methodInterceptors[aspectDefinition.getMethodIndex(method)];
     }
 }

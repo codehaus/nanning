@@ -9,12 +9,12 @@ package com.tirsen.nanning;
 import java.lang.reflect.Method;
 
 /**
- * TODO doesn't work yet.
+ * Implement this if you want to do method-level filtering.
  *
- * <!-- $Id: FilterMethodsInterceptor.java,v 1.1 2002-11-17 14:03:34 tirsen Exp $ -->
+ * <!-- $Id: FilterMethodsInterceptor.java,v 1.2 2002-11-18 20:56:30 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public interface FilterMethodsInterceptor extends Interceptor
 {
