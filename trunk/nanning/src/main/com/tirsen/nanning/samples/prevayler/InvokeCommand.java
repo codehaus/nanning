@@ -32,7 +32,7 @@ public class InvokeCommand implements Command {
             Object target = call.getTarget();
             Object[] args = call.getArgs();
             Method method = call.getMethod();
-            logger.info("executing " + method + " on " + target + " with args " + Arrays.asList(args));
+            logger.info("executing " + method + " on " + target + " with " + (args == null ? "no args" : "args " + Arrays.asList(args)));
             return execute(system, method, target, args);
         } catch (Exception e) {
 
