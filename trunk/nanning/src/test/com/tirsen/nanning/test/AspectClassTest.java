@@ -15,10 +15,10 @@ import com.tirsen.nanning.Interceptor;
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: AspectClassTest.java,v 1.4 2002-10-28 18:51:01 tirsen Exp $ -->
+ * <!-- $Id: AspectClassTest.java,v 1.5 2002-10-30 21:39:27 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class AspectClassTest extends TestCase
 {
@@ -57,12 +57,12 @@ public class AspectClassTest extends TestCase
         aspectClass.addInterceptor(MockInterceptor.class);
         aspectClass.addInterceptor(NullInterceptor.class);
         aspectClass.setTarget(Impl.class);
-        AspectDefinition interfaceDefinition = new AspectDefinition();
-        interfaceDefinition.setInterface(SideAspect.class);
-        interfaceDefinition.addInterceptor(NullInterceptor.class);
-        interfaceDefinition.addInterceptor(MockInterceptor.class);
-        interfaceDefinition.setTarget(SideAspectImpl.class);
-        aspectClass.addSideAspect(interfaceDefinition);
+        AspectDefinition aspectDefinition = new AspectDefinition();
+        aspectDefinition.setInterface(SideAspect.class);
+        aspectDefinition.addInterceptor(NullInterceptor.class);
+        aspectDefinition.addInterceptor(MockInterceptor.class);
+        aspectDefinition.setTarget(SideAspectImpl.class);
+        aspectClass.addSideAspect(aspectDefinition);
 
         Object bigMomma = aspectClass.newInstance();
 

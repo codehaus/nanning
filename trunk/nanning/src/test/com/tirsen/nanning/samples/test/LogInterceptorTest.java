@@ -20,10 +20,10 @@ import java.util.Iterator;
 /**
  * TODO document LogInterceptorTest
  *
- * <!-- $Id: LogInterceptorTest.java,v 1.2 2002-10-30 20:10:54 tirsen Exp $ -->
+ * <!-- $Id: LogInterceptorTest.java,v 1.3 2002-10-30 21:39:27 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class LogInterceptorTest extends TestCase
 {
@@ -223,8 +223,8 @@ public class LogInterceptorTest extends TestCase
         aspectClass.setInterface(Intf.class);
         aspectClass.addInterceptor(LogInterceptor.class);
         aspectClass.setTarget(Impl.class);
-        assertTrue("failed to patch into commons-logging", LogFactory.getFactory() instanceof MockLogFactory);
 
+        assertTrue("failed to patch into commons-logging", LogFactory.getFactory() instanceof MockLogFactory);
         MockLog mockLog = ((MockLogFactory) LogFactory.getFactory()).getMockLog();
         mockLog.expectAddMessage(">>> call(hej, svej)");
         mockLog.expectAddMessage("<<< call(hej, svej) = hej tillbax!");
