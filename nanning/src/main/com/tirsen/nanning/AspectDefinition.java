@@ -13,15 +13,15 @@ import java.util.Iterator;
 /**
  * Defines an interface that's to be added to an aspected object.
  *
- * <!-- $Id: AspectDefinition.java,v 1.1 2002-10-27 12:13:18 tirsen Exp $ -->
+ * <!-- $Id: AspectDefinition.java,v 1.2 2002-10-27 12:36:41 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class AspectDefinition
 {
     protected Class interfaceClass;
-    protected List interceptorClasses = new ArrayList();
+    protected List interceptorDefinitions = new ArrayList();
     protected Class targetClass;
 
     /**
@@ -37,11 +37,21 @@ public class AspectDefinition
     /**
      * Adds an interceptor to the chain of interceptors.
      *
-     * @param aspectClass
+     * @param interceptorClass
      */
-    public void addInterceptor(Class aspectClass)
+    public void addInterceptor(Class interceptorClass)
     {
-        interceptorClasses.add(aspectClass);
+        addInterceptor(new InterceptorDefinition(interceptorClass));
+    }
+
+    /**
+     * Adds an interceptor to the chain of interceptors.
+     *
+     * @param interceptorDefinition
+     */
+    public void addInterceptor(InterceptorDefinition interceptorDefinition)
+    {
+        interceptorDefinitions.add(interceptorDefinition);
     }
 
     /**
@@ -59,16 +69,21 @@ public class AspectDefinition
         SideAspectInstance interfaceInstance = new SideAspectInstance();
         interfaceInstance.setInterface(interfaceClass);
 
-        List instances = new ArrayList(interceptorClasses.size());
-        for (Iterator iterator = interceptorClasses.iterator(); iterator.hasNext();)
+        List instances = new ArrayList(interceptorDefinitions.size());
+        for (Iterator iterator = interceptorDefinitions.iterator(); iterator.hasNext();)
         {
-            Class aspectClass = (Class) iterator.next();
-            instances.add(aspectClass.newInstance());
+            InterceptorDefinition interceptorDefinition = (InterceptorDefinition) iterator.next();
+            instances.add(interceptorDefinition.newInstance());
         }
         Interceptor[] interceptors = (Interceptor[]) instances.toArray(new Interceptor[instances.size()]);
         interfaceInstance.setInterceptors(interceptors);
 
         interfaceInstance.setTarget(targetClass.newInstance());
         return interfaceInstance;
+    }
+
+    public Class getInterfaceClass()
+    {
+        return interfaceClass;
     }
 }
