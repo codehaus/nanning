@@ -16,7 +16,7 @@ public class TransactionUnsupportedInterceptor implements MethodInterceptor, Fil
         }
     }
 
-    public boolean interceptsMethod(MixinInstance mixin, Method method) {
+    public boolean interceptsMethod(Method method) {
         return Attributes.hasAttribute(method, "transaction-unsupported");
     }
 }

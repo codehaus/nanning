@@ -10,7 +10,7 @@ import com.tirsen.nanning.definition.SingletonInterceptor;
  * TODO document PrevaylerInterceptor
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirs?n</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  */
 public class PrevaylerInterceptor implements SingletonInterceptor, MethodInterceptor, FilterMethodsInterceptor {
 
@@ -18,7 +18,7 @@ public class PrevaylerInterceptor implements SingletonInterceptor, MethodInterce
         return Attributes.hasAttribute(interfaceClass, "entity");
     }
 
-    public boolean interceptsMethod(MixinInstance mixin, Method method) {
+    public boolean interceptsMethod(Method method) {
         return Attributes.hasAttribute(method, "transaction");
     }
 

@@ -26,7 +26,7 @@
             com.tirsen.nanning.NullInterceptor
         </interceptor>
         <target>
-            com.tirsen.nanning.Impl
+            com.tirsen.nanning.IntfImpl
         </target>
 
         <aspect interface="com.tirsen.nanning.TestMixin" />

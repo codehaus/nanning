@@ -11,6 +11,8 @@ import com.tirsen.nanning.attribute.AttributesXMLParserTest;
 import com.tirsen.nanning.config.AspectSystemTest;
 import com.tirsen.nanning.samples.prevayler.ObjectGraphVisitorTest;
 import com.tirsen.nanning.samples.rmi.RemoteTest;
+import com.tirsen.nanning.samples.CacheTest;
+import com.tirsen.nanning.samples.CacheInterceptorTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -18,10 +20,10 @@ import junit.framework.TestSuite;
 /**
  * TODO document UnitTestSuite
  *
- * <!-- $Id: UnitTestSuite.java,v 1.16 2003-05-09 14:57:49 lecando Exp $ -->
+ * <!-- $Id: UnitTestSuite.java,v 1.17 2003-05-11 13:40:52 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.16 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.17 $
  */
 public class UnitTestSuite {
     ///CLOVER:OFF
@@ -33,6 +35,21 @@ public class UnitTestSuite {
         suite.addTestSuite(ObjectGraphVisitorTest.class);
         suite.addTestSuite(AspectSystemTest.class);
         suite.addTestSuite(SerializationTest.class);
+        suite.addTestSuite(RemoteTest.class);
+        suite.addTestSuite(AspectClassTest.class);
+        suite.addTestSuite(ConstructionInterceptorTest.class);
+        suite.addTestSuite(InheritanceTest.class);
+        suite.addTestSuite(InterceptorTest.class);
+        suite.addTestSuite(SerializationTest.class);
+        suite.addTestSuite(AttributeFilterTest.class);
+        suite.addTestSuite(AspectRepositoryTest.class);
+        suite.addTestSuite(AspectsTest.class);
+        suite.addTestSuite(AttributeFilterTest.class);
+        suite.addTestSuite(MethodFilterTest.class);
+
+        suite.addTestSuite(CacheTest.class);
+        suite.addTestSuite(CacheInterceptorTest.class);
+        
         suite.addTestSuite(RemoteTest.class);
         return suite;
     }
