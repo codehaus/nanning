@@ -3,6 +3,8 @@ package com.tirsen.nanning.samples.prevayler;
 import com.tirsen.nanning.Aspects;
 import com.tirsen.nanning.Interceptor;
 import org.prevayler.implementation.SnapshotPrevayler;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -12,6 +14,8 @@ import java.util.Collection;
 import java.lang.ref.Reference;
 
 public class GarbageCollectingPrevayler extends SnapshotPrevayler {
+    private static final Log logger = LogFactory.getLog(GarbageCollectingPrevayler.class);
+
     public GarbageCollectingPrevayler(IdentifyingSystem system, String path) throws IOException, ClassNotFoundException {
         super(system, path);
     }
@@ -29,7 +33,10 @@ public class GarbageCollectingPrevayler extends SnapshotPrevayler {
 
         for (Iterator iterator = unreferencedObjects.iterator(); iterator.hasNext();) {
             Object unreferencedObject = iterator.next();
+
+            logger.debug("Unregistering object: " + unreferencedObject);
             system.unregisterObjectID(unreferencedObject);
+
             if (unreferencedObject instanceof FinalizationCallback) {
                 FinalizationCallback finalizationCallback = (FinalizationCallback) unreferencedObject;
                 finalizationCallback.finalizationCallback();
@@ -41,12 +48,20 @@ public class GarbageCollectingPrevayler extends SnapshotPrevayler {
         final Set referencedObjects = new HashSet();
         ObjectGraphVisitor.visit(system, new ObjectGraphVisitor() {
             protected void visit(Object o) {
+
+                if (o instanceof String) {
+                    return;
+                }
+
                 if (o instanceof Reference) {
                     return;
                 }
+
                 if (Identity.isEntity(o.getClass())) {
                     referencedObjects.add(o);
+                    logger.debug("Adding refrerenced object: " + o);
                 }
+
                 if (Aspects.isAspectObject(o)) {
                     // for performance, skip the proxy part of all aspected objects
                     Object[] targets = Aspects.getTargets(o);
@@ -57,8 +72,6 @@ public class GarbageCollectingPrevayler extends SnapshotPrevayler {
                     for (int i = 0; i < interceptors.length; i++) {
                         super.visit(interceptors[i]);
                     }
-                } else if (Identity.isMarshalByValue(o)) {
-                    // also skip any value objects, they shouldn't contain references to entities anyway
                 } else {
                     super.visit(o);
                 }
