@@ -11,6 +11,10 @@ public class CurrentPrevayler {
     private static ThreadLocal currentPrevayler = new InheritableThreadLocal();
     private static ThreadLocal currentSystem = new InheritableThreadLocal();
 
+    public static boolean isInitialized() {
+        return currentSystem.get() != null;
+    }
+
     public static IdentifyingSystem getSystem() {
         IdentifyingSystem identifyingSystem = (IdentifyingSystem) currentSystem.get();
         assert identifyingSystem != null : "Prevayler not initialized for this thread, no current system";

@@ -12,6 +12,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 public class InvokeCommand implements Command {
+    static final long serialVersionUID = 320681517664792343L;
+    
     private static final Log logger = LogFactory.getLog(InvokeCommand.class);
     private IdentifyingCall call;
 
@@ -20,7 +22,10 @@ public class InvokeCommand implements Command {
     }
 
     public Serializable execute(PrevalentSystem system) throws Exception {
-        IdentifyingSystem prev = CurrentPrevayler.getSystem();
+        IdentifyingSystem prev = null;
+        if (CurrentPrevayler.isInitialized()) {
+            prev = CurrentPrevayler.getSystem();
+        }
         CurrentPrevayler.setSystem((IdentifyingSystem) system);
         CurrentPrevayler.enterTransaction();
         try {

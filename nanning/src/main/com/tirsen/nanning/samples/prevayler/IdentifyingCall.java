@@ -8,6 +8,8 @@ import com.tirsen.nanning.Invocation;
 import org.apache.commons.io.IOUtil;
 
 public class IdentifyingCall extends Call {
+    static final long serialVersionUID = -6836192619875407405L;
+    
     public IdentifyingCall(Invocation invocation) throws Exception {
         super(invocation);
         target = marshal(target);
