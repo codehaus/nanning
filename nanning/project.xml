@@ -4,7 +4,7 @@
     <name>Nanning Aspects</name>
     <id>nanning</id>
     <logo>/images/nanning.png</logo>
-    <currentVersion>0.7-SNAPSHOT</currentVersion>
+    <currentVersion>0.7</currentVersion>
     <groupId>nanning</groupId>
     <organization>
         <name>Jon Tirsen</name>
