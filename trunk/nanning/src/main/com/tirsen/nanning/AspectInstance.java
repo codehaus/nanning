@@ -18,10 +18,10 @@ import java.util.ArrayList;
 /**
  * TODO document AspectInstance
  *
- * <!-- $Id: AspectInstance.java,v 1.1 2002-10-22 18:28:09 tirsen Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.2 2002-10-22 18:56:25 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 class AspectInstance implements InvocationHandler
 {
@@ -54,7 +54,7 @@ class AspectInstance implements InvocationHandler
         Object target = interfaceInstance.getTarget();
 
         Invocation invocation = new InvocationImpl(proxy, method, args, interceptors, target);
-        return invocation.invokeNext(invocation);
+        return invocation.invokeNext();
     }
 
     Object createProxy()
