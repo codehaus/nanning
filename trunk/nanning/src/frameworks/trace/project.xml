@@ -3,7 +3,7 @@
     <extend>${basedir}/../project.xml</extend>
     <name>Nanning Trace</name>
     <id>nanning-trace</id>
-    <currentVersion>0.9</currentVersion>
+    <currentVersion>1.0-beta-1-SNAPSHOT</currentVersion>
     <package>org.codehaus.nanning.trace</package>
     <shortDescription>Trace</shortDescription>
     <description></description>
