@@ -167,6 +167,10 @@ public class RemoteCallServer {
         naming.put(name, o);
     }
 
+    public void reset() {
+        marshaller.reset();
+    }
+
     private class CallProcessor implements Runnable {
         private final Socket socket;
 
