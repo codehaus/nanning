@@ -15,10 +15,10 @@ import java.util.*;
 /**
  * TODO document AspectDefinition
  *
- * <!-- $Id: MixinInstance.java,v 1.14 2003-05-12 13:43:53 lecando Exp $ -->
+ * <!-- $Id: MixinInstance.java,v 1.15 2003-06-11 15:13:32 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public final class MixinInstance implements Serializable {
     static final long serialVersionUID = 7386027290257587762L;
@@ -125,6 +125,10 @@ public final class MixinInstance implements Serializable {
 
         public AspectInstance getAspectInstance() {
             return Aspects.getAspectInstance(getProxy());
+        }
+
+        public Object getArg(int arg) {
+            return args[arg];
         }
 
         public Object getTarget() {
