@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Array;
+import java.lang.reflect.Modifier;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,19 +26,21 @@ public class ObjectGraphVisitor {
         Field[] fields = o.getClass().getDeclaredFields();
         for (int fieldIndex = 0; fieldIndex < fields.length; fieldIndex++) {
             Field field = fields[fieldIndex];
-            field.setAccessible(true);
-            try {
-                Object nested = field.get(o);
-                if(nested != null && nested.getClass().isArray()) {
-                    for (int arrayIndex = 0; arrayIndex < Array.getLength(nested); arrayIndex++) {
-                        Object arrayNested = Array.get(nested, arrayIndex);
-                        visitNested(arrayNested);
+            if (!Modifier.isStatic(field.getModifiers())) {
+                field.setAccessible(true);
+                try {
+                    Object nested = field.get(o);
+                    if(nested != null && nested.getClass().isArray()) {
+                        for (int arrayIndex = 0; arrayIndex < Array.getLength(nested); arrayIndex++) {
+                            Object arrayNested = Array.get(nested, arrayIndex);
+                            visitNested(arrayNested);
+                        }
+                    } else {
+                        visitNested(nested);
                     }
-                } else {
-                    visitNested(nested);
+                } catch (Exception e) {
+                    logger.warn("could not enter field " + field + " on object " + o, e);
                 }
-            } catch (Exception e) {
-                logger.warn("could not enter field " + field + " on object " + o, e);
             }
         }
     }

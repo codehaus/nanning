@@ -1,18 +1,20 @@
 package com.tirsen.nanning.samples.prevayler;
 
+import java.io.InputStream;
+
 import com.tirsen.nanning.Aspects;
-import com.tirsen.nanning.Invocation;
 import com.tirsen.nanning.Interceptor;
-import com.tirsen.nanning.attribute.Attributes;
+import com.tirsen.nanning.Invocation;
+import org.apache.commons.io.IOUtil;
 
 public class IdentifyingCall extends Call {
-    public IdentifyingCall(Invocation invocation) {
+    public IdentifyingCall(Invocation invocation) throws Exception {
         super(invocation);
         target = marshal(target);
         args = marshalArguments(invocation.getArgs());
     }
 
-    private Object[] marshalArguments(Object[] args) {
+    private Object[] marshalArguments(Object[] args) throws Exception {
         if (args == null) {
             return null;
         }
@@ -25,18 +27,16 @@ public class IdentifyingCall extends Call {
         return marshalled;
     }
 
-    protected Object marshal(Object o) {
-        if (Number.class.isInstance(o)) {
+    protected Object marshal(Object o) throws Exception {
+        if (Identity.isMarshalByValue(o)) {
             return o;
-        } else if (String.class.isInstance(o)) {
-            return o;
-        } else if (Character.class.isInstance(o)) {
-            return o;
+        } else if (o instanceof InputStream) {
+            return new Identity(InputStream.class, IOUtil.toByteArray(((InputStream) o)));
         } else {
-            if (isService(getInterfaceClass())) {
-                return new Identity(getInterfaceClass(), getClassIdentifier());
+            if (Identity.isService(o.getClass())) {
+                return new Identity(o.getClass(), getClassIdentifier());
             }
-            if (isEntity(getInterfaceClass())) {
+            if (Identity.isEntity(o.getClass())) {
                 if (CurrentPrevayler.getSystem().hasObjectID(o)) {
                     return new Identity(o.getClass(), new Long(CurrentPrevayler.getSystem().getObjectID(o)));
                 } else {
@@ -47,7 +47,9 @@ public class IdentifyingCall extends Call {
 
         }
 
-        throw new IllegalArgumentException("Can't marshal " + o);
+        throw new IllegalArgumentException("Can't marshal " + o +
+                                           " could it be an entity or service without the proper attribute?"+
+                                           " (Use 'entity', 'service' or 'marshal-by-value'.)");
     }
 
     private Object[] unmarshalArguments(Object[] args) {
@@ -64,12 +66,14 @@ public class IdentifyingCall extends Call {
     }
 
     private Object unmarshal(Object o) {
-        if (isMarshalByValue(o)) {
+        if (Identity.isMarshalByValue(o)) {
             return o;
         } else if (o instanceof Identity) {
             return resolve((Identity) o);
-        } else if (isEntity(o.getClass())) {
-            registerObjectIDsRecursive(o);
+        } else if (Identity.isEntity(o.getClass())) {
+            if (!CurrentPrevayler.getSystem().hasObjectID(o)) {
+                registerObjectIDsRecursive(o);
+            }
             return o;
         } else {
             throw new IllegalArgumentException("Can't resolve " + o);
@@ -80,11 +84,15 @@ public class IdentifyingCall extends Call {
         final IdentifyingSystem system = CurrentPrevayler.getSystem();
         ObjectGraphVisitor.visit(o, new ObjectGraphVisitor() {
             protected void visit(Object o) {
-                if (isEntity(o.getClass())) {
+                if (Identity.isMarshalByValue(o)) {
+                    return;
+                }
+                if (Identity.isEntity(o.getClass())) {
                     assert !system.hasObjectID(o) :
                             "you're mixing object in prevayler with objects outside, this will lead to unpredictable results, " +
                             "so I've banished that sort of behaviour with this assert here";
                     system.registerObjectID(o);
+                    super.visit(o);
                 }
                 // for performance, skip the proxy part of all aspected objects
                 if (Aspects.isAspectObject(o)) {
@@ -104,22 +112,7 @@ public class IdentifyingCall extends Call {
     }
 
     protected Object resolve(Identity identity) {
-        Class objectClass = identity.getObjectClass();
-        if (isService(objectClass)) {
-            return Aspects.getCurrentAspectFactory().newInstance(identity.getIdentifier());
-        }
-        if (isEntity(objectClass)) {
-            return CurrentPrevayler.getSystem().getObjectWithID(((Long) identity.getIdentifier()).longValue());
-        }
-        throw new IllegalArgumentException("Can't resolve objects of " + objectClass);
-    }
-
-    static boolean isEntity(Class objectClass) {
-        return Attributes.hasInheritedAttribute(objectClass, "entity");
-    }
-
-    private boolean isService(Class objectClass) {
-        return Attributes.hasInheritedAttribute(objectClass, "service");
+        return identity.resolve();
     }
 
     public Object[] getArgs() {
@@ -131,19 +124,4 @@ public class IdentifyingCall extends Call {
         return unmarshal(target);
     }
 
-    public static boolean isMarshalByValue(Object o) {
-        if (o == null) {
-            return true;
-        } else if (o instanceof Number) {
-            return true;
-        } else if (o instanceof String) {
-            return true;
-        } else if (o instanceof Character) {
-            return true;
-        } else if (o instanceof Class) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 }
