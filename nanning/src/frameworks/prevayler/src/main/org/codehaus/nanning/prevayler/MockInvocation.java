@@ -38,7 +38,7 @@ public class MockInvocation implements Invocation {
         return null;
     }
 
-    public int getfInterceptorCount() {
+    public int getInterceptorCount() {
         return 0;
     }
 
