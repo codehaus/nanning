@@ -101,33 +101,33 @@ assertEquals("argMethodValue", Attributes.getAttribute(argMethod, "methodAttribu
 <aspect-repository>
     <aspect>
         <interface>
-            com.tirsen.nanning.test.SideAspect
+            com.tirsen.nanning.SideAspect
         </interface>
         <interceptor>
-            com.tirsen.nanning.test.NullInterceptor
+            com.tirsen.nanning.NullInterceptor
         </interceptor>
         <interceptor>
-            com.tirsen.nanning.test.MockInterceptor
+            com.tirsen.nanning.MockInterceptor
         </interceptor>
         <target>
-            com.tirsen.nanning.test.SideAspectImpl
+            com.tirsen.nanning.SideAspectImpl
         </target>
     </aspect>
     <class>
         <interface>
-            com.tirsen.nanning.test.Intf
+            com.tirsen.nanning.Intf
         </interface>
         <interceptor>
-            com.tirsen.nanning.test.MockInterceptor
+            com.tirsen.nanning.MockInterceptor
         </interceptor>
         <interceptor>
-            com.tirsen.nanning.test.NullInterceptor
+            com.tirsen.nanning.NullInterceptor
         </interceptor>
         <target>
-            com.tirsen.nanning.test.Impl
+            com.tirsen.nanning.Impl
         </target>
 
-        <aspect interface="com.tirsen.nanning.test.SideAspect" />
+        <aspect interface="com.tirsen.nanning.SideAspect" />
     </class>
 </aspect-repository>
                 ]]></source>
@@ -158,15 +158,15 @@ Object bigMomma = AspectRepository.getInstance().newInstance(Intf.class);
                 </p>
             </subsection>
 
-            <subsection name="Stateless interceptors">
+            <subsection name="Singleton interceptors">
                 <p>
                     If you're interceptor does not keep state implement the marker-interface
-                    <a href="apidocs/com/tirsen/nanning/StatelessInterceptor.html">StatelessInterceptor</a>.
+                    <a href="apidocs/com/tirsen/nanning/SingletonInterceptor.html">SingletonInterceptor</a>.
                     If you do Nanning will only instantiate one instance and use that as the interceptor
                     for the whole system. Example:
                 </p>
                 <source><![CDATA[
-public class NullInterceptor implements Interceptor, StatelessInterceptor
+public class NullInterceptor implements SingletonInterceptor
 {
     public Object invoke(Invocation invocation) throws Throwable
     {

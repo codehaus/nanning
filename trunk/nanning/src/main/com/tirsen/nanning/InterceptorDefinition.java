@@ -9,10 +9,10 @@ package com.tirsen.nanning;
 /**
  * TODO document InterceptorDefinition
  *
- * <!-- $Id: InterceptorDefinition.java,v 1.3 2002-11-05 20:46:38 tirsen Exp $ -->
+ * <!-- $Id: InterceptorDefinition.java,v 1.4 2002-11-17 14:03:34 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class InterceptorDefinition
 {
@@ -30,7 +30,7 @@ public class InterceptorDefinition
         {
             return statelessInterceptorSingleton;
         }
-        else if(StatelessInterceptor.class.isAssignableFrom(interceptorClass))
+        else if(SingletonInterceptor.class.isAssignableFrom(interceptorClass))
         {
             return statelessInterceptorSingleton = (Interceptor) interceptorClass.newInstance();
         }
