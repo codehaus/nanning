@@ -2,6 +2,7 @@ package com.tirsen.nanning.samples.rmi;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.IOException;
 
 import com.tirsen.nanning.Invocation;
 import com.tirsen.nanning.MethodInterceptor;
@@ -22,12 +23,22 @@ public class RemoteAspect extends PointcutAspect implements MethodInterceptor {
     public Object invoke(Invocation invocation) throws Throwable {
         RemoteIdentity remoteIdentity = (RemoteIdentity) invocation.getTarget();
 
-        ServerConnection connection = remoteIdentity.getConnectionManager().openConnection();
+        ServerConnection connection = null;
+        try {
+            connection = remoteIdentity.getConnectionManager().openConnection();
+        } catch (IOException e) {
+            throw new CouldNotConnectException(e);
+        }
 
         try {
             Call call = new MarshallingCall(invocation, marshaller);
 
-            ObjectOutputStream output = new ObjectOutputStream(connection.getOutputStream());
+            ObjectOutputStream output = null;
+            try {
+                output = new ObjectOutputStream(connection.getOutputStream());
+            } catch (IOException e) {
+                throw new CouldNotConnectException(e);
+            }
             output.writeObject(call);
             ObjectInputStream input = new ObjectInputStream(connection.getInputStream());
             Object result = marshaller.unmarshal(input.readObject());
