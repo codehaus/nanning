@@ -3,7 +3,7 @@
     <pomVersion>3</pomVersion>
     <name>Nanning Aspects</name>
     <id>nanning</id>
-    <currentVersion>0.3</currentVersion>
+    <currentVersion>0.4</currentVersion>
     <organization>
         <url>http://sourceforge.net/projects/nanning</url>
         <logo>http://sourceforge.net/sflogo.php?group_id=64968&amp;type=5</logo>
@@ -37,6 +37,11 @@
     </repository>
 
     <versions>
+        <version>
+            <id>0.3</id>
+            <name>0.3</name>
+            <tag>RELEASE_0_3</tag>
+        </version>
         <version>
             <id>0.2</id>
             <name>0.2</name>
@@ -150,7 +155,7 @@
 
         <dependency>
             <id>log4j</id>
-            <version>1.2.6</version>
+            <version>1.2.8</version>
         </dependency>
 
         <dependency>
@@ -166,7 +171,7 @@
 
     </dependencies>
 
-    <build>
+    <build>p
 
         <nagEmailAddress>
             tirsen@users.sourceforge.net
