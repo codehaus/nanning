@@ -167,9 +167,9 @@
             tirsen@users.sourceforge.net
         </nagEmailAddress>
 
-        <sourceDirectory>src/main</sourceDirectory>
+        <sourceDirectory>${basedir}/src/main</sourceDirectory>
 
-        <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
+        <unitTestSourceDirectory>${basedir}/src/test</unitTestSourceDirectory>
 
         <!-- Unit test classes -->
 
@@ -182,7 +182,7 @@
             </excludes>
             <resources>
                 <resource>
-                    <directory>src/test</directory>
+                    <directory>${basedir}/src/test</directory>
                     <includes>
                         <include>**/*.xml</include>
                         <include>**/*.properties</include>
@@ -193,7 +193,7 @@
 
 
         <resources>
-            <directory>src/main</directory>
+            <directory>${basedir}/src/main</directory>
             <includes>
                 <include>**/*.xml</include>
             </includes>
