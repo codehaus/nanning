@@ -28,10 +28,10 @@ import org.apache.commons.logging.LogFactory;
  * Hmm... wait, a minute, there's some support for this in QDox, maybe that will work...
  * -- jon
 
- * <!-- $Id: Attributes.java,v 1.10 2003-04-14 17:32:55 tirsen Exp $ -->
+ * <!-- $Id: Attributes.java,v 1.11 2003-05-20 07:45:08 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.10 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.11 $
  */
 
 public class Attributes {
@@ -212,6 +212,39 @@ public class Attributes {
                 if (hasInheritedAttribute(anInterface, field, attribute)) {
                     return true;
                 }
+            }
+            return false;
+        }
+    }
+
+    public static boolean hasInheritedAttribute(Method method, String attribute) {
+        return hasInheritedAttribute(method.getDeclaringClass(), method, attribute);
+    }
+
+    public static boolean hasInheritedAttribute(Class aClass, Method method, String attribute) {
+        if (aClass == null) {
+            return false;
+        }
+
+        try {
+            method = aClass.getDeclaredMethod(method.getName(), method.getParameterTypes());
+        } catch (NoSuchMethodException e) {
+        }
+
+        if (hasAttribute(aClass, method, attribute)) {
+            return true;
+        } else {
+            Class[] interfaces = aClass.getInterfaces();
+            for (int i = 0; i < interfaces.length; i++) {
+                Class anInterface = interfaces[i];
+                if (hasInheritedAttribute(anInterface, method, attribute)) {
+                    return true;
+                }
+            }
+
+            Class superclass = aClass.getSuperclass();
+            if (hasInheritedAttribute(superclass, method, attribute)) {
+                return true;
             }
             return false;
         }

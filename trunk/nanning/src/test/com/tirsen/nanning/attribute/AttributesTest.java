@@ -15,12 +15,28 @@ import org.apache.commons.lang.StringUtils;
 /**
  * TODO document AttributesTest
  *
- * <!-- $Id: AttributesTest.java,v 1.6 2003-04-14 17:33:00 tirsen Exp $ -->
+ * <!-- $Id: AttributesTest.java,v 1.7 2003-05-20 07:45:08 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.6 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.7 $
  */
 public class AttributesTest extends AbstractAttributesTest {
+    private Method method;
+    private Field field;
+    private Method argMethod;
+    private Method arrayArgMethod;
+    private Method overrideMethod;
+
+    protected void setUp() throws Exception {
+        super.setUp();
+        
+        method = AttributesTestClass.class.getMethod("method", null);
+        overrideMethod = AttributesTestSubClass.class.getMethod("method", null);
+        
+        field = AttributesTestClass.class.getDeclaredField("field");
+        argMethod = AttributesTestClass.class.getMethod("method", new Class[]{String.class, String.class});
+        arrayArgMethod = AttributesTestClass.class.getMethod("method", new Class[]{String[].class});
+    }
 
     public void testClassAttributes() throws IOException, NoSuchMethodException, NoSuchFieldException {
         ClassAttributes classAttributes = Attributes.getAttributes(AttributesTestClass.class);
@@ -28,22 +44,18 @@ public class AttributesTest extends AbstractAttributesTest {
         assertTrue(classAttributes.hasAttribute("class.attribute"));
         assertFalse(classAttributes.hasAttribute("stupid.attribute"));
 
-        Field field = AttributesTestClass.class.getDeclaredField("field");
         assertEquals("fieldValue", classAttributes.getAttribute(field, "field.attribute"));
         assertTrue(classAttributes.hasAttribute(field, "field.attribute"));
         assertFalse(classAttributes.hasAttribute(field, "stupid.attribute"));
 
-        Method method = AttributesTestClass.class.getMethod("method", null);
         assertEquals("methodValue", classAttributes.getAttribute(method, "method.attribute"));
         assertTrue(classAttributes.hasAttribute(method, "method.attribute"));
         assertFalse(classAttributes.hasAttribute(method, "stupid.attribute"));
 
-        Method argMethod = AttributesTestClass.class.getMethod("method", new Class[]{String.class, String.class});
         assertEquals("argMethodValue", classAttributes.getAttribute(argMethod, "method.attribute"));
         assertTrue(classAttributes.hasAttribute(argMethod, "method.attribute"));
         assertFalse(classAttributes.hasAttribute(argMethod, "stupid.attribute"));
 
-        Method arrayArgMethod = AttributesTestClass.class.getMethod("method", new Class[]{String[].class});
         assertTrue(classAttributes.hasAttribute(arrayArgMethod, "method.attribute"));
         assertFalse(classAttributes.hasAttribute(arrayArgMethod, "stupid.attribute"));
         assertEquals("arrayArgMethodValue", classAttributes.getAttribute(arrayArgMethod, "method.attribute"));
@@ -105,4 +117,13 @@ public class AttributesTest extends AbstractAttributesTest {
         assertEquals("attribute", ClassAttributes.joinTail(parts, 2));
     }
 
+    public void testHasInheritedAttribute() {
+        assertTrue(Attributes.hasInheritedAttribute(method, "method.attribute"));
+        assertFalse(Attributes.hasInheritedAttribute(method, "stupid.attribute"));
+
+        assertTrue(Attributes.hasInheritedAttribute(overrideMethod, "method.attribute"));
+        assertFalse(Attributes.hasInheritedAttribute(overrideMethod, "stupid.attribute"));
+
+        assertTrue(Attributes.hasInheritedAttribute(overrideMethod, "interface.attribute"));
+    }
 }
