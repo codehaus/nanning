@@ -11,29 +11,44 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * TODO document InterfaceDefinition
+ * Defines an interface that's to be added to an aspected object.
  *
- * <!-- $Id: InterfaceDefinition.java,v 1.1 2002-10-22 18:28:09 tirsen Exp $ -->
+ * <!-- $Id: InterfaceDefinition.java,v 1.2 2002-10-22 18:56:25 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class InterfaceDefinition
 {
     private Class interfaceClass;
-    public List aspectClasses = new ArrayList();
+    private List aspectClasses = new ArrayList();
     private Class targetClass;
 
+    /**
+     * Specify interface to use.
+     *
+     * @param interfaceClass
+     */
     public void setInterface(Class interfaceClass)
     {
         this.interfaceClass = interfaceClass;
     }
 
+    /**
+     * Adds an interceptor to the chain of interceptors.
+     *
+     * @param aspectClass
+     */
     public void addInterceptor(Class aspectClass)
     {
         aspectClasses.add(aspectClass);
     }
 
+    /**
+     * Specify target-object to use.
+     *
+     * @param targetClass
+     */
     public void setTarget(Class targetClass)
     {
         this.targetClass = targetClass;

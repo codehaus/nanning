@@ -11,34 +11,53 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * TODO document AspectClass
+ * The definition of an aspected object, specifies interfaces, interceptors and target-objects.
  *
- * <!-- $Id: AspectClass.java,v 1.1 2002-10-22 18:28:09 tirsen Exp $ -->
+ * <!-- $Id: AspectClass.java,v 1.2 2002-10-22 18:56:25 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class AspectClass
 {
-    public List interfaceDefinitions = new ArrayList();
+    private List interfaceDefinitions = new ArrayList();
 
     AspectClass()
     {
     }
 
+    /**
+     * Creates an unconfigured class.
+     *
+     * @return a new unconfigured class.
+     */
     public static AspectClass create()
     {
         AspectClass aspectClass = new AspectClass();
         return aspectClass;
     }
 
-    public Object newInstance() throws InstantiationException, IllegalAccessException
+    /**
+     * Instantiates an instance with the specified interfaces, interceptors and target-objects.
+     *
+     * @return a new aspected object.
+     *
+     * @throws InstantiationException
+     */
+    public Object newInstance() throws InstantiationException
     {
         List instances = new ArrayList(interfaceDefinitions.size());
         for (Iterator iterator = interfaceDefinitions.iterator(); iterator.hasNext();)
         {
             InterfaceDefinition interfaceDefinition = (InterfaceDefinition) iterator.next();
-            instances.add(interfaceDefinition.newInstance());
+            try
+            {
+                instances.add(interfaceDefinition.newInstance());
+            }
+            catch (IllegalAccessException e)
+            {
+                throw new InstantiationException(e.getMessage());
+            }
         }
 
         AspectInstance aspectInstance =
@@ -47,6 +66,12 @@ public class AspectClass
         return aspectInstance.createProxy();
     }
 
+    /**
+     * Adds a new interface specification, specifies interface, interceptors and target-object these are stacked
+     * "on the side" of the object.
+     *
+     * @param interfaceDefinition
+     */
     public void addInterface(InterfaceDefinition interfaceDefinition)
     {
         interfaceDefinitions.add(interfaceDefinition);

@@ -15,10 +15,10 @@ import java.lang.reflect.Method;
 /**
  * TODO document MockAspect
  *
- * <!-- $Id: MockAspect.java,v 1.3 2002-10-22 18:28:09 tirsen Exp $ -->
+ * <!-- $Id: MockAspect.java,v 1.4 2002-10-22 18:56:25 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class MockAspect implements Interceptor
 {
@@ -45,18 +45,18 @@ public class MockAspect implements Interceptor
         called = true;
         actualTarget = invocation.getTarget();
         actualProxy = invocation.getProxy();
-        
+
         int index = invocation.getCurrentIndex();
         Assert.assertSame(this, invocation.getInterceptor(invocation.getCurrentIndex()));
 
-        // check that getNumberOfAspects is correct
-        int numberOfAspects = invocation.getNumberOfAspects();
+        // check that getNumberOfInterceptors is correct
+        int numberOfAspects = invocation.getNumberOfInterceptors();
         invocation.getInterceptor(numberOfAspects - 1); // should work...
         try
         {
             invocation.getInterceptor(numberOfAspects); // should not work...
             ///CLOVER:OFF
-            Assert.fail("Invocation.getNumberOfAspects doesn't work.");
+            Assert.fail("Invocation.getNumberOfInterceptors doesn't work.");
             ///CLOVER:ON
         }
         catch (Exception shouldHappen)
@@ -67,7 +67,7 @@ public class MockAspect implements Interceptor
 
         Assert.assertNull(invocation.getArgs());
 
-        return invocation.invokeNext(invocation);
+        return invocation.invokeNext();
     }
 
     public void expectTarget(Object o)

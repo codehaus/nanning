@@ -11,10 +11,10 @@ import java.lang.reflect.Method;
 /**
  * TODO document InvocationImpl
  *
- * <!-- $Id: InvocationImpl.java,v 1.1 2002-10-22 18:28:09 tirsen Exp $ -->
+ * <!-- $Id: InvocationImpl.java,v 1.2 2002-10-22 18:56:25 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 class InvocationImpl implements Invocation
 {
@@ -34,12 +34,12 @@ class InvocationImpl implements Invocation
         this.target = target;
     }
 
-    public Object invokeNext(Invocation invocation) throws Throwable
+    public Object invokeNext() throws Throwable
     {
         index++;
         if (interceptors != null && index < interceptors.length)
         {
-            return interceptors[index].invoke(invocation);
+            return interceptors[index].invoke(this);
         }
         else
         {
@@ -62,7 +62,7 @@ class InvocationImpl implements Invocation
         return index;
     }
 
-    public int getNumberOfAspects()
+    public int getNumberOfInterceptors()
     {
         return interceptors.length;
     }
