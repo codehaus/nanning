@@ -40,11 +40,13 @@ public class SerializationTest extends AbstractAttributesTest {
         Object serialized = serializeObject(intf);
         assertTrue(serialized instanceof Intf);
         assertEquals(1, Aspects.getAspectInstance(serialized).getAllInterceptors().size());
+        assertEquals(1, Aspects.getAspectInstance(serialized).getMixins().size());
 
         Aspects.setContextAspectFactory(multipleAspectFactory);
         serialized = serializeObject(intf);
         assertTrue(serialized instanceof Intf);
         assertEquals(3, Aspects.getAspectInstance(serialized).getAllInterceptors().size());
+        assertEquals(2, Aspects.getAspectInstance(serialized).getMixins().size());
         // unfortunately added mixins does not (yet?) work, proxies are not recreated on serialization... :-(
         assertFalse(serialized instanceof TestMixin);
     }
