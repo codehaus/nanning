@@ -15,13 +15,13 @@ import java.util.Set;
 /**
  * Facade for accessing some important features of aspected objects and their definitions.
  *
- * <!-- $Id: Aspects.java,v 1.15 2003-01-24 13:29:29 tirsen Exp $ -->
+ * <!-- $Id: Aspects.java,v 1.16 2003-01-29 14:24:24 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.15 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.16 $
  */
 public class Aspects {
-    private static ThreadLocal contextAspectRepository = new ThreadLocal();
+    private static ThreadLocal contextAspectRepository = new InheritableThreadLocal();
     static ThreadLocal currentThis = new ThreadLocal();
 
     /**
