@@ -65,7 +65,7 @@
 
         <dependency>
             <id>prevayler</id>
-            <version>2.00.000-SNAPSHOT</version>
+            <version>2.00.000-alpha</version>
         </dependency>
 
         <dependency>
