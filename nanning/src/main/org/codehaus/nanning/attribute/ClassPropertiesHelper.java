@@ -89,7 +89,7 @@ public class ClassPropertiesHelper {
         if (targetClassAttributes != null) {
             Method method = findMethod(methodSignature);
             if (method == null) {
-                throw new AttributeException("Error while loading attributes, could not find method: " +
+                throw new AttributeException("Error while loading attributes, could not find method " +
                                              methodSignature + " for " + attributeClass);
             }
 
@@ -157,6 +157,7 @@ public class ClassPropertiesHelper {
                 }
                 String type = parameterType.getName();
                 type = type.substring(type.lastIndexOf('.') + 1);
+                type = type.substring(type.lastIndexOf('$') + 1);
                 stringBuffer.append(type);
                 if (i + 1 < parameterTypes.length) {
                     stringBuffer.append(',');

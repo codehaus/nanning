@@ -29,9 +29,11 @@ public class ClassPropertiesHelperTest extends TestCase {
         assertEquals("value", classPropertiesHelper.properties.getProperty("class.attribute"));
     }
 
-    void method(double[] doubles) {}
-    void method(Double[] doubles) {}
-    void method(int[] ints) {}
+    void methodWithArray(double[] doubles) {}
+    void methodWithArray(Double[] doubles) {}
+    void methodWithArray(int[] ints) {}
+    public static class InnerClass {}
+    void methodWithInnerClassArgument(InnerClass arg) {}
 
     public void testMethodSignature() throws NoSuchMethodException {
         assertEquals("method()", ClassPropertiesHelper.methodSignature(AttributesTest.method));
@@ -40,12 +42,16 @@ public class ClassPropertiesHelperTest extends TestCase {
         assertEquals("method(String,String)", ClassPropertiesHelper.methodSignature(AttributesTest.argMethod));
         assertEquals("method(String)", ClassPropertiesHelper.methodSignature(AttributesTest.arrayArgMethod));
         assertEquals("method(String)", ClassPropertiesHelper.methodSignature(AttributesTest.arrayArgMethod));
-        assertEquals("method(double)", ClassPropertiesHelper.methodSignature(
-                ClassPropertiesHelperTest.class.getDeclaredMethod("method", new Class[] { double[].class })));
-        assertEquals("method(Double)", ClassPropertiesHelper.methodSignature(
-                ClassPropertiesHelperTest.class.getDeclaredMethod("method", new Class[] { Double[].class })));
-        assertEquals("method(int)", ClassPropertiesHelper.methodSignature(
-                ClassPropertiesHelperTest.class.getDeclaredMethod("method", new Class[] { int[].class })));
+        assertEquals("methodWithArray(double)", ClassPropertiesHelper.methodSignature(
+                ClassPropertiesHelperTest.class.getDeclaredMethod("methodWithArray", new Class[] { double[].class })));
+        assertEquals("methodWithArray(Double)", ClassPropertiesHelper.methodSignature(
+                ClassPropertiesHelperTest.class.getDeclaredMethod("methodWithArray", new Class[] { Double[].class })));
+        assertEquals("methodWithArray(int)", ClassPropertiesHelper.methodSignature(
+                ClassPropertiesHelperTest.class.getDeclaredMethod("methodWithArray", new Class[] { int[].class })));
+        assertEquals("methodWithArray(int)", ClassPropertiesHelper.methodSignature(
+                ClassPropertiesHelperTest.class.getDeclaredMethod("methodWithArray", new Class[] { int[].class })));
+        assertEquals("methodWithInnerClassArgument(InnerClass)", ClassPropertiesHelper.methodSignature(
+                ClassPropertiesHelperTest.class.getDeclaredMethod("methodWithInnerClassArgument", new Class[] { InnerClass.class })));
     }
 
     public void testGetClassName() {
