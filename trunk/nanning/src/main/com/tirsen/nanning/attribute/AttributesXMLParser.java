@@ -2,24 +2,51 @@ package com.tirsen.nanning.attribute;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.FileInputStream;
 import java.util.Properties;
+import java.net.MalformedURLException;
 
 import org.apache.commons.digester.Digester;
 import org.xml.sax.SAXException;
 
-public class AttributesXMLParser {
+public class AttributesXMLParser implements AttributesLoader {
     private String fieldName;
     private String methodName;
     private String argumentList;
-    private ClassAttributes classAttributes;
+    private ClassPropertiesHelper classPropertiesHelper;
 
-    public AttributesXMLParser(ClassAttributes classAttributes) {
-        this.classAttributes = classAttributes;
-    }
+    public void load(ClassAttributes classAttributes) {
+        this.classPropertiesHelper = new ClassPropertiesHelper(classAttributes);
+        Class aClass = classAttributes.getAttributeClass();
+        InputStream input = null;
+        try {
+            // load the XML-defined attributes
+            input = Attributes.findFile(aClass, classPropertiesHelper.getClassName() + ".xml");
+            if (input == null) {
+                input = Attributes.findFile(aClass, aClass.getName().replace('.', '/') + ".xml");
+            }
 
-    public static void parseXML(InputStream input, ClassAttributes classAttributes) throws IOException, SAXException {
-        AttributesXMLParser attributesXMLParser = new AttributesXMLParser(classAttributes);
-        attributesXMLParser.parse(input);
+            if (input != null) {
+                parse(input);
+            }
+
+        } catch (MalformedURLException e) {
+            throw new AttributeException("Error fetching properties for " + aClass, e);
+        } catch (IOException e) {
+            throw new AttributeException("Error fetching properties for " + aClass, e);
+        } catch (AttributeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new AttributeException("Error fetching properties for " + aClass, e);
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    throw new AttributeException(e);
+                }
+            }
+        }
     }
 
     private void parse(InputStream input) throws IOException, SAXException {
@@ -40,14 +67,14 @@ public class AttributesXMLParser {
 
     public void setAttributeValue(String name, String value) {
         if (fieldName != null) {
-            classAttributes.loadFieldAttribute(fieldName, name, value);
-            
+            classPropertiesHelper.loadFieldAttribute(fieldName, name, value);
+
         } else if (methodName != null) {
             String methodSignature = methodName + "(" + ((argumentList == null) ? "" : argumentList) + ")";
-            classAttributes.loadMethodAttribute(methodSignature, name, value);
+            classPropertiesHelper.loadMethodAttribute(methodSignature, name, value);
 
         } else {
-            classAttributes.loadClassAttribute(name, value);
+            classPropertiesHelper.loadClassAttribute(name, value);
 
         }
         fieldName = null;
