@@ -1,0 +1,3 @@
+Nanning Aspects is an Aspect Oriented Framework for Java based on dynamic proxies and aspects implemented as ordinary Java-classes. Configuration of the aspects will be provided externally and via attributes associated with classes and methods. These attributes are specified in the Java-source-code and can be inspected at runtime. This framework is usable in different scenarios, in particular it can serve as a very interesting alternative to EJB within the J2EE-platform.
+
+Nanning Aspects is an Aspect Oriented Framework for Java as outlined by Rickard Oberg. It is based on dynamic proxies and aspects are implemented as ordinary Java-classes. It can serve as a very interesting alternative to EJB in J2EE.

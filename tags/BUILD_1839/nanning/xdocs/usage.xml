@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<document>
+
+    <properties>
+        <author email="tirsen@codehaus.org">Jon Tirsen</author>
+        <title>Usage</title>
+    </properties>
+
+    <body>
+
+        <section name="Out of date">
+        		<p>
+            This documentation is a bit out of date. For better documentation please see the
+            <a href="http://nanning.snipsnap.org">wiki</a>. This documentation will be updated before the 1.0 release.
+        		</p>
+        </section>
+
+        <section name="Usage">
+
+            <subsection name="Building an aspected object">
+                <p>
+                    This builds an aspected object consisting of two mixins one implementing the interface Intf and the
+                    other implementing SideAspect. Both mixins have the interceptors MockInterceptor and NullInterceptor
+                    applied to all methods.
+                </p>
+                <source><![CDATA[
+AspectInstance aspectInstance = new AspectInstance();
+MixinInstance mixinInstance = new MixinInstance();
+mixinInstance.setInterfaceClass(Intf.class);
+mixinInstance.addInterceptor(new MockInterceptor());
+mixinInstance.addInterceptor(new NullInterceptor());
+mixinInstance.setTarget(new Impl());
+aspectInstance.addMixin(mixinInstance);
+MixinInstance sideMixinInstance = new MixinInstance();
+sideMixinInstance.setInterfaceClass(SideAspect.class);
+sideMixinInstance.addInterceptor(new NullInterceptor());
+sideMixinInstance.addInterceptor(new MockInterceptor());
+sideMixinInstance.setTarget(new SideAspectImpl());
+aspectInstance.addMixin(sideMixinInstance);
+
+Object bigMomma = aspectInstance.getProxy();
+
+Intf intf = (Intf) intf;
+intf.call();
+
+SideAspect sideAspect = (SideAspect) intf;
+sideAspect.call();
+                ]]></source>
+            </subsection>
+
+            <subsection name="Using runtime attributes">
+                <p>
+                    This is an example from the unit-tests:
+                </p>
+                <p>
+                    The class (with the attributes):
+                </p>
+                <source><![CDATA[
+/**
+ * @classAttribute classValue
+ */
+public class AttributesTestClass
+{
+    /**
+     * @fieldAttribute fieldValue
+     */
+    public String field;
+
+    /**
+     * @methodAttribute methodValue
+     */
+    public void method()
+    {
+    }
+
+    /**
+     * @methodAttribute argMethodValue
+     */
+    public void method(String arg)
+    {
+    }
+}
+                ]]></source>
+                <p>
+                    The code that compiles and accesses these attributes:
+                </p>
+                <source><![CDATA[
+AttributesCompiler attributesCompiler = new AttributesCompiler();
+attributesCompiler.setSrc(new File("src" + File.separator + "test"));
+attributesCompiler.setDest(targetDir);
+attributesCompiler.execute();
+
+assertEquals("classValue", Attributes.getAttribute(AttributesTestClass.class, "classAttribute"));
+Field field = AttributesTestClass.class.getDeclaredField("field");
+assertEquals("fieldValue", Attributes.getAttribute(field, "fieldAttribute"));
+Method method = AttributesTestClass.class.getMethod("method", null);
+assertEquals("methodValue", Attributes.getAttribute(method, "methodAttribute"));
+Method argMethod = AttributesTestClass.class.getMethod("method", new Class[]{String.class});
+assertEquals("argMethodValue", Attributes.getAttribute(argMethod, "methodAttribute"));
+                ]]></source>
+                <p>
+                    The attributes-compiler can also be used as an ant-task (or better yet! inside
+                    <a href="http://jakarta.apache.org/maven">maven</a>). This is left as an exercise
+                    for the interested reader (yeah, yeah, I'm lazy...).
+                </p>
+            </subsection>
+
+            <subsection name="Configuration file format">
+                <p>
+                    The XML based format is documented <a href="http://nanning.snipsnap.org/space/xml+based+configuration">here</a>.
+                </p>
+            </subsection>
+
+        </section>
+
+    </body>
+</document>
