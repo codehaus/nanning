@@ -14,10 +14,10 @@ import java.lang.reflect.Proxy;
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: AspectInstanceTest.java,v 1.10 2003-05-12 13:43:53 lecando Exp $ -->
+ * <!-- $Id: AspectInstanceTest.java,v 1.11 2003-05-13 06:37:22 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class AspectInstanceTest extends TestCase {
     public void testEmptyAspectInstance() {
@@ -172,24 +172,23 @@ public class AspectInstanceTest extends TestCase {
         assertSame(mixin, instance.getMixinForInterface(Base.class));
     }
 
-    public void testEqualsAndHashCode() {
-        AspectInstance instance = new AspectInstance();
-        AspectInstance instance2 = new AspectInstance();
-        assertEqualsAndHashCodeEquals(instance, instance2);
-
-        NullAspectFactory aspectFactory = new NullAspectFactory();
-        instance = new AspectInstance(aspectFactory, Interface.class);
-        instance2 = new AspectInstance(aspectFactory, Interface.class);
-        assertEqualsAndHashCodeEquals(instance, instance2);
-
-        MixinInstance mixin = new MixinInstance(Interface.class, null);
-        MixinInstance mixin2 = new MixinInstance(Interface.class, null);
-        assertEqualsAndHashCodeEquals(mixin, mixin2);
-        instance.addMixin(mixin);
-        instance2.addMixin(mixin2);
-        assertEqualsAndHashCodeEquals(instance, instance2);
-
-    }
+//    public void testEqualsAndHashCode() {
+//        AspectInstance instance = new AspectInstance();
+//        AspectInstance instance2 = new AspectInstance();
+//        assertEqualsAndHashCodeEquals(instance, instance2);
+//
+//        NullAspectFactory aspectFactory = new NullAspectFactory();
+//        instance = new AspectInstance(aspectFactory, Interface.class);
+//        instance2 = new AspectInstance(aspectFactory, Interface.class);
+//        assertEqualsAndHashCodeEquals(instance, instance2);
+//
+//        MixinInstance mixin = new MixinInstance(Interface.class, null);
+//        MixinInstance mixin2 = new MixinInstance(Interface.class, null);
+//        assertEqualsAndHashCodeEquals(mixin, mixin2);
+//        instance.addMixin(mixin);
+//        instance2.addMixin(mixin2);
+//        assertEqualsAndHashCodeEquals(instance, instance2);
+//    }
 
     private void assertEqualsAndHashCodeEquals(Object o1, Object o2) {
         assertEquals(o1, o2);
