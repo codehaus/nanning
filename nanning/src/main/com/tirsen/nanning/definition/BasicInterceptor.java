@@ -16,10 +16,10 @@ import java.util.regex.Pattern;
  * basic interceptor with methodNameFilter support.
  * TODO document BasicInterceptor
  *
- * <!-- $Id: BasicInterceptor.java,v 1.2 2003-01-24 13:29:30 tirsen Exp $ -->
+ * <!-- $Id: BasicInterceptor.java,v 1.3 2003-03-12 22:34:53 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 
 public abstract class BasicInterceptor implements DefinitionAwareInterceptor, FilterMethodsInterceptor {
@@ -32,9 +32,6 @@ public abstract class BasicInterceptor implements DefinitionAwareInterceptor, Fi
      * compiles it as a pattern and matches with the passed method's name.
      * If the pattern matches it returns true.
      * If there is not methodNameFilter attribute specified then returns true.
-     *
-     * @param method
-     * @return
      */
     public boolean interceptsMethod(Method method) {
         InterceptorDefinition interceptorDefinition = getInterceptorDefinition();

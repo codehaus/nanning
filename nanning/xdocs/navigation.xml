@@ -5,6 +5,7 @@
 
     <body>
         <links>
+            <item name="wiki" href="http://nanning.snipsnap.org"/>
             <item name="jutopia" href="http://www.freeroller.net/page/tirsen"/>
             <item name="Random Thoughts" href="http://www.dreambean.com/"/>
             <item name="Maven" href="http://jakarta.apache.org/turbine/maven/"/>

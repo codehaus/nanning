@@ -8,15 +8,17 @@ package com.tirsen.nanning;
 
 import junit.framework.Assert;
 
+import java.io.Serializable;
+
 /**
  * TODO document TestMixinImpl
  *
- * <!-- $Id: TestMixinImpl.java,v 1.1 2003-02-06 20:33:42 tirsen Exp $ -->
+ * <!-- $Id: TestMixinImpl.java,v 1.2 2003-03-12 22:34:55 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
-public class TestMixinImpl implements TestMixin
+public class TestMixinImpl implements TestMixin, Serializable
 {
     private boolean called;
 

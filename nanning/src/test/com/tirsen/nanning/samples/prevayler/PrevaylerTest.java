@@ -2,6 +2,7 @@ package com.tirsen.nanning.samples.prevayler;
 
 import java.io.*;
 import java.util.Collection;
+import java.util.IdentityHashMap;
 
 import com.tirsen.nanning.AspectFactory;
 import com.tirsen.nanning.Aspects;
@@ -155,7 +156,23 @@ public class PrevaylerTest extends AbstractAttributesTest {
                 assertEquals("two objects should be left, one garbage collected", 2, currentMySystem().getAllRegisteredObjects().size());
             }
         });
+    }
 
+    public void testSerialization() throws IOException, ClassNotFoundException {
+        MyObject myObject = (MyObject) aspectFactory.newInstance(MyObject.class);
+        myObject.setValue("value");
+        IdentityHashMap identityHashMap = new IdentityHashMap();
+        identityHashMap.put(myObject, new Long(1));
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+        objectOutputStream.writeObject(identityHashMap);
+        objectOutputStream.close();
+        ObjectInputStream objectInputStream = new ObjectInputStream(new ByteArrayInputStream(outputStream.toByteArray()));
+        identityHashMap = (IdentityHashMap) objectInputStream.readObject();
+
+        myObject = (MyObject) identityHashMap.keySet().iterator().next();
+        assertEquals("value", myObject.getValue());
     }
 
     public void testOptionalDataException() throws IOException, ClassNotFoundException {

@@ -23,10 +23,10 @@ import org.apache.commons.lang.builder.ToStringStyle;
 /**
  * TODO document AspectInstance
  *
- * <!-- $Id: AspectInstance.java,v 1.29 2003-03-03 10:07:33 lecando Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.30 2003-03-12 22:34:52 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.29 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.30 $
  */
 public final class AspectInstance implements InvocationHandler, Externalizable {
     static final long serialVersionUID = 5462785783512485056L;
@@ -54,6 +54,10 @@ public final class AspectInstance implements InvocationHandler, Externalizable {
 
     public AspectInstance(AspectFactory aspectFactory, Object classIdentifier) {
         this.aspectFactory = aspectFactory;
+        this.classIdentifier = classIdentifier;
+    }
+
+    public AspectInstance(Object classIdentifier) {
         this.classIdentifier = classIdentifier;
     }
 
@@ -117,7 +121,7 @@ public final class AspectInstance implements InvocationHandler, Externalizable {
         return interfaceInstance.getAllInterceptors();
     }
 
-    private MixinInstance getMixinForInterface(Class interfaceClass) {
+    public MixinInstance getMixinForInterface(Class interfaceClass) {
         MixinInstance mixinInstance = (MixinInstance) mixins.get(interfaceClass);
         assert mixinInstance != null : "there is no mixin for interface " + interfaceClass;
         return mixinInstance;
