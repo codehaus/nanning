@@ -1,12 +1,9 @@
 package com.tirsen.nanning.samples.prevayler;
 
-import org.prevayler.PrevalentSystem;
-import org.prevayler.AlarmClock;
-
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
-import com.tirsen.nanning.AspectRepository;
+import org.prevayler.AlarmClock;
 
 public class MySystem implements IdentifyingSystem {
     private AlarmClock clock;

@@ -71,7 +71,7 @@ public class RemoteCallServer {
             Object result = method.invoke(service, call.getArgs());
 
             ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
-            output.writeObject(RemoteServiceCall.marshal(result));
+            output.writeObject(result);
         } catch (Exception e) {
             logger.error("error executing call", e);
         } finally {
