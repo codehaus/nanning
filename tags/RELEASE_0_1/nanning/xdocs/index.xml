@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<document>
+
+    <properties>
+        <author email="tirsen@users.sourceforge.net">Jon Tirsen</author>
+        <title>Nanning Aspects</title>
+    </properties>
+
+    <body>
+
+        <section name="Nanning Aspects">
+            <p>
+                Nanning Aspects is a simple yet scaleable aspect-oriented framework based on the ideas of
+                implementing AOP in Java outlined by Rickard Öberg in his
+                <a href="http://www.dreambean.com">blog</a>.
+            </p>
+            <p>
+                Nanning is also nice "little" town in Guanxi province in southern China. It's about 1-2
+                million inhabitants which barely makes it a town by chinese standards. It is not to be
+                confused with the much larger Nanking/Nanjing.
+            </p>
+            <p>
+                Nanning Aspects is experimental and should not be regarded as production-quality. Although,
+                it is being used in production-level projects with great success.
+            </p>
+        </section>
+
+    </body>
+</document>

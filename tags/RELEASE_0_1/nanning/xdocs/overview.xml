@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<document>
+
+    <properties>
+        <author email="tirsen@users.sourceforge.net">Jon Tirsen</author>
+        <title>Nanning Aspects</title>
+    </properties>
+
+    <body>
+
+        <section name="Overview">
+            <p>
+                This is a short overview of the Nanning Aspects AOP framework.
+            </p>
+
+            <subsection name="Features">
+                <p>
+                    Nanning Aspects has the following features:
+                </p>
+                <ul>
+                    <li>
+                        An aspected object consists of a set of mixins. A an interface, a target-object and a set of
+                        interceptors (advises on method-calls), these interceptors intercept calls on the interface on
+                        it's way to the target.
+                    </li>
+                    <li>
+                        An aspect consists of an interface, a target-object and a set of interceptors
+                        (advises on method-calls), these interceptors intercept calls on the interface on
+                        it's way to the target.
+                    </li>
+                    <li>
+                        An aspect-class consists of a set of aspects and can in it's own right have an
+                        interface, target and interceptors. The interceptors of the class will always be
+                        executed before <em>all</em> other interceptors, even the interceptors of the other
+                        aspects of the class.
+                    </li>
+                    <li>
+                        When instantiated all these aspects are put together using a Proxy in the
+                        Reflection API.
+                    </li>
+                    <li>
+                        Attributes (Javadoc-like tags) can also be added to classes, fields and methods.
+                        These attributes are accesible at runtime.
+                    </li>
+                    <li>
+                        Inherited interfaces will call correct target. If several aspects implement same
+                        interface the first one will take precedence. The target of the aspect-class will
+                        always take precedence before the rest.
+                    </li>
+                    <li>
+                        An XML-config format that's actually a
+                        <a href="http://jakarta.apache.org/commons/sandbox/jelly">Jelly-script</a>.
+                    </li>
+                    <li>
+                        Method-selectors that selects what methods an interceptor should intercept.
+                    </li>
+                    <li>
+                        Super-simple implementation. Really! Anybody can do it! Even me!
+                    </li>
+                </ul>
+            </subsection>
+
+            <subsection name="Restrictions">
+                <p>
+                    Nanning Aspects has the following restrictions
+                </p>
+                <ul>
+                    <li>
+                        You can only advise on method-call pointcuts which is far from the power that
+                        for example <a href="http://www.aspectj.org">AspectJ</a> offers. On the other hand
+                        compared to the complexity of AspectJ Nanning is much, much simpler. In reality
+                        many of the benefits of AOP can be reached with this simple construct. At the moment there is
+                        also some experimental support for intercepting object-instantiation.
+                    </li>
+                    <li>
+                        All your objects need to have interface and implementation separated, that is all
+                        public methods (accessible to clients) needs to be placed in an interface which is
+                        implemented by the actual class. In contrast to EJB your implementation must
+                        implement the interface, which also forces your implementation to stay in sync
+                        with your interface. (This is actually good, because the java-compiler will choke
+                        if they're out of sync before your code even hits unit-tests.)
+                    </li>
+                    <li>
+                        You'll get indeterministic effects if your interface has a method with same name as
+                        a method of another interface for the aspect-class. (Currently considering
+                        disallowing this altogether.)
+                    </li>
+                </ul>
+            </subsection>
+
+            <subsection name="Non-features">
+                <p>
+                    Nanning Aspects do not have these features (yet?):
+                </p>
+                <ul>
+                    <li>
+                        No support for inheriting interceptors by inheriting interfaces.
+                    </li>
+                    <li>
+                        A mega-cool logo.
+                    </li>
+                    <li>
+                        A set of interceptors that will supersede EJB forever!
+                    </li>
+                </ul>
+            </subsection>
+
+        </section>
+
+    </body>
+</document>

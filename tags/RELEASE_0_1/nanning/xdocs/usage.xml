@@ -1,0 +1,242 @@
+<?xml version="1.0"?>
+<document>
+
+    <properties>
+        <author email="tirsen@users.sourceforge.net">Jon Tirsen</author>
+        <title>Nanning Aspects</title>
+    </properties>
+
+    <body>
+
+        <section name="Usage">
+            <subsection name="Using aspects">
+                <p>
+                    This is an example from the unit-tests:
+                </p>
+                <source><![CDATA[
+AspectClass aspectClass = new AspectClass();
+aspectClass.setInterface(Intf.class);
+aspectClass.addInterceptor(MockInterceptor.class);
+aspectClass.addInterceptor(NullInterceptor.class);
+aspectClass.setTarget(Impl.class);
+AspectDefinition aspectDefinition = new AspectDefinition();
+aspectDefinition.setInterface(SideAspect.class);
+aspectDefinition.addInterceptor(NullInterceptor.class);
+aspectDefinition.addInterceptor(MockInterceptor.class);
+aspectDefinition.setTarget(SideAspectImpl.class);
+aspectClass.addSideAspect(aspectDefinition);
+
+Object bigMomma = aspectClass.newInstance();
+
+// cast it to the interface you want to call, caveat: method-names must not conflict
+((Intf) bigMomma).call();
+((SideAspect) bigMomma).sideCall();
+                ]]></source>
+                <p>
+                    Nanning also has an <a href="#Configuration file format">XML-configuration format</a>
+                    if that's what you prefer.
+                </p>
+            </subsection>
+
+            <subsection name="Using runtime attributes">
+                <p>
+                    This is an example from the unit-tests:
+                </p>
+                <p>
+                    The class (with the attributes):
+                </p>
+                <source><![CDATA[
+/**
+ * @classAttribute classValue
+ */
+public class AttributesTestClass
+{
+    /**
+     * @fieldAttribute fieldValue
+     */
+    public String field;
+
+    /**
+     * @methodAttribute methodValue
+     */
+    public void method()
+    {
+    }
+
+    /**
+     * @methodAttribute argMethodValue
+     */
+    public void method(String arg)
+    {
+    }
+}
+                ]]></source>
+                <p>
+                    The code that compiles and accesses these attributes:
+                </p>
+                <source><![CDATA[
+AttributesCompiler attributesCompiler = new AttributesCompiler();
+attributesCompiler.setSrc(new File("src" + File.separator + "test"));
+attributesCompiler.setDest(targetDir);
+attributesCompiler.execute();
+
+assertEquals("classValue", Attributes.getAttribute(AttributesTestClass.class, "classAttribute"));
+Field field = AttributesTestClass.class.getDeclaredField("field");
+assertEquals("fieldValue", Attributes.getAttribute(field, "fieldAttribute"));
+Method method = AttributesTestClass.class.getMethod("method", null);
+assertEquals("methodValue", Attributes.getAttribute(method, "methodAttribute"));
+Method argMethod = AttributesTestClass.class.getMethod("method", new Class[]{String.class});
+assertEquals("argMethodValue", Attributes.getAttribute(argMethod, "methodAttribute"));
+                ]]></source>
+                <p>
+                    The attributes-compiler can also be used as an ant-task (or better yet! inside
+                    <a
+                        href="http://jakarta.apache.org/maven">maven</a>). This is left as an exercise
+                    for the interested reader (yeah, yeah, I'm lazy...).
+                </p>
+            </subsection>
+
+            <subsection name="Configuration file format">
+                <p>
+                    If you prefer XML over Java you can create a configuration file with the following
+                    format:
+                </p>
+                <source><![CDATA[
+<aspect-repository>
+    <aspect>
+        <interface>
+            com.tirsen.nanning.SideAspect
+        </interface>
+        <interceptor>
+            com.tirsen.nanning.NullInterceptor
+        </interceptor>
+        <interceptor>
+            com.tirsen.nanning.MockInterceptor
+        </interceptor>
+        <target>
+            com.tirsen.nanning.SideAspectImpl
+        </target>
+    </aspect>
+    <class>
+        <interface>
+            com.tirsen.nanning.Intf
+        </interface>
+        <interceptor>
+            com.tirsen.nanning.MockInterceptor
+        </interceptor>
+        <interceptor>
+            com.tirsen.nanning.NullInterceptor
+        </interceptor>
+        <target>
+            com.tirsen.nanning.Impl
+        </target>
+
+        <aspect interface="com.tirsen.nanning.SideAspect" />
+    </class>
+</aspect-repository>
+                ]]></source>
+                <p>
+                    Access the configuration with code along the following lines:
+                </p>
+                <source><![CDATA[
+AspectRepository aspectRepository = new AspectRepository();
+aspectRepository.configure(AspectRepositoryTest.class.getResource("aspect-repository-test.xml"));
+Object bigMomma = aspectRepository.newInstance(Intf.class);
+                ]]></source>
+                <p>
+                    Or if you want to cheat you can name the file "aspect-repository.xml" and put it
+                    in your classpath. In that case your code would look more like:
+                </p>
+                <source><![CDATA[
+Object bigMomma = AspectRepository.getInstance().newInstance(Intf.class);
+                ]]></source>
+                <p>
+                    Oh, forgot to mention... The configuration file is actually a
+                    <a href="http://jakarta.apache.org/commons/sandbox/jelly">Jelly</a>-script, which means
+                    you can probably do all sorts of crazy things and probably also embed Nanning-aspects
+                    inside other Jelly-scripts. I haven't had time to test all the implications of this
+                    feature but I guess it's kind of cool. I guess this also breaks the "simplest thing that
+                    could possibly work"-design I usually prefer but codewise it was just slightly more
+                    or just as complex as parsing the XML by hand, mostly due to Jelly being designed so
+                    well.
+                </p>
+            </subsection>
+
+            <subsection name="Singleton interceptors">
+                <p>
+                    If you're interceptor does not keep state implement the marker-interface
+                    <a href="apidocs/com/tirsen/nanning/SingletonInterceptor.html">SingletonInterceptor</a>.
+                    If you do Nanning will only instantiate one instance and use that as the interceptor
+                    for the whole system. Example:
+                </p>
+                <source><![CDATA[
+public class NullInterceptor implements SingletonInterceptor
+{
+    public Object invoke(Invocation invocation) throws Throwable
+    {
+        return invocation.invokeNext();
+    }
+}
+                ]]></source>
+            </subsection>
+
+            <subsection name="Method filtering">
+                <p>
+                    Preliminary method filtering has also been implemented. If your interceptor likes to
+                    filter out the methods that it will intercept implement
+                    <a href="apidocs/com/tirsen/nanning/FilterMethodsInterceptor.html">
+                        FilterMethodsInterceptor</a>. If you return <code>false</code> to the call to
+                    <a href="apidocs/com/tirsen/nanning/FilterMethodsInterceptor.html#interceptsMethod(java.lang.reflect.Method)">
+                        FilterMethodsInterceptor.interceptsMethod</a> your interceptor will not be called
+                    for that method.
+                </p>
+                <source><![CDATA[
+public static class TestFilterMethodsInterceptor implements FilterMethodsInterceptor
+{
+    public boolean interceptsMethod(Method method)
+    {
+        return method.getName().equals("interceptThis");
+    }
+
+    public Object invoke(Invocation invocation) throws Throwable
+    {
+        if(!invocation.getMethod().getName().equals("interceptThis"))
+        {
+            fail("should not intercept " + invocation.getMethod());
+        }
+        return invocation.invokeNext();
+    }
+}
+                ]]></source>
+            </subsection>
+            <subsection name="Method name filters">
+                Filtering what methods an interceptor should intercept depending on its name by setting
+                the attribute "methodNameFilter" on the InterceptorDefinition to a regular expression that
+                the method name must match. (NOTE: your interceptor must extend BasicInterceptor,
+                where this behaviour is implemented). In this example only methods whose name contains
+                "Again" are intercepted (regular expression .*Again.*).
+                <source><![CDATA[
+AspectClass aspectClass = new AspectClass();
+aspectClass.setInterface(SomeAspect.class);
+InterceptorDefinition interceptorDefinition = new InterceptorDefinition(TestFilterMethodsInterceptor.class);
+// set the regular expression that method-name must match
+interceptorDefinition.setAttribute("methodNameFilter", ".*Again.*");
+aspectClass.addInterceptor(interceptorDefinition);
+aspectClass.setTarget(SomeAspectImpl.class);
+
+SomeAspect someAspect = (SomeAspect) aspectClass.newInstance();
+Object proxy = createAspectProxy();
+
+SomeAspect aspect = (SomeAspect) proxy;
+
+aspect.doIt(); // will NOT be called
+aspect.doItAgain(); // WILL be called
+aspect.oupsIDidItAgain(); // WILL be called
+                ]]></source>
+                An attribute called "methodNameFilter" on the interceptor-class accomplishes the same thing. There is
+                currently no support for specifying this in the XML-configuration.
+            </subsection>
+        </section>
+
+    </body>
+</document>
