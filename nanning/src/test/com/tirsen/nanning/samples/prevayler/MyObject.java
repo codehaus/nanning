@@ -17,4 +17,6 @@ public interface MyObject extends Serializable {
      * @transaction
      */
     void setMyObject(MyObject myObject);
+
+    MyObject getMyObject();
 }

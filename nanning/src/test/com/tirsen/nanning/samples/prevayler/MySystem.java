@@ -13,4 +13,11 @@ public interface MySystem extends IdentifyingSystem {
     MyObject createMyObject();
 
     List getObjects();
+
+    /**
+     * @transaction
+     */
+    void setMyObject(MyObject myObject);
+
+    MyObject getMyObject();
 }

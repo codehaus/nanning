@@ -2,12 +2,13 @@ package com.tirsen.nanning.samples.prevayler;
 
 import com.tirsen.nanning.Aspects;
 import com.tirsen.nanning.Invocation;
+import com.tirsen.nanning.Interceptor;
 import com.tirsen.nanning.attribute.Attributes;
 
 public class IdentifyingCall extends Call {
     public IdentifyingCall(Invocation invocation) {
         super(invocation);
-        target = identify(target);
+        target = marshal(target);
         args = marshalArguments(invocation.getArgs());
     }
 
@@ -32,8 +33,21 @@ public class IdentifyingCall extends Call {
         } else if (Character.class.isInstance(o)) {
             return o;
         } else {
-            return identify(target);
+            if (isService(getInterfaceClass())) {
+                return new Identity(getInterfaceClass(), getClassIdentifier());
+            }
+            if (isEntity(getInterfaceClass())) {
+                if (CurrentPrevayler.getSystem().hasObjectID(o)) {
+                    return new Identity(o.getClass(), new Long(CurrentPrevayler.getSystem().getObjectID(o)));
+                } else {
+                    // object is not part of target prevalent-system, marshal by value and assign ID at execution
+                    return o;
+                }
+            }
+
         }
+
+        throw new IllegalArgumentException("Can't marshal " + o);
     }
 
     private Object[] unmarshalArguments(Object[] args) {
@@ -50,35 +64,68 @@ public class IdentifyingCall extends Call {
     }
 
     private Object unmarshal(Object o) {
-        if (Number.class.isInstance(o)) {
+        if (o == null) {
+            return null;
+        } else if (o instanceof Number) {
             return o;
-        } else if (String.class.isInstance(o)) {
+        } else if (o instanceof String) {
             return o;
-        } else if (Character.class.isInstance(o)) {
+        } else if (o instanceof Character) {
             return o;
         } else if (o instanceof Identity) {
             return resolve((Identity) o);
+        } else if (isEntity(o.getClass())) {
+            registerObjectIDsRecursive(o);
+            return o;
         } else {
             throw new IllegalArgumentException("Can't resolve " + o);
         }
     }
 
-    protected Identity identify(Object object) {
-        if (Attributes.hasInheritedAttribute(getInterfaceClass(), "service")) {
-            return null;
-        }
-        if (Attributes.hasInheritedAttribute(getInterfaceClass(), "entity")) {
-            return new Identity(object.getClass(), new Long(CurrentPrevayler.getSystem().getObjectID(object)));
-        }
-
-        throw new IllegalArgumentException("Can't identify " + object);
+    private void registerObjectIDsRecursive(Object o) {
+        final IdentifyingSystem system = CurrentPrevayler.getSystem();
+        ObjectGraphVisitor.visit(o, new ObjectGraphVisitor() {
+            protected void visit(Object o) {
+                if (isEntity(o.getClass())) {
+                    assert !system.hasObjectID(o) :
+                            "you're mixing object in prevayler with objects outside, this will lead to unpredictable results, " +
+                            "so I've banished that sort of behaviour with this assert here";
+                    system.registerObjectID(o);
+                }
+                // for performance, skip the proxy part of all aspected objects
+                if (Aspects.isAspectObject(o)) {
+                    Object[] targets = Aspects.getTargets(o);
+                    for (int i = 0; i < targets.length; i++) {
+                        super.visit(targets[i]);
+                    }
+                    Interceptor[] interceptors = Aspects.getInterceptors(o);
+                    for (int i = 0; i < interceptors.length; i++) {
+                        super.visit(interceptors[i]);
+                    }
+                } else {
+                    super.visit(o);
+                }
+            }
+        });
     }
 
-    protected static Object resolve(Identity identity) {
-        if (Attributes.hasInheritedAttribute(identity.getObjectClass(), "entity")) {
+    protected Object resolve(Identity identity) {
+        Class objectClass = identity.getObjectClass();
+        if (isService(objectClass)) {
+            return Aspects.getCurrentAspectFactory().newInstance(identity.getIdentifier());
+        }
+        if (isEntity(objectClass)) {
             return CurrentPrevayler.getSystem().getObjectWithID(((Long) identity.getIdentifier()).longValue());
         }
-        throw new IllegalArgumentException("Can't resolve objects of " + identity.getObjectClass());
+        throw new IllegalArgumentException("Can't resolve objects of " + objectClass);
+    }
+
+    private boolean isEntity(Class objectClass) {
+        return Attributes.hasInheritedAttribute(objectClass, "entity");
+    }
+
+    private boolean isService(Class objectClass) {
+        return Attributes.hasInheritedAttribute(objectClass, "service");
     }
 
     public Object[] getArgs() {
@@ -86,10 +133,7 @@ public class IdentifyingCall extends Call {
     }
 
     public Object getTarget() {
-        if (target == null) {
-            return Aspects.getCurrentAspectFactory().newInstance(getClassIdentifier());
-        } else {
-            return resolve((Identity) target);
-        }
+        assert target != null;
+        return unmarshal(target);
     }
 }
