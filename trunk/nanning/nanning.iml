@@ -12,9 +12,9 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="junit-3.8.1" level="application" />
+    <orderEntry type="library" name="oro-2.0.7" level="application" />
     <orderEntry type="library" name="qdox-1.2" level="application" />
     <orderEntry type="library" name="ant-1.5.3-1" level="application" />
-    <orderEntry type="library" name="oro-2.0.7" level="application" />
   </component>
 </module>
 
