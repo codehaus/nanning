@@ -34,6 +34,9 @@ public class AcceptanceTestSuite {
         suite.addTestSuite(ContractInterceptorTest.class);
         suite.addTestSuite(XMLTest.class);
         suite.addTestSuite(AttributesTest.class);
+
+        suite.addTestSuite(com.tirsen.nanning.locking.AcceptanceTest.class);
+
         return suite;
     }
     ///CLOVER:ON

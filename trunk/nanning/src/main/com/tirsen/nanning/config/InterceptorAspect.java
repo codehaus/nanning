@@ -6,14 +6,11 @@ import com.tirsen.nanning.MethodInterceptor;
 import com.tirsen.nanning.MixinInstance;
 
 import java.lang.reflect.Method;
-import java.util.Iterator;
-import java.util.List;
 
 public class InterceptorAspect implements Aspect {
     public static final int SINGLETON = 0;
     public static final int PER_METHOD = SINGLETON + 1;
-//    public static final int PER_INSTANCE = PER_METHOD + 1;
-//    public static final int PER_MIXIN = PER_INSTANCE + 1;
+    public static final int PER_INSTANCE = PER_METHOD + 1;
 
     private Class interceptorClass;
     private int stateManagement;
@@ -29,17 +26,17 @@ public class InterceptorAspect implements Aspect {
     }
 
     public InterceptorAspect(Pointcut pointcut, Class interceptorClass, int stateManagement) {
-        setPointcut(pointcut);
-
-        this.interceptorClass = interceptorClass;
         this.stateManagement = stateManagement;
-
-        assert stateManagement == SINGLETON || stateManagement == PER_METHOD
-                : "SINGLETON and PER_METHOD is supported only at the moment";
+        assert stateManagement == SINGLETON || stateManagement == PER_METHOD || stateManagement == PER_INSTANCE
+                : "SINGLETON, PER_METHOD and PER_INSTANCE is supported only, not " + stateManagement;
 
         if (stateManagement == SINGLETON) {
             singletonInterceptor = createInterceptor();
         }
+
+        setPointcut(pointcut);
+
+        this.interceptorClass = interceptorClass;
     }
 
     public void setPointcut(Pointcut pointcut) {
@@ -82,25 +79,15 @@ public class InterceptorAspect implements Aspect {
     }
 
     public void advise(AspectInstance instance) {
-        if (pointcut.adviseInstance(instance)) {
-            List mixins = instance.getMixins();
-            for (Iterator iterator = mixins.iterator(); iterator.hasNext();) {
-                MixinInstance mixin = (MixinInstance) iterator.next();
-                if (pointcut.adviseMixin(mixin)) {
-                    Method[] methods = getMethodsToAdvise(instance, mixin);
-                    for (int i = 0; i < methods.length; i++) {
-                        Method method = methods[i];
-                        if (stateManagement == SINGLETON) {
-                            assert singletonInterceptor != null;
-                            mixin.addInterceptor(method, singletonInterceptor);
-                        }
-                        if (stateManagement == PER_METHOD) {
-                            MethodInterceptor interceptor = createInterceptor();
-                            mixin.addInterceptor(method, interceptor);
-                        }
-                    }
-                }
-            }
+        if (stateManagement == SINGLETON) {
+            pointcut.advise(instance, singletonInterceptor);
+
+        } else if (stateManagement == PER_INSTANCE) {
+            pointcut.advise(instance, createInterceptor());
+
+        } else if (stateManagement == PER_METHOD) {
+            pointcut.advise(instance, interceptorClass);
+
         }
     }
 

@@ -1,6 +1,7 @@
 package com.tirsen.nanning.xml;
 
 import com.tirsen.nanning.config.InterceptorAspect;
+import com.tirsen.nanning.config.Pointcut;
 import org.apache.commons.digester.Digester;
 import org.apache.commons.digester.ObjectCreationFactory;
 import org.xml.sax.Attributes;

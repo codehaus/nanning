@@ -13,7 +13,7 @@ public class PointcutTest extends AbstractAttributesTest {
 
     public void testFalseAbstractPointcut() {
         Pointcut falsePointcut = new AbstractPointcut() {
-            protected boolean adviseMethod(Method method) {
+            public boolean adviseMethod(Method method) {
                 return false;
             }
         };
@@ -22,7 +22,7 @@ public class PointcutTest extends AbstractAttributesTest {
 
     public void testTrueAbstractPointcut() {
         Pointcut falsePointcut = new AbstractPointcut() {
-            protected boolean adviseMethod(Method method) {
+            public boolean adviseMethod(Method method) {
                 return true;
             }
         };

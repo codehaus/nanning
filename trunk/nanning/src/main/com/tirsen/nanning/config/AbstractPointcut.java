@@ -2,6 +2,8 @@ package com.tirsen.nanning.config;
 
 import com.tirsen.nanning.MixinInstance;
 import com.tirsen.nanning.AspectInstance;
+import com.tirsen.nanning.MethodInterceptor;
+import com.tirsen.nanning.AspectException;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -31,5 +33,39 @@ public abstract class AbstractPointcut implements Pointcut {
         return true;
     }
 
-    protected abstract boolean adviseMethod(Method method);
+    public void advise(AspectInstance instance, MethodInterceptor interceptor) {
+        advise(instance, interceptor, null);
+    }
+
+    public void advise(AspectInstance instance, Class interceptorClass) {
+        advise(instance, null, interceptorClass);
+    }
+
+    public void advise(AspectInstance instance, MethodInterceptor interceptor, Class interceptorClass) {
+        if (adviseInstance(instance)) {
+            List mixins = instance.getMixins();
+            for (Iterator iterator = mixins.iterator(); iterator.hasNext();) {
+                MixinInstance mixin = (MixinInstance) iterator.next();
+                if (adviseMixin(mixin)) {
+                    Method[] methods = methodsToAdvise(instance, mixin);
+                    for (int i = 0; i < methods.length; i++) {
+                        Method method = methods[i];
+                        if (interceptor != null) {
+                            mixin.addInterceptor(method, interceptor);
+                        } else if (interceptorClass != null) {
+                            try {
+                                mixin.addInterceptor(method, (MethodInterceptor) interceptorClass.newInstance());
+                            } catch (Exception e) {
+                                throw new AspectException(e);
+                            }
+                        } else {
+                            assert false : "interceptor or class needs to be specified";
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public abstract boolean adviseMethod(Method method);
 }
