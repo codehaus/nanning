@@ -8,8 +8,7 @@ package com.tirsen.nanning;
 
 import com.tirsen.nanning.attribute.AttributesTest;
 import com.tirsen.nanning.attribute.AttributesXMLParserTest;
-import com.tirsen.nanning.config.Def2Test;
-import com.tirsen.nanning.samples.CacheTest;
+import com.tirsen.nanning.config.AspectSystemTest;
 import com.tirsen.nanning.samples.prevayler.ObjectGraphVisitorTest;
 import com.tirsen.nanning.samples.rmi.RemoteTest;
 import junit.framework.Test;
@@ -19,30 +18,21 @@ import junit.framework.TestSuite;
 /**
  * TODO document UnitTestSuite
  *
- * <!-- $Id: UnitTestSuite.java,v 1.15 2003-04-23 20:44:37 tirsen Exp $ -->
+ * <!-- $Id: UnitTestSuite.java,v 1.16 2003-05-09 14:57:49 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.15 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.16 $
  */
 public class UnitTestSuite {
     ///CLOVER:OFF
     public static Test suite() {
         TestSuite suite = new TestSuite();
-        suite.addTestSuite(AspectClassTest.class);
         suite.addTestSuite(AspectInstanceTest.class);
-        suite.addTestSuite(InterceptorTest.class);
-        suite.addTestSuite(ConstructionInterceptorTest.class);
-        suite.addTestSuite(AspectRepositoryTest.class);
         suite.addTestSuite(AttributesTest.class);
-        suite.addTestSuite(AspectsTest.class);
-        suite.addTestSuite(MethodFilterTest.class);
         suite.addTestSuite(AttributesXMLParserTest.class);
-        suite.addTestSuite(AttributeFilterTest.class);
         suite.addTestSuite(ObjectGraphVisitorTest.class);
-        suite.addTestSuite(InheritanceTest.class);
-        suite.addTestSuite(Def2Test.class);
+        suite.addTestSuite(AspectSystemTest.class);
         suite.addTestSuite(SerializationTest.class);
-        suite.addTestSuite(CacheTest.class);
         suite.addTestSuite(RemoteTest.class);
         return suite;
     }

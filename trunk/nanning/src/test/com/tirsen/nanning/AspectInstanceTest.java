@@ -14,10 +14,10 @@ import junit.framework.TestCase;
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: AspectInstanceTest.java,v 1.6 2003-04-23 20:44:37 tirsen Exp $ -->
+ * <!-- $Id: AspectInstanceTest.java,v 1.7 2003-05-09 14:57:48 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.6 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.7 $
  */
 public class AspectInstanceTest extends TestCase {
     public void testEmptyAspectInstance() {
@@ -31,7 +31,7 @@ public class AspectInstanceTest extends TestCase {
 
     public void testAspectInstanceWithOneMixin() {
         AspectInstance instance = new AspectInstance();
-        instance.addMixin(new MixinInstance(Intf.class, new Impl()));
+        instance.addMixin(new MixinInstance(Intf.class, new IntfImpl()));
         Object proxy = instance.getProxy();
         assertTrue(proxy instanceof Intf);
         Intf intf = (Intf) proxy;
@@ -41,9 +41,14 @@ public class AspectInstanceTest extends TestCase {
     Method calledMethod = null;
     public void testInterceptor() throws NoSuchMethodException {
         AspectInstance instance = new AspectInstance();
-        MixinInstance mixin = new MixinInstance(Intf.class, new Impl());
+        MixinInstance mixin = new MixinInstance(Intf.class, new IntfImpl());
         Method callMethod = Intf.class.getMethod("call", null);
         mixin.addInterceptor(callMethod, new MethodInterceptor() {
+
+            public boolean interceptsMethod(AspectInstance aspectInstance, MixinInstance mixin, Method method) {
+                return true;
+            }
+
             public Object invoke(Invocation invocation) throws Throwable {
                 calledMethod = invocation.getMethod();
                 return invocation.invokeNext();
@@ -66,14 +71,14 @@ public class AspectInstanceTest extends TestCase {
         AspectInstance instance = new AspectInstance();
         MixinInstance mixin = new MixinInstance();
         mixin.setInterfaceClass(Intf.class);
-        mixin.addInterceptor(new MockInterceptor());
-        mixin.addInterceptor(new MockInterceptor());
-        mixin.setTarget(new Impl());
+        mixin.addInterceptor(instance, new MockInterceptor());
+        mixin.addInterceptor(instance, new MockInterceptor());
+        mixin.setTarget(new IntfImpl());
         instance.addMixin(mixin);
 
         Intf proxy = (Intf) instance.getProxy();
 
-        Aspects.setTarget(proxy, Intf.class, new Impl() {
+        Aspects.setTarget(proxy, Intf.class, new IntfImpl() {
             public void call() {
                 throw new BlahongaException();
             }
@@ -87,7 +92,7 @@ public class AspectInstanceTest extends TestCase {
             fail();
         }
 
-        Aspects.setTarget(proxy, Intf.class, new Impl() {
+        Aspects.setTarget(proxy, Intf.class, new IntfImpl() {
             public void call() {
                 throw new BlahongaError();
             }
@@ -111,26 +116,26 @@ public class AspectInstanceTest extends TestCase {
         AspectInstance aspectInstance = new AspectInstance();
         MixinInstance mixinInstance = new MixinInstance();
         mixinInstance.setInterfaceClass(Intf.class);
-        mixinInstance.addInterceptor(new MockInterceptor());
-        mixinInstance.addInterceptor(new NullInterceptor());
-        mixinInstance.setTarget(new Impl());
+        mixinInstance.addInterceptor(aspectInstance, new MockInterceptor());
+        mixinInstance.addInterceptor(aspectInstance, new NullInterceptor());
+        mixinInstance.setTarget(new IntfImpl());
         aspectInstance.addMixin(mixinInstance);
         MixinInstance sideMixinInstance = new MixinInstance();
         sideMixinInstance.setInterfaceClass(TestMixin.class);
-        sideMixinInstance.addInterceptor(new NullInterceptor());
-        sideMixinInstance.addInterceptor(new MockInterceptor());
+        sideMixinInstance.addInterceptor(aspectInstance, new NullInterceptor());
+        sideMixinInstance.addInterceptor(aspectInstance, new MockInterceptor());
         sideMixinInstance.setTarget(new TestMixinImpl());
         aspectInstance.addMixin(sideMixinInstance);
 
         Object bigMomma = aspectInstance.getProxy();
 
-        assertEquals(4, Aspects.getInterceptors(bigMomma).length);
+        assertEquals(4, Aspects.getInterceptors(bigMomma).size());
 
         verifySideAspect(bigMomma);
     }
 
     public static void verifySideAspect(Object bigMomma) throws NoSuchMethodException {
-        Impl target = (Impl) Aspects.getTarget(bigMomma, Intf.class);
+        IntfImpl target = (IntfImpl) Aspects.getTarget(bigMomma, Intf.class);
         target.expectThis(bigMomma);
         MockInterceptor classInterceptor = (MockInterceptor) (Aspects.getInterceptors(bigMomma, Intf.class.getMethods()[0])[0]);
         classInterceptor.expectAtIndex(0);
@@ -167,17 +172,17 @@ public class AspectInstanceTest extends TestCase {
         AspectInstance aspectInstance = new AspectInstance();
         MixinInstance mixinInstance = new MixinInstance();
         mixinInstance.setInterfaceClass(Intf.class);
-        mixinInstance.setTarget(new Impl());
+        mixinInstance.setTarget(new IntfImpl());
         aspectInstance.addMixin(mixinInstance);
         Intf intf = (Intf) aspectInstance.getProxy();
 
-        Impl impl = (Impl) Aspects.getTarget(intf, Intf.class);
+        IntfImpl impl = (IntfImpl) Aspects.getTarget(intf, Intf.class);
 
         intf.call();
         impl.verify();
     }
 
-    public static class ImplWithEquals extends Impl {
+    public static class ImplWithEquals extends IntfImpl {
         String state;
 
         public ImplWithEquals(String state) {

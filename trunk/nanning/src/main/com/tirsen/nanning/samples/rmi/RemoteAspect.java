@@ -1,23 +1,24 @@
 package com.tirsen.nanning.samples.rmi;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.IOException;
+import java.lang.reflect.Method;
 
+import com.tirsen.nanning.AspectInstance;
 import com.tirsen.nanning.Invocation;
 import com.tirsen.nanning.MethodInterceptor;
-import com.tirsen.nanning.config.InterceptorAdvise;
-import com.tirsen.nanning.config.MethodPointcut;
-import com.tirsen.nanning.config.PointcutAspect;
+import com.tirsen.nanning.MixinInstance;
+import com.tirsen.nanning.config.Aspect;
 import com.tirsen.nanning.samples.prevayler.Call;
 import com.tirsen.nanning.samples.prevayler.Marshaller;
 import com.tirsen.nanning.samples.prevayler.MarshallingCall;
 
-public class RemoteAspect extends PointcutAspect implements MethodInterceptor {
+public class RemoteAspect implements Aspect, MethodInterceptor {
     private Marshaller marshaller;
 
-    public RemoteAspect() {
-        addPointcut(new MethodPointcut(new InterceptorAdvise(this)));
+    public boolean interceptsMethod(AspectInstance aspectInstance, MixinInstance mixin, Method method) {
+        return true;
     }
 
     public Object invoke(Invocation invocation) throws Throwable {
@@ -58,5 +59,17 @@ public class RemoteAspect extends PointcutAspect implements MethodInterceptor {
 
     void setMarshaller(Marshaller marshaller) {
         this.marshaller = marshaller;
+    }
+
+    public Object introduce(AspectInstance aspectInstance) {
+        return null;
+    }
+
+    public Object advise(AspectInstance aspectInstance, MixinInstance mixin) {
+        return this;
+    }
+
+    public Object adviseConstruction(AspectInstance aspectInstance) {
+        return null;
     }
 }

@@ -4,7 +4,7 @@ import com.tirsen.nanning.AspectException;
 import com.tirsen.nanning.AspectInstance;
 import com.tirsen.nanning.MixinInstance;
 
-public class FindTargetMixinAspect extends PointcutAspect {
+public class FindTargetMixinAspect implements Aspect {
     private static final String DEFAULT_IMPLEMENTATION_SUFFIX = "Impl";
     private String implementationSuffix = DEFAULT_IMPLEMENTATION_SUFFIX;
 
@@ -14,27 +14,31 @@ public class FindTargetMixinAspect extends PointcutAspect {
 
     public FindTargetMixinAspect(String implementationSuffix) {
         this.implementationSuffix = implementationSuffix;
+    }
 
-        Advise advise = new Advise() {
-            public void advise(AspectInstance aspectInstance) {
-                Class interfaceClass = (Class) aspectInstance.getClassIdentifier();
-                Class targetClass = findImpl(interfaceClass);
-                Object target = null;
-                try {
-                    target = targetClass.newInstance();
-                } catch (Exception e) {
-                    throw new AspectException("Could not instantiate target " + targetClass, e);
-                }
+    public Object introduce(AspectInstance aspectInstance) {
+        MixinInstance mixinInstance = new MixinInstance();
 
-                MixinInstance mixinInstance = new MixinInstance();
-                mixinInstance.setInterfaceClass(interfaceClass);
-                mixinInstance.setTarget(target);
-                aspectInstance.addMixin(mixinInstance);
-            }
-        };
-        Pointcut pointcut = new AllPointcut();
-        pointcut.addAdvise(advise);
-        addPointcut(pointcut);
+        Class interfaceClass = aspectInstance.getClassIdentifier();
+        Class targetClass = findImpl(interfaceClass);
+        Object target = null;
+        try {
+            target = targetClass.newInstance();
+        } catch (Exception e) {
+            throw new AspectException("Could not instantiate target " + targetClass, e);
+        }
+
+        mixinInstance.setInterfaceClass(interfaceClass);
+        mixinInstance.setTarget(target);
+        return mixinInstance;
+    }
+
+    public Object advise(AspectInstance aspectInstance, MixinInstance mixin) {
+        return null;
+    }
+
+    public Object adviseConstruction(AspectInstance aspectInstance) {
+        return null;
     }
 
     private Class findImpl(Class interfaceClass) {

@@ -3,23 +3,25 @@ package com.tirsen.nanning.samples.prevayler;
 import java.lang.reflect.Method;
 
 import com.tirsen.nanning.Invocation;
+import com.tirsen.nanning.MethodInterceptor;
+import com.tirsen.nanning.MixinInstance;
+import com.tirsen.nanning.AspectInstance;
 import com.tirsen.nanning.attribute.Attributes;
-import com.tirsen.nanning.definition.FilterMethodsInterceptor;
 import com.tirsen.nanning.definition.SingletonInterceptor;
 
 /**
  * TODO document PrevaylerInterceptor
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
-public class PrevaylerInterceptor implements SingletonInterceptor, FilterMethodsInterceptor {
+public class PrevaylerInterceptor implements SingletonInterceptor, MethodInterceptor {
 
     public boolean interceptsConstructor(Class interfaceClass) {
         return Attributes.hasAttribute(interfaceClass, "entity");
     }
 
-    public boolean interceptsMethod(Method method) {
+    public boolean interceptsMethod(AspectInstance aspectInstance, MixinInstance mixin, Method method) {
         return Attributes.hasAttribute(method, "transaction");
     }
 

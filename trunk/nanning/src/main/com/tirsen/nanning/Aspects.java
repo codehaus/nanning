@@ -12,14 +12,15 @@ import java.lang.reflect.Proxy;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.ArrayList;
 
 /**
  * Utility for accessing and modifying aspected object.
  *
- * <!-- $Id: Aspects.java,v 1.21 2003-04-25 10:08:35 lecando Exp $ -->
+ * <!-- $Id: Aspects.java,v 1.22 2003-05-09 14:57:45 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public class Aspects {
     private static ThreadLocal contextAspectRepository = new InheritableThreadLocal();
@@ -31,9 +32,9 @@ public class Aspects {
      * @param proxy
      * @return the interceptors.
      */
-    public static Interceptor[] getInterceptors(Object proxy) {
+    public static List getInterceptors(Object proxy) {
         Set interceptors = getAspectInstance(proxy).getAllInterceptors();
-        return (Interceptor[]) interceptors.toArray(new Interceptor[interceptors.size()]);
+        return new ArrayList(interceptors);
     }
 
     /**

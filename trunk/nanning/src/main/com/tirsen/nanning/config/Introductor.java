@@ -4,16 +4,24 @@ import com.tirsen.nanning.AspectException;
 import com.tirsen.nanning.AspectInstance;
 import com.tirsen.nanning.MixinInstance;
 
-public class AddMixinAdvise extends Advise {
+public class Introductor implements Aspect {
     private Class interfaceClass;
     private Class targetClass;
 
-    public AddMixinAdvise(Class interfaceClass, Class targetClass) {
+    public Introductor(Class interfaceClass, Class targetClass) {
         this.interfaceClass = interfaceClass;
         this.targetClass = targetClass;
     }
 
-    public void advise(AspectInstance aspectInstance) {
+    public Object advise(AspectInstance aspectInstance, MixinInstance mixin) {
+        return null;
+    }
+
+    public Object adviseConstruction(AspectInstance aspectInstance) {
+        return null;
+    }
+
+    public Object introduce(AspectInstance aspectInstance) {
         MixinInstance mixinInstance = new MixinInstance();
         mixinInstance.setInterfaceClass(interfaceClass);
         if (targetClass != null) {
@@ -23,6 +31,6 @@ public class AddMixinAdvise extends Advise {
                 throw new AspectException("could not instantiate target " + e);
             }
         }
-        aspectInstance.addMixin(mixinInstance);
+        return mixinInstance;
     }
 }

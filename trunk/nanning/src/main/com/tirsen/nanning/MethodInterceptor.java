@@ -6,14 +6,16 @@
  */
 package com.tirsen.nanning;
 
+import java.lang.reflect.Method;
+
 
 /**
  * Intercepts calls on an interface on it's way to the target, these are nested "on top" of the target.
  *
- * <!-- $Id: MethodInterceptor.java,v 1.3 2003-03-21 17:11:10 lecando Exp $ -->
+ * <!-- $Id: MethodInterceptor.java,v 1.4 2003-05-09 14:57:45 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public interface MethodInterceptor extends Interceptor {
     /**
@@ -24,4 +26,6 @@ public interface MethodInterceptor extends Interceptor {
      * @throws Throwable if the interceptors or the target-object throws an exception.
      */
     Object invoke(Invocation invocation) throws Throwable;
+
+    boolean interceptsMethod(AspectInstance aspectInstance, MixinInstance mixin, Method method);
 }

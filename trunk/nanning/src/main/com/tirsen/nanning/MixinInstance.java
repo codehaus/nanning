@@ -14,10 +14,10 @@ import java.util.*;
 /**
  * TODO document AspectDefinition
  *
- * <!-- $Id: MixinInstance.java,v 1.10 2003-04-08 12:38:04 lecando Exp $ -->
+ * <!-- $Id: MixinInstance.java,v 1.11 2003-05-09 14:57:45 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public final class MixinInstance {
     private Class interfaceClass;
@@ -159,12 +159,16 @@ public final class MixinInstance {
      * Adds this interceptor to all methods.
      * @param interceptor
      */
-    public void addInterceptor(Interceptor interceptor) {
+    public void addInterceptor(AspectInstance aspectInstance, Interceptor interceptor) {
+        assert !(interceptor instanceof ConstructionInterceptor) : "Construction interceptors are added on the aspect instance";
         Method[] methods = getMethods();
         for (int i = 0; i < methods.length; i++) {
             Method method = methods[i];
             if (interceptor instanceof MethodInterceptor) {
-                addInterceptor(method, (MethodInterceptor) interceptor);
+                MethodInterceptor methodInterceptor = (MethodInterceptor) interceptor;
+                if (methodInterceptor.interceptsMethod(aspectInstance, this, method)) {
+                    addInterceptor(method, methodInterceptor);
+                }
             }
         }
     }

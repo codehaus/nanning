@@ -6,8 +6,12 @@
  */
 package com.tirsen.nanning.samples;
 
+import java.lang.reflect.Method;
+
 import com.tirsen.nanning.Invocation;
 import com.tirsen.nanning.MethodInterceptor;
+import com.tirsen.nanning.MixinInstance;
+import com.tirsen.nanning.AspectInstance;
 import com.tirsen.nanning.definition.SingletonInterceptor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -15,12 +19,17 @@ import org.apache.commons.logging.LogFactory;
 /**
  * TODO document TraceInterceptor
  *
- * <!-- $Id: TraceInterceptor.java,v 1.7 2003-03-21 17:11:12 lecando Exp $ -->
+ * <!-- $Id: TraceInterceptor.java,v 1.8 2003-05-09 14:57:47 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class TraceInterceptor implements MethodInterceptor, SingletonInterceptor {
+
+    public boolean interceptsMethod(AspectInstance aspectInstance, MixinInstance mixin, Method method) {
+        return true;
+    }
+
     public Object invoke(Invocation invocation) throws Throwable {
         StopWatch watch = new StopWatch(false);
 

@@ -1,11 +1,6 @@
 package com.tirsen.nanning.samples.prevayler;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.IdentityHashMap;
@@ -17,7 +12,7 @@ import com.tirsen.nanning.MixinInstance;
 import com.tirsen.nanning.attribute.AbstractAttributesTest;
 import com.tirsen.nanning.attribute.Attributes;
 import com.tirsen.nanning.config.AspectSystem;
-import com.tirsen.nanning.config.MixinAspect;
+import com.tirsen.nanning.config.FindTargetMixinAspect;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.prevayler.implementation.CheckpointPrevayler;
@@ -32,9 +27,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
         super.setUp();
 
         AspectSystem aspectSystem = new AspectSystem();
-        aspectSystem.addAspect(new MixinAspect(MySystem.class, MySystemImpl.class));
-        aspectSystem.addAspect(new MixinAspect(MyObject.class, MyObjectImpl.class));
-        aspectSystem.addAspect(new MixinAspect(TestUnsupportedTransaction.class, TestUnsupportedTransactionImpl.class));
+        aspectSystem.addAspect(new FindTargetMixinAspect());
         aspectSystem.addAspect(new PrevaylerAspect());
 
         aspectFactory = aspectSystem;

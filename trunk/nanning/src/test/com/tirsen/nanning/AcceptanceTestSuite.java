@@ -18,16 +18,15 @@ import junit.framework.TestSuite;
 /**
  * TODO document UnitTestSuite
  *
- * <!-- $Id: AcceptanceTestSuite.java,v 1.6 2003-04-23 20:44:37 tirsen Exp $ -->
+ * <!-- $Id: AcceptanceTestSuite.java,v 1.7 2003-05-09 14:57:47 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.6 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.7 $
  */
 public class AcceptanceTestSuite {
     ///CLOVER:OFF
     public static Test suite() {
         TestSuite suite = new TestSuite();
-        suite.addTestSuite(PerformanceTest.class);
         suite.addTestSuite(PrevaylerTest.class);
         suite.addTestSuite(TraceInterceptorTest.class);
         suite.addTestSuite(RemoteCallServerTest.class);

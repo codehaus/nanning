@@ -7,9 +7,12 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.lang.reflect.Method;
 
 import com.tirsen.nanning.Invocation;
 import com.tirsen.nanning.MethodInterceptor;
+import com.tirsen.nanning.MixinInstance;
+import com.tirsen.nanning.AspectInstance;
 import com.tirsen.nanning.attribute.Attributes;
 import ognl.MethodFailedException;
 import ognl.Ognl;
@@ -22,7 +25,7 @@ import org.apache.commons.logging.LogFactory;
  * you can enable and disable contract-checking in the same way you enable and disable assertions (java -ea and so on).
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class ContractInterceptor implements MethodInterceptor {
     private static final Log logger = LogFactory.getLog(ContractInterceptor.class);
@@ -33,6 +36,11 @@ public class ContractInterceptor implements MethodInterceptor {
      * If this is non-null don't execute contracts, used when executing the expressions.
      */
     private ThreadLocal checkContracts = new ThreadLocal();
+
+    
+    public boolean interceptsMethod(AspectInstance aspectInstance, MixinInstance mixin, Method method) {
+        return true;
+    }
 
     public Object invoke(Invocation invocation) throws Throwable {
         String ensures = Attributes.getAttribute(invocation.getMethod(), "ensures");
