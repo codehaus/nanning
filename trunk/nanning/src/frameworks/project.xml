@@ -100,7 +100,7 @@
     <build>
 
         <nagEmailAddress>
-            tirsen@users.sourceforge.net
+            tirsen@codehaus.org
         </nagEmailAddress>
 
         <sourceDirectory>${basedir}/src/main</sourceDirectory>
