@@ -15,10 +15,10 @@ import com.tirsen.nanning.Interceptor;
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: AspectClassTest.java,v 1.3 2002-10-27 12:13:18 tirsen Exp $ -->
+ * <!-- $Id: AspectClassTest.java,v 1.4 2002-10-28 18:51:01 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class AspectClassTest extends TestCase
 {
@@ -66,9 +66,10 @@ public class AspectClassTest extends TestCase
 
         Object bigMomma = aspectClass.newInstance();
 
+        assertEquals(2, Aspects.getInterceptors(bigMomma).length);
+
         Impl target = (Impl) Aspects.getTarget(bigMomma, Intf.class);
         MockInterceptor classInterceptor = (MockInterceptor) (Aspects.getInterceptors(bigMomma, Intf.class)[0]);
-        classInterceptor.setName("classInterceptor");
         classInterceptor.expectAtIndex(0);
         classInterceptor.expectNumberOfInterceptors(2);
         classInterceptor.expectCalledTimes(2);
@@ -78,7 +79,6 @@ public class AspectClassTest extends TestCase
 
         SideAspectImpl sideTarget = (SideAspectImpl) Aspects.getTarget(bigMomma, SideAspect.class);
         MockInterceptor sideInterceptor = (MockInterceptor) (Aspects.getInterceptors(bigMomma, SideAspect.class)[3]);
-        sideInterceptor.setName("sideInterceptor");
         sideInterceptor.expectAtIndex(3);
         sideInterceptor.expectNumberOfInterceptors(4);
         sideInterceptor.expectCalledTimes(1);

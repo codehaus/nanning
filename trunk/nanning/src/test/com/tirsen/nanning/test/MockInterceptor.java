@@ -15,10 +15,10 @@ import java.lang.reflect.Method;
 /**
  * TODO document MockInterceptor
  *
- * <!-- $Id: MockInterceptor.java,v 1.1 2002-10-27 12:13:18 tirsen Exp $ -->
+ * <!-- $Id: MockInterceptor.java,v 1.2 2002-10-28 18:51:01 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class MockInterceptor implements Interceptor
 {
@@ -130,24 +130,5 @@ public class MockInterceptor implements Interceptor
     public void expectNumberOfInterceptors(int index)
     {
         this.expectNumberOfInterceptors = index;
-    }
-
-    public void setName(String name)
-    {
-        this.name = name;
-    }
-
-    public String toString()
-    {
-        String toString;
-        if (name == null)
-        {
-            toString = super.toString();
-        }
-        else
-        {
-            toString = this.getClass().getName() + "[" + name + "]";
-        }
-        return toString;
     }
 }

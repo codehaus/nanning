@@ -9,14 +9,14 @@ package com.tirsen.nanning;
 /**
  * TODO document InterceptorDefinition
  *
- * <!-- $Id: InterceptorDefinition.java,v 1.1 2002-10-27 12:36:41 tirsen Exp $ -->
+ * <!-- $Id: InterceptorDefinition.java,v 1.2 2002-10-28 18:51:00 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class InterceptorDefinition
 {
-    private Class interceptorClass;
+    private final Class interceptorClass;
 
     public InterceptorDefinition(Class interceptorClass)
     {
