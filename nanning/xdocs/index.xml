@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+<document>
+
+    <properties>
+        <author email="tirsen@users.sourceforge.net">Jon Tirsen</author>
+        <title>Nanning Aspects</title>
+    </properties>
+
+    <body>
+
+        <section name="Summary">
+            <p>
+                Nanning is a simple yet scaleable aspect-oriented framework based on the ideas of
+                implementing AOP in Java outlined by Rickard Oberg in his
+                <a href="http://dreambean.com">blog</a>.
+            </p>
+
+            <subsection name="Features">
+                <p>
+                    Nanning Aspects has the following features:
+                </p>
+                <ul>
+                    <li>
+                        An aspect consists of an interface, a target-object and a set of interceptors that
+                        intercept calls on the interface on it's way to the target.
+                    </li>
+                    <li>
+                        An aspect-class consists of a set of aspects and can in it's own right have an
+                        interface, target and interceptors. The interceptors of the class will always be
+                        executed before <em>all</em> other interceptors, even the interceptors of the other
+                        aspects of the class.
+                    </li>
+                    <li>
+                        When instantiated all these aspects are put together using a Proxy in the
+                        Reflection API.
+                    </li>
+                    <li>
+                        Attributes (Javadoc-like tags) can also be added to classes, fields and methods.
+                        These attributes are accesible at runtime.
+                    </li>
+                    <li>
+                        Super-simple implementation. Really! Anybody can do it! Even me!
+                    </li>
+                </ul>
+            </subsection>
+
+            <subsection name="Non-features">
+                <p>
+                    Nanning Aspects do not have these features (yet?):
+                </p>
+                <ul>
+                    <li>
+                        A mega-cool logo.
+                    </li>
+                    <li>
+                        A nifty XML-config-file.
+                    </li>
+                    <li>
+                        A set of interceptors that will supersede EJB forever!
+                    </li>
+                </ul>
+            </subsection>
+
+            <subsection name="Using aspects">
+                <p>
+                    This is an example from the unit-tests:
+                </p>
+                <source><![CDATA[
+AspectClass aspectClass = new AspectClass();
+aspectClass.setInterface(Intf.class);
+aspectClass.addInterceptor(MockInterceptor.class);
+aspectClass.addInterceptor(NullInterceptor.class);
+aspectClass.setTarget(Impl.class);
+AspectDefinition aspectDefinition = new AspectDefinition();
+interfaceDefinition.setInterface(SideAspect.class);
+interfaceDefinition.addInterceptor(NullInterceptor.class);
+interfaceDefinition.addInterceptor(MockInterceptor.class);
+interfaceDefinition.setTarget(SideAspectImpl.class);
+aspectClass.addSideAspect(interfaceDefinition);
+
+Object bigMomma = aspectClass.newInstance();
+                ]]></source>
+                <p>
+                    As you can see Nanning does not yet have a fancy XML-configuration file. The reason to
+                    this is because I (Jon Tirsen) am allergic to deployment-descriptors. In the end I do
+                    realize I have to get over this irrational phobia and implement something, but I'm
+                    trying desperately to postpone that moment.
+                </p>
+            </subsection>
+
+            <subsection name="Using runtime attributes">
+                <p>
+                    This is an example from the unit-tests:
+                </p>
+                <p>
+                    The class (with the attributes):
+                </p>
+                <source><![CDATA[
+/**
+ * @classAttribute classValue
+ */
+public class AttributesTestClass
+{
+    /**
+     * @fieldAttribute fieldValue
+     */
+    public String field;
+
+    /**
+     * @methodAttribute methodValue
+     */
+    public void method()
+    {
+    }
+
+    /**
+     * @methodAttribute argMethodValue
+     */
+    public void method(String arg)
+    {
+    }
+}
+                ]]></source>
+                <p>
+                    The code that compiles and accesses these attributes:
+                </p>
+                <source><![CDATA[
+AttributesCompiler attributesCompiler = new AttributesCompiler();
+attributesCompiler.setSrc(new File("src" + File.separator + "test"));
+attributesCompiler.setDest(targetDir);
+attributesCompiler.execute();
+
+assertEquals("classValue", Attributes.getAttribute(AttributesTestClass.class, "classAttribute"));
+Field field = AttributesTestClass.class.getDeclaredField("field");
+assertEquals("fieldValue", Attributes.getAttribute(field, "fieldAttribute"));
+Method method = AttributesTestClass.class.getMethod("method", null);
+assertEquals("methodValue", Attributes.getAttribute(method, "methodAttribute"));
+Method argMethod = AttributesTestClass.class.getMethod("method", new Class[]{String.class});
+assertEquals("argMethodValue", Attributes.getAttribute(argMethod, "methodAttribute"));
+                ]]></source>
+                <p>
+                    The attributes-compiler can also be used as an ant-task (or better yet! inside <a
+                    href="http://jakarta.apache.org/maven">maven</a>). This is left as an exercise
+                    for the interested reader (yeah, yeah, I'm lazy...).
+                </p>
+            </subsection>
+
+        </section>
+
+    </body>
+</document>

@@ -9,15 +9,16 @@ package com.tirsen.nanning.test;
 /**
  * TODO document AttributesTestClass
  *
- * <!-- $Id: AttributesTestClass.java,v 1.1 2002-10-28 21:45:34 tirsen Exp $ -->
+ * <!-- $Id: AttributesTestClass.java,v 1.2 2002-10-30 21:39:28 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
  * @classAttribute classValue
  */
 public class AttributesTestClass
 {
+    ///CLOVER:OFF
     /**
      * @fieldAttribute fieldValue
      */
@@ -33,7 +34,8 @@ public class AttributesTestClass
     /**
      * @methodAttribute argMethodValue
      */
-    public void method(String arg)
+    public void method(String arg, String arg2)
     {
     }
+    ///CLOVER:ON
 }
