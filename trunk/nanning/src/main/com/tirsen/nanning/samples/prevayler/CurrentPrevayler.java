@@ -3,6 +3,7 @@ package com.tirsen.nanning.samples.prevayler;
 import org.prevayler.Prevayler;
 
 public class CurrentPrevayler {
+
     private static ThreadLocal isInTransaction = new ThreadLocal() {
         protected Object initialValue() {
             return new Integer(0);
