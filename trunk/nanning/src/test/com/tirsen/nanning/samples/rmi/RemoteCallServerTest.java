@@ -2,22 +2,19 @@ package com.tirsen.nanning.samples.rmi;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 
 import com.tirsen.nanning.Aspects;
 import com.tirsen.nanning.attribute.AbstractAttributesTest;
 import com.tirsen.nanning.config.AspectSystem;
 import com.tirsen.nanning.config.MixinAspect;
 import com.tirsen.nanning.samples.prevayler.*;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.prevayler.implementation.SnapshotPrevayler;
 
 public class RemoteCallServerTest extends AbstractAttributesTest {
     private AspectSystem serverAspectSystem;
     private File prevaylerDir;
     private int port = 12346;
-    private CountingPrevayler prevayler;
+    private SnapshotPrevayler prevayler;
     private SocketRemoteCallServer remoteCallServer;
     private RemoteMarshaller clientMarshaller;
 
@@ -39,7 +36,7 @@ public class RemoteCallServerTest extends AbstractAttributesTest {
 
         // init server side
         Aspects.setContextAspectFactory(serverAspectSystem);
-        prevayler = new CountingPrevayler(serverAspectSystem.newInstance(MySystem.class),
+        prevayler = new SnapshotPrevayler(serverAspectSystem.newInstance(MySystem.class),
                                           prevaylerDir.getAbsolutePath());
 
         remoteCallServer = new SocketRemoteCallServer();

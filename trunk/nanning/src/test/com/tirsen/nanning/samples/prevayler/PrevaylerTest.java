@@ -20,6 +20,7 @@ import com.tirsen.nanning.config.AspectSystem;
 import com.tirsen.nanning.config.MixinAspect;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.prevayler.implementation.CheckpointPrevayler;
 
 public class PrevaylerTest extends AbstractAttributesTest {
 
@@ -70,7 +71,6 @@ public class PrevaylerTest extends AbstractAttributesTest {
                 prevayler.assertNumberOfCommands("no command when object created outside prevayler", 3);
 
                 outsideObject.setMyObject(outsideNestedObject);
-//                prevayler.assertNumberOfCommands("no command when operating on object outside prevayler", 4);
                 prevayler.assertNumberOfCommands("commands operating on objects outside prevayler still generates " +
                                                  "commands (they shouldn't really but we haven't implemented that yet)",
                                                  4);
@@ -102,7 +102,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
         checkMySystem();
 
         // reload database with snapshot
-        prevayler.checkpoint();
+        ((CheckpointPrevayler) prevayler.getWrappedPrevayler()).checkpoint();
         checkMySystem();
     }
 
@@ -127,9 +127,9 @@ public class PrevaylerTest extends AbstractAttributesTest {
     public void testABC() throws ClassNotFoundException, IOException, NoSuchMethodException {
         AspectInstance aspectInstance = Aspects.getAspectInstance(aspectFactory.newInstance(MyObject.class));
         MixinInstance mixinInstance = (MixinInstance) aspectInstance.getMixins().iterator().next();
-        Method setValue = MyObject.class.getDeclaredMethod("setValue", new Class[] { String.class });
+        Method setValue = MyObject.class.getDeclaredMethod("setValue", new Class[]{String.class});
         assertEquals(2, mixinInstance.getInterceptorsForMethod(setValue).size());
-        Method setABC = MyObject.class.getDeclaredMethod("setABC", new Class[] { String[].class });
+        Method setABC = MyObject.class.getDeclaredMethod("setABC", new Class[]{String[].class});
         assertTrue(Attributes.getAttributes(MyObject.class).hasAttribute(setABC, "transaction"));
         assertTrue(Attributes.hasAttribute(setABC, "transaction"));
         assertEquals(2, mixinInstance.getInterceptorsForMethod(setABC).size());
@@ -157,7 +157,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
         });
 
         // restoring
-        prevayler.checkpoint();
+        ((CheckpointPrevayler) prevayler.getWrappedPrevayler()).checkpoint();
         prevayler = newPrevayler();
         CurrentPrevayler.withPrevayler(prevayler, new Runnable() {
             public void run() {
@@ -169,7 +169,8 @@ public class PrevaylerTest extends AbstractAttributesTest {
         });
 
         // restoring and garbage collecting
-        prevayler.checkpoint();
+        ((CheckpointPrevayler) prevayler.getWrappedPrevayler()).checkpoint();
+
         prevayler = newPrevayler();
         CurrentPrevayler.withPrevayler(prevayler, new Runnable() {
             public void run() {
@@ -218,8 +219,8 @@ public class PrevaylerTest extends AbstractAttributesTest {
     }
 
     private CountingPrevayler newPrevayler() throws IOException, ClassNotFoundException {
-        CountingPrevayler prevayler = new CountingPrevayler(aspectFactory.newInstance(MySystem.class),
-                                                            prevaylerDir.getAbsolutePath());
+        CountingPrevayler prevayler = new CountingPrevayler(new CheckpointPrevayler(aspectFactory.newInstance(MySystem.class),
+                                                                                    prevaylerDir.getAbsolutePath()));
         return prevayler;
     }
 
@@ -240,7 +241,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
         assertFalse(PrevaylerInterceptor.isTransactional(Object.class));
         assertTrue(PrevaylerInterceptor.isTransactional(MySystem.class));
         assertFalse(PrevaylerInterceptor.transactionalReturnValue(
-                MySystem.class.getMethod("setMyObject", new Class[] { MyObject.class })));
+                MySystem.class.getMethod("setMyObject", new Class[]{MyObject.class})));
         assertTrue(PrevaylerInterceptor.transactionalReturnValue(MySystem.class.getMethod("createMyObject", null)));
     }
 }

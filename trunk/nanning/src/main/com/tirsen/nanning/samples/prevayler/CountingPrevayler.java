@@ -3,24 +3,19 @@ package com.tirsen.nanning.samples.prevayler;
 import java.io.IOException;
 
 import junit.framework.Assert;
+import org.prevayler.Prevayler;
 import org.prevayler.Transaction;
-import org.prevayler.implementation.CheckpointPrevayler;
 
-public class CountingPrevayler extends CheckpointPrevayler {
+public class CountingPrevayler extends FilterPrevayler {
     private int numberOfCommandsInLog = 0;
 
-    public CountingPrevayler(Object system, String dir) throws IOException, ClassNotFoundException {
-        super(system, dir);
+    public CountingPrevayler(Prevayler prevayler) {
+        super(prevayler);
     }
 
     public void execute(Transaction transaction) {
         numberOfCommandsInLog++;
         super.execute(transaction);
-    }
-
-    public void checkpoint() {
-        numberOfCommandsInLog = 0;
-        super.checkpoint();
     }
 
     public void assertNumberOfCommands(String message, int expectedNumber) {
