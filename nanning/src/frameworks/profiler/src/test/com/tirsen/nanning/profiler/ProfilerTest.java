@@ -1,7 +1,10 @@
-package com.tirsen.nanning.samples;
+package com.tirsen.nanning.profiler;
 
 import com.tirsen.nanning.config.*;
 import com.tirsen.nanning.attribute.*;
+import com.tirsen.nanning.profiler.Profiled;
+import com.tirsen.nanning.profiler.ProfilerInterceptor;
+import com.tirsen.nanning.profiler.ProfilerLogger;
 
 public class ProfilerTest extends AbstractAttributesTest {
     public void testProfiler() throws Exception {

@@ -1,4 +1,4 @@
-package com.tirsen.nanning.samples;
+package com.tirsen.nanning.profiler;
 
 import com.tirsen.nanning.Invocation;
 import org.apache.commons.logging.Log;
@@ -9,7 +9,7 @@ public class ProfilerLogger {
 
     private static final ProfilerLogger instance = new ProfilerLogger();
 
-    static String lastLog;
+    String lastLog;
 
     private ProfilerLogger() {
     }

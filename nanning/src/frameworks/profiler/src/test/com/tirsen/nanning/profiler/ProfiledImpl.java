@@ -1,4 +1,6 @@
-package com.tirsen.nanning.samples;
+package com.tirsen.nanning.profiler;
+
+import com.tirsen.nanning.profiler.Profiled;
 
 public class ProfiledImpl implements Profiled
 {

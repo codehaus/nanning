@@ -21,6 +21,8 @@ public abstract class AbstractAttributesTest extends TestCase {
 
             compileAttributes(new File("src" + File.separator + "test"));
             compileAttributes(new File("src" + File.separator + "main"));
+            compileAttributes(new File("src" + File.separator + "frameworks" + File.separator + "contract" + File.separator + "src" + File.separator + "test"));
+            compileAttributes(new File("src" + File.separator + "frameworks" + File.separator + "contract" + File.separator + "src" + File.separator + "main"));
             compileAttributes(new File(".." + File.separator + "nanning" + File.separator + "src" + File.separator + "main"));
             compileAttributes(new File(".." + File.separator + "nanning" + File.separator + "src" + File.separator + "test"));
 

@@ -1,4 +1,4 @@
-package com.tirsen.nanning.samples;
+package com.tirsen.nanning.profiler;
 
 import com.tirsen.nanning.Invocation;
 import com.tirsen.nanning.MethodInterceptor;

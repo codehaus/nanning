@@ -14,12 +14,20 @@ import java.lang.reflect.Proxy;
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: AspectInstanceTest.java,v 1.12 2003-05-23 07:43:40 lecando Exp $ -->
+ * <!-- $Id: AspectInstanceTest.java,v 1.13 2003-06-09 17:40:42 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.12 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.13 $
  */
 public class AspectInstanceTest extends TestCase {
+    private Method callMethod;
+
+    protected void setUp() throws Exception {
+        super.setUp();
+
+        callMethod = Interface.class.getMethod("call", null);
+    }
+
     public void testEmptyAspectInstance() {
         AspectInstance instance = new AspectInstance();
         Object proxy = instance.getProxy();
@@ -54,7 +62,6 @@ public class AspectInstanceTest extends TestCase {
         AspectInstance instance = new AspectInstance();
 
         final Target target = new Target();
-        final Method callMethod = Interface.class.getMethod("call", null);
         MixinInstance mixin = new MixinInstance(Interface.class, target);
         instance.addMixin(mixin);
         final Interface intf = (Interface) instance.getProxy();
@@ -272,6 +279,20 @@ public class AspectInstanceTest extends TestCase {
         assertSame(Intf.class,
                 Aspects.getRealClass(Proxy.getProxyClass(AspectInstanceTest.class.getClassLoader(), new Class[]{Intf.class})));
     }
+
+    public void testAddInterceptor() {
+        MethodInterceptor interceptor = new MethodInterceptor() {
+                public Object invoke(Invocation invocation) throws Throwable {
+                    return null;
+                }
+            };
+        AspectInstance instance = new AspectInstance();
+        instance.addMixin(new MixinInstance(Interface.class, new Target()));
+        instance.addInterceptor(interceptor);
+        assertTrue(instance.getInterceptorsForMethod(callMethod).contains(interceptor));
+    }
+
+
 
     public void testSideAspectAndAspectsOnProxy() throws IllegalAccessException, InstantiationException, NoSuchMethodException {
         AspectInstance aspectInstance = new AspectInstance();
