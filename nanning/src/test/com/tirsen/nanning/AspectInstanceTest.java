@@ -14,10 +14,10 @@ import java.lang.reflect.Proxy;
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: AspectInstanceTest.java,v 1.11 2003-05-13 06:37:22 lecando Exp $ -->
+ * <!-- $Id: AspectInstanceTest.java,v 1.12 2003-05-23 07:43:40 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class AspectInstanceTest extends TestCase {
     public void testEmptyAspectInstance() {
@@ -190,10 +190,10 @@ public class AspectInstanceTest extends TestCase {
 //        assertEqualsAndHashCodeEquals(instance, instance2);
 //    }
 
-    private void assertEqualsAndHashCodeEquals(Object o1, Object o2) {
-        assertEquals(o1, o2);
-        assertEquals(o1.hashCode(), o2.hashCode());
-    }
+//    private void assertEqualsAndHashCodeEquals(Object o1, Object o2) {
+//        assertEquals(o1, o2);
+//        assertEquals(o1.hashCode(), o2.hashCode());
+//    }
 
 
     public static class BlahongaException extends RuntimeException {

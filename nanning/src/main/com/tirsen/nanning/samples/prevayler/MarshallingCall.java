@@ -51,7 +51,7 @@ public class MarshallingCall extends AuthenticatedCall {
         return marshalled;
     }
 
-    protected Object marshal(Object o) throws Exception {
+    protected Object marshal(Object o) {
         return getMarshaller().marshal(o);
     }
 

@@ -8,6 +8,8 @@
 package com.tirsen.nanning;
 
 import java.io.Serializable;
+import java.io.ObjectInputStream;
+import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -31,10 +33,10 @@ import org.apache.commons.lang.builder.ToStringStyle;
  aspectInstance.addMixin(mixinInstance);
  </pre></code>
  *
- * <!-- $Id: AspectInstance.java,v 1.43 2003-05-13 06:37:22 lecando Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.44 2003-05-23 07:43:39 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.43 $
+ * @version $Revision: 1.44 $
  */
 public final class AspectInstance implements InvocationHandler, Serializable {
     static final long serialVersionUID = 5462785783512485056L;
@@ -151,17 +153,12 @@ public final class AspectInstance implements InvocationHandler, Serializable {
         }).toArray();
     }
 
-    private Object readResolve() {
+    private void readObject(ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {
+        objectInputStream.defaultReadObject();
         AspectFactory currentAspectFactory = Aspects.getCurrentAspectFactory();
         assert currentAspectFactory != null : "context AspectFactory not specified, it is not possible to deserialize " + this;
-//        AspectInstance aspectInstance = Aspects.getAspectInstance(currentAspectFactory.newInstance(classIdentifier, mixinsList.toArray(new MixinInstance[mixinsList.size()])));
-//        assert aspectInstance != null;
-//
-//        return aspectInstance;
-        
         aspectFactory = currentAspectFactory;
         aspectFactory.reinitialize(this);
-        return this;
     }
 
     public Class getClassIdentifier() {
@@ -273,12 +270,7 @@ public final class AspectInstance implements InvocationHandler, Serializable {
     }
 
     public Object getProxy() {
-        return getProxy(true);
-    }
-
-    public Object getProxy(boolean runConstructionInterceptors) {
-        Object proxy = createProxy(runConstructionInterceptors);
-        return proxy;
+        return createProxy(true);
     }
 
     private Object executeConstructionInterceptors(Object proxy) {

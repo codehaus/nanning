@@ -8,28 +8,19 @@ import com.tirsen.nanning.attribute.AbstractAttributesTest;
 import com.tirsen.nanning.config.Aspect;
 import com.tirsen.nanning.config.AspectSystem;
 import com.tirsen.nanning.config.Introductor;
+import com.tirsen.nanning.config.InterceptorAspect;
 
 /**
  * TODO document ContractInterceptorTest
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirs?n</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class ContractInterceptorTest extends AbstractAttributesTest {
     public void test() throws MalformedURLException {
 
         AspectSystem system = new AspectSystem();
-        system.addAspect(new Aspect() {
-            public void adviseMixin(AspectInstance aspectInstance, MixinInstance mixin) {
-                mixin.addInterceptor(new ContractInterceptor());
-            }
-
-            public void advise(AspectInstance aspectInstance) {
-            }
-
-            public void introduce(AspectInstance aspectInstance) {
-            }
-        });
+        system.addAspect(new InterceptorAspect(new ContractInterceptor()));
         system.addAspect(new Introductor(ContractIntf.class, ContractImpl.class));
         
         ContractIntf contract = (ContractIntf) system.newInstance(ContractIntf.class);

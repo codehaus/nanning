@@ -4,8 +4,6 @@ import com.tirsen.nanning.config.*;
 import com.tirsen.nanning.attribute.*;
 
 public class ProfilerTest extends AbstractAttributesTest {
-
-
     public void testProfiler() throws Exception {
         Thread thread = new Thread(new Runnable() {
             public void run() {
@@ -23,7 +21,7 @@ public class ProfilerTest extends AbstractAttributesTest {
         thread.join();
         String log = ProfilerLogger.getProfilerLogger().lastLog;
         assertNotNull(log);
-        assertTrue("log not correct: <" + log + ">", log.matches("(.*)someMethod: (.*)ms"));
+        assertTrue(log.matches("(.*)someMethod: (.*)ms"));
     }
 
     public void testMinimumProfilingDuration() throws Exception {
@@ -46,6 +44,4 @@ public class ProfilerTest extends AbstractAttributesTest {
         assertTrue(log.indexOf("delayTwoHundredMillis") > 0);
 
     }
-
-
 }

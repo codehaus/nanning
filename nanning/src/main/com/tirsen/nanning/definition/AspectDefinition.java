@@ -15,10 +15,10 @@ import com.tirsen.nanning.MixinInstance;
 /**
  * Defines an interface that's to be added to an aspected object.
  *
- * <!-- $Id: AspectDefinition.java,v 1.8 2003-05-22 20:18:32 tirsen Exp $ -->
+ * <!-- $Id: AspectDefinition.java,v 1.9 2003-05-23 07:43:40 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.8 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.9 $
  *
  * @deprecated please use the new {@link com.tirsen.nanning.config.AspectSystem} framework instead.
  */
@@ -84,8 +84,7 @@ public class AspectDefinition {
         return interfaceClass;
     }
 
-    MixinInstance newInstance(Object target)
-            throws InstantiationException, IllegalAccessException {
+    MixinInstance newInstance(Object target) {
         checkTarget(target);
 
         MixinInstance mixinInstance = new MixinInstance();

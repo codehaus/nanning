@@ -10,14 +10,16 @@ package com.tirsen.nanning;
 /**
  * Base class for exceptions related to aspects.
  *
- * <!-- $Id: AspectException.java,v 1.5 2003-04-23 20:44:36 tirsen Exp $ -->
+ * <!-- $Id: AspectException.java,v 1.6 2003-05-23 07:43:39 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.5 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.6 $
  */
 public class AspectException extends RuntimeException {
+///CLOVER:OFF
     public AspectException() {
     }
+///CLOVER:ON
 
     public AspectException(String message) {
         super(message);

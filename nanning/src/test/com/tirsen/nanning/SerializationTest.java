@@ -8,40 +8,41 @@ import com.tirsen.nanning.attribute.AbstractAttributesTest;
 
 public class SerializationTest extends AbstractAttributesTest {
     public void testChangedAspectFactoryBetweenSerializations() throws IOException, ClassNotFoundException {
-//        AspectFactory singleAspectFactory = new AspectFactory() {
-//            public Object newInstance(Class classIdentifier) {
-//                return createSingleMixin().getProxy();
-//            }
-//
-//            public void reinitialize(AspectInstance aspectInstance) {
-//                addInterceptor(aspectInstance);
-//            }
-//        };
-//
-//        AspectFactory multipleAspectFactory = new AspectFactory() {
-//            public Object newInstance(Class classIdentifier) {
-//                return createMultiMixin().getProxy();
-//            }
-//
-//            public void reinitialize(AspectInstance aspectInstance) {
-//                addInterceptor(aspectInstance);
-//            }
-//        };
-//
-//        Aspects.setContextAspectFactory(singleAspectFactory);
-//        Intf intf = (Intf) singleAspectFactory.newInstance(Intf.class);
-//        Object serialized = serializeObject(intf);
-//        assertTrue(serialized instanceof Intf);
-//        assertEquals(1, Aspects.getAspectInstance(serialized).getAllInterceptors().size());
-//        assertEquals(1, Aspects.getAspectInstance(serialized).getMixins().size());
-//
-//        Aspects.setContextAspectFactory(multipleAspectFactory);
-//        serialized = serializeObject(intf);
-//        assertTrue(serialized instanceof Intf);
-//        assertEquals(3, Aspects.getAspectInstance(serialized).getAllInterceptors().size());
-//        assertEquals(2, Aspects.getAspectInstance(serialized).getMixins().size());
-//        // unfortunately added mixins does not (yet?) work, proxies are not recreated on serialization... :-(
-//        assertFalse(serialized instanceof TestMixin);
+        AspectFactory singleAspectFactory = new AspectFactory() {
+            public Object newInstance(Class classIdentifier) {
+                return createSingleMixin().getProxy();
+            }
+
+            public void reinitialize(AspectInstance aspectInstance) {
+                addInterceptors(aspectInstance, 1);
+            }
+        };
+
+        AspectFactory multipleAspectFactory = new AspectFactory() {
+            public Object newInstance(Class classIdentifier) {
+                return createMultiMixin().getProxy();
+            }
+
+            public void reinitialize(AspectInstance aspectInstance) {
+                addInterceptors(aspectInstance, 3);
+            }
+        };
+
+        Aspects.setContextAspectFactory(singleAspectFactory);
+        Intf intf = (Intf) singleAspectFactory.newInstance(Intf.class);
+        Object serialized = serializeObject(intf);
+        assertTrue(serialized instanceof Intf);
+        assertEquals(1, Aspects.getAspectInstance(serialized).getAllInterceptors().size());
+        assertEquals(1, Aspects.getAspectInstance(serialized).getMixins().size());
+
+        Aspects.setContextAspectFactory(multipleAspectFactory);
+        serialized = serializeObject(intf);
+        assertTrue(serialized instanceof Intf);
+        assertEquals(3, Aspects.getAspectInstance(serialized).getAllInterceptors().size());
+
+        // unfortunately added mixins does not (yet?) work :-(
+        assertEquals(1, Aspects.getAspectInstance(serialized).getMixins().size());
+        assertFalse(serialized instanceof TestMixin);
     }
 
     private Object serializeObject(Intf intf) throws IOException, ClassNotFoundException {
@@ -57,7 +58,7 @@ public class SerializationTest extends AbstractAttributesTest {
         mixinInstance.setInterfaceClass(TestMixin.class);
         mixinInstance.setTarget(new TestMixinImpl());
         aspectInstance.addMixin(mixinInstance);
-        addInterceptor(aspectInstance);
+        addInterceptors(aspectInstance, 1);
         return aspectInstance;
     }
 
@@ -67,15 +68,17 @@ public class SerializationTest extends AbstractAttributesTest {
         mixinInstance.setInterfaceClass(Intf.class);
         mixinInstance.setTarget(new IntfImpl());
         aspectInstance.addMixin(mixinInstance);
-        addInterceptor(aspectInstance);
+        addInterceptors(aspectInstance, 3);
         return aspectInstance;
     }
 
-    private void addInterceptor(AspectInstance aspectInstance) {
+    private void addInterceptors(AspectInstance aspectInstance, int numberOfInterceptors) {
         Collection mixins = aspectInstance.getMixins();
         for (Iterator iterator = mixins.iterator(); iterator.hasNext();) {
             MixinInstance mixinInstance = (MixinInstance) iterator.next();
-            mixinInstance.addInterceptor(new NullInterceptor());
+            for (int i = 0; i < numberOfInterceptors; i++) {
+                mixinInstance.addInterceptor(new NullInterceptor());
+            }
         }
     }
 }
