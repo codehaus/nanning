@@ -6,22 +6,20 @@
  */
 package com.tirsen.nanning;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * The definition of an aspected object, specifies interfaces, interceptors and target-objects.
  *
- * <!-- $Id: AspectClass.java,v 1.7 2002-10-30 20:10:53 tirsen Exp $ -->
+ * <!-- $Id: AspectClass.java,v 1.8 2002-11-06 17:50:05 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class AspectClass extends AspectDefinition
 {
     private final List aspectDefinitions = new ArrayList();
+    private Map interfacesToInstancesIndex;
 
     /**
      * Instantiates an instance with the specified interfaces, interceptors and target-objects.
@@ -32,6 +30,15 @@ public class AspectClass extends AspectDefinition
      */
     public Object newInstance()
     {
+        AspectInstance aspectInstance =
+                new AspectInstance(this);
+
+        return aspectInstance.createProxy();
+    }
+
+    SideAspectInstance[] instantiateSideAspects()
+    {
+        SideAspectInstance[] sideAspectInstances;
         try
         {
             List instances = new ArrayList(aspectDefinitions.size() + 1);
@@ -57,10 +64,7 @@ public class AspectClass extends AspectDefinition
             }
 
 
-            AspectInstance aspectInstance =
-                    new AspectInstance((SideAspectInstance[]) instances.toArray(new SideAspectInstance[0]));
-
-            return aspectInstance.createProxy();
+            sideAspectInstances = (SideAspectInstance[]) instances.toArray(new SideAspectInstance[0]);
         }
         catch (IllegalAccessException e)
         {
@@ -70,6 +74,7 @@ public class AspectClass extends AspectDefinition
         {
             throw new AspectException(e);
         }
+        return sideAspectInstances;
     }
 
     /**
@@ -81,5 +86,50 @@ public class AspectClass extends AspectDefinition
     public void addSideAspect(AspectDefinition interfaceDefinition)
     {
         aspectDefinitions.add(interfaceDefinition);
+
+        reindexInterfacesToIndex();
+    }
+
+    private void reindexInterfacesToIndex()
+    {
+        interfacesToInstancesIndex = new HashMap();
+        indexInterface(getInterfaceClass(), 0);
+        for (ListIterator iterator = aspectDefinitions.listIterator(); iterator.hasNext();)
+        {
+            AspectDefinition aspectDefinition = (AspectDefinition) iterator.next();
+            indexInterface(aspectDefinition.getInterfaceClass(), iterator.previousIndex() + 1);
+        }
+    }
+
+    private void indexInterface(Class interfaceClass, int instanceIndex)
+    {
+        // when two side-aspects implement same interface the earlier one take precedence
+        // that is it already exists in the index
+        if(!interfacesToInstancesIndex.containsKey(interfaceClass))
+        {
+            interfacesToInstancesIndex.put(interfaceClass, new Integer(instanceIndex));
+        }
+        Class[] interfaces = interfaceClass.getInterfaces();
+        for (int i = 0; i < interfaces.length; i++)
+        {
+            Class superInterface = interfaces[i];
+            indexInterface(superInterface, instanceIndex);
+        }
+    }
+
+    public void setInterface(Class interfaceClass)
+    {
+        super.setInterface(interfaceClass);
+        reindexInterfacesToIndex();
+    }
+
+    public int getSideAspectIndexForInterface(Class interfaceClass)
+    {
+        Integer integer = (Integer) interfacesToInstancesIndex.get(interfaceClass);
+        if(integer == null)
+        {
+            throw new IllegalArgumentException("No such interface for this object: " + interfaceClass.getName());
+        }
+        return integer.intValue();
     }
 }
