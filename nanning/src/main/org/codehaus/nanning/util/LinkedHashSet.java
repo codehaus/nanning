@@ -15,6 +15,11 @@ public class LinkedHashSet implements Set {
         this(1);
     }
 
+    public LinkedHashSet(Collection collection) {
+        this(collection.size());
+        addAll(collection);
+    }
+
     public int size() {
         return list.size();
     }
