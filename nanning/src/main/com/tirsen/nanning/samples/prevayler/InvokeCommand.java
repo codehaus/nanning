@@ -1,14 +1,13 @@
 package com.tirsen.nanning.samples.prevayler;
 
+import com.tirsen.nanning.Invocation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.prevayler.PrevalentSystem;
 import org.prevayler.Command;
+import org.prevayler.PrevalentSystem;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
-
-import com.tirsen.nanning.Invocation;
 
 public class InvokeCommand implements Command {
     private static final Log logger = LogFactory.getLog(InvokeCommand.class);

@@ -1,16 +1,7 @@
 package com.tirsen.nanning.samples.prevayler;
 
-import com.tirsen.nanning.Aspects;
-import com.tirsen.nanning.definition.InterceptorDefinition;
 import org.prevayler.Prevayler;
-import org.prevayler.PrevalentSystem;
 
-import java.util.Stack;
-
-/**
- * All this stuff should actually be thread-local instead, that way you can be running to several prevaylers at the
- * same time.
- */
 public class CurrentPrevayler {
     private static ThreadLocal isInTransaction = new ThreadLocal() {
         protected Object initialValue() {
@@ -26,7 +17,7 @@ public class CurrentPrevayler {
         return identifyingSystem;
     }
 
-    public static void setSystem(IdentifyingSystem system) {
+    static void setSystem(IdentifyingSystem system) {
         currentSystem.set(system);
     }
 
@@ -38,7 +29,7 @@ public class CurrentPrevayler {
 
     public static void setPrevayler(Prevayler prevayler) {
         currentPrevayler.set(prevayler);
-        setSystem((IdentifyingSystem) prevayler.system());
+        setSystem(prevayler == null ? null : (IdentifyingSystem) prevayler.system());
     }
 
     static boolean isReplaying() {
@@ -60,5 +51,15 @@ public class CurrentPrevayler {
 
     private static int transactionCount() {
         return ((Integer) isInTransaction.get()).intValue();
+    }
+
+    public static void withPrevayler(Prevayler prevayler, Runnable runnable) {
+        Prevayler lastPrevayler = (Prevayler) currentPrevayler.get();
+        setPrevayler(prevayler);
+        try {
+            runnable.run();
+        } finally {
+            setPrevayler(lastPrevayler);
+        }
     }
 }

@@ -1,10 +1,10 @@
 package com.tirsen.nanning;
 
-import junit.framework.TestCase;
 import com.tirsen.nanning.definition.AspectClass;
 import com.tirsen.nanning.definition.AspectDefinition;
 import com.tirsen.nanning.definition.InterceptorDefinition;
 import com.tirsen.nanning.definition.SingletonInterceptor;
+import junit.framework.TestCase;
 
 public class ConstructionInterceptorTest extends TestCase {
     public static class MockConstructionInterceptor implements ConstructionInterceptor, SingletonInterceptor {

@@ -1,14 +1,14 @@
 package com.tirsen.nanning.samples.prevayler;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.prevayler.AlarmClock;
-
+/**
+ * @entity
+ */
 public interface MySystem extends IdentifyingSystem {
     /**
      * @ensures hasObjectID(result)
-     * @prevayler-commmand
+     * @transaction
      */
     MyObject createMyObject();
 

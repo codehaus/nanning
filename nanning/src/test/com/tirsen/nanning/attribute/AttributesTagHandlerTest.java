@@ -9,24 +9,20 @@ package com.tirsen.nanning.attribute;
 
 import junit.framework.TestCase;
 
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Properties;
 
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 /**
  * TODO document AttributesTagHandlerTest
  *
- * <!-- $Id: AttributesTagHandlerTest.java,v 1.1 2003-01-12 13:25:40 tirsen Exp $ -->
+ * <!-- $Id: AttributesTagHandlerTest.java,v 1.2 2003-01-24 13:29:30 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class AttributesTagHandlerTest extends TestCase {
     private SAXParser parser;

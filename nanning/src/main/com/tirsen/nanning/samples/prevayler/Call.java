@@ -1,11 +1,11 @@
 package com.tirsen.nanning.samples.prevayler;
 
-import java.lang.reflect.Method;
-import java.io.Serializable;
-
 import com.tirsen.nanning.Invocation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.Serializable;
+import java.lang.reflect.Method;
 
 public class Call implements Serializable {
     private static final Log logger = LogFactory.getLog(Call.class);

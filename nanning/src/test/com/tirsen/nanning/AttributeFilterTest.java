@@ -1,23 +1,21 @@
 package com.tirsen.nanning;
 
-import junit.framework.TestCase;
+import com.tirsen.nanning.attribute.AbstractAttributesTest;
+import com.tirsen.nanning.definition.AspectClass;
+import com.tirsen.nanning.definition.InterceptorDefinition;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tirsen.nanning.definition.AspectClass;
-import com.tirsen.nanning.definition.InterceptorDefinition;
-import com.tirsen.nanning.attribute.AttributesTest;
-
 /**
  * TODO document AttributesTest
  *
- * <!-- $Id: AttributeFilterTest.java,v 1.3 2003-01-19 12:09:04 tirsen Exp $ -->
+ * <!-- $Id: AttributeFilterTest.java,v 1.4 2003-01-24 13:29:30 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
-public class AttributeFilterTest extends TestCase {
+public class AttributeFilterTest  extends AbstractAttributesTest {
     private static List expectedMethods;
 
     protected void setUp() throws Exception {
@@ -26,9 +24,6 @@ public class AttributeFilterTest extends TestCase {
         // initialize the lists
         expectedMethods = new ArrayList();
         AttributeFilterInterceptor.invokedMethods.clear();
-
-        // compile the Attributes they haven't been already
-        AttributesTest.compileAttributes();
     }
 
     protected void tearDown() throws Exception {

@@ -8,19 +8,15 @@ package com.tirsen.nanning;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import com.tirsen.nanning.samples.TraceInterceptorTest;
-import com.tirsen.nanning.samples.ContractInterceptorTest;
-import com.tirsen.nanning.samples.prevayler.PrevaylerTest;
-import com.tirsen.nanning.*;
 
 
 /**
  * TODO document AllTestSuite
  *
- * <!-- $Id: AllTestSuite.java,v 1.1 2002-12-11 10:57:52 lecando Exp $ -->
+ * <!-- $Id: AllTestSuite.java,v 1.2 2003-01-24 13:29:30 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.1 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.2 $
  */
 public class AllTestSuite
 {

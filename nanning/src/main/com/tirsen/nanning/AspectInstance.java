@@ -24,10 +24,10 @@ import java.util.*;
 /**
  * TODO document AspectInstance
  *
- * <!-- $Id: AspectInstance.java,v 1.23 2003-01-23 13:53:13 lecando Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.24 2003-01-24 13:29:29 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.23 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.24 $
  */
 public class AspectInstance implements InvocationHandler, Externalizable {
     private Object proxy;
@@ -273,11 +273,11 @@ public class AspectInstance implements InvocationHandler, Externalizable {
 
     public String toString() {
         if (mixinsList.size() == 1) {
-            return mixinsList.get(0).toString();
+            return "nanning{" + mixinsList.get(0).toString() + "}";
         }
-        return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE)
+        return "nanning{" + new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE)
                 .append("class", classIdentifier)
                 .append("mixins", mixinsList)
-                .toString();
+                .toString() + "}";
     }
 }

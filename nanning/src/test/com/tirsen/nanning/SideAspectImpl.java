@@ -7,15 +7,14 @@
 package com.tirsen.nanning;
 
 import junit.framework.Assert;
-import com.tirsen.nanning.SideAspect;
 
 /**
  * TODO document SideAspectImpl
  *
- * <!-- $Id: SideAspectImpl.java,v 1.1 2002-11-17 14:03:34 tirsen Exp $ -->
+ * <!-- $Id: SideAspectImpl.java,v 1.2 2003-01-24 13:29:30 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class SideAspectImpl implements SideAspect
 {

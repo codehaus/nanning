@@ -6,36 +6,30 @@
  */
 package com.tirsen.nanning;
 
-import junit.framework.TestCase;
-import com.tirsen.nanning.samples.StopWatch;
-import com.tirsen.nanning.definition.AspectClass;
+import com.tirsen.nanning.attribute.AbstractAttributesTest;
 import com.tirsen.nanning.attribute.Attributes;
 import com.tirsen.nanning.attribute.AttributesTestClass;
-import com.tirsen.nanning.attribute.AttributesTest;
+import com.tirsen.nanning.definition.AspectClass;
+import com.tirsen.nanning.samples.StopWatch;
 
 import java.lang.reflect.Method;
 
 /**
  * TODO document PerformanceTest
  *
- * <!-- $Id: PerformanceTest.java,v 1.12 2003-01-19 22:47:07 tirsen Exp $ -->
+ * <!-- $Id: PerformanceTest.java,v 1.13 2003-01-24 13:29:30 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
-public class PerformanceTest extends TestCase
+public class PerformanceTest extends AbstractAttributesTest
 {
-    protected void setUp() throws Exception {
-        super.setUp();
-        AttributesTest.compileAttributes();
-    }
-
     public void testInvocation() throws IllegalAccessException, InstantiationException
     {
         // these are exceptionally high due to Clover...
         double maxMemoryPerInvocation = 1.6;
         double timesSlowerTolerance = 52;
-        double maxTimePerInvocation = 0.007;
+        double maxTimePerInvocation = 0.008;
 
         int numberOfInvocations = 100000;
 
@@ -111,7 +105,7 @@ public class PerformanceTest extends TestCase
         ///CLOVER:ON
 
         // determine max-memory per aspect-instance compared to ordinary instances
-        double maxMemoryPerInstance = ordinary.getMemoryUsed(numberOfInstances) * timesBiggerTolerance;
+//        double maxMemoryPerInstance = ordinary.getMemoryUsed(numberOfInstances) * timesBiggerTolerance;
 
         // setup a factory
         AspectClass aspectClass = new AspectClass();

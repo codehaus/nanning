@@ -1,38 +1,30 @@
 package com.tirsen.nanning.samples.prevayler;
 
+import com.tirsen.nanning.Aspects;
+import com.tirsen.nanning.attribute.AbstractAttributesTest;
+import com.tirsen.nanning.definition.AspectClass;
+import com.tirsen.nanning.definition.AspectRepository;
+import com.tirsen.nanning.definition.InterceptorDefinition;
+import org.prevayler.PrevalentSystem;
+import org.prevayler.Prevayler;
+import org.prevayler.implementation.SnapshotPrevayler;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import com.tirsen.nanning.*;
-import com.tirsen.nanning.attribute.AttributesTest;
-import com.tirsen.nanning.definition.AspectClass;
-import com.tirsen.nanning.definition.AspectRepository;
-import com.tirsen.nanning.definition.InterceptorDefinition;
-import junit.framework.TestCase;
-import org.prevayler.implementation.SnapshotPrevayler;
-import org.prevayler.PrevalentSystem;
-import org.prevayler.Prevayler;
-
-public class PrevaylerTest extends TestCase {
+public class PrevaylerTest extends AbstractAttributesTest {
 
     private AspectRepository aspectRepository;
 
     private File prevaylerDir;
-    private PrevaylerInterceptor prevaylerInterceptor;
-    private SnapshotPrevayler prevayler;
-    private MySystem system;
 
     protected void setUp() throws Exception {
         super.setUp();
 
-        AttributesTest.compileAttributes();
-
         aspectRepository = new AspectRepository();
 
         aspectRepository.defineInterceptor(new InterceptorDefinition(PrevaylerInterceptor.class));
-        prevaylerInterceptor =
-                (PrevaylerInterceptor) aspectRepository.getInterceptor(PrevaylerInterceptor.class).getSingleton();
 
         {
             AspectClass aspectClass = new AspectClass();
@@ -56,18 +48,21 @@ public class PrevaylerTest extends TestCase {
         prevaylerDir.delete();
         prevaylerDir.mkdirs();
         prevaylerDir.deleteOnExit();
-
-        initPrevayler();
     }
 
     public void test() throws IOException, ClassNotFoundException {
-        MyObject myObject = system.createMyObject();
-        myObject.setAttribute("oldValue");
-        myObject.setAttribute("newValue");
+        SnapshotPrevayler prevayler = newPrevayler();
+        CurrentPrevayler.withPrevayler(prevayler, new Runnable() {
+            public void run() {
+                MyObject myObject = currentMySystem().createMyObject();
+                myObject.setAttribute("oldValue");
+                myObject.setAttribute("newValue");
 
-        List objects = system.getObjects();
-        assertEquals("object not created ", 1, objects.size());
-        assertEquals("attribute not correct value", "newValue", ((MyObject) objects.get(0)).getAttribute());
+                List objects = currentMySystem().getObjects();
+                assertEquals("object not created ", 2, objects.size());
+                assertEquals("attribute not correct value", "newValue", ((MyObject) objects.get(1)).getAttribute());
+            }
+        });
 
         // reload database
         checkMySystem();
@@ -78,16 +73,23 @@ public class PrevaylerTest extends TestCase {
     }
 
     private void checkMySystem() throws IOException, ClassNotFoundException {
-        initPrevayler();
-        List objects = system.getObjects();
-        assertEquals("object not persisted", 1, objects.size());
-        assertEquals("property not correct value", "newValue", ((MyObject) objects.get(0)).getAttribute());
+        Prevayler prevayler = newPrevayler();
+        CurrentPrevayler.withPrevayler(prevayler, new Runnable() {
+            public void run() {
+                List objects = currentMySystem().getObjects();
+                assertEquals("object not persisted", 2, objects.size());
+                assertEquals("property not correct value", "newValue", ((MyObject) objects.get(1)).getAttribute());
+            }
+        });
     }
 
-    private void initPrevayler() throws IOException, ClassNotFoundException {
-        prevayler = new SnapshotPrevayler((PrevalentSystem) aspectRepository.newInstance(MySystem.class),
+    private MySystem currentMySystem() {
+        return (MySystem) CurrentPrevayler.getSystem();
+    }
+
+    private SnapshotPrevayler newPrevayler() throws IOException, ClassNotFoundException {
+        SnapshotPrevayler prevayler = new SnapshotPrevayler((PrevalentSystem) aspectRepository.newInstance(MySystem.class),
                                 prevaylerDir.getAbsolutePath());
-        system = (MySystem) prevayler.system();
-        CurrentPrevayler.setPrevayler(prevayler);
+        return prevayler;
     }
 }

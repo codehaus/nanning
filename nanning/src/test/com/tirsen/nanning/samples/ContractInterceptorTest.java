@@ -1,24 +1,18 @@
 package com.tirsen.nanning.samples;
 
-import junit.framework.TestCase;
+import com.tirsen.nanning.attribute.AbstractAttributesTest;
 import com.tirsen.nanning.definition.AspectClass;
-import com.tirsen.nanning.attribute.AttributesCompiler;
-import com.tirsen.nanning.attribute.Attributes;
-import com.tirsen.nanning.attribute.AttributesTest;
 
-import java.io.File;
 import java.net.MalformedURLException;
 
 /**
  * TODO document ContractInterceptorTest
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
-public class ContractInterceptorTest extends TestCase {
+public class ContractInterceptorTest extends AbstractAttributesTest {
     public void test() throws MalformedURLException {
-        AttributesTest.compileAttributes();
-
         AspectClass aspectClass = new AspectClass();
         aspectClass.setInterface(ContractIntf.class);
         aspectClass.addInterceptor(ContractInterceptor.class);
