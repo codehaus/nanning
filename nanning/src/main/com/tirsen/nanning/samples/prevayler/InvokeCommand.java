@@ -3,10 +3,9 @@ package com.tirsen.nanning.samples.prevayler;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.security.PrivilegedExceptionAction;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Arrays;
 
 import javax.security.auth.Subject;
 
@@ -36,11 +35,11 @@ public class InvokeCommand implements Command {
         }
         CurrentPrevayler.enterTransaction();
         try {
-            Object target = call.getTarget();
-            Object[] args = call.getArgs();
-            Method method = call.getMethod();
-            Subject subject = call.getSubject();
             if (logger.isDebugEnabled()) {
+                Object target = call.getTarget();
+                Object[] args = call.getArgs();
+                Method method = call.getMethod();
+                Subject subject = call.getSubject();
 
                 List argsList = Collections.EMPTY_LIST;
                 if (args != null) {
@@ -50,7 +49,8 @@ public class InvokeCommand implements Command {
                 logger.debug("args " + argsList);
                 logger.debug("user " + subject);
             }
-            Serializable serializable = execute(system, subject, method, target, args);
+            
+            Serializable serializable = (Serializable) call.invoke();
             logger.debug("success!");
             return serializable;
         } catch (Exception e) {
@@ -68,26 +68,6 @@ public class InvokeCommand implements Command {
         } finally {
             CurrentPrevayler.exitTransaction();
             CurrentPrevayler.setSystem(prev);
-        }
-    }
-
-    protected Serializable execute(
-            PrevalentSystem system, Subject subject,
-            final Method method, final Object unmarshalledTarget, final Object[] unmarshalledArgs)
-            throws Exception
-    {
-        if (subject != null) {
-            try {
-                return (Serializable) Subject.doAs(subject, new PrivilegedExceptionAction() {
-                    public Object run() throws Exception {
-                        return (Serializable) method.invoke(unmarshalledTarget, unmarshalledArgs);
-                    }
-                });
-            } catch (java.security.PrivilegedActionException e) {
-                throw e.getException();
-            }
-        } else {
-            return (Serializable) method.invoke(unmarshalledTarget, unmarshalledArgs);
         }
     }
 

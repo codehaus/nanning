@@ -14,30 +14,22 @@ import com.tirsen.nanning.samples.prevayler.MarshallingCall;
 import com.tirsen.nanning.samples.prevayler.Marshaller;
 
 public class RemoteAspect extends PointcutAspect implements MethodInterceptor {
-    private String hostname = "localhost";
-    private int port = 4711;
     private Marshaller marshaller;
 
     public RemoteAspect() {
         addPointcut(new MethodPointcut(new InterceptorAdvise(this)));
     }
 
-    public void setHostname(String hostname) {
-        this.hostname = hostname;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
-    }
-
     public Object invoke(Invocation invocation) throws Throwable {
-        Socket socket = new Socket(hostname, port);
+        RemoteIdentity remoteIdentity = (RemoteIdentity) invocation.getTarget();
+        Socket socket = new Socket(remoteIdentity.getHostname(), remoteIdentity.getPort());
         try {
-            ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
             Call call = new MarshallingCall(invocation, marshaller);
+
+            ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
             output.writeObject(call);
             ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
-            Object result = input.readObject();
+            Object result = marshaller.unmarshal(input.readObject());
             if (result instanceof ExceptionThrown) {
                 ExceptionThrown exceptionThrown = (ExceptionThrown) result;
                 throw exceptionThrown.getThrowable().fillInStackTrace();
@@ -48,7 +40,7 @@ public class RemoteAspect extends PointcutAspect implements MethodInterceptor {
         }
     }
 
-    public void setMarshaller(Marshaller marshaller) {
+    void setMarshaller(Marshaller marshaller) {
         this.marshaller = marshaller;
     }
 }

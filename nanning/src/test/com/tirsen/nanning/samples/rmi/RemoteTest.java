@@ -16,13 +16,12 @@ import org.prevayler.implementation.SnapshotPrevayler;
 
 public class RemoteTest extends AbstractAttributesTest {
     private AspectSystem serverAspectSystem;
-    private AspectSystem clientAspectSystem;
     private File prevaylerDir;
     private int port = 12346;
     private SnapshotPrevayler prevayler;
     private RemoteCallServer remoteCallServer;
     private String hostname = "localhost";
-    private RemoteMarshaller marshaller;
+    private RemoteMarshaller clientMarshaller;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -38,15 +37,7 @@ public class RemoteTest extends AbstractAttributesTest {
         serverAspectSystem.addAspect(new MixinAspect(MyStatefulService.class, MyStatefulServiceImpl.class));
         serverAspectSystem.addAspect(new PrevaylerAspect());
 
-        clientAspectSystem = new AspectSystem();
-        clientAspectSystem.addAspect(new MixinAspect(MyStatelessService.class, null));
-        clientAspectSystem.addAspect(new MixinAspect(MyStatefulService.class, MyStatefulServiceImpl.class));
-        RemoteAspect remoteAspect = new RemoteAspect();
-        remoteAspect.setHostname(hostname);
-        remoteAspect.setPort(port);
-        marshaller = new RemoteMarshaller(clientAspectSystem);
-        remoteAspect.setMarshaller(marshaller);
-        clientAspectSystem.addAspect(remoteAspect);
+        clientMarshaller = new RemoteMarshaller();
 
         // init server side
         Aspects.setContextAspectFactory(serverAspectSystem);
@@ -75,7 +66,7 @@ public class RemoteTest extends AbstractAttributesTest {
         remoteCallServer.bind("MyStatelessService", serverAspectSystem.newInstance(MyStatelessService.class));
 
         // client side
-        MyStatelessService myService = (MyStatelessService) new Naming(marshaller, hostname, port).lookup("MyStatelessService");
+        MyStatelessService myService = (MyStatelessService) new Naming(clientMarshaller, hostname, port).lookup("MyStatelessService");
         myService.createObject("attributeValue");
 
         // server side
@@ -101,7 +92,7 @@ public class RemoteTest extends AbstractAttributesTest {
         remoteCallServer.bind("MyStatefulService", serverAspectSystem.newInstance(MyStatefulService.class));
 
         // client side
-        MyStatefulService statefulService = (MyStatefulService) new Naming(marshaller, hostname, port).lookup("MyStatefulService");
+        MyStatefulService statefulService = (MyStatefulService) new Naming(clientMarshaller, hostname, port).lookup("MyStatefulService");
         assertNull(statefulService.value());
         statefulService.modify("value");
         assertEquals("value", statefulService.value());
@@ -109,11 +100,11 @@ public class RemoteTest extends AbstractAttributesTest {
 
     public void testObjectTable() {
         Object o = new Object();
-        RemoteMarshaller objectTable = new RemoteMarshaller();
-        Object id = objectTable.registerID(o);
+        ObjectTable objectTable = new ObjectTable();
+        Object id = objectTable.register(o);
         assertTrue(objectTable.isIDRegistered(id));
         assertSame(o, objectTable.getFromID(id));
-        assertSame(id, objectTable.registerID(o));
+        assertSame(id, objectTable.register(o));
     }
 
     public void testRemoteMarshallerWithLocalObject() {
@@ -132,8 +123,8 @@ public class RemoteTest extends AbstractAttributesTest {
     public void testRemoteMarshallerWithRemoteObject() {
         Object service = serverAspectSystem.newInstance(MyStatefulService.class);
 
-        RemoteMarshaller remoteMarshaller = new RemoteMarshaller(clientAspectSystem);
-        Identity identity = new Identity((Class) Aspects.getAspectInstance(service).getClassIdentifier(), new Long(System.currentTimeMillis()));
+        RemoteMarshaller remoteMarshaller = new RemoteMarshaller();
+        Identity identity = new RemoteIdentity((Class) Aspects.getAspectInstance(service).getClassIdentifier(), new Long(System.currentTimeMillis()), hostname, port);
         Object stub = remoteMarshaller.unmarshal(identity);
         assertNotNull(stub);
         assertTrue(stub instanceof MyStatefulService);

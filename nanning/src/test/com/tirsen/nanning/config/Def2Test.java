@@ -24,8 +24,8 @@ public class Def2Test extends TestCase {
 
         constructionInterceptor.verify();
 
-        assertSame(nullInterceptor, interceptors[0]);
-        MockInterceptor mockInterceptor2 = (MockInterceptor) interceptors[1];
+        assertSame(nullInterceptor, interceptors[1]);
+        MockInterceptor mockInterceptor2 = (MockInterceptor) interceptors[0];
         MockInterceptor mockInterceptor = (MockInterceptor) interceptors[2];
         ((TestMixin) bigMomma).mixinCall();
         mockInterceptor.verify();
@@ -40,18 +40,18 @@ public class Def2Test extends TestCase {
         Impl impl = new Impl();
         TestMixinImpl testMixin = new TestMixinImpl();
 
-        Object bigMomma = aspectSystem.newInstance(Intf.class, new Object[] { impl, testMixin });
+        Object bigMomma = aspectSystem.newInstance(Intf.class, new Object[]{impl, testMixin});
         assertSame(Aspects.getTarget(bigMomma, Intf.class), impl);
         assertSame(Aspects.getTarget(bigMomma, TestMixin.class), testMixin);
 
         // test in another order
-        bigMomma = aspectSystem.newInstance(Intf.class, new Object[] { testMixin, impl });
+        bigMomma = aspectSystem.newInstance(Intf.class, new Object[]{testMixin, impl});
         assertSame(Aspects.getTarget(bigMomma, Intf.class), impl);
         assertSame(Aspects.getTarget(bigMomma, TestMixin.class), testMixin);
 
         // test one object too many
         try {
-            bigMomma = aspectSystem.newInstance(Intf.class, new Object[] { testMixin, impl, new Object() });
+            bigMomma = aspectSystem.newInstance(Intf.class, new Object[]{testMixin, impl, new Object()});
             fail();
         } catch (IllegalArgumentException e) {
         }

@@ -1,12 +1,17 @@
 package com.tirsen.nanning.samples.rmi;
 
 import java.io.*;
-import java.lang.reflect.Method;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+
+import javax.security.auth.Subject;
 
 import com.tirsen.nanning.AspectFactory;
 import com.tirsen.nanning.Aspects;
@@ -35,6 +40,7 @@ public class RemoteCallServer {
             assert port != 0 : "port not specified";
             logger.info("starting RMI-server on port " + port);
             serverSocket = new ServerSocket(port);
+            marshaller = new RemoteMarshaller(InetAddress.getLocalHost().getCanonicalHostName(), port);
             serverSocket.setSoTimeout(SERVER_SOCKET_TIMEOUT);
             threadPool = new DefaultThreadPool(threadPoolSize);
 
@@ -69,6 +75,12 @@ public class RemoteCallServer {
 
     private void processCall(Socket socket) {
         Aspects.setContextAspectFactory(aspectRepository);
+        Subject subject = Subject.getSubject(AccessController.getContext());
+        if (subject != null) {
+            subject.getPrincipals().clear();
+            subject.getPrivateCredentials().clear();
+            subject.getPublicCredentials().clear();
+        }
 
         try {
             OutputStream outputStream = socket.getOutputStream();
@@ -122,10 +134,7 @@ public class RemoteCallServer {
         Object result;
         try {
             call.setMarshaller(marshaller);
-            Method method = call.getMethod();
-
-            Object target = call.getTarget();
-            result = method.invoke(target, call.getArgs());
+            result = call.invoke();
         } catch (Throwable e) {
             logger.error("error executing call", e);
             result = new ExceptionThrown(e);
@@ -142,6 +151,10 @@ public class RemoteCallServer {
     }
 
     public void stop() {
+        if (serverThread == null) {
+            return;
+        }
+
         doStop = true;
         try {
             serverThread.join(SERVER_SOCKET_TIMEOUT + 1);
@@ -162,14 +175,20 @@ public class RemoteCallServer {
         }
 
         public void run() {
-            try {
-                processCall(socket);
-            } finally {
-                try {
-                    socket.close();
-                } catch (IOException e) {
+            // run completely unauthenticated
+            Subject.doAs(new Subject(true, new HashSet(), new HashSet(), new HashSet()), new PrivilegedAction() {
+                public Object run() {
+                    try {
+                        processCall(socket);
+                    } finally {
+                        try {
+                            socket.close();
+                        } catch (IOException e) {
+                        }
+                    }
+                    return null;
                 }
-            }
+            });
         }
     }
 }

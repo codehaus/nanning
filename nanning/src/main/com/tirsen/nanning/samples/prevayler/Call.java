@@ -6,6 +6,10 @@ import org.apache.commons.logging.LogFactory;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
+import java.security.PrivilegedExceptionAction;
+
+import javax.security.auth.Subject;
 
 public class Call implements Serializable {
     static final long serialVersionUID = -3336463259251779539L;
@@ -55,5 +59,23 @@ public class Call implements Serializable {
 
     public Object getTarget() {
         return target;
+    }
+
+    public Object invoke() throws Exception {
+        final Method method = getMethod();
+        final Object target = getTarget();
+        final Object[] args = getArgs();
+
+        try {
+            return method.invoke(target, args);
+        } catch (InvocationTargetException e) {
+            if (e.getTargetException() instanceof Exception) {
+                throw (Exception) e.getTargetException();
+            } else if (e.getTargetException() instanceof Error) {
+                throw (Error) e.getTargetException();
+            } else {
+                throw e;
+            }
+        }
     }
 }
