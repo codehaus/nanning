@@ -2,9 +2,10 @@ package org.codehaus.nanning.prevayler;
 
 import java.io.*;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.Date;
+import java.util.HashMap;
 
+import junit.framework.Assert;
 import org.codehaus.nanning.AspectInstance;
 import org.codehaus.nanning.Aspects;
 import org.codehaus.nanning.Mixin;
@@ -13,7 +14,6 @@ import org.codehaus.nanning.attribute.Attributes;
 import org.codehaus.nanning.config.AspectSystem;
 import org.codehaus.nanning.config.FindTargetMixinAspect;
 import org.prevayler.PrevaylerFactory;
-import junit.framework.Assert;
 
 public class PrevaylerTest extends AbstractAttributesTest {
 
@@ -25,9 +25,9 @@ public class PrevaylerTest extends AbstractAttributesTest {
         super.setUp();
 
         assertTrue("attributes not compiled or not on classpath (add 'target/attributes' to classpath)",
-                   PrevaylerUtils.isTransactional(MySystem.class.getMethod("setMyObject", new Class[]{MyObject.class})));
+                PrevaylerUtils.isTransactional(MySystem.class.getMethod("setMyObject", new Class[]{MyObject.class})));
         assertTrue("attributes not compiled or not on classpath (add 'target/attributes' to classpath)",
-                   PrevaylerUtils.isTransactional(MySystem.class.getMethod("setSimpleString", new Class[]{String.class})));
+                PrevaylerUtils.isTransactional(MySystem.class.getMethod("setSimpleString", new Class[]{String.class})));
 
         aspectSystem = new AspectSystem();
         aspectSystem.addAspect(new FindTargetMixinAspect());
@@ -497,6 +497,26 @@ public class PrevaylerTest extends AbstractAttributesTest {
         });
     }
 
+    public void testCreatingObjectsAfterSnapshotIsTakenSystemRestarted() throws Exception {
+        newPrevayler();
+        withCurrentPrevayler(new PrevaylerAction() {
+            public Object run() {
+                currentSystem().setMyObject((MyObject) currentSystem().newInstance(MyObject.class));
+                return null;
+            }
+        });
+
+        // restoring
+        currentPrevayler.takeSnapshot();
+        newPrevayler();
+        withCurrentPrevayler(new PrevaylerAction() {
+            public Object run() {
+                currentSystem().getMyObject().setMyObject((MyObject) currentSystem().newInstance(MyObject.class));
+                return null;
+            }
+        });
+    }
+
     public void testSerialization() throws IOException, ClassNotFoundException {
         MyObject myObject = (MyObject) aspectSystem.newInstance(MyObject.class);
         myObject.setValue("value");
@@ -523,7 +543,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
     private void newPrevayler() throws IOException, ClassNotFoundException {
         currentPrevayler = new CountingPrevayler(
                 PrevaylerFactory.createPrevayler((Serializable) Aspects.getCurrentAspectFactory().newInstance(MySystem.class),
-                                                 prevaylerDir.getAbsolutePath()));
+                        prevaylerDir.getAbsolutePath()));
     }
 
     public interface TestUnsupportedTransaction {
