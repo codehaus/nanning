@@ -4,7 +4,7 @@ import com.tirsen.nanning.samples.prevayler.Identity;
 
 public class RemoteIdentity extends Identity {
     static final long serialVersionUID = -7294340439273542677L;
-    
+
     private ServerConnectionManager connectionManager;
 
     public RemoteIdentity(Class objectClass, Object identifier, ServerConnectionManager connectionManager) {

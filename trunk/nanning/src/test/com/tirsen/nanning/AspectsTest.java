@@ -12,19 +12,16 @@ import junit.framework.TestCase;
 /**
  * TODO document AspectsTest
  *
- * <!-- $Id: AspectsTest.java,v 1.3 2003-01-24 13:29:30 tirsen Exp $ -->
+ * <!-- $Id: AspectsTest.java,v 1.4 2003-03-21 17:11:14 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.3 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.4 $
  */
-public class AspectsTest extends TestCase
-{
-    public static class OtherImpl extends Impl
-    {
+public class AspectsTest extends TestCase {
+    public static class OtherImpl extends Impl {
     }
 
-    public void testSetTarget()
-    {
+    public void testSetTarget() {
         AspectClass aspectClass = new AspectClass();
         aspectClass.setInterface(Intf.class);
         aspectClass.setTarget(Impl.class);

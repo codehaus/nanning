@@ -1,15 +1,14 @@
 package com.tirsen.nanning.config;
 
-import com.tirsen.nanning.AspectInstance;
-import com.tirsen.nanning.Interceptor;
-import com.tirsen.nanning.MixinInstance;
-import com.tirsen.nanning.AspectException;
-
+import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Collection;
 import java.util.Iterator;
-import java.lang.reflect.Method;
+import java.util.List;
+
+import com.tirsen.nanning.AspectException;
+import com.tirsen.nanning.AspectInstance;
+import com.tirsen.nanning.MixinInstance;
 
 public class PointcutAspect implements Aspect {
     private List pointcuts = new ArrayList();

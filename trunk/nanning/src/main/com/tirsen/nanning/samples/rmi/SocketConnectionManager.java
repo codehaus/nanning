@@ -1,14 +1,14 @@
 package com.tirsen.nanning.samples.rmi;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.Socket;
 
 public class SocketConnectionManager implements ServerConnectionManager, Serializable {
     static final long serialVersionUID = -7929346379044472125L;
-    
+
     private String host;
     private int port;
 

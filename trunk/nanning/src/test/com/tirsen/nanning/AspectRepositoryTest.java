@@ -12,10 +12,10 @@ import junit.framework.TestCase;
 /**
  * TODO document AspectRepositoryTest
  *
- * <!-- $Id: AspectRepositoryTest.java,v 1.7 2003-02-06 20:33:42 tirsen Exp $ -->
+ * <!-- $Id: AspectRepositoryTest.java,v 1.8 2003-03-21 17:11:14 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.7 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.8 $
  */
 public class AspectRepositoryTest extends TestCase {
     public void testEmpty() {
@@ -80,7 +80,7 @@ public class AspectRepositoryTest extends TestCase {
         java.net.URL resource = AspectRepositoryTest.class.getResource("aspect-repository-test.xml");
         aspectRepository.configure(resource);
 
-//        AspectRepository aspectRepository = AspectRepository.getInstance();
+        //        AspectRepository aspectRepository = AspectRepository.getInstance();
         Object bigMomma = aspectRepository.newInstance(Intf.class);
         AspectClassTest.verifySideAspect(bigMomma);
     }

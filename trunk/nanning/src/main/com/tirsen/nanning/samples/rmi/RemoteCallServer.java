@@ -1,9 +1,9 @@
 package com.tirsen.nanning.samples.rmi;
 
+import java.io.*;
 import java.security.AccessController;
 import java.util.HashMap;
 import java.util.Map;
-import java.io.*;
 
 import javax.security.auth.Subject;
 
@@ -39,7 +39,13 @@ public class RemoteCallServer {
             Object result = processCall(command);
 
             ObjectOutputStream output = new ObjectOutputStream(resultStream);
-            output.writeObject(result);
+            try {
+                output.writeObject(result);
+            } catch (NotSerializableException e) {
+                String message = "Could not serialize object with class " + result.getClass();
+                assert false : message;
+                logger.fatal(message);
+            }
             output.flush();
 
         } catch (IOException e) {

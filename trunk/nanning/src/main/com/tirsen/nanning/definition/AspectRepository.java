@@ -6,13 +6,6 @@
  */
 package com.tirsen.nanning.definition;
 
-import com.tirsen.nanning.AspectFactory;
-import com.tirsen.nanning.jelly.AspectTagLibrary;
-import org.apache.commons.jelly.JellyContext;
-import org.apache.commons.jelly.XMLOutput;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
 import java.util.Collection;
@@ -20,13 +13,20 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.tirsen.nanning.AspectFactory;
+import com.tirsen.nanning.jelly.AspectTagLibrary;
+import org.apache.commons.jelly.JellyContext;
+import org.apache.commons.jelly.XMLOutput;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * TODO document AspectRepository
  *
- * <!-- $Id: AspectRepository.java,v 1.5 2003-01-24 13:40:09 tirsen Exp $ -->
+ * <!-- $Id: AspectRepository.java,v 1.6 2003-03-21 17:11:11 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.5 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.6 $
  */
 public class AspectRepository implements AspectFactory {
     private static AspectRepository instance;

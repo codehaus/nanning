@@ -1,9 +1,9 @@
 package com.tirsen.nanning.attribute;
 
-import junit.framework.TestCase;
-
 import java.io.File;
 import java.net.MalformedURLException;
+
+import junit.framework.TestCase;
 
 public abstract class AbstractAttributesTest extends TestCase {
     private static boolean attributesCompiled = false;

@@ -6,21 +6,21 @@
  */
 package com.tirsen.nanning.definition;
 
-import com.tirsen.nanning.*;
-
 import java.lang.reflect.Method;
 import java.util.*;
+
+import com.tirsen.nanning.MethodInterceptor;
+import com.tirsen.nanning.MixinInstance;
 
 /**
  * Defines an interface that's to be added to an aspected object.
  *
- * <!-- $Id: AspectDefinition.java,v 1.4 2003-01-24 13:40:09 tirsen Exp $ -->
+ * <!-- $Id: AspectDefinition.java,v 1.5 2003-03-21 17:11:11 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.4 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.5 $
  */
-public class AspectDefinition
-{
+public class AspectDefinition {
     private Class interfaceClass;
     private List interceptorDefinitions = new ArrayList();
     private Class targetClass;
@@ -31,8 +31,7 @@ public class AspectDefinition
      *
      * @param interfaceClass
      */
-    public void setInterface(Class interfaceClass)
-    {
+    public void setInterface(Class interfaceClass) {
         this.interfaceClass = interfaceClass;
         methodsToIndex = new HashMap();
         Method[] methods = interfaceClass.getMethods();
@@ -48,8 +47,7 @@ public class AspectDefinition
      *
      * @param interceptorClass
      */
-    public void addInterceptor(Class interceptorClass)
-    {
+    public void addInterceptor(Class interceptorClass) {
         addInterceptor(new InterceptorDefinition(interceptorClass));
     }
 
@@ -58,8 +56,7 @@ public class AspectDefinition
      *
      * @param interceptorDefinition
      */
-    public void addInterceptor(InterceptorDefinition interceptorDefinition)
-    {
+    public void addInterceptor(InterceptorDefinition interceptorDefinition) {
         interceptorDefinitions.add(interceptorDefinition);
     }
 
@@ -68,14 +65,12 @@ public class AspectDefinition
      *
      * @param targetClass
      */
-    public void setTarget(Class targetClass)
-    {
+    public void setTarget(Class targetClass) {
         this.targetClass = targetClass;
     }
 
     MixinInstance createMixinInstance()
-            throws IllegalAccessException, InstantiationException
-    {
+            throws IllegalAccessException, InstantiationException {
         if (targetClass != null) {
             return newInstance(targetClass.newInstance());
         } else {
@@ -83,14 +78,12 @@ public class AspectDefinition
         }
     }
 
-    public Class getInterfaceClass()
-    {
+    public Class getInterfaceClass() {
         return interfaceClass;
     }
 
     MixinInstance newInstance(Object target)
-            throws InstantiationException, IllegalAccessException
-    {
+            throws InstantiationException, IllegalAccessException {
         checkTarget(target);
 
         MixinInstance mixinInstance = new MixinInstance();
@@ -101,7 +94,7 @@ public class AspectDefinition
             Method[] methods = mixinInstance.getMethods();
             for (int j = 0; j < methods.length; j++) {
                 Method method = methods[j];
-                if(interceptorDefinition.interceptsMethod(method)) {
+                if (interceptorDefinition.interceptsMethod(method)) {
                     mixinInstance.addInterceptor(method, (MethodInterceptor) interceptorDefinition.newInstance());
                 }
             }
@@ -112,14 +105,14 @@ public class AspectDefinition
     }
 
     private void checkTarget(Object target) {
-        if(target == null) {
+        if (target == null) {
             return;
         }
 
-        if(!interfaceClass.isInstance(target)) {
+        if (!interfaceClass.isInstance(target)) {
             throw new IllegalArgumentException("target does not implement interface: " + target);
         }
-        if(!targetClass.isInstance(target)) {
+        if (!targetClass.isInstance(target)) {
             throw new IllegalArgumentException("target is not an instance of target-class: " + target);
         }
     }
@@ -128,7 +121,7 @@ public class AspectDefinition
         List interceptors = new ArrayList();
         for (Iterator iterator = interceptorDefinitions.iterator(); iterator.hasNext();) {
             InterceptorDefinition interceptorDefinition = (InterceptorDefinition) iterator.next();
-            if(interceptorDefinition.interceptsConstructor(getInterfaceClass())) {
+            if (interceptorDefinition.interceptsConstructor(getInterfaceClass())) {
                 interceptors.add(interceptorDefinition.newInstance());
             }
         }

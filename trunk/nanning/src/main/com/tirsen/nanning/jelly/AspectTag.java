@@ -9,31 +9,28 @@ package com.tirsen.nanning.jelly;
 import com.tirsen.nanning.definition.AspectClass;
 import com.tirsen.nanning.definition.AspectDefinition;
 import com.tirsen.nanning.definition.AspectRepository;
+import org.apache.commons.jelly.JellyTagException;
 import org.apache.commons.jelly.TagSupport;
 import org.apache.commons.jelly.XMLOutput;
-import org.apache.commons.jelly.JellyTagException;
 
 /**
  * TODO document AspectTag
  *
- * <!-- $Id: AspectTag.java,v 1.7 2003-03-12 22:34:53 tirsen Exp $ -->
+ * <!-- $Id: AspectTag.java,v 1.8 2003-03-21 17:11:11 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.7 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.8 $
  */
-public class AspectTag extends TagSupport
-{
+public class AspectTag extends TagSupport {
     protected AspectDefinition aspectDefinition;
     private Class aspectRef;
 
-    public void setInterface(String interfaceClass) throws ClassNotFoundException
-    {
+    public void setInterface(String interfaceClass) throws ClassNotFoundException {
         this.aspectRef =
                 Thread.currentThread().getContextClassLoader().loadClass(interfaceClass);
     }
 
-    public AspectDefinition getAspectDefinition()
-    {
+    public AspectDefinition getAspectDefinition() {
         return aspectDefinition;
     }
 
@@ -43,39 +40,29 @@ public class AspectTag extends TagSupport
         AspectClass aspectClass = null;
         AspectRepositoryTag aspectRepositoryTag =
                 (AspectRepositoryTag) findAncestorWithClass(AspectRepositoryTag.class);
-        if (aspectRepositoryTag != null)
-        {
+        if (aspectRepositoryTag != null) {
             aspectRepository = aspectRepositoryTag.getAspectRepository();
         }
         AspectClassTag aspectClassTag = (AspectClassTag) findAncestorWithClass(AspectClassTag.class);
-        if (aspectClassTag != null)
-        {
+        if (aspectClassTag != null) {
             aspectClass = aspectClassTag.getAspectClass();
         }
 
         // find or instantiate aspect
-        if(aspectRef == null)
-        {
+        if (aspectRef == null) {
             aspectDefinition = new AspectDefinition();
-        }
-        else
-        {
+        } else {
             aspectDefinition = aspectRepository.getAspect(aspectRef);
         }
 
         invokeBody(xmlOutput);
 
         // addLink aspect to class or define in repository
-        if(aspectClass != null)
-        {
+        if (aspectClass != null) {
             aspectClass.addAspect(aspectDefinition);
-        }
-        else if(aspectRepository != null)
-        {
+        } else if (aspectRepository != null) {
             aspectRepository.defineAspect(aspectDefinition);
-        }
-        else
-        {
+        } else {
             throw new IllegalStateException("Must be contained within 'aspect-repository' or 'class'.");
         }
     }

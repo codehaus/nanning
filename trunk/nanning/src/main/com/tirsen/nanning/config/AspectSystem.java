@@ -1,12 +1,11 @@
 package com.tirsen.nanning.config;
 
-import com.tirsen.nanning.*;
-import com.tirsen.nanning.definition.SingletonInterceptor;
-import com.tirsen.nanning.definition.FilterMethodsInterceptor;
-
-import java.util.*;
 import java.lang.reflect.Method;
+import java.util.*;
 
+import com.tirsen.nanning.*;
+import com.tirsen.nanning.definition.FilterMethodsInterceptor;
+import com.tirsen.nanning.definition.SingletonInterceptor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 

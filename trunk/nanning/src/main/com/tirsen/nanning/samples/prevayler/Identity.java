@@ -12,11 +12,11 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * TODO document Identity
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class Identity implements Serializable {
     static final long serialVersionUID = 716500751463534855L;
-    
+
     private Class objectClass;
     private Object identifier;
 

@@ -17,15 +17,13 @@ import com.tirsen.nanning.samples.StopWatch;
 /**
  * TODO document PerformanceTest
  *
- * <!-- $Id: PerformanceTest.java,v 1.16 2003-03-21 16:14:57 lecando Exp $ -->
+ * <!-- $Id: PerformanceTest.java,v 1.17 2003-03-21 17:11:14 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
-public class PerformanceTest extends AbstractAttributesTest
-{
-    public void testInvocation() throws IllegalAccessException, InstantiationException
-    {
+public class PerformanceTest extends AbstractAttributesTest {
+    public void testInvocation() throws IllegalAccessException, InstantiationException {
         // these are exceptionally high due to Clover...
         double maxMemoryPerInvocation = 8;
         double timesSlowerTolerance = 22;
@@ -38,8 +36,7 @@ public class PerformanceTest extends AbstractAttributesTest
         ///CLOVER:OFF
         StopWatch ordinary = new StopWatch();
 
-        for (int i = 0; i < numberOfInvocations; i++)
-        {
+        for (int i = 0; i < numberOfInvocations; i++) {
             intf.call();
         }
 
@@ -57,8 +54,7 @@ public class PerformanceTest extends AbstractAttributesTest
         ///CLOVER:OFF
         StopWatch aspect = new StopWatch();
 
-        for (int i = 0; i < numberOfInvocations; i++)
-        {
+        for (int i = 0; i < numberOfInvocations; i++) {
             intf.call();
         }
 
@@ -71,11 +67,11 @@ public class PerformanceTest extends AbstractAttributesTest
         System.out.println();
         System.out.println("timesSlower = " + timesSlower);
         System.out.println("timesMoreMemory = " + timesMoreMemory);
-//        System.out.println("ordinaryTime = " + ordinary.getTimeSpent());
-//        System.out.println("ordinaryMemory = " + ordinary.getMemoryUsed());
-//        System.out.println("aspectsTime = " + aspect.getTimeSpent());
-//        System.out.println("aspectsMemory = " + aspect.getMemoryUsed());
-//        System.out.println("memoryPerInvocation = " + aspect.getMemoryUsed(numberOfInvocations));
+        //        System.out.println("ordinaryTime = " + ordinary.getTimeSpent());
+        //        System.out.println("ordinaryMemory = " + ordinary.getMemoryUsed());
+        //        System.out.println("aspectsTime = " + aspect.getTimeSpent());
+        //        System.out.println("aspectsMemory = " + aspect.getMemoryUsed());
+        //        System.out.println("memoryPerInvocation = " + aspect.getMemoryUsed(numberOfInvocations));
         System.out.println("timePerInvocation = " + aspect.getTimeSpent(numberOfInvocations));
 
         assertTrue("memory per invocation exceeded", aspect.getMemoryUsed(numberOfInvocations) < maxMemoryPerInvocation);
@@ -83,10 +79,9 @@ public class PerformanceTest extends AbstractAttributesTest
         assertTrue("time per invocation exceeded", timesSlowerTolerance > timesSlower);
     }
 
-    public void testInstantiation() throws IllegalAccessException, InstantiationException
-    {
+    public void testInstantiation() throws IllegalAccessException, InstantiationException {
         int timesBiggerTolerance = 69;
-//        int timesSlowerTolerance = 866;
+        //        int timesSlowerTolerance = 866;
 
         int numberOfInstances = 10000;
 
@@ -96,8 +91,7 @@ public class PerformanceTest extends AbstractAttributesTest
         ///CLOVER:OFF
         StopWatch ordinary = new StopWatch();
 
-        for (int i = 0; i < numberOfInstances; i++)
-        {
+        for (int i = 0; i < numberOfInstances; i++) {
             objects[i] = new Impl();
         }
 
@@ -105,7 +99,7 @@ public class PerformanceTest extends AbstractAttributesTest
         ///CLOVER:ON
 
         // determine max-memory per aspect-instance compared to ordinary instances
-//        double maxMemoryPerInstance = ordinary.getMemoryUsed(numberOfInstances) * timesBiggerTolerance;
+        //        double maxMemoryPerInstance = ordinary.getMemoryUsed(numberOfInstances) * timesBiggerTolerance;
 
         // setup a factory
         AspectClass aspectClass = new AspectClass();
@@ -119,8 +113,7 @@ public class PerformanceTest extends AbstractAttributesTest
         StopWatch aspect = new StopWatch();
 
         Object[] aspects = new Object[numberOfInstances];
-        for (int i = 0; i < numberOfInstances; i++)
-        {
+        for (int i = 0; i < numberOfInstances; i++) {
             aspects[i] = aspectClass.newInstance();
         }
 
@@ -136,18 +129,18 @@ public class PerformanceTest extends AbstractAttributesTest
         double timesSlower = aspect.getTimeSpent() / ordinary.getTimeSpent();
 
         System.out.println();
-//        System.out.println("ordinaryTime = " + ordinary.getTimeSpent());
-//        System.out.println("aspectsTime = " + aspect.getTimeSpent());
+        //        System.out.println("ordinaryTime = " + ordinary.getTimeSpent());
+        //        System.out.println("aspectsTime = " + aspect.getTimeSpent());
         System.out.println("times slower = " + timesSlower);
 
-//        System.out.println("memory = " + aspect.getMemoryUsed());
-//        System.out.println("memoryPerOrdinaryInstance = " + ordinary.getMemoryUsed(numberOfInstances));
-//        System.out.println("maxMemoryPerInstance = " + maxMemoryPerInstance);
-//        System.out.println("memoryPerInstance = " + aspect.getMemoryUsed(numberOfInstances));
+        //        System.out.println("memory = " + aspect.getMemoryUsed());
+        //        System.out.println("memoryPerOrdinaryInstance = " + ordinary.getMemoryUsed(numberOfInstances));
+        //        System.out.println("maxMemoryPerInstance = " + maxMemoryPerInstance);
+        //        System.out.println("memoryPerInstance = " + aspect.getMemoryUsed(numberOfInstances));
         System.out.println("times bigger = " + timesBigger);
 
         assertTrue("memory per instance exceeded", timesBiggerTolerance > timesBigger);
-//        assertTrue("time per instantiation exceeded", timesSlowerTolerance > timesSlower);
+        //        assertTrue("time per instantiation exceeded", timesSlowerTolerance > timesSlower);
     }
 
     public void testAttributes() throws NoSuchMethodException {

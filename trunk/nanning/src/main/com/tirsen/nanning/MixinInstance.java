@@ -14,10 +14,10 @@ import java.util.*;
 /**
  * TODO document AspectDefinition
  *
- * <!-- $Id: MixinInstance.java,v 1.8 2003-03-21 16:14:56 lecando Exp $ -->
+ * <!-- $Id: MixinInstance.java,v 1.9 2003-03-21 17:11:10 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public final class MixinInstance {
     private Class interfaceClass;
@@ -57,7 +57,7 @@ public final class MixinInstance {
 
     public List getInterceptorsForMethod(Method method) {
         List interceptors = (List) methodInterceptors.get(method);
-        if(interceptors == null) {
+        if (interceptors == null) {
             interceptors = new ArrayList();
             methodInterceptors.put(method, interceptors);
         }

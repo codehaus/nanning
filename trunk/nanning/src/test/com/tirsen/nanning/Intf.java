@@ -10,12 +10,11 @@ package com.tirsen.nanning;
 /**
  * TODO document Intf
  *
- * <!-- $Id: Intf.java,v 1.1 2002-11-17 14:03:34 tirsen Exp $ -->
+ * <!-- $Id: Intf.java,v 1.2 2003-03-21 17:11:14 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.2 $
  */
-public interface Intf
-{
+public interface Intf {
     void call();
 }

@@ -17,7 +17,9 @@ public class StopWatch {
 
     public StopWatch(boolean doGC) {
         if (doGC) {
-            System.gc(); System.gc(); System.gc();
+            System.gc();
+            System.gc();
+            System.gc();
         }
         startMemory = Runtime.getRuntime().freeMemory();
         startTime = System.currentTimeMillis();

@@ -9,12 +9,11 @@ package com.tirsen.nanning;
 /**
  * TODO document TestMixin
  *
- * <!-- $Id: TestMixin.java,v 1.1 2003-02-06 20:33:42 tirsen Exp $ -->
+ * <!-- $Id: TestMixin.java,v 1.2 2003-03-21 17:11:14 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.2 $
  */
-public interface TestMixin
-{
+public interface TestMixin {
     void mixinCall();
 }

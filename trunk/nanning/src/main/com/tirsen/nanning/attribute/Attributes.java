@@ -6,9 +6,6 @@
  */
 package com.tirsen.nanning.attribute;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -16,6 +13,9 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * TODO document Attributes
@@ -28,10 +28,10 @@ import java.util.*;
  * Hmm... wait, a minute, there's some support for this in QDox, maybe that will work...
  * -- jon
 
- * <!-- $Id: Attributes.java,v 1.7 2003-03-13 08:26:54 lecando Exp $ -->
+ * <!-- $Id: Attributes.java,v 1.8 2003-03-21 17:11:10 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 
 public class Attributes {
@@ -205,7 +205,7 @@ public class Attributes {
             Class[] interfaces = aClass.getInterfaces();
             for (int i = 0; i < interfaces.length; i++) {
                 Class anInterface = interfaces[i];
-                if(hasInheritedAttribute(anInterface, field, attribute)) {
+                if (hasInheritedAttribute(anInterface, field, attribute)) {
                     return true;
                 }
             }
@@ -250,7 +250,7 @@ public class Attributes {
             Class[] interfaces = aClass.getInterfaces();
             for (int i = 0; i < interfaces.length; i++) {
                 Class anInterface = interfaces[i];
-                if(hasInheritedAttribute(anInterface, attribute)) {
+                if (hasInheritedAttribute(anInterface, attribute)) {
                     return true;
                 }
             }

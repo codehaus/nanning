@@ -1,8 +1,8 @@
 package com.tirsen.nanning.config;
 
+import com.tirsen.nanning.AspectException;
 import com.tirsen.nanning.AspectInstance;
 import com.tirsen.nanning.MixinInstance;
-import com.tirsen.nanning.AspectException;
 
 public class AddMixinAdvise extends Advise {
     private Class interfaceClass;

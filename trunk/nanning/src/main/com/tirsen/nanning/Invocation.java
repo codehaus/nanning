@@ -12,13 +12,12 @@ import java.lang.reflect.Method;
 /**
  * Description of the current invocation, given to an interceptor upon method-call.
  *
- * <!-- $Id: Invocation.java,v 1.6 2003-01-12 13:25:40 tirsen Exp $ -->
+ * <!-- $Id: Invocation.java,v 1.7 2003-03-21 17:11:10 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.6 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.7 $
  */
-public interface Invocation
-{
+public interface Invocation {
     /**
      * Invoke the next interceptor in the stack (or the target if you're last).
      *

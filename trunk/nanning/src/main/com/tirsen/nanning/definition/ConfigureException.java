@@ -9,24 +9,20 @@ package com.tirsen.nanning.definition;
 /**
  * TODO document ConfigureException
  *
- * <!-- $Id: ConfigureException.java,v 1.1 2003-01-12 13:25:40 tirsen Exp $ -->
+ * <!-- $Id: ConfigureException.java,v 1.2 2003-03-21 17:11:11 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.2 $
  */
-public class ConfigureException extends RuntimeException
-{
-    public ConfigureException()
-    {
+public class ConfigureException extends RuntimeException {
+    public ConfigureException() {
     }
 
-    public ConfigureException(Throwable cause)
-    {
+    public ConfigureException(Throwable cause) {
         super(cause);
     }
 
-    public ConfigureException(String message)
-    {
+    public ConfigureException(String message) {
         super(message);
     }
 }

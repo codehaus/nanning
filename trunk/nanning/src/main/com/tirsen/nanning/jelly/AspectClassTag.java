@@ -7,19 +7,18 @@
 package com.tirsen.nanning.jelly;
 
 import com.tirsen.nanning.definition.AspectClass;
-import org.apache.commons.jelly.XMLOutput;
 import org.apache.commons.jelly.JellyTagException;
+import org.apache.commons.jelly.XMLOutput;
 
 /**
  * TODO document AspectClassTag
  *
- * <!-- $Id: AspectClassTag.java,v 1.5 2003-03-12 22:34:53 tirsen Exp $ -->
+ * <!-- $Id: AspectClassTag.java,v 1.6 2003-03-21 17:11:11 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.5 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.6 $
  */
-public class AspectClassTag extends AspectTag
-{
+public class AspectClassTag extends AspectTag {
     private AspectClass aspectClass;
 
     public void doTag(XMLOutput xmlOutput) throws JellyTagException {
@@ -28,8 +27,7 @@ public class AspectClassTag extends AspectTag
         ((AspectRepositoryTag) getParent()).getAspectRepository().defineClass(getAspectClass());
     }
 
-    public AspectClass getAspectClass()
-    {
+    public AspectClass getAspectClass() {
         return aspectClass;
     }
 

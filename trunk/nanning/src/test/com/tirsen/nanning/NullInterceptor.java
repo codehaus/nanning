@@ -11,15 +11,13 @@ import com.tirsen.nanning.definition.SingletonInterceptor;
 /**
  * TODO document NullInterceptor
  *
- * <!-- $Id: NullInterceptor.java,v 1.4 2003-01-24 13:29:30 tirsen Exp $ -->
+ * <!-- $Id: NullInterceptor.java,v 1.5 2003-03-21 17:11:14 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.4 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.5 $
  */
-public class NullInterceptor implements MethodInterceptor, SingletonInterceptor
-{
-    public Object invoke(Invocation invocation) throws Throwable
-    {
+public class NullInterceptor implements MethodInterceptor, SingletonInterceptor {
+    public Object invoke(Invocation invocation) throws Throwable {
         return invocation.invokeNext();
     }
 }

@@ -1,9 +1,9 @@
 package com.tirsen.nanning.config;
 
+import java.lang.reflect.Method;
+
 import com.tirsen.nanning.AspectInstance;
 import com.tirsen.nanning.MixinInstance;
-
-import java.lang.reflect.Method;
 
 public class AllPointcut extends Pointcut {
     public AllPointcut() {

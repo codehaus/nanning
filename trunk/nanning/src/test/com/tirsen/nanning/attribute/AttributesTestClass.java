@@ -9,15 +9,14 @@ package com.tirsen.nanning.attribute;
 /**
  * TODO document AttributesTestClass
  *
- * <!-- $Id: AttributesTestClass.java,v 1.2 2003-02-20 15:36:06 lecando Exp $ -->
+ * <!-- $Id: AttributesTestClass.java,v 1.3 2003-03-21 17:11:14 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
  * @class.attribute classValue
  */
-public class AttributesTestClass
-{
+public class AttributesTestClass {
     ///CLOVER:OFF
     /**
      * @field.attribute fieldValue
@@ -27,15 +26,13 @@ public class AttributesTestClass
     /**
      * @method.attribute methodValue
      */
-    public void method()
-    {
+    public void method() {
     }
 
     /**
      * @method.attribute argMethodValue
      */
-    public void method(String arg, String arg2)
-    {
+    public void method(String arg, String arg2) {
     }
     ///CLOVER:ON
 }

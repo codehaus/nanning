@@ -7,30 +7,27 @@
 package com.tirsen.nanning.jelly;
 
 import com.tirsen.nanning.definition.AspectRepository;
+import org.apache.commons.jelly.JellyTagException;
 import org.apache.commons.jelly.TagSupport;
 import org.apache.commons.jelly.XMLOutput;
-import org.apache.commons.jelly.JellyTagException;
 
 /**
  * TODO document AspectRepositoryTag
  *
- * <!-- $Id: AspectRepositoryTag.java,v 1.4 2003-03-12 22:34:53 tirsen Exp $ -->
+ * <!-- $Id: AspectRepositoryTag.java,v 1.5 2003-03-21 17:11:11 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.4 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.5 $
  */
-public class AspectRepositoryTag extends TagSupport
-{
+public class AspectRepositoryTag extends TagSupport {
     private String id = "default";
     private AspectRepository aspectRepository;
 
-    public void setId(String id)
-    {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public AspectRepository getAspectRepository()
-    {
+    public AspectRepository getAspectRepository() {
         return aspectRepository;
     }
 

@@ -6,26 +6,24 @@
  */
 package com.tirsen.nanning;
 
+import java.lang.reflect.Method;
+
 import com.tirsen.nanning.definition.AspectClass;
 import com.tirsen.nanning.definition.FilterMethodsInterceptor;
 import com.tirsen.nanning.definition.InterceptorDefinition;
 import com.tirsen.nanning.definition.SingletonInterceptor;
 import junit.framework.TestCase;
 
-import java.lang.reflect.Method;
-
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: InterceptorTest.java,v 1.3 2003-01-24 13:29:30 tirsen Exp $ -->
+ * <!-- $Id: InterceptorTest.java,v 1.4 2003-03-21 17:11:14 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.3 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.4 $
  */
-public class InterceptorTest extends TestCase
-{
-    public void testInterceptor() throws IllegalAccessException, InstantiationException, NoSuchMethodException
-    {
+public class InterceptorTest extends TestCase {
+    public void testInterceptor() throws IllegalAccessException, InstantiationException, NoSuchMethodException {
         AspectClass aspectClass = new AspectClass();
         aspectClass.setInterface(Intf.class);
         aspectClass.addInterceptor(MockInterceptor.class);
@@ -52,15 +50,12 @@ public class InterceptorTest extends TestCase
         interceptor2.verify();
     }
 
-    public static interface ErrorIntf
-    {
+    public static interface ErrorIntf {
         void call() throws Exception;
     }
 
-    public static class StatelessInterceptorImpl implements MethodInterceptor, SingletonInterceptor
-    {
-        public Object invoke(Invocation invocation) throws Throwable
-        {
+    public static class StatelessInterceptorImpl implements MethodInterceptor, SingletonInterceptor {
+        public Object invoke(Invocation invocation) throws Throwable {
             return invocation.invokeNext();
         }
     }
@@ -84,42 +79,34 @@ public class InterceptorTest extends TestCase
         assertNotSame("ordinary interceptor not instantiated twice", interceptor, interceptor2);
     }
 
-    public static class TestFilterMethodsInterceptor implements FilterMethodsInterceptor
-    {
-        public boolean interceptsMethod(Method method)
-        {
+    public static class TestFilterMethodsInterceptor implements FilterMethodsInterceptor {
+        public boolean interceptsMethod(Method method) {
             return method.getName().equals("interceptThis");
         }
 
-        public Object invoke(Invocation invocation) throws Throwable
-        {
-            if(!invocation.getMethod().getName().equals("interceptThis"))
-            {
+        public Object invoke(Invocation invocation) throws Throwable {
+            if (!invocation.getMethod().getName().equals("interceptThis")) {
                 fail("should not intercept " + invocation.getMethod());
             }
             return invocation.invokeNext();
         }
     }
 
-    public static interface TestFilterIntf
-    {
+    public static interface TestFilterIntf {
         void interceptThis();
+
         void dontInterceptThis();
     }
 
-    public static class TestFilterImpl implements TestFilterIntf
-    {
-        public void interceptThis()
-        {
+    public static class TestFilterImpl implements TestFilterIntf {
+        public void interceptThis() {
         }
 
-        public void dontInterceptThis()
-        {
+        public void dontInterceptThis() {
         }
     }
 
-    public void testFilterMethods()
-    {
+    public void testFilterMethods() {
         AspectClass aspectClass = new AspectClass();
         aspectClass.setInterface(TestFilterIntf.class);
         aspectClass.addInterceptor(TestFilterMethodsInterceptor.class);

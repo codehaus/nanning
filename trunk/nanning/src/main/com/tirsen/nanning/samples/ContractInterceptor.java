@@ -1,13 +1,5 @@
 package com.tirsen.nanning.samples;
 
-import com.tirsen.nanning.Invocation;
-import com.tirsen.nanning.MethodInterceptor;
-import com.tirsen.nanning.attribute.Attributes;
-import ognl.MethodFailedException;
-import ognl.Ognl;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,13 +8,21 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.tirsen.nanning.Invocation;
+import com.tirsen.nanning.MethodInterceptor;
+import com.tirsen.nanning.attribute.Attributes;
+import ognl.MethodFailedException;
+import ognl.Ognl;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * TODO document ContractInterceptor.
  * Tip: use <code>Class.desiredAssertionStatus()</code> to check wheather to addLink this interceptor or not, that way
  * you can enable and disable contract-checking in the same way you enable and disable assertions (java -ea and so on).
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class ContractInterceptor implements MethodInterceptor {
     private static final Log logger = LogFactory.getLog(ContractInterceptor.class);

@@ -1,10 +1,10 @@
 package com.tirsen.nanning;
 
-import com.tirsen.nanning.attribute.AbstractAttributesTest;
-
 import java.io.*;
 import java.util.Collection;
 import java.util.Iterator;
+
+import com.tirsen.nanning.attribute.AbstractAttributesTest;
 
 public class SerializationTest extends AbstractAttributesTest {
     public void testChangedAspectFactoryBetweenSerializations() throws IOException, ClassNotFoundException {

@@ -1,22 +1,24 @@
 package com.tirsen.nanning.samples.prevayler;
 
 import junit.framework.TestCase;
-import com.tirsen.nanning.samples.prevayler.ObjectGraphVisitor;
 
 public class ObjectGraphVisitorTest extends TestCase {
 
     public static class ABase {
-        B[] array = { new B(), new B() };
+        B[] array = {new B(), new B()};
         B b = new B();
         Object nullField = null;
     }
+
     public static class A extends ABase {
         public String toString() {
             return "A";
         }
     }
+
     public static class B {
         A circularity;
+
         public String toString() {
             return "B";
         }

@@ -1,5 +1,7 @@
 package com.tirsen.nanning.samples.prevayler;
 
+import java.lang.reflect.Method;
+
 import com.tirsen.nanning.ConstructionInterceptor;
 import com.tirsen.nanning.ConstructionInvocation;
 import com.tirsen.nanning.Invocation;
@@ -7,13 +9,11 @@ import com.tirsen.nanning.attribute.Attributes;
 import com.tirsen.nanning.definition.FilterMethodsInterceptor;
 import com.tirsen.nanning.definition.SingletonInterceptor;
 
-import java.lang.reflect.Method;
-
 /**
  * TODO document PrevaylerInterceptor
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public class PrevaylerInterceptor implements SingletonInterceptor, FilterMethodsInterceptor, ConstructionInterceptor {
 

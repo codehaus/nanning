@@ -1,7 +1,7 @@
 package com.tirsen.nanning.config;
 
-import com.tirsen.nanning.ConstructionInterceptor;
 import com.tirsen.nanning.AspectInstance;
+import com.tirsen.nanning.ConstructionInterceptor;
 
 public class ConstructionInterceptorAdvise extends Advise {
     private ConstructionInterceptor singletonInterceptor;

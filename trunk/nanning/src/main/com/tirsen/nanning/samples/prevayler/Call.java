@@ -1,19 +1,14 @@
 package com.tirsen.nanning.samples.prevayler;
 
-import com.tirsen.nanning.Invocation;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.io.Serializable;
-import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
-import java.security.PrivilegedExceptionAction;
+import java.lang.reflect.Method;
 
-import javax.security.auth.Subject;
+import com.tirsen.nanning.Invocation;
 
 public class Call implements Serializable {
     static final long serialVersionUID = -3336463259251779539L;
-    
+
     protected Object target;
     protected Object[] args;
     private Object classIdentifier;

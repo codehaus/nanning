@@ -17,16 +17,14 @@ import junit.framework.TestSuite;
 /**
  * TODO document UnitTestSuite
  *
- * <!-- $Id: AcceptanceTestSuite.java,v 1.4 2003-01-24 13:29:30 tirsen Exp $ -->
+ * <!-- $Id: AcceptanceTestSuite.java,v 1.5 2003-03-21 17:11:13 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.4 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.5 $
  */
-public class AcceptanceTestSuite
-{
+public class AcceptanceTestSuite {
     ///CLOVER:OFF
-    public static Test suite()
-    {
+    public static Test suite() {
         TestSuite suite = new TestSuite();
         suite.addTestSuite(PerformanceTest.class);
         suite.addTestSuite(PrevaylerTest.class);

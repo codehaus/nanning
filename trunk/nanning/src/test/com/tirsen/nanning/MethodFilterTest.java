@@ -6,21 +6,21 @@
  */
 package com.tirsen.nanning;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.tirsen.nanning.definition.AspectClass;
 import com.tirsen.nanning.definition.BasicInterceptor;
 import com.tirsen.nanning.definition.InterceptorDefinition;
 import junit.framework.TestCase;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * TODO document MethodFilterTest
  *
- * <!-- $Id: MethodFilterTest.java,v 1.3 2003-01-24 13:29:30 tirsen Exp $ -->
+ * <!-- $Id: MethodFilterTest.java,v 1.4 2003-03-21 17:11:14 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.3 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.4 $
  */
 
 public class MethodFilterTest extends TestCase {
@@ -107,7 +107,7 @@ public class MethodFilterTest extends TestCase {
 
     private void verify() {
         assertEquals("number of executed methods was not as expected",
-                expectedMethods.size(), invokedMethods.size());
+                     expectedMethods.size(), invokedMethods.size());
         for (int i = 0; i < expectedMethods.size(); i++) {
             String methodName = (String) expectedMethods.get(i);
             assertTrue(methodName + " was not invoked", invokedMethods.contains(methodName));
