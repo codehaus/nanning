@@ -1,0 +1,4 @@
+Changes since 0.2:
+
+Prevayler framework:
+ - Switched to CheckpointPrevayler and Prevayler 2.0. Object IDs removed.
