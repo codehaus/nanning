@@ -71,7 +71,6 @@ public class CurrentPrevayler {
     }
 
     public static Object withPrevayler(Prevayler prevayler, PrevaylerAction action) throws Exception {
-        assert prevayler != null : "no prevayler specified";
         Prevayler lastPrevayler = (Prevayler) currentPrevayler.get();
         setPrevayler(prevayler);
         try {
