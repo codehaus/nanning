@@ -10,9 +10,11 @@ import java.lang.reflect.Method;
  * TODO document MarshallingCommand
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public abstract class MarshallingCommand implements InvocationCommand {
+    static final long serialVersionUID = 5848314669553768335L;
+
     private Identity target;
     private Object[] args;
     private Class declaringClass;
@@ -28,7 +30,7 @@ public abstract class MarshallingCommand implements InvocationCommand {
     }
 
     private Object[] marshalArguments(Object[] args) {
-        if(args == null) {
+        if (args == null) {
             return null;
         }
 
@@ -60,7 +62,7 @@ public abstract class MarshallingCommand implements InvocationCommand {
     }
 
     private Object[] unmarshalArguments(Object[] args) {
-        if(args == null) {
+        if (args == null) {
             return null;
         }
 
@@ -79,7 +81,7 @@ public abstract class MarshallingCommand implements InvocationCommand {
             return o;
         } else if (Character.class.isInstance(o)) {
             return o;
-        } else if(o instanceof Identity) {
+        } else if (o instanceof Identity) {
             return resolve(target);
         } else {
             throw new IllegalArgumentException("Can't resolve " + o);
