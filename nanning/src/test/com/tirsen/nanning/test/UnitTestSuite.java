@@ -12,10 +12,10 @@ import junit.framework.TestSuite;
 /**
  * TODO document UnitTestSuite
  *
- * <!-- $Id: UnitTestSuite.java,v 1.1 2002-10-21 21:07:31 tirsen Exp $ -->
+ * <!-- $Id: UnitTestSuite.java,v 1.2 2002-10-22 18:28:09 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class UnitTestSuite
 {
@@ -23,8 +23,7 @@ public class UnitTestSuite
     public static Test suite()
     {
         TestSuite suite = new TestSuite();
-        suite.addTestSuite(AspectProxyTest.class);
-        suite.addTestSuite(FactoryTest.class);
+        suite.addTestSuite(AspectClassTest.class);
         suite.addTestSuite(PerformanceTest.class);
         return suite;
     }

@@ -12,10 +12,10 @@ import java.lang.reflect.Method;
 /**
  * TODO document Invocation
  *
- * <!-- $Id: Invocation.java,v 1.1 2002-10-21 21:07:31 tirsen Exp $ -->
+ * <!-- $Id: Invocation.java,v 1.2 2002-10-22 18:28:09 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public interface Invocation
 {
@@ -29,7 +29,7 @@ public interface Invocation
 
     int getNumberOfAspects();
 
-    Interceptor getAspect(int index);
+    Interceptor getInterceptor(int index);
 
     Method getMethod();
 

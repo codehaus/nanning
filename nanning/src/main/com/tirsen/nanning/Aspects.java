@@ -12,25 +12,25 @@ import java.lang.reflect.Proxy;
 /**
  * TODO document Aspects
  *
- * <!-- $Id: Aspects.java,v 1.1 2002-10-21 21:07:31 tirsen Exp $ -->
+ * <!-- $Id: Aspects.java,v 1.2 2002-10-22 18:28:09 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class Aspects
 {
-    public static Interceptor[] getAspects(Object proxy)
+    public static Interceptor[] getInterceptors(Object proxy, Class interfaceClass)
     {
-        return getAspectProxy(proxy).getAspects();
+        return getAspectInstance(proxy).getInterceptors(interfaceClass);
     }
 
-    private static AspectProxy getAspectProxy(Object proxy)
+    private static AspectInstance getAspectInstance(Object proxy)
     {
-        return (AspectProxy) Proxy.getInvocationHandler(proxy);
+        return (AspectInstance) Proxy.getInvocationHandler(proxy);
     }
 
-    public static Object getTarget(Object proxy)
+    public static Object getTarget(Object proxy, Class interfaceClass)
     {
-        return getAspectProxy(proxy).getTarget();
+        return getAspectInstance(proxy).getTarget(interfaceClass);
     }
 }

@@ -10,21 +10,24 @@ import com.tirsen.nanning.Interceptor;
 import com.tirsen.nanning.Invocation;
 import junit.framework.Assert;
 
+import java.lang.reflect.Method;
+
 /**
  * TODO document MockAspect
  *
- * <!-- $Id: MockAspect.java,v 1.2 2002-10-21 21:07:31 tirsen Exp $ -->
+ * <!-- $Id: MockAspect.java,v 1.3 2002-10-22 18:28:09 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class MockAspect implements Interceptor
 {
     private boolean called;
-    private Object target;
+    private Object expectTarget;
     private Object actualTarget;
-    private Object proxy;
+    private Object expectProxy;
     private Object actualProxy;
+    private Method expectMethod;
 
     public MockAspect()
     {
@@ -33,14 +36,8 @@ public class MockAspect implements Interceptor
     public void verify()
     {
         Assert.assertTrue("was never called", called);
-        if (target != null)
-        {
-            Assert.assertSame("real object was not correct during call", target, actualTarget);
-        }
-        if (proxy != null)
-        {
-            Assert.assertSame("proxy was not correct during call", proxy, actualProxy);
-        }
+        Assert.assertSame("real object was not correct during sideCall", expectTarget, actualTarget);
+        Assert.assertSame("expectProxy was not correct during sideCall", expectProxy, actualProxy);
     }
 
     public Object invoke(Invocation invocation) throws Throwable
@@ -50,14 +47,14 @@ public class MockAspect implements Interceptor
         actualProxy = invocation.getProxy();
         
         int index = invocation.getCurrentIndex();
-        Assert.assertSame(this, invocation.getAspect(invocation.getCurrentIndex()));
+        Assert.assertSame(this, invocation.getInterceptor(invocation.getCurrentIndex()));
 
         // check that getNumberOfAspects is correct
         int numberOfAspects = invocation.getNumberOfAspects();
-        invocation.getAspect(numberOfAspects - 1); // should work...
+        invocation.getInterceptor(numberOfAspects - 1); // should work...
         try
         {
-            invocation.getAspect(numberOfAspects); // should not work...
+            invocation.getInterceptor(numberOfAspects); // should not work...
             ///CLOVER:OFF
             Assert.fail("Invocation.getNumberOfAspects doesn't work.");
             ///CLOVER:ON
@@ -66,7 +63,7 @@ public class MockAspect implements Interceptor
         {
         }
 
-        Assert.assertEquals(Intf.class.getMethod("call", null), invocation.getMethod());
+        Assert.assertEquals(expectMethod, invocation.getMethod());
 
         Assert.assertNull(invocation.getArgs());
 
@@ -75,11 +72,16 @@ public class MockAspect implements Interceptor
 
     public void expectTarget(Object o)
     {
-        target = o;
+        expectTarget = o;
+    }
+
+    public void expectMethod(Method expectMethod)
+    {
+        this.expectMethod = expectMethod;
     }
 
     public void expectProxy(Object proxy)
     {
-        this.proxy = proxy;
+        this.expectProxy = proxy;
     }
 }

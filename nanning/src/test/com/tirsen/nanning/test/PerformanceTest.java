@@ -6,32 +6,31 @@
  */
 package com.tirsen.nanning.test;
 
-import com.tirsen.nanning.AspectProxy;
-import com.tirsen.nanning.Factory;
+import com.tirsen.nanning.AspectClass;
+import com.tirsen.nanning.InterfaceDefinition;
 import junit.framework.TestCase;
 
 /**
  * TODO document PerformanceTest
  *
- * <!-- $Id: PerformanceTest.java,v 1.1 2002-10-21 21:07:31 tirsen Exp $ -->
+ * <!-- $Id: PerformanceTest.java,v 1.2 2002-10-22 18:28:09 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class PerformanceTest extends TestCase
 {
-    public void testPerformanceAndMemory()
+    public void testPerformanceAndMemory() throws IllegalAccessException, InstantiationException
     {
-        Impl impl = new Impl();
+        AspectClass aspectClass = AspectClass.create();
+        InterfaceDefinition interfaceDefinition = new InterfaceDefinition();
+        interfaceDefinition.setInterface(Intf.class);
+        interfaceDefinition.addInterceptor(NullAspect.class);
+        interfaceDefinition.addInterceptor(NullAspect.class);
+        interfaceDefinition.setTarget(Impl.class);
+        aspectClass.addInterface(interfaceDefinition);
 
-        AspectProxy aspectProxy = AspectProxy.create(impl);
-
-        NullAspect aspect = new NullAspect();
-        aspectProxy.addAspect(aspect);
-        NullAspect aspect2 = new NullAspect();
-        aspectProxy.addAspect(aspect2);
-
-        Intf intf = (Intf) aspectProxy.createProxy(new Class[] { Intf.class });
+        Intf intf = (Intf) aspectClass.newInstance();
 
         int numberOfInvocations = 100000;
         double maxMemoryPerInvocation = 4;
@@ -90,11 +89,13 @@ public class PerformanceTest extends TestCase
         double maxMemoryPerInstance = memoryPerOrdinaryInstance * timesBiggerTolerance;
 
         // setup a factory
-        Factory.addFactory(Intf.class);
-        Factory factory = Factory.getFactory(Intf.class);
-        factory.setDefaultTarget(Impl.class);
-        factory.addAspect(NullAspect.class);
-        factory.addAspect(NullAspect.class);
+        AspectClass aspectClass = AspectClass.create();
+        InterfaceDefinition interfaceDefinition = new InterfaceDefinition();
+        interfaceDefinition.setInterface(Intf.class);
+        interfaceDefinition.addInterceptor(NullAspect.class);
+        interfaceDefinition.addInterceptor(NullAspect.class);
+        interfaceDefinition.setTarget(Impl.class);
+        aspectClass.addInterface(interfaceDefinition);
 
         // instantiates a bunch of aspect-instances
         ///CLOVER:OFF
@@ -103,7 +104,7 @@ public class PerformanceTest extends TestCase
 
         for (int i = 0; i < numberOfInstances; i++)
         {
-            factory.newInstance();
+            aspectClass.newInstance();
         }
 
         memory = startMemory - Runtime.getRuntime().freeMemory();
