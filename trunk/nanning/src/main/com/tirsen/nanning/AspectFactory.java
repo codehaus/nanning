@@ -8,7 +8,7 @@
 package com.tirsen.nanning;
 
 public interface AspectFactory {
-    Object newInstance(Object classIdentifier);
+    Object newInstance(Class classIdentifier);
 
-    Object newInstance(Object classIdentifier, Object[] targets);
+    Object newInstance(Class classIdentifier, Object[] targets);
 }

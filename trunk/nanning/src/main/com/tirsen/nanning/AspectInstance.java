@@ -34,10 +34,10 @@ import org.apache.commons.lang.builder.ToStringStyle;
         aspectInstance.addMixin(mixinInstance);
 </pre></code>
  *
- * <!-- $Id: AspectInstance.java,v 1.33 2003-04-14 17:32:54 tirsen Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.34 2003-04-16 13:56:00 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.33 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.34 $
  */
 public final class AspectInstance implements InvocationHandler, Externalizable {
     static final long serialVersionUID = 5462785783512485056L;
@@ -48,7 +48,7 @@ public final class AspectInstance implements InvocationHandler, Externalizable {
     /**
      * Used during serialization only.
      */
-    private Object serializeClassIdentifier;
+    private Class serializeClassIdentifier;
     /**
      * Used during serialization only.
      */
@@ -57,18 +57,18 @@ public final class AspectInstance implements InvocationHandler, Externalizable {
 
     private List mixinsList = new ArrayList();
     private AspectFactory aspectFactory;
-    private Object classIdentifier;
+    private Class classIdentifier;
     private List constructionInterceptors;
 
     public AspectInstance() {
     }
 
-    public AspectInstance(AspectFactory aspectFactory, Object classIdentifier) {
+    public AspectInstance(AspectFactory aspectFactory, Class classIdentifier) {
         this.aspectFactory = aspectFactory;
         this.classIdentifier = classIdentifier;
     }
 
-    public AspectInstance(Object classIdentifier) {
+    public AspectInstance(Class classIdentifier) {
         this.classIdentifier = classIdentifier;
     }
 
@@ -145,6 +145,10 @@ public final class AspectInstance implements InvocationHandler, Externalizable {
         return mixinInstance;
     }
 
+    public boolean hasMixinForInterface(Class interfaceClass) {
+        return mixins.containsKey(interfaceClass);
+    }
+
     public void setTarget(Class interfaceClass, Object target) {
         MixinInstance mixinInstance = getMixinForInterface(interfaceClass);
         mixinInstance.setTarget(target);
@@ -174,11 +178,11 @@ public final class AspectInstance implements InvocationHandler, Externalizable {
     }
 
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        serializeClassIdentifier = in.readObject();
+        serializeClassIdentifier = (Class) in.readObject();
         serializeTargets = (Object[]) in.readObject();
     }
 
-    public Object getClassIdentifier() {
+    public Class getClassIdentifier() {
         return classIdentifier;
     }
 

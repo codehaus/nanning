@@ -8,6 +8,7 @@
 package com.tirsen.nanning.definition;
 
 import com.tirsen.nanning.MixinInstance;
+import com.tirsen.nanning.AspectInstance;
 import com.tirsen.nanning.attribute.Attributes;
 import com.tirsen.nanning.config.Advise;
 import com.tirsen.nanning.config.Pointcut;
@@ -24,6 +25,13 @@ public class AttributePointcut extends Pointcut {
     public AttributePointcut(String attribute, Advise advise) {
         this(attribute);
         addAdvise(advise);
+    }
+
+    protected boolean adviseInstance(AspectInstance aspectInstance) {
+        if (aspectInstance.getClassIdentifier() instanceof Class) {
+            return Attributes.hasInheritedAttribute((Class) aspectInstance.getClassIdentifier(), attribute);
+        }
+        return super.adviseInstance(aspectInstance);
     }
 
     protected boolean adviseMixin(MixinInstance mixinInstance) {
