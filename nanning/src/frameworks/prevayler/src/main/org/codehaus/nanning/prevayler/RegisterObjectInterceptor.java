@@ -2,7 +2,6 @@ package org.codehaus.nanning.prevayler;
 
 import org.codehaus.nanning.ConstructionInterceptor;
 import org.codehaus.nanning.ConstructionInvocation;
-import org.codehaus.nanning.attribute.Attributes;
 import org.codehaus.nanning.prevayler.CurrentPrevayler;
 import org.codehaus.nanning.prevayler.IdentifyingSystem;
 

@@ -31,4 +31,8 @@ public class IdentifiableImpl implements Identifiable, Serializable {
         logger.debug("Assigned id " + objectID + " to object " + Aspects.getThis());
         this.objectID = objectID;
     }
+
+    public void clearObjectID() {
+        objectID = -1;
+    }
 }
