@@ -52,6 +52,10 @@
 <!--        <copy file="${basedir}/docs/CHANGES" todir="${maven.dist.bin.assembly.dir}"/>-->
 <!--    </postGoal>-->
 
+    <goal name="damagecontrol">
+      <attainGoal name="jar:install" />
+    </goal>
+
     <goal name="nanning:frameworks-docs">
 
         <attainGoal name="jar:install"/>
