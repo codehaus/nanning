@@ -6,63 +6,64 @@
  */
 package com.tirsen.nanning;
 
-import java.io.*;
+import com.tirsen.nanning.definition.AspectRepository;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Transformer;
+
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-
-import org.apache.commons.lang.builder.ToStringBuilder;
+import java.lang.reflect.Proxy;
+import java.util.*;
 
 /**
  * TODO document AspectInstance
  *
- * <!-- $Id: AspectInstance.java,v 1.19 2002-12-12 08:27:57 lecando Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.20 2003-01-12 13:25:40 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.19 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.20 $
  */
-class AspectInstance implements InvocationHandler, Externalizable {
-    private static final Method OBJECT_EQUALS_METHOD;
-
+public class AspectInstance implements InvocationHandler, Externalizable {
     private Object proxy;
-    private SideAspectInstance[] sideAspectInstances;
-    private AspectClass aspectClass;
+    private Map mixins = new HashMap();
 
     /**
      * Used during serialization only.
      */
-    private Class serializeInterfaceClass;
+    private Object serializeClassIdentifier;
     /**
      * Used during serialization only.
      */
     private Object[] serializeTargets;
 
 
-    static {
-        try {
-            OBJECT_EQUALS_METHOD = Object.class.getMethod("equals", new Class[]{Object.class});
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     static ThreadLocal currentThis = new ThreadLocal();
+    private List mixinsList = new ArrayList();
+    private AspectFactory aspectFactory;
+    private Object classIdentifier;
 
     public AspectInstance() {
     }
 
-    public AspectInstance(AspectClass aspectClass, SideAspectInstance[] sideAspectInstances) {
-        this.sideAspectInstances = sideAspectInstances;
-        this.aspectClass = aspectClass;
+    public AspectInstance(AspectRepository aspectRepository, Object classIdentifier) {
+        this.aspectFactory = aspectRepository;
+        this.classIdentifier = classIdentifier;
     }
 
-    Object init(Object proxy) {
-        return this.proxy = invokeConstructor(proxy);
-    }
-
-    private Object invokeConstructor(Object proxy) {
-        for (int i = 0; i < sideAspectInstances.length; i++) {
-            SideAspectInstance sideAspectInstance = sideAspectInstances[i];
-            proxy = sideAspectInstance.invokeConstructor(proxy);
+    public Object getProxy() {
+        if(proxy == null) {
+            Set interfaces = new HashSet(CollectionUtils.collect(mixins.values(), new Transformer() {
+                public Object transform(Object o) {
+                    return ((MixinInstance) o).getInterfaceClass();
+                }
+            }));
+            proxy = Proxy.newProxyInstance(getClass().getClassLoader(),
+                    (Class[]) interfaces.toArray(new Class[0]),
+                    this);
         }
         return proxy;
     }
@@ -74,79 +75,139 @@ class AspectInstance implements InvocationHandler, Externalizable {
             Object prevThis = currentThis.get();
             try {
                 currentThis.set(proxy);
-                SideAspectInstance interfaceInstance = getSideAspectInstance(interfaceClass);
-                // if it wasn't defined by any of the specified interfaces let's assume it's the default one (ie. index 0)
-
+                MixinInstance interfaceInstance = getMixinForInterface(interfaceClass);
                 return interfaceInstance.invokeMethod(proxy, method, args);
             } finally {
                 currentThis.set(prevThis);
             }
         } else {
-            if (OBJECT_EQUALS_METHOD.equals(method) && Aspects.isAspectObject(args[0])) {
-                args[0] = Aspects.getClassTarget(args[0]);
+            // for methods defined on Object:
+            // change all proxies into AspectInstances and the call this aspect instance
+            if(args != null) {
+                for (int i = 0; i < args.length; i++) {
+                    Object arg = args[i];
+                    if(Aspects.isAspectObject(arg)) {
+                        args[i] = Aspects.getAspectInstance(arg);
+                    }
+                }
             }
-            // main-target take care of all calls to Object (such as equals, toString and so on)
-            return method.invoke(sideAspectInstances[0].getTarget(), args);
+            return method.invoke(this, args);
         }
     }
 
     Object getTarget(Class interfaceClass) {
-        SideAspectInstance interfaceInstance = getSideAspectInstance(interfaceClass);
+        MixinInstance interfaceInstance = getMixinForInterface(interfaceClass);
         return interfaceInstance.getTarget();
     }
 
-    Interceptor[] getClassInterceptors() {
-        // the actual class-specific interface-instance is at the first position
-        return sideAspectInstances[0].getAllInterceptors();
-    }
-
-    Interceptor[] getInterceptors(Class interfaceClass) {
-        SideAspectInstance interfaceInstance = getSideAspectInstance(interfaceClass);
+    Set getInterceptors(Class interfaceClass) {
+        MixinInstance interfaceInstance = getMixinForInterface(interfaceClass);
         return interfaceInstance.getAllInterceptors();
     }
 
-    private SideAspectInstance getSideAspectInstance(Class interfaceClass) {
-        return sideAspectInstances[aspectClass.getSideAspectIndexForInterface(interfaceClass)];
+    private MixinInstance getMixinForInterface(Class interfaceClass) {
+        MixinInstance mixinInstance = (MixinInstance) mixins.get(interfaceClass);
+        assert mixinInstance != null : "there is not mixin for interface " + interfaceClass;
+        return mixinInstance;
     }
 
     public void setTarget(Class interfaceClass, Object target) {
-        SideAspectInstance sideAspectInstance = getSideAspectInstance(interfaceClass);
-        sideAspectInstance.setTarget(target);
-    }
-
-    public String toString() {
-        SideAspectInstance defaultInterfaceInstance = sideAspectInstances[0];
-        return new ToStringBuilder(this)
-                .append("interface", defaultInterfaceInstance.getInterfaceClass().getName())
-                .append("target", defaultInterfaceInstance.getTarget())
-                .toString();
-    }
-
-    public AspectClass getAspectClass() {
-        return aspectClass;
+        MixinInstance mixinInstance = getMixinForInterface(interfaceClass);
+        mixinInstance.setTarget(target);
     }
 
     public Object[] getTargets() {
-        Object[] targets = new Object[sideAspectInstances.length];
-        for (int i = 0; i < sideAspectInstances.length; i++) {
-            SideAspectInstance sideAspectInstance = sideAspectInstances[i];
-            targets[i] = sideAspectInstance.getTarget();
-        }
-        return targets;
+        return CollectionUtils.collect(mixinsList, new Transformer() {
+            public Object transform(Object o) {
+                return ((MixinInstance) o).getTarget();
+            }
+        }).toArray();
     }
 
     private Object readResolve() {
         return Aspects.getAspectInstance(
-                Aspects.getCurrentAspectRepository().newInstance(serializeInterfaceClass, serializeTargets));
+                Aspects.getCurrentAspectFactory().newInstance(serializeClassIdentifier, serializeTargets));
     }
 
     public void writeExternal(ObjectOutput out) throws IOException {
-        out.writeObject(sideAspectInstances[0].getInterfaceClass());
+        out.writeObject(getClassIdentifier());
         out.writeObject(getTargets());
     }
 
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        serializeInterfaceClass = (Class) in.readObject();
+        serializeClassIdentifier = in.readObject();
         serializeTargets = (Object[]) in.readObject();
+    }
+
+    public Object getClassIdentifier() {
+        return classIdentifier;
+    }
+
+    public void addMixin(MixinInstance mixinInstance) {
+        assert proxy == null : "Can't add mixins when proxy has been created.";
+        Class interfaceClass = mixinInstance.getInterfaceClass();
+        bindMixinToInterface(interfaceClass, mixinInstance);
+        mixinsList.add(mixinInstance);
+    }
+
+    /**
+     * Binds the mixin to the specified interface and all of it's superclasses, overrides any other bindings
+     * to that interface (and superclasses).
+     * @param interfaceClass
+     * @param mixinInstance
+     */
+    private void bindMixinToInterface(Class interfaceClass, MixinInstance mixinInstance) {
+        mixins.put(interfaceClass, mixinInstance);
+        Class superclass = interfaceClass.getSuperclass();
+        if (superclass != null) {
+            bindMixinToInterface(superclass, mixinInstance);
+        }
+        Class[] interfaces = interfaceClass.getInterfaces();
+        if (interfaces != null) {
+            for (int i = 0; i < interfaces.length; i++) {
+                Class anInterface = interfaces[i];
+                bindMixinToInterface(anInterface, mixinInstance);
+            }
+        }
+    }
+
+    public Set getAllInterceptors() {
+        Set result = new HashSet();
+        for (Iterator mixinIterator = mixins.values().iterator(); mixinIterator.hasNext();) {
+            MixinInstance mixinInstance = (MixinInstance) mixinIterator.next();
+            Set allInterceptors = mixinInstance.getAllInterceptors();
+            for (Iterator interceptorIterator = allInterceptors.iterator(); interceptorIterator.hasNext();) {
+                Interceptor interceptor = (Interceptor) interceptorIterator.next();
+                result.add(interceptor);
+            }
+        }
+        return result;
+    }
+
+    public List getInterceptorsForMethod(Method method) {
+        return getMixinForInterface(method.getDeclaringClass()).getInterceptorsForMethod(method);
+    }
+
+    public AspectFactory getAspectFactory() {
+        return aspectFactory;
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AspectInstance)) return false;
+
+        final AspectInstance aspectInstance = (AspectInstance) o;
+
+        if (classIdentifier != null ? !classIdentifier.equals(aspectInstance.classIdentifier) : aspectInstance.classIdentifier != null) return false;
+        if (!mixinsList.equals(aspectInstance.mixinsList)) return false;
+
+        return true;
+    }
+
+    public int hashCode() {
+        int result;
+        result = mixinsList.hashCode();
+        result = 29 * result + (classIdentifier != null ? classIdentifier.hashCode() : 0);
+        return result;
     }
 }

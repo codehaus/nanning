@@ -1,10 +1,10 @@
 package com.tirsen.nanning.samples;
 
 import junit.framework.TestCase;
-import com.tirsen.nanning.AspectClass;
-import com.tirsen.nanning.AttributesCompiler;
-import com.tirsen.nanning.Attributes;
-import com.tirsen.nanning.AttributesTest;
+import com.tirsen.nanning.definition.AspectClass;
+import com.tirsen.nanning.attribute.AttributesCompiler;
+import com.tirsen.nanning.attribute.Attributes;
+import com.tirsen.nanning.attribute.AttributesTest;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -13,7 +13,7 @@ import java.net.MalformedURLException;
  * TODO document ContractInterceptorTest
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class ContractInterceptorTest extends TestCase {
     public void test() throws MalformedURLException {

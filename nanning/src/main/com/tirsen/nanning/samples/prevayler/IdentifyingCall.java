@@ -1,8 +1,9 @@
 package com.tirsen.nanning.samples.prevayler;
 
 import com.tirsen.nanning.Invocation;
-import com.tirsen.nanning.Attributes;
+import com.tirsen.nanning.attribute.Attributes;
 import com.tirsen.nanning.Aspects;
+import com.tirsen.nanning.definition.AspectRepository;
 
 public class IdentifyingCall extends Call {
     public IdentifyingCall(Invocation invocation) {
@@ -68,7 +69,7 @@ public class IdentifyingCall extends Call {
             return null;
         }
         if (object instanceof Identifiable) {
-            return new Identity(object.getClass(), new Long(CurrentPrevayler.getSystem().getOID(object)));
+            return new Identity(object.getClass(), new Long(CurrentPrevayler.getSystem().getObjectID(object)));
         }
 
         throw new IllegalArgumentException("Can't identify " + object);
@@ -76,7 +77,7 @@ public class IdentifyingCall extends Call {
 
     protected Object resolve(Identity identity) {
         if (Identifiable.class.isAssignableFrom(identity.getObjectClass())) {
-            return CurrentPrevayler.getSystem().getObjectWithID(((Integer) identity.getIdentifier()).intValue());
+            return CurrentPrevayler.getSystem().getObjectWithID(((Long) identity.getIdentifier()).intValue());
         }
         throw new IllegalArgumentException("Can't resolve " + identity.getObjectClass());
     }
@@ -87,7 +88,7 @@ public class IdentifyingCall extends Call {
 
     public Object getTarget() {
         if (target == null) {
-            return Aspects.getCurrentAspectRepository().newInstance(getInterfaceClass());
+            return Aspects.getCurrentAspectFactory().newInstance(getClassIdentifier());
         } else {
             return resolve((Identity) target);
         }

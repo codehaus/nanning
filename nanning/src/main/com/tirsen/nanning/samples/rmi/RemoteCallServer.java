@@ -1,15 +1,13 @@
 package com.tirsen.nanning.samples.rmi;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.lang.reflect.Method;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 
-import com.tirsen.nanning.AspectRepository;
 import com.tirsen.nanning.Aspects;
+import com.tirsen.nanning.AspectFactory;
 import com.tirsen.nanning.samples.prevayler.Call;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -19,7 +17,7 @@ import org.apache.commons.threadpool.ThreadPool;
 public class RemoteCallServer {
     private static final Log logger = LogFactory.getLog(RemoteCallServer.class);
 
-    private AspectRepository aspectRepository;
+    private AspectFactory aspectRepository;
     private int port;
     private ServerSocket serverSocket;
     private ThreadPool threadPool;
@@ -61,17 +59,21 @@ public class RemoteCallServer {
 
     private void processCall(Socket socket) {
         try {
-            Aspects.setContextAspectRepository(aspectRepository);
+            Aspects.setContextAspectFactory(aspectRepository);
 
-            ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
+            OutputStream outputStream = socket.getOutputStream();
+            InputStream inputStream = socket.getInputStream();
+
+            ObjectInputStream input = new ObjectInputStream(inputStream);
             Call call = (Call) input.readObject();
             Method method = call.getMethod();
 
-            Object service = aspectRepository.newInstance(call.getInterfaceClass());
+            Object service = aspectRepository.newInstance(call.getClassIdentifier());
             Object result = method.invoke(service, call.getArgs());
 
-            ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+            ObjectOutputStream output = new ObjectOutputStream(outputStream);
             output.writeObject(result);
+            output.close();
         } catch (Exception e) {
             logger.error("error executing call", e);
         } finally {
@@ -83,7 +85,7 @@ public class RemoteCallServer {
         }
     }
 
-    public void setAspectRepository(AspectRepository aspectRepository) {
+    public void setAspectRepository(AspectFactory aspectRepository) {
         this.aspectRepository = aspectRepository;
     }
 

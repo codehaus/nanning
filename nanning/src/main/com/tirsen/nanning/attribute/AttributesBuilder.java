@@ -1,5 +1,5 @@
 
-package com.tirsen.nanning;
+package com.tirsen.nanning.attribute;
 
 import java.util.Properties;
 import java.util.Iterator;
@@ -19,7 +19,7 @@ import com.thoughtworks.qdox.parser.structs.MethodDef;
  * to parse another file, the reset() method must be called.</p>
  *
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.1 $
  */
 public class AttributesBuilder implements Builder {
 

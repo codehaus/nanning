@@ -5,13 +5,16 @@ import junit.framework.TestCase;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tirsen.nanning.definition.AspectClass;
+import com.tirsen.nanning.definition.InterceptorDefinition;
+
 /**
  * TODO document AttributesTest
  *
- * <!-- $Id: AttributeFilterTest.java,v 1.1 2003-01-06 14:32:27 tirsen Exp $ -->
+ * <!-- $Id: AttributeFilterTest.java,v 1.2 2003-01-12 13:25:40 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class AttributeFilterTest extends TestCase {
     private static List expectedMethods;

@@ -19,10 +19,10 @@ public class InvokeCommand implements Command {
     }
 
     public Serializable execute(PrevalentSystem system) throws Exception {
-        Object unmarshalledTarget = call.getTarget();
-        Object[] unmarshalledArgs = call.getArgs();
+        Object target = call.getTarget();
+        Object[] args = call.getArgs();
         Method method = call.getMethod();
-        return execute(system, method, unmarshalledTarget, unmarshalledArgs);
+        return execute(system, method, target, args);
     }
 
     protected Serializable execute(

@@ -5,12 +5,16 @@ import java.io.IOException;
 import java.util.List;
 
 import com.tirsen.nanning.*;
+import com.tirsen.nanning.attribute.AttributesTest;
+import com.tirsen.nanning.definition.AspectClass;
+import com.tirsen.nanning.definition.AspectRepository;
+import com.tirsen.nanning.definition.InterceptorDefinition;
 import junit.framework.TestCase;
 import org.prevayler.implementation.SnapshotPrevayler;
 
 public class PrevaylerTest extends TestCase {
 
-    private AspectRepository aspectRepository;
+    private AspectFactory aspectRepository;
 
     private File prevaylerDir;
 
@@ -31,7 +35,7 @@ public class PrevaylerTest extends TestCase {
         aspectRepository1.defineClass(aspectClass);
         aspectRepository = aspectRepository1;
 
-        Aspects.setContextAspectRepository(aspectRepository);
+        Aspects.setContextAspectFactory(aspectRepository);
 
         prevaylerDir = File.createTempFile("test", "");
         prevaylerDir.delete();

@@ -8,15 +8,15 @@ package com.tirsen.nanning;
 
 import com.tirsen.nanning.MethodInterceptor;
 import com.tirsen.nanning.Invocation;
-import com.tirsen.nanning.SingletonInterceptor;
+import com.tirsen.nanning.definition.SingletonInterceptor;
 
 /**
  * TODO document NullInterceptor
  *
- * <!-- $Id: NullInterceptor.java,v 1.2 2002-12-03 17:21:01 lecando Exp $ -->
+ * <!-- $Id: NullInterceptor.java,v 1.3 2003-01-12 13:25:40 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.2 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.3 $
  */
 public class NullInterceptor implements MethodInterceptor, SingletonInterceptor
 {

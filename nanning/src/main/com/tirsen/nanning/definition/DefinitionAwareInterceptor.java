@@ -4,7 +4,10 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
-package com.tirsen.nanning;
+package com.tirsen.nanning.definition;
+
+import com.tirsen.nanning.definition.InterceptorDefinition;
+import com.tirsen.nanning.MethodInterceptor;
 
 /**
  * if your interceptor needs access to its definition then make sure you extend this class or one of its
@@ -12,10 +15,10 @@ package com.tirsen.nanning;
  *
  * TODO document DefinitionAwareInterceptor
  *
- * <!-- $Id: DefinitionAwareInterceptor.java,v 1.2 2002-12-03 17:04:50 lecando Exp $ -->
+ * <!-- $Id: DefinitionAwareInterceptor.java,v 1.1 2003-01-12 13:25:40 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.2 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.1 $
  */
 
 public interface DefinitionAwareInterceptor extends MethodInterceptor {

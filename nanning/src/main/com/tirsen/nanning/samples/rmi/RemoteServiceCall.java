@@ -2,6 +2,7 @@ package com.tirsen.nanning.samples.rmi;
 
 import com.tirsen.nanning.Aspects;
 import com.tirsen.nanning.Invocation;
+import com.tirsen.nanning.definition.AspectRepository;
 import com.tirsen.nanning.samples.prevayler.Call;
 
 public class RemoteServiceCall extends Call {
@@ -11,6 +12,6 @@ public class RemoteServiceCall extends Call {
     }
 
     public Object getTarget() {
-        return Aspects.getCurrentAspectRepository().newInstance(getInterfaceClass());
+        return Aspects.getCurrentAspectFactory().newInstance(getClassIdentifier());
     }
 }

@@ -1,6 +1,8 @@
 package com.tirsen.nanning;
 
 import junit.framework.TestCase;
+import com.tirsen.nanning.definition.AspectClass;
+import com.tirsen.nanning.definition.AspectDefinition;
 
 public class InheritanceTest extends TestCase {
     public static interface InheritedIntf extends Intf

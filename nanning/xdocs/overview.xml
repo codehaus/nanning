@@ -19,27 +19,18 @@
                 </p>
                 <ul>
                     <li>
-                        An aspected object consists of a set of mixins. A an interface, a target-object and a set of
-                        interceptors (advises on method-calls), these interceptors intercept calls on the interface on
-                        it's way to the target.
+                        An aspected object consists of a set of mixins. Every mixin is an interface, a target-object
+                        and a set of interceptors (advises on method-calls), these interceptors intercept calls on the
+                        interface on it's way to the target.
                     </li>
                     <li>
-                        An aspect consists of an interface, a target-object and a set of interceptors
-                        (advises on method-calls), these interceptors intercept calls on the interface on
-                        it's way to the target.
+                        An aspected object is used by creating a Proxy with the Reflection API. This proxy will
+                        implement all the interfaces of all the mixins by invoking all the interceptors for the called
+                        method and finally calling the proper implementation of the target object.
                     </li>
                     <li>
-                        An aspect-class consists of a set of aspects and can in it's own right have an
-                        interface, target and interceptors. The interceptors of the class will always be
-                        executed before <em>all</em> other interceptors, even the interceptors of the other
-                        aspects of the class.
-                    </li>
-                    <li>
-                        When instantiated all these aspects are put together using a Proxy in the
-                        Reflection API.
-                    </li>
-                    <li>
-                        Attributes (Javadoc-like tags) can also be added to classes, fields and methods.
+                        Attributes (as Javadoc-like tags in the source code or as an xml-document with the same
+                        name as the class) can also be added to classes, fields and methods.
                         These attributes are accesible at runtime.
                     </li>
                     <li>
@@ -55,7 +46,7 @@
                         Method-selectors that selects what methods an interceptor should intercept.
                     </li>
                     <li>
-                        Super-simple implementation. Really! Anybody can do it! Even me!
+                        Super-simple implementation. Really! Anybody can do it!
                     </li>
                 </ul>
             </subsection>
@@ -82,7 +73,7 @@
                     </li>
                     <li>
                         You'll get indeterministic effects if your interface has a method with same name as
-                        a method of another interface for the aspect-class. (Currently considering
+                        a method of another interface for the aspected object. (Currently considering
                         disallowing this altogether.)
                     </li>
                 </ul>
@@ -94,7 +85,17 @@
                 </p>
                 <ul>
                     <li>
-                        No support for inheriting interceptors by inheriting interfaces.
+                        Functionality to build aspected objects via the same semantics as AspectJ. That is via
+                        join-points, pointcuts and advises. It is being considered.
+                    </li>
+                    <li>
+                        Because of this an aspect isn't completely modular, for example the state introduced to an
+                        aspected object isn't located in the same module as the interceptor that will act on that state.
+                        Consider for example an Access Control List-aspect. The fields containing the access control
+                        entries will be in a mixin while the code that actually enforces the access control will be in
+                        an interceptor. If Nanning supported more AspectJ-level semantics this problem could be remedied
+                        and both mixins and interceptors along with the pointcuts describing where these should be
+                        advised could be tied together via an aspect (and even placed in the same class).
                     </li>
                     <li>
                         A mega-cool logo.

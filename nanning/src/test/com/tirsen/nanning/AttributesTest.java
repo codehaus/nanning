@@ -6,25 +6,25 @@
  */
 package com.tirsen.nanning;
 
+import com.tirsen.nanning.attribute.Attributes;
+import com.tirsen.nanning.attribute.AttributesCompiler;
 import junit.framework.TestCase;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.lang.reflect.Field;
-import java.net.URL;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
+import java.net.URL;
 
-import com.tirsen.nanning.AttributesCompiler;
-import com.tirsen.nanning.Attributes;
 
 /**
  * TODO document AttributesTest
  *
- * <!-- $Id: AttributesTest.java,v 1.4 2002-12-08 12:57:45 tirsen Exp $ -->
+ * <!-- $Id: AttributesTest.java,v 1.5 2003-01-12 13:25:40 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class AttributesTest extends TestCase
 {

@@ -11,13 +11,17 @@ import junit.framework.TestCase;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tirsen.nanning.definition.AspectClass;
+import com.tirsen.nanning.definition.InterceptorDefinition;
+import com.tirsen.nanning.definition.BasicInterceptor;
+
 /**
  * TODO document MethodFilterTest
  *
- * <!-- $Id: MethodFilterTest.java,v 1.1 2002-11-30 18:23:56 tirsen Exp $ -->
+ * <!-- $Id: MethodFilterTest.java,v 1.2 2003-01-12 13:25:40 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 
 public class MethodFilterTest extends TestCase {

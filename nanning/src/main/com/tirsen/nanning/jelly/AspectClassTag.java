@@ -8,15 +8,15 @@ package com.tirsen.nanning.jelly;
 
 import org.apache.commons.jelly.XMLOutput;
 import org.apache.commons.jelly.TagSupport;
-import com.tirsen.nanning.AspectClass;
+import com.tirsen.nanning.definition.AspectClass;
 
 /**
  * TODO document AspectClassTag
  *
- * <!-- $Id: AspectClassTag.java,v 1.2 2002-12-03 13:55:24 lecando Exp $ -->
+ * <!-- $Id: AspectClassTag.java,v 1.3 2003-01-12 13:25:40 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.2 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.3 $
  */
 public class AspectClassTag extends AspectTag
 {

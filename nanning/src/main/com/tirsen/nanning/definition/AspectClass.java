@@ -4,7 +4,11 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
-package com.tirsen.nanning;
+package com.tirsen.nanning.definition;
+
+import com.tirsen.nanning.AspectInstance;
+import com.tirsen.nanning.MixinInstance;
+import com.tirsen.nanning.AspectException;
 
 import java.util.*;
 import java.lang.reflect.Proxy;
@@ -12,10 +16,10 @@ import java.lang.reflect.Proxy;
 /**
  * The definition of an aspected object, specifies interfaces, interceptors and target-objects.
  *
- * <!-- $Id: AspectClass.java,v 1.18 2002-12-11 15:11:54 lecando Exp $ -->
+ * <!-- $Id: AspectClass.java,v 1.1 2003-01-12 13:25:40 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.18 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.1 $
  */
 public class AspectClass {
     private final List aspectDefinitions = new ArrayList();
@@ -31,55 +35,63 @@ public class AspectClass {
      *
      * @return a new aspected object.
      *
-     * @throws AspectException
+     * @throws com.tirsen.nanning.AspectException
      */
     public Object newInstance() {
         return newInstance(null);
     }
 
     public Object newInstance(Object[] targets) {
-        SideAspectInstance[] sideAspectInstances = instantiateSideAspects(targets);
-
-        AspectInstance aspectInstance = new AspectInstance(this, sideAspectInstances);
-
-        List sideAspects = new ArrayList(sideAspectInstances.length);
-        for (int i = 0; i < sideAspectInstances.length; i++) {
-            SideAspectInstance interfaceInstance = sideAspectInstances[i];
-            sideAspects.add(interfaceInstance.getInterfaceClass());
+        AspectInstance aspectInstance = new AspectInstance(getAspectRepository(), getInterfaceClass());
+        try {
+            // iterate the rest of the definitions and add the interceptors of the first on to the rest
+            for (ListIterator iterator = aspectDefinitions.listIterator(); iterator.hasNext();) {
+                AspectDefinition mixinDefinition = (AspectDefinition) iterator.next();
+                MixinInstance mixinInstance = null;
+                if (targets != null) {
+                    mixinInstance =
+                            mixinDefinition.newInstance(targets[iterator.previousIndex()]);
+                } else {
+                    mixinInstance =
+                            mixinDefinition.createMixinInstance();
+                }
+                aspectInstance.addMixin(mixinInstance);
+            }
+        } catch (IllegalAccessException e) {
+            throw new AspectException(e);
+        } catch (InstantiationException e) {
+            throw new AspectException(e);
         }
 
-        Object proxy = instantiateProxy(aspectInstance, sideAspects);
+        Object proxy = aspectInstance.getProxy();
+        for (Iterator iterator = aspectDefinitions.iterator(); iterator.hasNext();) {
+            AspectDefinition mixinDefinition = (AspectDefinition) iterator.next();
+            proxy = mixinDefinition.initializeProxy(proxy);
+        }
 
-        return aspectInstance.init(proxy);
-    }
-
-    protected Object instantiateProxy(AspectInstance aspectInstance, List interfaces) {
-        Object proxy = Proxy.newProxyInstance(getClass().getClassLoader(),
-                                              (Class[]) interfaces.toArray(new Class[0]),
-                                              aspectInstance);
         return proxy;
     }
 
-    SideAspectInstance[] instantiateSideAspects(Object[] targets) {
-        SideAspectInstance[] sideAspectInstances;
+    MixinInstance[] instantiateSideAspects(Object[] targets) {
+        MixinInstance[] sideAspectInstances;
         try {
             List instances = new ArrayList(aspectDefinitions.size());
 
             // iterate the rest of the definitions and add the interceptors of the first on to the rest
             for (ListIterator iterator = aspectDefinitions.listIterator(); iterator.hasNext();) {
                 AspectDefinition aspectDefinition = (AspectDefinition) iterator.next();
-                SideAspectInstance aspectInstance = null;
+                MixinInstance aspectInstance = null;
                 if (targets != null) {
                     aspectInstance =
-                            aspectDefinition.createAspectInstance(targets[iterator.previousIndex()]);
+                            aspectDefinition.newInstance(targets[iterator.previousIndex()]);
                 } else {
                     aspectInstance =
-                            aspectDefinition.createAspectInstance();
+                            aspectDefinition.createMixinInstance();
                 }
                 instances.add(aspectInstance);
             }
 
-            sideAspectInstances = (SideAspectInstance[]) instances.toArray(new SideAspectInstance[0]);
+            sideAspectInstances = (MixinInstance[]) instances.toArray(new MixinInstance[0]);
         } catch (IllegalAccessException e) {
             throw new AspectException(e);
         } catch (InstantiationException e) {
@@ -164,5 +176,9 @@ public class AspectClass {
 
     public void setAspectRepository(AspectRepository aspectRepository) {
         this.aspectRepository = aspectRepository;
+    }
+
+    public List getAspectDefinitions() {
+        return aspectDefinitions;
     }
 }

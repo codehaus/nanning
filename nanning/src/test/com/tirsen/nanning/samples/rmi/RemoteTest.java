@@ -5,6 +5,10 @@ import java.io.IOException;
 import java.util.List;
 
 import com.tirsen.nanning.*;
+import com.tirsen.nanning.attribute.AttributesTest;
+import com.tirsen.nanning.definition.AspectClass;
+import com.tirsen.nanning.definition.AspectRepository;
+import com.tirsen.nanning.definition.InterceptorDefinition;
 import com.tirsen.nanning.samples.prevayler.*;
 import junit.framework.TestCase;
 import org.prevayler.implementation.SnapshotPrevayler;
@@ -64,7 +68,7 @@ public class RemoteTest extends TestCase {
         }
 
         // init server side
-        Aspects.setContextAspectRepository(serverAspectRepository);
+        Aspects.setContextAspectFactory(serverAspectRepository);
         CurrentPrevayler.setPrevayler(new SnapshotPrevayler(new MySystem(), prevaylerDir.getAbsolutePath()));
         RemoteCallServer remoteCallServer = new RemoteCallServer();
         remoteCallServer.setPort(port);

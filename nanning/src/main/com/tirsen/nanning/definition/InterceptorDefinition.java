@@ -4,7 +4,9 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
-package com.tirsen.nanning;
+package com.tirsen.nanning.definition;
+
+import com.tirsen.nanning.*;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -15,10 +17,10 @@ import java.lang.reflect.Method;
 /**
  * TODO document InterceptorDefinition
  *
- * <!-- $Id: InterceptorDefinition.java,v 1.10 2002-12-12 08:35:36 lecando Exp $ -->
+ * <!-- $Id: InterceptorDefinition.java,v 1.1 2003-01-12 13:25:40 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.10 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.1 $
  */
 public class InterceptorDefinition {
     private final Class interceptorClass;

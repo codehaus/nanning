@@ -16,17 +16,17 @@ import java.util.Map;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import com.tirsen.nanning.AspectRepository;
-import com.tirsen.nanning.AspectDefinition;
-import com.tirsen.nanning.AspectClass;
+import com.tirsen.nanning.definition.AspectDefinition;
+import com.tirsen.nanning.definition.AspectClass;
+import com.tirsen.nanning.AspectFactory;
 
 /**
  * TODO document AspectTagLibrary
  *
- * <!-- $Id: AspectTagLibrary.java,v 1.3 2002-11-03 19:05:33 tirsen Exp $ -->
+ * <!-- $Id: AspectTagLibrary.java,v 1.4 2003-01-12 13:25:40 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class AspectTagLibrary extends TagLibrary
 {
@@ -49,7 +49,7 @@ public class AspectTagLibrary extends TagLibrary
         for (Iterator iterator = variables.values().iterator(); iterator.hasNext();)
         {
             Object value = iterator.next();
-            if(value instanceof AspectRepository)
+            if(value instanceof AspectFactory)
             {
                 result.add(value);
             }

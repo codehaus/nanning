@@ -1,7 +1,7 @@
 package com.tirsen.nanning.samples.prevayler;
 
 import com.tirsen.nanning.Aspects;
-import com.tirsen.nanning.InterceptorDefinition;
+import com.tirsen.nanning.definition.InterceptorDefinition;
 import org.prevayler.Prevayler;
 
 /**
