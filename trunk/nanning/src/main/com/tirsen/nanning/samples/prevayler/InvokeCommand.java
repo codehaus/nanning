@@ -11,8 +11,6 @@ import javax.security.auth.Subject;
 import com.tirsen.nanning.Invocation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.prevayler.util.TransactionWithQuery;
-import org.prevayler.util.clock.ClockedTransaction;
 import org.prevayler.util.clock.ClockedSystem;
 
 public class InvokeCommand extends ClockedTransaction {
