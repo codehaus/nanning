@@ -29,4 +29,8 @@ public class CountingPrevayler extends FilterPrevayler {
     public int getNumberOfCommandsInLog() {
         return numberOfCommandsInLog;
     }
+    
+    public void resetNumberOfCommands() {
+        numberOfCommandsInLog = 0;
+    }
 }
