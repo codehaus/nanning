@@ -14,18 +14,20 @@ import java.lang.reflect.Proxy;
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: AspectInstanceTest.java,v 1.13 2003-06-09 17:40:42 tirsen Exp $ -->
+ * <!-- $Id: AspectInstanceTest.java,v 1.14 2003-06-22 16:26:26 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class AspectInstanceTest extends TestCase {
     private Method callMethod;
+    private Method mainCallMethod;
 
     protected void setUp() throws Exception {
         super.setUp();
 
         callMethod = Interface.class.getMethod("call", null);
+        mainCallMethod = TestObject.class.getMethod("mainCall", null);
     }
 
     public void testEmptyAspectInstance() {
@@ -400,7 +402,6 @@ public class AspectInstanceTest extends TestCase {
 
         public void reinitialize(AspectInstance aspectInstance) {
         }
-
     }
 
 //    public void testCallsOnJavaLangObject() {
@@ -410,5 +411,55 @@ public class AspectInstanceTest extends TestCase {
 //        aspectInstance2.addMixin(new MixinInstance(Intf.class, new ImplWithEquals("state")));
 //        assertEquals(aspectInstance1.getProxy(), aspectInstance2.getProxy());
 //    }
+
+    public static class TestObject {
+        boolean wasCalled;
+        Object thisDuringCall;
+
+        public void mainCall() {
+            wasCalled = true;
+            thisDuringCall = this;
+        }
+    }
+
+    public void testInterceptOrdinaryClass() {
+        MixinInstance mainMixin = new MixinInstance(TestObject.class);
+        assertTrue(mainMixin.isMainMixin());
+        MixinInstance mixin = new MixinInstance(Interface.class, Target.class);
+        assertFalse(mixin.isMainMixin());
+        AspectInstance instance = new AspectInstance();
+        instance.addMixin(mainMixin);
+        instance.addMixin(mixin);
+
+        Object proxy = instance.getProxy();
+        assertTrue(proxy instanceof TestObject);
+        final TestObject testObject = (TestObject) proxy;
+
+        // ordinary call
+        assertFalse(testObject.wasCalled);
+        testObject.mainCall();
+        assertTrue(testObject.wasCalled);
+        assertSame(testObject, testObject.thisDuringCall);
+        testObject.wasCalled = false;
+
+        // call with interceptor
+        assertEquals(0, mainMixin.getInterceptorsForMethod(mainCallMethod).size());
+        mainMixin.addInterceptor(new MethodInterceptor() {
+            public Object invoke(Invocation invocation) throws Throwable {
+                wasCalled = true;
+                assertSame(testObject, invocation.getProxy());
+                assertSame(testObject, invocation.getTarget());
+                return invocation.invokeNext();
+            }
+        });
+        assertEquals(1, mainMixin.getInterceptorsForMethod(mainCallMethod).size());
+
+        assertFalse(wasCalled);
+        assertFalse(testObject.wasCalled);
+        testObject.mainCall();
+        assertTrue(wasCalled);
+        assertTrue(testObject.wasCalled);
+    }
+
 
 }

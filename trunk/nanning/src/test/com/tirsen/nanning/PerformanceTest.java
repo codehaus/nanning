@@ -16,10 +16,10 @@ import java.lang.reflect.Method;
 /**
  * TODO document PerformanceTest
  *
- * <!-- $Id: PerformanceTest.java,v 1.19 2003-05-11 13:40:52 tirsen Exp $ -->
+ * <!-- $Id: PerformanceTest.java,v 1.20 2003-06-22 16:26:26 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public class PerformanceTest extends AbstractAttributesTest {
     public void testInvocation() throws IllegalAccessException, InstantiationException {
@@ -46,6 +46,7 @@ public class PerformanceTest extends AbstractAttributesTest {
         MixinInstance mixin = new MixinInstance(Intf.class, new IntfImpl());
         mixin.addInterceptor(new NullInterceptor());
         mixin.addInterceptor(new NullInterceptor());
+//        instance.useCglib(true);
         instance.addMixin(mixin);
 
         intf = (Intf) instance.getProxy();

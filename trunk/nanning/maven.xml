@@ -93,7 +93,7 @@
 
     </goal>
 
-    <postGoal name="java:jar">
+    <postGoal name="jar:jar">
 
         <attainGoal name="nanning:frameworks-build" />
 

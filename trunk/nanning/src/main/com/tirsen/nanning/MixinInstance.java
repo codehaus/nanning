@@ -6,6 +6,8 @@
  */
 package com.tirsen.nanning;
 
+import net.sf.cglib.MethodProxy;
+
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -15,12 +17,12 @@ import java.util.*;
 /**
  * TODO document AspectDefinition
  *
- * <!-- $Id: MixinInstance.java,v 1.15 2003-06-11 15:13:32 lecando Exp $ -->
+ * <!-- $Id: MixinInstance.java,v 1.16 2003-06-22 16:26:26 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.15 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.16 $
  */
-public final class MixinInstance implements Serializable {
+public class MixinInstance implements Serializable {
     static final long serialVersionUID = 7386027290257587762L;
 
     private Class interfaceClass;
@@ -34,6 +36,10 @@ public final class MixinInstance implements Serializable {
     public MixinInstance(Class interfaceClass, Object target) {
         setInterfaceClass(interfaceClass);
         setTarget(target);
+    }
+
+    public MixinInstance(Class aClass) {
+        setInterfaceClass(aClass);
     }
 
     public void setInterfaceClass(Class interfaceClass) {
@@ -78,16 +84,18 @@ public final class MixinInstance implements Serializable {
         return interceptors;
     }
 
-    class InvocationImpl implements Invocation {
-        private Object proxy;
-        private final Method method;
-        private final Object[] args;
-        private ListIterator interceptors;
+    protected class InvocationImpl implements Invocation {
+        protected Object proxy;
+        protected final Method method;
+        protected final Object[] args;
+        private MethodProxy methodProxy;
+        protected ListIterator interceptors;
 
-        public InvocationImpl(Object proxy, Method method, Object[] args) {
+        public InvocationImpl(Object proxy, Method method, Object[] args, MethodProxy methodProxy) {
             this.proxy = proxy;
             this.method = method;
             this.args = args;
+            this.methodProxy = methodProxy;
             interceptors = getInterceptorsForMethod(method).listIterator();
         }
 
@@ -96,7 +104,11 @@ public final class MixinInstance implements Serializable {
                 return ((MethodInterceptor) interceptors.next()).invoke(this);
             } else {
                 try {
-                    return method.invoke(getTarget(), args);
+                    if (methodProxy == null) {
+                        return method.invoke(getTarget(), args);
+                    } else {
+                        return methodProxy.invokeSuper(proxy, args);
+                    }
                 } catch (InvocationTargetException e) {
                     throwRealException(e);
                     throw e;
@@ -132,7 +144,7 @@ public final class MixinInstance implements Serializable {
         }
 
         public Object getTarget() {
-            return MixinInstance.this.getTarget();
+            return MixinInstance.this.target;
         }
 
         public void setTarget(Object target) {
@@ -160,12 +172,21 @@ public final class MixinInstance implements Serializable {
         }
     }
 
-    public Object invokeMethod(Object proxy,
-                               Method method,
-                               Object[] args)
+    public Class getMainClass() {
+        return getInterfaceClass();
+    }
+
+    public Object invokeMethod(Object proxy, Method method, Object[] args, MethodProxy methodProxy)
             throws Throwable {
-        Invocation invocation = new InvocationImpl(proxy, method, args);
-        return invocation.invokeNext();
+        assert isMainMixin() ? methodProxy != null : true : "sorry, I need to be invoked with a MethodProxy";
+
+        Invocation invocation = new InvocationImpl(proxy, method, args, methodProxy);
+        Object returnValue = invocation.invokeNext();
+        return returnValue;
+    }
+
+    public boolean isMainMixin() {
+        return !getInterfaceClass().isInterface();
     }
 
     /**
