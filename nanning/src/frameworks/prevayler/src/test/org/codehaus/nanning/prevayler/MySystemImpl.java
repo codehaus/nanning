@@ -3,6 +3,7 @@ package org.codehaus.nanning.prevayler;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.codehaus.nanning.Aspects;
 import org.codehaus.nanning.prevayler.MyObject;
@@ -11,6 +12,7 @@ import org.codehaus.nanning.prevayler.MySystem;
 public class MySystemImpl extends BasicIdentifyingSystem implements MySystem, Serializable {
     private MyObject myObject;
     private String simpleString;
+    private List objects = new ArrayList();
 
     public MyObject createMyObject() {
         return (MyObject) Aspects.getCurrentAspectFactory().newInstance(MyObject.class);
@@ -40,6 +42,10 @@ public class MySystemImpl extends BasicIdentifyingSystem implements MySystem, Se
 
     public String getSimpleString() {
         return simpleString;
+    }
+
+    public void add(Object o) {
+        objects.add(o);
     }
 
     public void setSimpleString(String simpleString) {
