@@ -1,0 +1,52 @@
+Create a proxy behind an interface that actually calls the implementation of the interface. (done)
+
+Make the proxy a set of handlers in a list that calls each other. (done)
+
+Performance-tests. Implemented via time-boxed unit-tests.
+
+Access to the actual object and the call-stack from the aspects.
+
+Implement state-management for aspects:
+1) Stateless. One aspect-instance per configuration for the whole system.
+2) State-per-call. Pool of aspect-instances that's allocated per call.
+3) Stateful. One aspect-instance per object-instance.
+
+Aspects able to filter methods they don't want to listen too (when added _only_).
+
+Some kind of configuration. XML?
+Aspects are bound to classes.
+Could aspects be bound to interfaces?
+Elements and attributes of aspect-element is passed to JavaBean-properties on aspect.
+
+The rule for the order of execution is as follows:
+Aspect attached to more general class is executed before more specific class.
+How does this apply to interfaces? Aspect for interface is always executed before aspect on class and same as above?
+
+Maybe have a CLOS-style "around" with different rule:
+Aspect attached to more specific class is execute before more general class.
+
+Ability to specify named aspect-stacks that can be used as a single aspects at other places.
+
+Sample aspects to implement:
+Logging
+???
+
+"Add an interface through an aspect."
+Aspect can state what additional interfaces are implemented by this aspect, methods of this interface are never
+actually invoked on the object.
+
+"Runtime Attribute Inspection via QDox and Javadoc tags?"
+
+Rickard Öbergs requirements:
+1) Extend behaviour through interceptors. These would be the "detyped" interceptors. Logging, tx, security, "store-on-set-methods", stuff like that.
+*) Need to be able to replace interceptors at runtime, and especially when sending it back and forth between client and server. I want one set of interceptors on the client and one set on the server.
+*) Need to be able to specify interceptors on the "object" or on a specific interface. For example, I may want one interceptor to apply to all interfaces in a particular "class" (as defined above), and another to apply to a particular interface regardless of what "class" it is being used in. This is very very important, to have these two levels of interceptors.
+*) Need to be able to specify in descriptor (as a regular expression) what methods to apply each interceptor on. For example, I want to trigger a search engine to index my objects whenever I call a "set*|add*|remove*" method.
+*) Interceptors need to be able to be both stateless and stateful, i.e. one for all objects or one for each object.
+*) Interceptors need to be able to check what other interceptors have been run in the current execution chain, a.k.a. "wormhole".
+
+2) Extend interfaces of the "class". An "class" in AOP can be thought of as "the set of interfaces and the set of interceptors", since objects with the same set of interfaces and same set of interceptors will "look and feel" the same.
+*) The interfaces should have no restrictions. No "need to extend blah" or "methods need to throw yada" stuff. Just plain interfaces
+*) My implementations need to be able to implement those interfaces directly, i.e. not like in EJB.
+*) I need to be able specify per "class" whether I want a generic implementation of an interface or if I want a particular implementation. I.e. I want to say "this class has interfaces X,Y,Z" but not *have* to say "the implementation of X is XBean". This should be provided as a default through a "the default implementation of X is XBean" declaration.
+*) I should be able to take an object, and while I'm holding on to it I should be able to attach a new interface to it that can be thrown away when I'm done. This essentially means to create a new proxy with n+1 interfaces, that has the same set of interfaces as before. Typical example of when this might be useful is if I have an object graph that I want to access through DOM: just attach DOM interfaces and send it to a XSL processor or something like that. This doesn't affect the core object model, only for how I'm using it at that particular time.
