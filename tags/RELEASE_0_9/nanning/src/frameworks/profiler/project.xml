@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<project>
+    <extend>${basedir}/../project.xml</extend>
+    <name>Nanning Profiler</name>
+    <id>nanning-profiler</id>
+    <currentVersion>0.9</currentVersion>
+    <package>org.codehaus.nanning.profiler</package>
+    <shortDescription>Profiler</shortDescription>
+    <description>A profiling interceptor created by Khalil Bouhamza</description>
+
+    <developers>
+
+        <developer>
+            <name>Jon Tirsen</name>
+            <id>tirsen</id>
+            <organization>Lecando AB</organization>
+        </developer>
+
+        <developer>
+            <name>Khalil Bouhamza</name>
+        </developer>
+
+        <developer>
+            <name>Lecando AB</name>
+            <id>lecando</id>
+            <organization>Lecando AB</organization>
+        </developer>
+
+    </developers>
+
+    <dependencies>
+
+    </dependencies>
+
+</project>

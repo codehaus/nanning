@@ -1,0 +1,228 @@
+<?xml version="1.0"?>
+<project>
+    <pomVersion>3</pomVersion>
+    <name>Nanning Aspects</name>
+    <id>nanning</id>
+    <logo>/images/nanning.png</logo>
+    <currentVersion>0.9</currentVersion>
+    <groupId>nanning</groupId>
+    <organization>
+        <name>Jon Tirsen</name>
+        <url>http://codehaus.org/</url>
+        <logo>http://images.werken.com/codehaus-plain.gif</logo>
+    </organization>
+    <inceptionYear>2002</inceptionYear>
+    <package>org.codehaus.nanning</package>
+
+    <shortDescription>Nanning is a simple yet scaleable aspect-oriented framework.</shortDescription>
+
+    <description>
+        Nanning is a simple yet scaleable aspect-oriented framework in Java. It can be used to replace EJB in J2EE.
+    </description>
+
+    <url>http://nanning.codehaus.org</url>
+    <issueTrackingUrl>
+        http://jira.codehaus.org/secure/BrowseProject.jspa?id=10102
+    </issueTrackingUrl>
+    <siteAddress>codehaus.org</siteAddress>
+    <siteDirectory>/www/nanning.codehaus.org</siteDirectory>
+    <distributionDirectory>/www/nanning.codehaus.org/download</distributionDirectory>
+
+    <repository>
+        <connection>
+            scm:cvs:pserver:anoncvs@codehaus.org:/cvsroot/nanning:nanning
+        </connection>
+        <url>
+           http://cvs.codehaus.org/viewcvs.cgi/?cvsroot=nanning
+        </url>
+    </repository>
+
+    <versions>
+        <version>
+            <id>0.8</id>
+            <name>0.8</name>
+            <tag>RELEASE_0_8</tag>
+        </version>
+        <version>
+            <id>0.7</id>
+            <name>0.7</name>
+            <tag>RELEASE_0_7</tag>
+        </version>
+        <version>
+            <id>0.6</id>
+            <name>0.6</name>
+            <tag>RELEASE_0_6</tag>
+        </version>
+        <version>
+            <id>0.5</id>
+            <name>0.5</name>
+            <tag>RELEASE_0_5</tag>
+        </version>
+        <version>
+            <id>0.4</id>
+            <name>0.4</name>
+            <tag>RELEASE_0_4</tag>
+        </version>
+        <version>
+            <id>0.3</id>
+            <name>0.3</name>
+            <tag>RELEASE_0_3</tag>
+        </version>
+        <version>
+            <id>0.2</id>
+            <name>0.2</name>
+            <tag>RELEASE_0_2</tag>
+        </version>
+        <version>
+            <id>0.1</id>
+            <name>0.1</name>
+            <tag>RELEASE_0_1</tag>
+        </version>
+        <version>
+            <id>0.2</id>
+            <name>0.2</name>
+            <tag>RELEASE_0_2</tag>
+        </version>
+    </versions>
+
+    <mailingLists>
+        <mailingList>
+            <name>Nanning Developer List</name>
+            <subscribe>http://lists.sourceforge.net/mailman/listinfo/nanning-developer</subscribe>
+            <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/nanning-developer</unsubscribe>
+            <archive>http://lists.sourceforge.net/mailman/listinfo/nanning-developer</archive>
+        </mailingList>
+    </mailingLists>
+
+    <developers>
+
+        <developer>
+            <name>Johan Lind</name>
+            <id>behemoth</id>
+            <organization>Lecando AB</organization>
+        </developer>
+
+        <developer>
+            <name>Jimmy Larsson</name>
+            <id>jimmy</id>
+            <organization>Lecando AB</organization>
+        </developer>
+
+        <developer>
+            <name>Robert Lillsjo</name>
+            <id>robert</id>
+            <organization>Lecando AB</organization>
+        </developer>
+
+        <developer>
+            <name>Jon Tirsen</name>
+            <id>tirsen</id>
+            <organization>Lecando AB</organization>
+        </developer>
+
+        <developer>
+            <name>Lecando AB</name>
+            <id>lecando</id>
+            <organization>Lecando AB</organization>
+        </developer>
+
+    </developers>
+
+    <contributors>
+
+        <contributor>
+            <name>Talip Ozturk</name>
+        </contributor>
+
+        <contributor>
+            <name>Saimon Moore</name>
+        </contributor>
+
+        <contributor>
+            <name>Khalil Bouhamza</name>
+        </contributor>
+
+    </contributors>
+
+    <dependencies>
+
+        <dependency>
+            <id>qdox</id>
+            <version>1.2</version>
+        </dependency>
+
+        <dependency>
+            <id>junit</id>
+            <version>3.8.1</version>
+        </dependency>
+
+        <dependency>
+            <id>ant</id>
+            <version>1.5.2</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+
+        <nagEmailAddress>
+            tirsen@codehaus.org
+        </nagEmailAddress>
+
+        <sourceDirectory>${basedir}/src/main</sourceDirectory>
+
+        <unitTestSourceDirectory>${basedir}/src/test</unitTestSourceDirectory>
+
+        <!-- Unit test classes -->
+
+        <unitTest>
+            <includes>
+                <include>**/*Test.java</include>
+            </includes>
+            <excludes>
+                <exclude>**/Abstract*.java</exclude>
+                <exclude>**/PerformanceTest.java</exclude>
+                <exclude>**/BasicIdentifyingSystemGCTest.java</exclude>
+                <exclude>**/SoftMapTest.java</exclude>
+            </excludes>
+            <resources>
+                <resource>
+                    <directory>${basedir}/src/test</directory>
+                    <includes>
+                        <include>**/*.xml</include>
+                        <include>**/*.properties</include>
+                        <include>**/*.java</include>
+                    </includes>
+                </resource>
+            </resources>
+        </unitTest>
+
+
+        <resources>
+            <resource>
+                <directory>${basedir}/src/main</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+        </resources>
+
+    </build>
+    <reports>
+        <report>maven-license-plugin</report>
+        <report>maven-faq-plugin</report>
+        <report>maven-checkstyle-plugin</report>
+        <report>maven-pmd-plugin</report>
+        <report>maven-simian-plugin</report>
+        <report>maven-jdepend-plugin</report>
+        <report>maven-changelog-plugin</report>
+        <report>maven-changes-plugin</report>
+        <report>maven-statcvs-plugin</report>
+        <report>maven-file-activity-plugin</report>
+        <report>maven-developer-activity-plugin</report>
+        <report>maven-jxr-plugin</report>
+        <report>maven-javadoc-plugin</report>
+        <report>maven-junit-report-plugin</report>
+        <report>maven-clover-plugin</report>
+    </reports>
+</project>

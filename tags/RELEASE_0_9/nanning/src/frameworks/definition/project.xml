@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<project>
+    <extend>${basedir}/../project.xml</extend>
+    <name>Nanning Definition</name>
+    <id>nanning-definition</id>
+    <currentVersion>0.9</currentVersion>
+    <package>org.codehaus.nanning.definition</package>
+    <shortDescription>Definition</shortDescription>
+    <description>The older deprecated definition format and API</description>
+
+    <developers>
+
+        <developer>
+            <name>Jon Tirsen</name>
+            <id>tirsen</id>
+            <organization>Lecando AB</organization>
+        </developer>
+
+        <developer>
+            <name>Khalil Bouhamza</name>
+        </developer>
+
+        <developer>
+            <name>Lecando AB</name>
+            <id>lecando</id>
+            <organization>Lecando AB</organization>
+        </developer>
+
+    </developers>
+
+    <dependencies>
+
+        <dependency>
+            <id>dom4j</id>
+            <version>1.4-dev-8</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-jelly</groupId>
+            <artifactId>commons-jelly</artifactId>
+            <version>20030211.141339</version>
+        </dependency>
+
+        <dependency>
+            <id>commons-beanutils</id>
+            <version>1.5</version>
+        </dependency>
+
+    </dependencies>
+
+</project>
