@@ -8,7 +8,7 @@ package org.codehaus.nanning.trace;
 
 import org.codehaus.nanning.config.AspectSystem;
 import org.codehaus.nanning.config.InterceptorAspect;
-import org.codehaus.nanning.config.Introductor;
+import org.codehaus.nanning.config.MixinAspect;
 import org.codehaus.nanning.trace.TraceInterceptor;
 import junit.framework.TestCase;
 
@@ -23,10 +23,10 @@ import org.apache.commons.logging.Log;
 /**
  * TODO document TraceInterceptorTest
  *
- * <!-- $Id: TraceInterceptorTest.java,v 1.1 2003-07-04 10:53:58 lecando Exp $ -->
+ * <!-- $Id: TraceInterceptorTest.java,v 1.2 2003-07-24 16:46:11 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class TraceInterceptorTest extends TestCase {
     public static class MockLogger implements Log {
@@ -138,7 +138,7 @@ public class TraceInterceptorTest extends TestCase {
         AspectSystem system = new AspectSystem();
         MockLogger mockLogger = new MockLogger();
         system.addAspect(new InterceptorAspect(new TraceInterceptor(mockLogger)));
-        system.addAspect(new Introductor(Intf.class, Impl.class));
+        system.addAspect(new MixinAspect(Intf.class, Impl.class));
 
         mockLogger.expectAddMessage(">>> call(hej, svej)");
         mockLogger.expectAddMessage("<<< call(hej, svej), took");

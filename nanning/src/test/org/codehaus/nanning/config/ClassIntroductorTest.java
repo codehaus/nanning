@@ -10,16 +10,16 @@ public class ClassIntroductorTest extends TestCase {
     public static interface OtherInterface {}
     
     public void testIntroduce() {
-        ClassIntroductor introductor = new ClassIntroductor(Interface.class, Implementation.class);
+        MixinAspect aspect = new MixinAspect(Interface.class, Implementation.class);
         AspectInstance aspectInstance = new AspectInstance(Interface.class);
-        introductor.introduce(aspectInstance);
+        aspect.introduce(aspectInstance);
         assertEquals(1, aspectInstance.getMixins().size());
     }
     
     public void testNotIntroduce() {
-        ClassIntroductor introductor = new ClassIntroductor(Interface.class, Implementation.class);
+        MixinAspect aspect = new MixinAspect(Interface.class, Implementation.class);
         AspectInstance aspectInstance = new AspectInstance(OtherInterface.class);
-        introductor.introduce(aspectInstance);
+        aspect.introduce(aspectInstance);
         assertEquals(0, aspectInstance.getMixins().size());
     }
 }

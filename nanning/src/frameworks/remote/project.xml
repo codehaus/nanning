@@ -3,7 +3,7 @@
     <extend>${basedir}/../project.xml</extend>
     <name>Nanning Remote</name>
     <id>nanning-remote</id>
-    <currentVersion>1.0-beta-1-SNAPSHOT</currentVersion>
+    <currentVersion>1.0-beta-1</currentVersion>
     <package>org.codehaus.nanning.remote</package>
     <shortDescription>Profiler</shortDescription>
     <description></description>

@@ -6,7 +6,7 @@ import org.codehaus.nanning.Aspects;
 import org.codehaus.nanning.prevayler.BasicIdentifyingSystem;
 import org.codehaus.nanning.prevayler.CurrentPrevayler;
 import org.codehaus.nanning.config.AspectSystem;
-import org.codehaus.nanning.config.ClassIntroductor;
+import org.codehaus.nanning.config.MixinAspect;
 import junit.framework.TestCase;
 
 public class BasicIdentifyingSystemTest extends TestCase {
@@ -20,7 +20,7 @@ public class BasicIdentifyingSystemTest extends TestCase {
         super.setUp();
 
         AspectSystem aspectSystem = new AspectSystem();
-        aspectSystem.addAspect(new ClassIntroductor(Interface.class, Implementation.class));
+        aspectSystem.addAspect(new MixinAspect(Interface.class, Implementation.class));
         Aspects.setContextAspectFactory(aspectSystem);
 
         registredObject = Aspects.getCurrentAspectFactory().newInstance(Interface.class);

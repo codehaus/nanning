@@ -89,8 +89,8 @@ public class AspectSystemParserTest extends TestCase {
                 "target='" + Target.class.getName() + "' /></aspect-system>";
         AspectSystem aspectSystem = aspectSystemParser.parse(xml);
         assertEquals(1, aspectSystem.getAspects().size());
-        Introductor introductor = (Introductor) aspectSystem.getAspects().get(0);
-        assertEquals(Interface.class, introductor.getInterfaceClass());
-        assertEquals(Target.class, introductor.getTargetClass());
+        MixinAspect aspect = (MixinAspect) aspectSystem.getAspects().get(0);
+        assertEquals(Interface.class, aspect.getInterfaceClass());
+        assertEquals(Target.class, aspect.getTargetClass());
     }
 }
