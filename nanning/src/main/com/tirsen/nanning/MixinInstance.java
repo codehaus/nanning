@@ -12,14 +12,16 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 
 /**
  * TODO document AspectDefinition
  *
- * <!-- $Id: MixinInstance.java,v 1.1 2003-01-12 13:25:40 tirsen Exp $ -->
+ * <!-- $Id: MixinInstance.java,v 1.2 2003-01-16 10:17:48 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.2 $
  */
 public class MixinInstance {
     private AspectDefinition aspectDefinition;
@@ -211,5 +213,12 @@ public class MixinInstance {
         result = interfaceClass.hashCode();
         result = 29 * result + (target != null ? target.hashCode() : 0);
         return result;
+    }
+
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("interface", getInterfaceClass())
+                .append("target", getTarget())
+                .toString();
     }
 }

@@ -22,10 +22,17 @@ public class BasicIdentifyingSystem implements IdentifyingSystem {
     }
 
     public long getObjectID(Object object) {
-        if(!objects.contains(object)) {
-            objects.add(object);
-        }
+        assert hasObjectID(object);
+        objects.add(object);
         return (long) objects.indexOf(object);
+    }
+
+    public boolean hasObjectID(Object object) {
+        return objects.contains(object);
+    }
+
+    public void registerObjectID(Object o) {
+        objects.add(o);
     }
 
     public Object getObjectWithID(long oid) {
