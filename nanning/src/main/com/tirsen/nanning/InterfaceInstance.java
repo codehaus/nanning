@@ -15,10 +15,10 @@ import java.util.Arrays;
 /**
  * TODO document InterfaceDefinition
  *
- * <!-- $Id: InterfaceInstance.java,v 1.1 2002-10-22 18:28:09 tirsen Exp $ -->
+ * <!-- $Id: InterfaceInstance.java,v 1.2 2002-10-23 21:26:43 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 class InterfaceInstance
 {
@@ -31,20 +31,9 @@ class InterfaceInstance
         this.interfaceClass = interfaceClass;
     }
 
-    public void addInterspector(Object aspect)
+    void setInterceptors(Interceptor[] interceptors)
     {
-        ArrayList arrayList;
-        if (interceptors != null)
-        {
-            arrayList = new ArrayList(interceptors.length);
-            arrayList.addAll(Arrays.asList(interceptors));
-        }
-        else
-        {
-            arrayList = new ArrayList();
-        }
-        arrayList.add(aspect);
-        interceptors = (Interceptor[]) arrayList.toArray(new Interceptor[0]);
+        this.interceptors = interceptors;
     }
 
     public void setTarget(Object target)
