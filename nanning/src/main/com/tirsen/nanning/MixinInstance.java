@@ -14,10 +14,10 @@ import java.util.*;
 /**
  * TODO document AspectDefinition
  *
- * <!-- $Id: MixinInstance.java,v 1.9 2003-03-21 17:11:10 lecando Exp $ -->
+ * <!-- $Id: MixinInstance.java,v 1.10 2003-04-08 12:38:04 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public final class MixinInstance {
     private Class interfaceClass;
@@ -25,6 +25,11 @@ public final class MixinInstance {
     private Map methodInterceptors = new HashMap();
 
     public MixinInstance() {
+    }
+
+    public MixinInstance(Class interfaceClass, Object target) {
+        setInterfaceClass(interfaceClass);
+        setTarget(target);
     }
 
     public void setInterfaceClass(Class interfaceClass) {

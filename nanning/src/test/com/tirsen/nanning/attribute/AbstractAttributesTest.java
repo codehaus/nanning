@@ -18,15 +18,17 @@ public abstract class AbstractAttributesTest extends TestCase {
         if (!attributesCompiled) {
             attributesCompiled = true;
             attributesDir = new File("target" + File.separator + "attributes");
+
+            compileAttributes(new File("src" + File.separator + "test"));
+            compileAttributes(new File("src" + File.separator + "main"));
+            compileAttributes(new File(".." + File.separator + "nanning" + File.separator + "src" + File.separator + "main"));
+            compileAttributes(new File(".." + File.separator + "nanning" + File.separator + "src" + File.separator + "test"));
+
             try {
                 Attributes.addSearchPath(attributesDir.toURL());
             } catch (MalformedURLException e) {
                 fail(e.getMessage());
             }
-            compileAttributes(new File("src" + File.separator + "test"));
-            compileAttributes(new File("src" + File.separator + "main"));
-            compileAttributes(new File(".." + File.separator + "nanning" + File.separator + "src" + File.separator + "main"));
-            compileAttributes(new File(".." + File.separator + "nanning" + File.separator + "src" + File.separator + "test"));
         }
     }
 
