@@ -27,6 +27,10 @@ aspectDefinition.setTarget(SideAspectImpl.class);
 aspectClass.addSideAspect(aspectDefinition);
 
 Object bigMomma = aspectClass.newInstance();
+
+// cast it to the interface you want to call, caveat: method-names must not conflict
+((Intf) bigMomma).call();
+((SideAspect) bigMomma).sideCall();
                 ]]></source>
                 <p>
                     Nanning also has an <a href="#Configuration file format">XML-configuration format</a>
