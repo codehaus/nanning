@@ -4,6 +4,7 @@
  - Changed root-package from com.tirsen to org.codehaus.
  - Moved all frameworks out of the core.
  - Removed all dependencies (except compile-time attribute-dependencies) from core.
+ - Changed license to BSD-style license.
  - Various additional clean up.
 
 0.8
