@@ -14,10 +14,10 @@ import java.lang.reflect.Proxy;
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: AspectInstanceTest.java,v 1.14 2003-06-22 16:26:26 tirsen Exp $ -->
+ * <!-- $Id: AspectInstanceTest.java,v 1.15 2003-06-22 16:35:23 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class AspectInstanceTest extends TestCase {
     private Method callMethod;
@@ -461,5 +461,25 @@ public class AspectInstanceTest extends TestCase {
         assertTrue(testObject.wasCalled);
     }
 
+    public static class HelloWorld {
+        public void helloWorld() {
+            System.out.println("Hello world");
+        }
+    }
+
+    public void testSimpleSampleAspectifyAnything() {
+        AspectInstance instance = new AspectInstance();
+        instance.addMixin(new MixinInstance(HelloWorld.class));
+        instance.addInterceptor(new MethodInterceptor() {
+            public Object invoke(Invocation invocation) throws Throwable {
+                System.out.println("Before " + invocation.getMethod());
+                Object result = invocation.invokeNext();
+                System.out.println("After " + invocation.getMethod());
+                return result;
+            }
+        });
+        HelloWorld helloWorld = (HelloWorld) instance.getProxy();
+        helloWorld.helloWorld();
+    }
 
 }
