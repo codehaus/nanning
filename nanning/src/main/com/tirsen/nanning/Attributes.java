@@ -6,6 +6,9 @@
  */
 package com.tirsen.nanning;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -28,38 +31,62 @@ import java.util.Properties;
  * Hmm... wait, a minute, there's some support for this in QDox, maybe that will work...
  * -- jon
 
- * <!-- $Id: Attributes.java,v 1.1 2002-10-28 21:45:34 tirsen Exp $ -->
+ * <!-- $Id: Attributes.java,v 1.2 2002-10-30 13:27:42 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.2 $
  */
 public class Attributes
 {
+    private static final Log logger = LogFactory.getLog(Attributes.class);
+
     private static List searchPaths = new ArrayList();
 
     public static String getAttribute(Class klass, String attribute)
     {
-        String key = "class." + attribute;
-        return getProperty(klass, key);
+        return getProperty(klass, attributeName(klass, attribute));
+    }
+
+    private static String attributeName(Class klass, String attribute) {
+        return "class." + attribute;
     }
 
     private static String getProperty(Class klass, String key)
     {
+        Properties properties = getProperties(klass);
+        return properties.getProperty(key);
+    }
+
+    private static Properties getProperties(Class klass) {
         Properties properties;
-        String fileName = klass.getName().replace('.', '/') + ".attributes";
         InputStream inputStream = null;
         try
         {
-            inputStream = klass.getResourceAsStream('/' + fileName);
+            String className = klass.getName();
+
+            String fileName = className.substring(className.lastIndexOf('.') + 1) + ".attributes";
+            logger.debug("fileName = " + fileName);
+            inputStream = klass.getResourceAsStream(fileName);
+
+            fileName = className.replace('.', '/') + ".attributes";
+            logger.debug("fileName = " + fileName);
+            if (inputStream == null)
+            {
+                inputStream = klass.getResourceAsStream('/' + fileName);
+            }
+
+            logger.debug("searching on search-path");
             if(inputStream == null)
             {
                 for (Iterator iterator = searchPaths.iterator(); iterator.hasNext();)
                 {
                     URL searchPath = (URL) iterator.next();
                     URL url = new URL(searchPath, fileName);
+                    logger.debug("url = " + url);
                     inputStream = url.openStream();
                 }
             }
+
             if(inputStream != null)
             {
                 properties = new Properties();
@@ -92,33 +119,43 @@ public class Attributes
                 }
             }
         }
-        return properties.getProperty(key);
+        return properties;
     }
 
     public static String getAttribute(Method method, String attribute)
     {
-        StringBuffer name = new StringBuffer();
-        name.append(method.getName());
-        name.append('(');
+        String name = attributeName(method, attribute);
+        return getProperty(method.getDeclaringClass(), name);
+    }
+
+    private static String attributeName(Method method, String attribute) {
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(method.getName());
+        stringBuffer.append('(');
         Class[] parameterTypes = method.getParameterTypes();
         for (int i = 0; i < parameterTypes.length; i++)
         {
             Class parameterType = parameterTypes[i];
-            name.append(parameterType.getName());
+            stringBuffer.append(parameterType.getName());
             if(i + 1 < parameterTypes.length)
             {
-                name.append(',');
+                stringBuffer.append(',');
             }
         }
-        name.append(')');
-        name.append('.');
-        name.append(attribute);
-        return getProperty(method.getDeclaringClass(), name.toString());
+        stringBuffer.append(')');
+        stringBuffer.append('.');
+        stringBuffer.append(attribute);
+        String name = stringBuffer.toString();
+        return name;
     }
 
     public static String getAttribute(Field field, String attribute)
     {
-        return getProperty(field.getDeclaringClass(), field.getName() + '.' + attribute);
+        return getProperty(field.getDeclaringClass(), attributeName(field, attribute));
+    }
+
+    private static String attributeName(Field field, String attribute) {
+        return field.getName() + '.' + attribute;
     }
 
     public static void addSearchPath(URL searchPath)
@@ -129,5 +166,17 @@ public class Attributes
     public static void removeSearchPath(URL searchPath)
     {
         searchPaths.add(searchPath);
+    }
+
+    public static boolean hasAttribute(Class klass, String attribute) {
+        return getProperties(klass).containsKey(attributeName(klass, attribute));
+    }
+
+    public static boolean hasAttribute(Method method, String attribute) {
+        return getProperties(method.getDeclaringClass()).containsKey(attributeName(method, attribute));
+    }
+
+    public static boolean hasAttribute(Field field, String attribute) {
+        return getProperties(field.getDeclaringClass()).containsKey(attributeName(field, attribute));
     }
 }

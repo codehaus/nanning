@@ -10,13 +10,14 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import com.tirsen.nanning.samples.test.LogInterceptorTest;
 
+
 /**
  * TODO document UnitTestSuite
  *
- * <!-- $Id: UnitTestSuite.java,v 1.5 2002-10-28 21:45:34 tirsen Exp $ -->
+ * <!-- $Id: UnitTestSuite.java,v 1.6 2002-10-30 13:27:42 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.5 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.6 $
  */
 public class UnitTestSuite
 {
@@ -27,8 +28,8 @@ public class UnitTestSuite
         suite.addTestSuite(AspectClassTest.class);
         suite.addTestSuite(AspectRepositoryTest.class);
         suite.addTestSuite(PerformanceTest.class);
-        suite.addTestSuite(LogInterceptorTest.class);
         suite.addTestSuite(AttributesTest.class);
+        suite.addTestSuite(LogInterceptorTest.class);
         return suite;
     }
     ///CLOVER:ON
