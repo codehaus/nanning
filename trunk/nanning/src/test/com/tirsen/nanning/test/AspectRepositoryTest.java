@@ -7,21 +7,34 @@
 package com.tirsen.nanning.test;
 
 import junit.framework.TestCase;
-import com.tirsen.nanning.AspectClass;
-import com.tirsen.nanning.AspectDefinition;
-import com.tirsen.nanning.AspectRepository;
-import com.tirsen.nanning.InterceptorDefinition;
+import com.tirsen.nanning.*;
 
 /**
  * TODO document AspectRepositoryTest
  *
- * <!-- $Id: AspectRepositoryTest.java,v 1.1 2002-10-27 12:36:41 tirsen Exp $ -->
+ * <!-- $Id: AspectRepositoryTest.java,v 1.2 2002-11-03 17:14:28 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class AspectRepositoryTest extends TestCase
 {
+    public void testEmpty()
+    {
+        AspectRepository aspectRepository = new AspectRepository();
+
+        try
+        {
+            aspectRepository.newInstance(Intf.class);
+            ///CLOVER:OFF
+            fail("could instantiate aspect before it was configured");
+            ///CLOVER:ON
+        }
+        catch (IllegalArgumentException shouldHappen)
+        {
+        }
+    }
+
     public void testConfig() throws InstantiationException, IllegalAccessException
     {
         AspectRepository aspectRepository = new AspectRepository();
@@ -66,5 +79,15 @@ public class AspectRepositoryTest extends TestCase
 
         Intf intf = (Intf) aspectRepository.newInstance(Intf.class);
         intf.call();
+    }
+
+    public void testConfigure() throws NoSuchMethodException, ConfigureException
+    {
+        AspectRepository aspectRepository = new AspectRepository();
+        aspectRepository.configure(AspectRepositoryTest.class.getResource("aspect-repository-test.xml"));
+
+//        AspectRepository aspectRepository = AspectRepository.getInstance();
+        Object bigMomma = aspectRepository.newInstance(Intf.class);
+        AspectClassTest.verifySideAspect(bigMomma);
     }
 }
