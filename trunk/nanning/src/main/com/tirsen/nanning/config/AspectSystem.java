@@ -1,10 +1,13 @@
 package com.tirsen.nanning.config;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
-import com.tirsen.nanning.*;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
+import com.tirsen.nanning.AspectFactory;
+import com.tirsen.nanning.AspectInstance;
+import com.tirsen.nanning.MixinInstance;
 
 public class AspectSystem implements AspectFactory {
     private List aspects = new ArrayList();
