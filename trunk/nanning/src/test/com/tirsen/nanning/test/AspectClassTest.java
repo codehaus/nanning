@@ -15,10 +15,10 @@ import com.tirsen.nanning.Interceptor;
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: AspectClassTest.java,v 1.5 2002-10-30 21:39:27 tirsen Exp $ -->
+ * <!-- $Id: AspectClassTest.java,v 1.6 2002-10-31 16:38:56 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.5 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.6 $
  */
 public class AspectClassTest extends TestCase
 {
@@ -48,6 +48,40 @@ public class AspectClassTest extends TestCase
         impl.verify();
         aspect.verify();
         aspect2.verify();
+    }
+
+    public static class BlahongaException extends RuntimeException
+    {
+    }
+
+    public static interface ErrorIntf
+    {
+        void call() throws Exception;
+    }
+
+    public void testThrowsCorrectExceptions() {
+        AspectClass aspectClass = new AspectClass();
+        aspectClass.setInterface(Intf.class);
+        aspectClass.addInterceptor(MockInterceptor.class);
+        aspectClass.addInterceptor(MockInterceptor.class);
+        aspectClass.setTarget(Impl.class);
+
+        Intf proxy = (Intf) aspectClass.newInstance();
+
+        Aspects.setTarget(proxy, Intf.class, new Intf() {
+            public void call() {
+                throw new BlahongaException();
+            }
+        });
+
+        try {
+            proxy.call();
+            fail();
+        } catch (BlahongaException shouldHappen) {
+            System.out.println("shouldHappen = " + shouldHappen);
+        } catch (Exception e) {
+            fail();
+        }
     }
 
     public void testSideAspectAndAspectsOnProxy() throws IllegalAccessException, InstantiationException, NoSuchMethodException

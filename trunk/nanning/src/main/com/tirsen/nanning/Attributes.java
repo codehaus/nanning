@@ -15,10 +15,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * TODO document Attributes
@@ -31,16 +28,17 @@ import java.util.Properties;
  * Hmm... wait, a minute, there's some support for this in QDox, maybe that will work...
  * -- jon
 
- * <!-- $Id: Attributes.java,v 1.3 2002-10-30 20:10:54 tirsen Exp $ -->
+ * <!-- $Id: Attributes.java,v 1.4 2002-10-31 16:38:56 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.3 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.4 $
  */
 public class Attributes
 {
     private static final Log logger = LogFactory.getLog(Attributes.class);
 
     private static List searchPaths = new ArrayList();
+    private static Map propertiesCache = new HashMap();
 
     public static String getAttribute(Class klass, String attribute)
     {
@@ -60,64 +58,63 @@ public class Attributes
 
     private static Properties getProperties(Class klass)
     {
-        Properties properties;
-        InputStream inputStream = null;
-        try
-        {
-            String className = klass.getName();
-
-            String fileName = className.substring(className.lastIndexOf('.') + 1) + ".attributes";
-            logger.debug("fileName = " + fileName);
-            inputStream = klass.getResourceAsStream(fileName);
-
-            fileName = className.replace('.', '/') + ".attributes";
-            logger.debug("fileName = " + fileName);
-            if (inputStream == null)
+        Properties properties = (Properties) propertiesCache.get(klass);
+        if (properties == null) {
+            InputStream inputStream = null;
+            try
             {
-                inputStream = klass.getResourceAsStream('/' + fileName);
-            }
+                String className = klass.getName();
 
-            logger.debug("searching on search-path");
-            if (inputStream == null)
-            {
-                for (Iterator iterator = searchPaths.iterator(); iterator.hasNext();)
+                String fileName = className.substring(className.lastIndexOf('.') + 1) + ".attributes";
+                inputStream = klass.getResourceAsStream(fileName);
+
+                fileName = className.replace('.', '/') + ".attributes";
+                if (inputStream == null)
                 {
-                    URL searchPath = (URL) iterator.next();
-                    URL url = new URL(searchPath, fileName);
-                    logger.debug("url = " + url);
-                    inputStream = url.openStream();
+                    inputStream = klass.getResourceAsStream('/' + fileName);
+                }
+
+                if (inputStream == null)
+                {
+                    for (Iterator iterator = searchPaths.iterator(); iterator.hasNext();)
+                    {
+                        URL searchPath = (URL) iterator.next();
+                        URL url = new URL(searchPath, fileName);
+                        inputStream = url.openStream();
+                    }
+                }
+
+                if (inputStream != null)
+                {
+                    properties = new Properties();
+                    properties.load(inputStream);
+                    propertiesCache.put(klass, properties);
+                }
+                else
+                {
+                    throw new RuntimeException("Could not find attributes for " + klass);
                 }
             }
-
-            if (inputStream != null)
+            catch (MalformedURLException e)
             {
-                properties = new Properties();
-                properties.load(inputStream);
+                throw new RuntimeException(e);
             }
-            else
+            catch (IOException e)
             {
-                throw new RuntimeException("Could not find attributes for " + klass);
+                throw new RuntimeException(e);
             }
-        }
-        catch (MalformedURLException e)
-        {
-            throw new RuntimeException(e);
-        }
-        catch (IOException e)
-        {
-            throw new RuntimeException(e);
-        }
-        finally
-        {
-            if (inputStream != null)
+            finally
             {
-                try
+                if (inputStream != null)
                 {
-                    inputStream.close();
-                }
-                catch (IOException e)
-                {
-                    throw new RuntimeException(e);
+                    try
+                    {
+                        inputStream.close();
+                    }
+                    catch (IOException e)
+                    {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         }
