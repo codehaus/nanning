@@ -29,7 +29,7 @@ public class AttributesBuilderTest extends TestCase {
         input = new FileInputStream(javaFile);
         new Parser(new JFlexLexer(input), builder).parse();
 
-        classPropertiesHelpers = builder.getClassPropertiesHelper();
+        classPropertiesHelpers = builder.getClassPropertiesHelpers();
         assertEquals(2, classPropertiesHelpers.size());
     }
 
