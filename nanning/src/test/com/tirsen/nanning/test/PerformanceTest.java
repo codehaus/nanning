@@ -12,10 +12,10 @@ import junit.framework.TestCase;
 /**
  * TODO document PerformanceTest
  *
- * <!-- $Id: PerformanceTest.java,v 1.4 2002-10-27 12:13:18 tirsen Exp $ -->
+ * <!-- $Id: PerformanceTest.java,v 1.5 2002-11-03 19:01:29 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class PerformanceTest extends TestCase
 {
@@ -30,7 +30,7 @@ public class PerformanceTest extends TestCase
         Intf intf = (Intf) aspectClass.newInstance();
 
         int numberOfInvocations = 100000;
-        double maxMemoryPerInvocation = 1;
+        double maxMemoryPerInvocation = 1.2;
         double maxTimePerInvocation = 0.004; // this is exceptionally high due to clover...
 
         ///CLOVER:OFF

@@ -14,10 +14,10 @@ import com.tirsen.nanning.samples.test.LogInterceptorTest;
 /**
  * TODO document UnitTestSuite
  *
- * <!-- $Id: UnitTestSuite.java,v 1.7 2002-10-30 21:39:28 tirsen Exp $ -->
+ * <!-- $Id: UnitTestSuite.java,v 1.8 2002-11-03 19:01:29 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class UnitTestSuite
 {
@@ -29,7 +29,7 @@ public class UnitTestSuite
         suite.addTestSuite(AspectRepositoryTest.class);
         suite.addTestSuite(PerformanceTest.class);
         suite.addTestSuite(AttributesTest.class);
-//        suite.addTestSuite(LogInterceptorTest.class);
+        suite.addTestSuite(LogInterceptorTest.class);
         suite.addTestSuite(AspectsTest.class);
         return suite;
     }
