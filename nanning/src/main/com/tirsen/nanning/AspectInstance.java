@@ -9,6 +9,7 @@ package com.tirsen.nanning;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,10 +17,10 @@ import java.util.List;
 /**
  * TODO document AspectInstance
  *
- * <!-- $Id: AspectInstance.java,v 1.7 2002-10-30 20:10:54 tirsen Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.8 2002-10-31 16:38:56 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.7 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.8 $
  */
 class AspectInstance implements InvocationHandler
 {
@@ -47,7 +48,28 @@ class AspectInstance implements InvocationHandler
             }
             else
             {
-                return method.invoke(interfaceInstance.getTarget(), args);
+                try {
+                    return method.invoke(interfaceInstance.getTarget(), args);
+                } catch (InvocationTargetException e) {
+                    throwRealException(e);
+                    throw e;
+                }
+            }
+        }
+
+        private void throwRealException(InvocationTargetException e) throws Exception {
+            Throwable realException = e.getTargetException();
+            if (realException instanceof Error)
+            {
+                throw (Error) realException;
+            }
+            else if (realException instanceof RuntimeException)
+            {
+                throw (RuntimeException) realException;
+            }
+            else
+            {
+                throw (Exception) realException;
             }
         }
 
