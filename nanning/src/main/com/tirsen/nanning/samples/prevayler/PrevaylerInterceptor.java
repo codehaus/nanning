@@ -2,7 +2,9 @@ package com.tirsen.nanning.samples.prevayler;
 
 import java.lang.reflect.Method;
 
-import com.tirsen.nanning.*;
+import com.tirsen.nanning.FilterMethodsInterceptor;
+import com.tirsen.nanning.Invocation;
+import com.tirsen.nanning.MethodInterceptor;
 import com.tirsen.nanning.attribute.Attributes;
 import com.tirsen.nanning.definition.SingletonInterceptor;
 
@@ -10,7 +12,7 @@ import com.tirsen.nanning.definition.SingletonInterceptor;
  * TODO document PrevaylerInterceptor
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirs?n</a>
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  */
 public class PrevaylerInterceptor implements SingletonInterceptor, MethodInterceptor, FilterMethodsInterceptor {
     private boolean resolveEntities;
@@ -35,12 +37,6 @@ public class PrevaylerInterceptor implements SingletonInterceptor, MethodInterce
         2. there should NOT be a current transaction
         3. the target of the call has an object id in the current prevayler OR if the target is a service
         */
-
-        assert !transactionalReturnValue(invocation.getMethod()) :
-                invocation.getMethod() + " returns an object that is transactional, " +
-                "this is currently not supported on a transactional method. " +
-                "please remove transactional-tag from this method and ensure all methods called " +
-                "by this method are transactional";
 
         if (CurrentPrevayler.hasPrevayler()
                 && !CurrentPrevayler.isInTransaction()
