@@ -4,7 +4,7 @@
     <name>Nanning Definition</name>
     <id>nanning-definition</id>
     <currentVersion>0.9</currentVersion>
-    <package>com.tirsen.nanning.definition</package>
+    <package>org.codehaus.nanning.definition</package>
     <shortDescription>Profiler</shortDescription>
     <description>The older deprecated definition format and API</description>
 

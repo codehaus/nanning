@@ -135,33 +135,33 @@ assertEquals("argMethodValue", Attributes.getAttribute(argMethod, "methodAttribu
 <aspect-repository>
     <aspect>
         <interface>
-            com.tirsen.nanning.TestMixin
+            org.codehaus.nanning.TestMixin
         </interface>
         <interceptor>
-            com.tirsen.nanning.NullInterceptor
+            org.codehaus.nanning.NullInterceptor
         </interceptor>
         <interceptor>
-            com.tirsen.nanning.MockInterceptor
+            org.codehaus.nanning.MockInterceptor
         </interceptor>
         <target>
-            com.tirsen.nanning.TestMixinImpl
+            org.codehaus.nanning.TestMixinImpl
         </target>
     </aspect>
     <class>
         <interface>
-            com.tirsen.nanning.Intf
+            org.codehaus.nanning.Intf
         </interface>
         <interceptor>
-            com.tirsen.nanning.MockInterceptor
+            org.codehaus.nanning.MockInterceptor
         </interceptor>
         <interceptor>
-            com.tirsen.nanning.NullInterceptor
+            org.codehaus.nanning.NullInterceptor
         </interceptor>
         <target>
-            com.tirsen.nanning.Impl
+            org.codehaus.nanning.Impl
         </target>
 
-        <aspect interface="com.tirsen.nanning.TestMixin" />
+        <aspect interface="org.codehaus.nanning.TestMixin" />
     </class>
 </aspect-repository>
                 ]]></source>
@@ -192,7 +192,7 @@ Object bigMomma = AspectRepository.getInstance().newInstance(Intf.class);
             <subsection name="Singleton interceptors">
                 <p>
                     If you're interceptor does not keep state implement the marker-interface
-                    <a href="apidocs/com/tirsen/nanning/SingletonInterceptor.html">SingletonInterceptor</a>.
+                    <a href="apidocs/org/tirsen/nanning/SingletonInterceptor.html">SingletonInterceptor</a>.
                     If you do Nanning will only instantiate one instance and use that as the interceptor
                     for the whole system. Example:
                 </p>
@@ -211,9 +211,9 @@ public class NullInterceptor implements SingletonInterceptor
                 <p>
                     Preliminary method filtering has also been implemented. If your interceptor likes to
                     filter out the methods that it will intercept implement
-                    <a href="apidocs/com/tirsen/nanning/FilterMethodsInterceptor.html">
+                    <a href="apidocs/org/tirsen/nanning/FilterMethodsInterceptor.html">
                         FilterMethodsInterceptor</a>. If you return <code>false</code> to the call to
-                    <a href="apidocs/com/tirsen/nanning/FilterMethodsInterceptor.html#interceptsMethod(java.lang.reflect.Method)">
+                    <a href="apidocs/org/tirsen/nanning/FilterMethodsInterceptor.html#interceptsMethod(java.lang.reflect.Method)">
                         FilterMethodsInterceptor.interceptsMethod</a> your interceptor will not be called
                     for that method.
                 </p>

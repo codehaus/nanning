@@ -4,7 +4,7 @@
     <name>Nanning Remote</name>
     <id>nanning-remote</id>
     <currentVersion>0.9</currentVersion>
-    <package>com.tirsen.nanning.cache</package>
+    <package>org.codehaus.nanning.remote</package>
     <shortDescription>Profiler</shortDescription>
     <description></description>
 
