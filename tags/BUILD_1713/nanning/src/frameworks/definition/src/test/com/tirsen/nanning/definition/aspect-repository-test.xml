@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<aspect-repository>
+    <aspect>
+        <interface>
+            com.tirsen.nanning.definition.TestMixin
+        </interface>
+        <interceptor>
+            com.tirsen.nanning.definition.NullInterceptor
+        </interceptor>
+        <interceptor>
+            com.tirsen.nanning.definition.MockInterceptor
+        </interceptor>
+        <target>
+            com.tirsen.nanning.definition.TestMixinImpl
+        </target>
+    </aspect>
+    <class>
+        <interface>
+            com.tirsen.nanning.definition.Intf
+        </interface>
+        <interceptor>
+            com.tirsen.nanning.definition.MockInterceptor
+        </interceptor>
+        <interceptor>
+            com.tirsen.nanning.definition.NullInterceptor
+        </interceptor>
+        <target>
+            com.tirsen.nanning.definition.IntfImpl
+        </target>
+
+        <aspect interface="com.tirsen.nanning.definition.TestMixin" />
+    </class>
+</aspect-repository>
