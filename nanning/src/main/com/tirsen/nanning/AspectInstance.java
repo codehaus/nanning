@@ -23,10 +23,10 @@ import org.apache.commons.lang.builder.ToStringStyle;
 /**
  * TODO document AspectInstance
  *
- * <!-- $Id: AspectInstance.java,v 1.31 2003-03-21 17:11:08 lecando Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.32 2003-03-25 07:52:51 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.31 $
+ * @version $Revision: 1.32 $
  */
 public final class AspectInstance implements InvocationHandler, Externalizable {
     static final long serialVersionUID = 5462785783512485056L;
@@ -84,9 +84,10 @@ public final class AspectInstance implements InvocationHandler, Externalizable {
         return interfaces;
     }
 
-    public Object invoke(Object proxy, Method method, Object[] args)
-            throws Throwable {
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+
         Class interfaceClass = method.getDeclaringClass();
+
         if (interfaceClass != Object.class) {
             Object prevThis = Aspects.currentThis.get();
             try {
@@ -96,6 +97,7 @@ public final class AspectInstance implements InvocationHandler, Externalizable {
             } finally {
                 Aspects.currentThis.set(prevThis);
             }
+
         } else {
             // for methods defined on Object:
             // change all proxies into AspectInstances and the call this aspect instance
@@ -146,6 +148,7 @@ public final class AspectInstance implements InvocationHandler, Externalizable {
         assert serializeClassIdentifier != null && serializeTargets != null;
         AspectInstance aspectInstance = Aspects.getAspectInstance(currentAspectFactory.newInstance(serializeClassIdentifier, serializeTargets));
         assert aspectInstance != null;
+
         return aspectInstance;
     }
 
