@@ -1,24 +1,29 @@
 package com.tirsen.nanning.samples.prevayler;
 
 import com.tirsen.nanning.Invocation;
-import com.tirsen.nanning.ConstructionInvocation;
-
-import java.io.Serializable;
-
 import org.prevayler.PrevalentSystem;
 
+import java.io.Serializable;
+import java.lang.reflect.Method;
+
 /**
- * TODO document InvocationCommand
+ * TODO document MarshallingCommand
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public abstract class MarshallingCommand implements InvocationCommand {
     private Identity target;
     private Object[] args;
+    private Class declaringClass;
+    private Class[] parameterTypes;
+    private String methodName;
 
     public void setInvocation(Invocation invocation) {
-        target = identify(invocation.getTarget());
+        declaringClass = invocation.getMethod().getDeclaringClass();
+        methodName = invocation.getMethod().getName();
+        parameterTypes = invocation.getMethod().getParameterTypes();
+        target = identify(invocation.getProxy());
         args = marshalArguments(invocation.getArgs());
     }
 
@@ -26,7 +31,7 @@ public abstract class MarshallingCommand implements InvocationCommand {
         if(args == null) {
             return null;
         }
-        
+
         Object[] marshalled = new Object[args.length];
         for (int i = 0; i < args.length; i++) {
             Object arg = args[i];
@@ -48,9 +53,10 @@ public abstract class MarshallingCommand implements InvocationCommand {
     }
 
     public Serializable execute(PrevalentSystem system) throws Exception {
-        Object unmarshalledTarget = unmarshal(target);
+        Object unmarshalledTarget = resolve(target);
         Object[] unmarshalledArgs = unmarshalArguments(args);
-        return execute(system, unmarshalledTarget, unmarshalledArgs);
+        Method method = declaringClass.getMethod(methodName, parameterTypes);
+        return execute(system, method, unmarshalledTarget, unmarshalledArgs);
     }
 
     private Object[] unmarshalArguments(Object[] args) {
@@ -76,14 +82,14 @@ public abstract class MarshallingCommand implements InvocationCommand {
         } else if(o instanceof Identity) {
             return resolve(target);
         } else {
-            throw new IllegalArgumentException("Can't unmarshal " + o);
+            throw new IllegalArgumentException("Can't resolve " + o);
         }
     }
 
-    protected abstract Identity identify(Object target);
+    protected abstract Identity identify(Object object);
 
     protected abstract Object resolve(Identity identity);
 
     protected abstract Serializable execute(
-            PrevalentSystem system, Object unmarshalledTarget, Object[] unmarshalledArgs);
+            PrevalentSystem system, Method method, Object unmarshalledTarget, Object[] unmarshalledArgs);
 }

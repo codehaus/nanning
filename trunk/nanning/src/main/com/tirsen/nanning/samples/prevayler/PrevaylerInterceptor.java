@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
  * TODO document PrevaylerInterceptor
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class PrevaylerInterceptor
         implements SingletonInterceptor, FilterMethodsInterceptor, DefinitionAwareInterceptor, ConstructionInterceptor {
@@ -61,26 +61,29 @@ public class PrevaylerInterceptor
         return Attributes.hasAttribute(method, "prevayler-command");
     }
 
-    public void construct(ConstructionInvocation invocation) {
+    public Object construct(ConstructionInvocation invocation) {
         if (!isInTransaction()) {
             enterTransaction();
             try {
                 ConstructCommand command = (ConstructCommand) constructCommandClass.newInstance();
                 command.setInvocation(invocation);
-                prevayler.executeCommand(command);
+                return prevayler.executeCommand(command);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             } finally {
                 exitTransaction();
             }
         }
+        else {
+            return invocation.getProxy();
+        }
     }
 
-    private void exitTransaction() {
+    void exitTransaction() {
         inTransaction.set(null);
     }
 
-    private void enterTransaction() {
+    void enterTransaction() {
         inTransaction.set(inTransaction); // any non-null object will do really
     }
 

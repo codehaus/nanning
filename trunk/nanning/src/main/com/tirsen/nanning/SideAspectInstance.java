@@ -15,10 +15,10 @@ import java.util.List;
 /**
  * TODO document AspectDefinition
  *
- * <!-- $Id: SideAspectInstance.java,v 1.7 2002-12-03 17:05:04 lecando Exp $ -->
+ * <!-- $Id: SideAspectInstance.java,v 1.8 2002-12-08 12:57:45 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.7 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.8 $
  */
 class SideAspectInstance {
     private AspectDefinition aspectDefinition;
@@ -100,7 +100,7 @@ class SideAspectInstance {
         }
     }
 
-    public void invokeConstructor(Object proxy) {
+    public Object invokeConstructor(Object proxy) {
         ConstructionInvocation constructionInvocation = null;
         for (int i = 0; i < interceptors.length; i++) {
             Interceptor interceptor = interceptors[i];
@@ -110,10 +110,11 @@ class SideAspectInstance {
                     if (constructionInvocation == null) {
                         constructionInvocation = new ConstructionInvocationImpl(proxy);
                     }
-                    ((ConstructionInterceptor) interceptor).construct(constructionInvocation);
+                    return ((ConstructionInterceptor) interceptor).construct(constructionInvocation);
                 }
             }
         }
+        return proxy;
     }
 
     class InvocationImpl implements Invocation {
