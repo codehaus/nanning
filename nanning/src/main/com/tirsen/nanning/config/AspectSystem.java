@@ -31,6 +31,11 @@ public class AspectSystem implements AspectFactory {
 
     public Object newInstance(Class classIdentifier, Object[] targets) {
         Object object = newInstance(classIdentifier);
+        setTargets(object, targets);
+        return object;
+    }
+
+    public void setTargets(Object object, Object[] targets) {
         List targetsList = new ArrayList(Arrays.asList(targets));
         Collection mixins = Aspects.getAspectInstance(object).getMixins();
         for (Iterator iterator = mixins.iterator(); iterator.hasNext();) {
@@ -46,7 +51,6 @@ public class AspectSystem implements AspectFactory {
         if (!targetsList.isEmpty()) {
             throw new IllegalArgumentException("could not find mixin for target(s) " + targetsList);
         }
-        return object;
     }
 
     public static Aspect mixin(Class interfaceClass, Class targetClass) {
