@@ -1,14 +1,12 @@
 package com.tirsen.nanning.samples.prevayler;
 
-import org.prevayler.implementation.SnapshotPrevayler;
-import org.prevayler.PrevalentSystem;
-
-import java.io.IOException;
-import java.util.Set;
-import java.util.HashSet;
-
 import com.tirsen.nanning.Aspects;
 import com.tirsen.nanning.Interceptor;
+import org.prevayler.implementation.SnapshotPrevayler;
+
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 public class GarbageCollectingSystem extends SnapshotPrevayler {
     public GarbageCollectingSystem(IdentifyingSystem system, String path) throws IOException, ClassNotFoundException {
@@ -17,6 +15,11 @@ public class GarbageCollectingSystem extends SnapshotPrevayler {
 
     public void takeSnapshot() throws IOException {
         IdentifyingSystem system = (IdentifyingSystem) system();
+        garbageCollectSystem(system);
+        super.takeSnapshot();
+    }
+
+    public static void garbageCollectSystem(IdentifyingSystem system) {
         final Set referencedObjects = new HashSet();
         ObjectGraphVisitor.visit(system, new ObjectGraphVisitor() {
             protected void visit(Object o) {
@@ -42,6 +45,5 @@ public class GarbageCollectingSystem extends SnapshotPrevayler {
             }
         });
         system.keepTheseObjects(referencedObjects);
-        super.takeSnapshot();
     }
 }
