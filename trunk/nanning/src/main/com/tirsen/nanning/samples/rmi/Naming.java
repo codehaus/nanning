@@ -17,11 +17,26 @@ public class Naming {
 
     public Object lookup(String name) throws IOException, ClassNotFoundException {
 
-        ServerConnection serverConnection = connectionManager.openConnection();
+        ServerConnection serverConnection = null;
         try {
-            ObjectOutputStream output = new ObjectOutputStream(serverConnection.getOutputStream());
+            serverConnection = connectionManager.openConnection();
+        } catch (IOException e) {
+            throw new CouldNotConnectException(e);
+        }
+        try {
+            ObjectOutputStream output = null;
+            try {
+                output = new ObjectOutputStream(serverConnection.getOutputStream());
+            } catch (IOException e) {
+                throw new CouldNotConnectException(e);
+            }
             output.writeObject(new NamingLookup(name));
-            ObjectInputStream input = new ObjectInputStream(serverConnection.getInputStream());
+            ObjectInputStream input = null;
+            try {
+                input = new ObjectInputStream(serverConnection.getInputStream());
+            } catch (IOException e) {
+                throw new CommunicationException(e);
+            }
             return marshaller.unmarshal(input.readObject());
         } finally {
             serverConnection.close();
