@@ -106,6 +106,16 @@ public class RemoteTest extends AbstractAttributesTest {
         assertSame(id, objectTable.register(o));
     }
 
+    public void testOBjectTableCleanup() throws Exception {
+        Object o = new Object();
+        ObjectTable objectTable = new ObjectTable(200);
+        Object id = objectTable.register(o);
+        Thread.sleep(100);
+        assertTrue(objectTable.isIDRegistered(id));
+        Thread.sleep(101);
+        assertFalse(objectTable.isIDRegistered(id));
+    }
+
     public void testRemoteMarshallerWithLocalObject() {
         RemoteMarshaller remoteMarshaller = new RemoteMarshaller();
         MyStatefulServiceImpl o = new MyStatefulServiceImpl();

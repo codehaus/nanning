@@ -28,10 +28,10 @@ import java.util.*;
  * Hmm... wait, a minute, there's some support for this in QDox, maybe that will work...
  * -- jon
 
- * <!-- $Id: Attributes.java,v 1.6 2003-02-21 13:44:39 lecando Exp $ -->
+ * <!-- $Id: Attributes.java,v 1.7 2003-03-13 08:26:54 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 
 public class Attributes {
@@ -88,7 +88,7 @@ public class Attributes {
                 }
 
                 if (!found) {
-                    logger.warn("could not find attributes for " + klass + " on classpath or in " + searchPaths);
+                    logger.debug("could not find attributes for " + klass + " on classpath or in " + searchPaths);
                 }
             } catch (MalformedURLException e) {
                 throw new RuntimeException("Error fetching properties for " + klass, e);
