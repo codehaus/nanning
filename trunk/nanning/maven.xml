@@ -13,6 +13,8 @@
         <delete file="${maven.dist.src.assembly.dir}/build.xml"/>
         <delete dir="${maven.dist.src.assembly.dir}/src/etc"/>
         <mkdir dir="${maven.dist.src.assembly.dir}/lib"/>
+
+        <copy file="${basedir}/docs/CHANGES" todir="${maven.dist.bin.assembly.dir}" />
     </postGoal>
 
     <postGoal name="dist:prepare-bin-filesystem">
@@ -45,6 +47,8 @@
                 </fileset>
             </copy>
         </j:forEach>
+
+        <copy file="${basedir}/docs/CHANGES" todir="${maven.dist.bin.assembly.dir}" />
     </postGoal>
 
 <!--    <goal name="nanning:frameworks-docs">-->
