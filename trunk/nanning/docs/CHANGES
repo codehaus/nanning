@@ -1,3 +1,7 @@
+0.6
+ - Initial implementation of new XML format based on AspectSystem.
+ - Large set of smaller refactorings and bugfixes.
+
 0.5
  - Reimplemented AspectSystem with better abstractions (and much better performance).
  - Profiler sample from Khalil Bouhamza.
