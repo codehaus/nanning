@@ -16,17 +16,22 @@ import com.tirsen.nanning.samples.LogInterceptor;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.net.URLClassLoader;
+import java.net.URL;
 
 /**
  * TODO document LogInterceptorTest
  *
- * <!-- $Id: LogInterceptorTest.java,v 1.3 2002-10-30 21:39:27 tirsen Exp $ -->
+ * <!-- $Id: LogInterceptorTest.java,v 1.4 2002-11-03 19:01:28 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class LogInterceptorTest extends TestCase
 {
+    private ClassLoader prevContextClassLoader;
+    private String prevFactory;
+
     public static class MockLogFactory extends LogFactory
     {
         private MockLog mockLog = new MockLog();
@@ -187,6 +192,10 @@ public class LogInterceptorTest extends TestCase
     protected void setUp() throws Exception
     {
         super.setUp();
+        // hack into commons-logging to intercept logging for test
+        prevContextClassLoader = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(new URLClassLoader(new URL[0]));
+        prevFactory = System.getProperty(LogFactory.FACTORY_PROPERTY);
         System.setProperty(LogFactory.FACTORY_PROPERTY,
                 "com.tirsen.nanning.samples.test.LogInterceptorTest$MockLogFactory");
     }
@@ -194,6 +203,12 @@ public class LogInterceptorTest extends TestCase
     protected void tearDown() throws Exception
     {
         super.tearDown();
+        // clean up hack for next tests
+        Thread.currentThread().setContextClassLoader(prevContextClassLoader);
+        if (prevFactory != null)
+        {
+            System.setProperty(LogFactory.FACTORY_PROPERTY, prevFactory);
+        }
     }
 
     public static interface Intf

@@ -1,149 +1,156 @@
 <?xml version="1.0"?>
 <project>
-  <pomVersion>3</pomVersion>
-  <name>Nanning Aspects</name>
-  <id>nanning</id>
-  <currentVersion>0.1</currentVersion>
-  <organization>
-    <url>http://sourceforge.net/projects/nanning</url>
-    <logo>http://sourceforge.net/sflogo.php?group_id=64968&amp;type=5</logo>
-  </organization>
-  <inceptionYear>2002</inceptionYear>
-  <package>com.tirsen.nanning</package>
+    <pomVersion>3</pomVersion>
+    <name>Nanning Aspects</name>
+    <id>nanning</id>
+    <currentVersion>0.1</currentVersion>
+    <organization>
+        <url>http://sourceforge.net/projects/nanning</url>
+        <logo>http://sourceforge.net/sflogo.php?group_id=64968&amp;type=5</logo>
+    </organization>
+    <inceptionYear>2002</inceptionYear>
+    <package>com.tirsen.nanning</package>
 
-  <shortDescription>Nanning is a simple yet scaleable aspect-oriented framework.</shortDescription>
+    <shortDescription>Nanning is a simple yet scaleable aspect-oriented framework.</shortDescription>
 
-  <description>
-  	Nanning is a simple yet scaleable aspect-oriented framework based on the ideas of implementing AOP in Java
-  	outlined by Rickard Oberg in his blog.
-  </description>
+    <description>
+        Nanning is a simple yet scaleable aspect-oriented framework based on the ideas of implementing AOP in Java
+        outlined by Rickard Oberg in his blog.
+    </description>
 
-  <url>http://nanning.sourceforge.net</url>
-  <issueTrackingUrl>
-    http://sourceforge.net/tracker/?group_id=64968
-  </issueTrackingUrl>
-  <siteAddress>Sourceforge</siteAddress>
-  <siteDirectory>/home/groups/n/na/nanning/htdocs</siteDirectory>
-  <distributionDirectory>
-    /unknownatthistime
-  </distributionDirectory>
+    <url>http://nanning.sourceforge.net</url>
+    <issueTrackingUrl>
+        http://sourceforge.net/tracker/?group_id=64968
+    </issueTrackingUrl>
+    <siteAddress>Sourceforge</siteAddress>
+    <siteDirectory>/home/groups/n/na/nanning/htdocs</siteDirectory>
+    <distributionDirectory>
+        /unknownatthistime
+    </distributionDirectory>
 
-  <repository>
-    <connection>
-      scm:cvs:pserver:anonymous@cvs.nanning.sourceforge.net:/cvsroot/nanning:nanning
-    </connection>
-    <url>
-      http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/nanning/nanning/
-    </url>
-  </repository>
+    <repository>
+        <connection>
+            scm:cvs:pserver:anonymous@cvs.nanning.sourceforge.net:/cvsroot/nanning:nanning
+        </connection>
+        <url>
+            http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/nanning/nanning/
+        </url>
+    </repository>
 
-  <versions>
-  </versions>
+    <versions>
+    </versions>
 
-  <mailingLists>
-      <mailingList>
-        <name>Nanning Developer List</name>
-        <subscribe>http://lists.sourceforge.net/mailman/listinfo/nanning-developer</subscribe>
-        <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/nanning-developer</unsubscribe>
-        <archive>http://lists.sourceforge.net/mailman/listinfo/nanning-developer</archive>
-      </mailingList>
-  </mailingLists>
+    <mailingLists>
+        <mailingList>
+            <name>Nanning Developer List</name>
+            <subscribe>http://lists.sourceforge.net/mailman/listinfo/nanning-developer</subscribe>
+            <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/nanning-developer</unsubscribe>
+            <archive>http://lists.sourceforge.net/mailman/listinfo/nanning-developer</archive>
+        </mailingList>
+    </mailingLists>
 
-  <developers>
+    <developers>
 
-    <developer>
-      <name>Jon Tirsen</name>
-      <id>tirsen</id>
-      <email>tirsen@users.sourceforge.net</email>
-      <organization></organization>
-    </developer>
+        <developer>
+            <name>Jon Tirsen</name>
+            <id>tirsen</id>
+            <email>tirsen@users.sourceforge.net</email>
+            <organization></organization>
+        </developer>
 
-  </developers>
+    </developers>
 
-  <dependencies>
+    <dependencies>
 
-    <dependency>
-      <id>commons-collections</id>
-      <version>2.0</version>
-    </dependency>
+        <dependency>
+            <id>commons-collections</id>
+            <version>2.0</version>
+        </dependency>
 
-    <dependency>
-      <id>qdox</id>
-      <version>1.0</version>
-    </dependency>
+        <dependency>
+            <id>qdox</id>
+            <version>1.0</version>
+        </dependency>
 
-    <dependency>
-      <id>commons-logging</id>
-      <version>1.0.2</version>
-    </dependency>
+        <dependency>
+            <id>commons-logging</id>
+            <version>1.0.2</version>
+        </dependency>
 
-    <dependency>
-      <id>commons-jelly</id>
-      <version>1.0-beta-4</version>
-    </dependency>
+        <dependency>
+            <id>commons-jelly</id>
+            <version>1.0-beta-4</version>
+        </dependency>
 
-    <dependency>
-      <id>commons-beanutils</id>
-      <version>1.5</version>
-    </dependency>
+        <dependency>
+            <id>commons-beanutils</id>
+            <version>1.5</version>
+        </dependency>
 
-    <dependency>
-      <id>commons-lang</id>
-      <version>1.0</version>
-    </dependency>
+        <dependency>
+            <id>commons-lang</id>
+            <version>1.0</version>
+        </dependency>
 
-    <dependency>
-      <id>dom4j</id>
-      <version>1.4-dev-7</version>
-    </dependency>
+        <dependency>
+            <id>dom4j</id>
+            <version>1.4-dev-7</version>
+        </dependency>
 
-    <dependency>
-      <id>junit</id>
-      <version>3.8.1</version>
-    </dependency>
+        <dependency>
+            <id>junit</id>
+            <version>3.8.1</version>
+        </dependency>
 
-    <dependency>
-      <id>ant</id>
-      <version>1.5</version>
-    </dependency>
+        <dependency>
+            <id>ant</id>
+            <version>1.5</version>
+        </dependency>
 
-    <dependency>
-      <id>log4j</id>
-      <version>1.2.6</version>
-    </dependency>
+        <dependency>
+            <id>log4j</id>
+            <version>1.2.6</version>
+        </dependency>
 
-  </dependencies>
+    </dependencies>
 
-  <build>
+    <build>
 
-    <nagEmailAddress>
-      tirsen@users.sourceforge.net
-    </nagEmailAddress>
+        <nagEmailAddress>
+            tirsen@users.sourceforge.net
+        </nagEmailAddress>
 
-    <sourceDirectory>src/main</sourceDirectory>
+        <sourceDirectory>src/main</sourceDirectory>
 
-    <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
+        <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
 
-    <!-- Unit test classes -->
+        <!-- Unit test classes -->
 
-    <unitTest>
-      <includes>
-        <include>**/*Test.java</include>
-        <include>**/*Test.class</include>
-        <include>**/*.xml</include>
-      </includes>
-      <excludes>
-        <exclude>**/Abstract*.java</exclude>
-        <exclude>**/Abstract*.class</exclude>
-      </excludes>
-    </unitTest>
+        <unitTest>
+            <includes>
+                <include>**/*Test.java</include>
+            </includes>
+            <excludes>
+                <exclude>**/Abstract*.java</exclude>
+            </excludes>
+            <resources>
+                <resource>
+                    <directory>src/test</directory>
+                    <includes>
+                        <include>**/*.xml</include>
+                        <include>**/*.properties</include>
+                    </includes>
+                </resource>
+            </resources>
+        </unitTest>
 
 
-      <resources>
-        <includes>
-          <include>**/*.xml</include>
-        </includes>
-      </resources>
+        <resources>
+            <directory>src/main</directory>
+            <includes>
+                <include>**/*.xml</include>
+            </includes>
+        </resources>
 
-  </build>
+    </build>
 </project>
