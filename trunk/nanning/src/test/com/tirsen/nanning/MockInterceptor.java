@@ -6,7 +6,7 @@
  */
 package com.tirsen.nanning;
 
-import com.tirsen.nanning.Interceptor;
+import com.tirsen.nanning.MethodInterceptor;
 import com.tirsen.nanning.Invocation;
 import junit.framework.Assert;
 
@@ -15,12 +15,12 @@ import java.lang.reflect.Method;
 /**
  * TODO document MockInterceptor
  *
- * <!-- $Id: MockInterceptor.java,v 1.1 2002-11-17 14:03:34 tirsen Exp $ -->
+ * <!-- $Id: MockInterceptor.java,v 1.2 2002-12-03 17:21:01 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.2 $
  */
-public class MockInterceptor implements Interceptor
+public class MockInterceptor implements MethodInterceptor
 {
     private Object expectTarget;
     private Object actualTarget;

@@ -4,6 +4,7 @@ import junit.framework.TestCase;
 import com.tirsen.nanning.AspectClass;
 import com.tirsen.nanning.AttributesCompiler;
 import com.tirsen.nanning.Attributes;
+import com.tirsen.nanning.AttributesTest;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -12,16 +13,11 @@ import java.net.MalformedURLException;
  * TODO document ContractInterceptorTest
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class ContractInterceptorTest extends TestCase {
     public void test() throws MalformedURLException {
-        File targetDir = new File("target" + File.separator + "attributes");
-        Attributes.addSearchPath(targetDir.toURL());
-        AttributesCompiler attributesCompiler = new AttributesCompiler();
-        attributesCompiler.setSrc(new File("src" + File.separator + "test"));
-        attributesCompiler.setDest(targetDir);
-        attributesCompiler.execute();
+        AttributesTest.compileAttributes();
 
         AspectClass aspectClass = new AspectClass();
         aspectClass.setInterface(ContractIntf.class);
