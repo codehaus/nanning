@@ -3,6 +3,7 @@ package org.codehaus.nanning.config;
 import org.codehaus.nanning.AspectException;
 import org.codehaus.nanning.AspectInstance;
 import org.codehaus.nanning.MethodInterceptor;
+import org.codehaus.nanning.AssertionException;
 
 public class InterceptorAspect implements Aspect {
     public static final int SINGLETON = 0;
@@ -24,8 +25,9 @@ public class InterceptorAspect implements Aspect {
 
     public InterceptorAspect(Pointcut pointcut, Class interceptorClass, int stateManagement) {
         this.stateManagement = stateManagement;
-        assert stateManagement == SINGLETON || stateManagement == PER_METHOD || stateManagement == PER_INSTANCE
-                : "SINGLETON, PER_METHOD and PER_INSTANCE is supported only, not " + stateManagement;
+        if (stateManagement != SINGLETON && stateManagement != PER_METHOD && stateManagement != PER_INSTANCE) {
+            throw new AssertionException("SINGLETON, PER_METHOD and PER_INSTANCE is supported only, not " + stateManagement);
+        }
 
         if (stateManagement == SINGLETON) {
             singletonInterceptor = createInterceptor();

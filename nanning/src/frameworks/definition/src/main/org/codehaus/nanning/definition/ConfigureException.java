@@ -6,17 +6,19 @@
  */
 package org.codehaus.nanning.definition;
 
+import org.codehaus.nanning.util.WrappedException;
+
 /**
  * TODO document ConfigureException
  *
- * <!-- $Id: ConfigureException.java,v 1.1 2003-07-04 10:53:57 lecando Exp $ -->
+ * <!-- $Id: ConfigureException.java,v 1.2 2003-09-05 07:56:42 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
  * @deprecated please use the new {@link org.codehaus.nanning.config.AspectSystem} framework instead.
  */
-public class ConfigureException extends RuntimeException {
+public class ConfigureException extends WrappedException {
     public ConfigureException() {
     }
 

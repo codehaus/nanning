@@ -34,10 +34,10 @@ mixin.addInterceptor(method, new MethodInterceptor() {
 }
 </code></pre>
  *
- * <!-- $Id: Mixin.java,v 1.3 2003-09-01 11:57:04 lecando Exp $ -->
+ * <!-- $Id: Mixin.java,v 1.4 2003-09-05 07:56:43 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class Mixin implements Serializable {
     static final long serialVersionUID = 7386027290257587762L;
@@ -60,7 +60,9 @@ public class Mixin implements Serializable {
     }
 
     public void setTarget(Object target) {
-        assert !(target instanceof Mixin);
+        if (target instanceof Mixin) {
+            throw new AssertionException();
+        }
         this.target = target;
     }
 

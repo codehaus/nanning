@@ -6,6 +6,7 @@ import java.io.Serializable;
 //import org.prevayler.util.clock.AbstractClockedSystem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.codehaus.nanning.AssertionException;
 
 public class BasicIdentifyingSystem implements IdentifyingSystem, Serializable {
     private static final Log logger = LogFactory.getLog(BasicIdentifyingSystem.class);
@@ -32,14 +33,18 @@ public class BasicIdentifyingSystem implements IdentifyingSystem, Serializable {
 
     public synchronized Object getObjectWithID(long oid) {
         Object object = idToObject.get(new Long(oid));
-        assert object != null : "could not find object with id " + oid;
-        assert hasObjectID(object) : "object is not registered " + object;
+        if (object == null) {
+            throw new AssertionException("could not find object with id " + oid);
+        }
         return object;
     }
 
     public synchronized long getObjectID(Object object) {
-        assert hasObjectID(object) : "object " + object + " had no object id, use registerObjectID(Object)";
-        return ((Long) objectToId.get(object)).longValue();
+        Long aLong = (Long) objectToId.get(object);
+        if (aLong == null) {
+            throw new AssertionException("object " + object + " had no object id, use registerObjectID(Object)");
+        }
+        return aLong.longValue();
     }
 
     public synchronized boolean hasNoRegisteredObjects() {
@@ -74,11 +79,17 @@ public class BasicIdentifyingSystem implements IdentifyingSystem, Serializable {
             throw new IllegalStateException("You have to be inside a transaction to register objects");
         }
 
-        assert object != null : "can't register null";
-        assert !hasObjectID(object) : "already has ID: " + object;
+        if (object == null) {
+            throw new AssertionException("can't register null");
+        }
+        if (hasObjectID(object)) {
+            throw new AssertionException("already has ID: " + object);
+        }
 
         Long id = getNextId();
-        assert !isIDRegistered(id.longValue());
+        if (isIDRegistered(id.longValue())) {
+            throw new AssertionException();
+        }
 
         idToObject.put(id, object);
         objectToId.put(object, id);

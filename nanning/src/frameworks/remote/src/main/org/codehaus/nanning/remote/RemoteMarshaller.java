@@ -6,6 +6,7 @@ import java.util.Iterator;
 import org.codehaus.nanning.AspectInstance;
 import org.codehaus.nanning.Aspects;
 import org.codehaus.nanning.Mixin;
+import org.codehaus.nanning.AssertionException;
 import org.codehaus.nanning.remote.ObjectTable;
 import org.codehaus.nanning.remote.RemoteAspect;
 import org.codehaus.nanning.remote.RemoteIdentity;
@@ -92,9 +93,12 @@ public class RemoteMarshaller implements Marshaller {
                                           connectionManager);
             }
         } else {
-            assert Aspects.isAspectObject(o) ? !isRemoteStub(o) : true
-                    : o + " was remote stub but did not have 'remote'-attribute";
-            assert !(o instanceof RemoteIdentity);
+            if (!(Aspects.isAspectObject(o) ? !isRemoteStub(o) : true)) {
+                throw new AssertionException(o + " was remote stub but did not have 'remote'-attribute");
+            }
+            if (o instanceof RemoteIdentity) {
+                throw new AssertionException();
+            }
         }
 
         return o;
@@ -115,9 +119,13 @@ public class RemoteMarshaller implements Marshaller {
     private static Object getSingleMixinTarget(Object o) {
         Collection mixins = Aspects.getAspectInstance(o).getMixins();
         Iterator iterator = mixins.iterator();
-        assert iterator.hasNext() : o + " doesn't have any mixins";
+        if (!iterator.hasNext()) {
+            throw new AssertionException(o + " doesn't have any mixins");
+        }
         Mixin mixinInstance = (Mixin) iterator.next();
-        assert !iterator.hasNext() : "don't support several mixins";
+        if (iterator.hasNext()) {
+            throw new AssertionException("don't support several mixins");
+        }
 
         Object target = mixinInstance.getTarget();
         return target;

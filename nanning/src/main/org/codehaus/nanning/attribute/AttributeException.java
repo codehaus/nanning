@@ -1,6 +1,8 @@
 package org.codehaus.nanning.attribute;
 
-public class AttributeException extends RuntimeException {
+import org.codehaus.nanning.util.WrappedException;
+
+public class AttributeException extends WrappedException {
     public AttributeException(String message) {
         super(message);
     }

@@ -1,7 +1,9 @@
 package org.codehaus.nanning.prevayler;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
+import java.io.*;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+
 import org.codehaus.nanning.AspectInstance;
 import org.codehaus.nanning.Aspects;
 import org.codehaus.nanning.Mixin;
@@ -10,11 +12,6 @@ import org.codehaus.nanning.attribute.Attributes;
 import org.codehaus.nanning.config.AspectSystem;
 import org.codehaus.nanning.config.FindTargetMixinAspect;
 import org.prevayler.PrevaylerFactory;
-
-import java.io.*;
-import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.IdentityHashMap;
 
 public class PrevaylerTest extends AbstractAttributesTest {
 
@@ -428,7 +425,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
     public void testSerialization() throws IOException, ClassNotFoundException {
         MyObject myObject = (MyObject) aspectSystem.newInstance(MyObject.class);
         myObject.setValue("value");
-        IdentityHashMap identityHashMap = new IdentityHashMap();
+        HashMap identityHashMap = new HashMap();
         identityHashMap.put(myObject, new Long(1));
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -436,7 +433,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
         objectOutputStream.writeObject(identityHashMap);
         objectOutputStream.close();
         ObjectInputStream objectInputStream = new ObjectInputStream(new ByteArrayInputStream(outputStream.toByteArray()));
-        identityHashMap = (IdentityHashMap) objectInputStream.readObject();
+        identityHashMap = (HashMap) objectInputStream.readObject();
 
         myObject = (MyObject) identityHashMap.keySet().iterator().next();
         assertEquals("value", myObject.getValue());
@@ -467,7 +464,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
 
     private void newPrevayler() throws IOException, ClassNotFoundException {
         currentPrevayler = new CountingPrevayler(
-                PrevaylerFactory.createPrevayler(Aspects.getCurrentAspectFactory().newInstance(MySystem.class),
+                PrevaylerFactory.createPrevayler((Serializable) Aspects.getCurrentAspectFactory().newInstance(MySystem.class),
                         prevaylerDir.getAbsolutePath()));
     }
 

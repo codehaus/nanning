@@ -1,6 +1,8 @@
 package org.codehaus.nanning.prevayler;
 
 import org.prevayler.Prevayler;
+import org.codehaus.nanning.util.WrappedException;
+import org.codehaus.nanning.AssertionException;
 
 import java.util.Stack;
 
@@ -22,7 +24,9 @@ public class CurrentPrevayler {
         } else {
             system = getPrevayler().prevalentSystem();
         }
-        assert system != null : "Prevayler not initialized for this thread, no current system";
+        if (system == null) {
+            throw new AssertionException("Prevayler not initialized for this thread, no current system");
+        }
         return system;
     }
 
@@ -36,7 +40,9 @@ public class CurrentPrevayler {
 
     public static Prevayler getPrevayler() {
         Prevayler prevayler = (Prevayler) currentPrevayler.get();
-        assert prevayler != null : "Prevayler not initialized for this thread, no current Prevayler";
+        if (prevayler == null) {
+            throw new AssertionException("Prevayler not initialized for this thread, no current Prevayler");
+        }
         return prevayler;
     }
 
@@ -57,7 +63,9 @@ public class CurrentPrevayler {
     }
 
     public static void exitTransaction() {
-        assert isInTransaction() : "not in transaction";
+        if (!isInTransaction()) {
+            throw new AssertionException("not in transaction");
+        }
         currentSystems().pop();
     }
 
@@ -78,7 +86,7 @@ public class CurrentPrevayler {
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new WrappedException(e);
         }
     }
 

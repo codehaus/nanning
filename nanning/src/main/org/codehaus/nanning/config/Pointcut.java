@@ -4,10 +4,7 @@ import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.List;
 
-import org.codehaus.nanning.AspectException;
-import org.codehaus.nanning.AspectInstance;
-import org.codehaus.nanning.MethodInterceptor;
-import org.codehaus.nanning.Mixin;
+import org.codehaus.nanning.*;
 
 public abstract class Pointcut {
 
@@ -46,7 +43,7 @@ public abstract class Pointcut {
                             throw new AspectException(e);
                         }
                     } else {
-                        assert false : "interceptor or class needs to be specified";
+                        throw new AssertionException("interceptor or class needs to be specified");
                     }
                 }
             }

@@ -2,6 +2,7 @@ package org.codehaus.nanning.remote;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.codehaus.nanning.AssertionException;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -29,7 +30,9 @@ class ObjectTable {
 
     Object getFromID(Object id) {
         LocalReference o = (LocalReference) idToReference.get(id);
-        assert o != null;
+        if (o == null) {
+            throw new AssertionException();
+        }
         o.touch();
         cleanupStale();
         return o.getReferred();

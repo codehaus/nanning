@@ -5,6 +5,8 @@ import junit.framework.TestCase;
 import java.lang.reflect.Proxy;
 import java.io.File;
 
+import org.codehaus.nanning.util.OroUtils;
+
 public class ClassPropertiesHelperTest extends TestCase {
     private ClassPropertiesHelper classPropertiesHelper;
 
@@ -61,9 +63,9 @@ public class ClassPropertiesHelperTest extends TestCase {
     }
 
     public void testJoinTail() {
-        String[] parts = "field.field.field.attribute".split("\\.");
+        String[] parts = OroUtils.split("field.field.field.attribute", "\\.");
         assertEquals("field.attribute", ClassPropertiesHelper.joinTail(parts, 2));
-        parts = "field.field.attribute".split("\\.");
+        parts = OroUtils.split("field.field.attribute", "\\.");
         assertEquals("attribute", ClassPropertiesHelper.joinTail(parts, 2));
     }
 

@@ -7,7 +7,7 @@ import org.codehaus.nanning.MethodInterceptor;
 import org.codehaus.nanning.attribute.Attributes;
 
 import java.lang.reflect.Method;
-import java.util.regex.Pattern;
+import org.codehaus.nanning.util.RegexpPattern;
 import java.util.Iterator;
 
 public class P {
@@ -148,10 +148,10 @@ public class P {
     }
 
     private static class MethodName extends Pointcut {
-        private final Pattern pattern;
+        private final RegexpPattern pattern;
 
         public MethodName(String pattern) {
-            this.pattern = Pattern.compile(pattern);
+            this.pattern = RegexpPattern.compile(pattern);
         }
 
         public boolean adviseMethod(AspectInstance instance, Mixin mixin, Method method) {

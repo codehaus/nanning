@@ -3,6 +3,7 @@ package org.codehaus.nanning.prevayler;
 import java.io.Serializable;
 
 import org.codehaus.nanning.Aspects;
+import org.codehaus.nanning.AssertionException;
 
 public class IdentifyingMarshaller implements Marshaller, Serializable {
     static final long serialVersionUID = 7285806267400465332L;
@@ -12,7 +13,9 @@ public class IdentifyingMarshaller implements Marshaller, Serializable {
             return o;
 
         } else if (PrevaylerUtils.isStatefulService(o.getClass())) {
-            assert o instanceof Serializable : "Stateful services must be serializable";
+            if (!(o instanceof Serializable)) {
+                throw new AssertionException("Stateful services must be serializable");
+            }
             return o;
 
         } else if (PrevaylerUtils.isStatelessService(o.getClass())) {
@@ -55,7 +58,6 @@ public class IdentifyingMarshaller implements Marshaller, Serializable {
 
     private IdentifyingSystem getSystem() {
         Object system = CurrentPrevayler.getSystem();
-        assert system instanceof IdentifyingSystem : "I need an identifying system to work";
         return (IdentifyingSystem) system;
     }
 
@@ -66,7 +68,9 @@ public class IdentifyingMarshaller implements Marshaller, Serializable {
         }
         if (PrevaylerUtils.isEntity(objectClass)) {
             long oid = ((Long) identity.getIdentifier()).longValue();
-            assert getSystem().isIDRegistered(oid) : "object of type " + Aspects.getRealClass(objectClass) + " had invalid object id " + oid;
+            if (!getSystem().isIDRegistered(oid)) {
+                throw new AssertionException("object of type " + Aspects.getRealClass(objectClass) + " had invalid object id " + oid);
+            }
             return getSystem().getObjectWithID(oid);
         }
         throw new IllegalArgumentException("Can't resolve objects of " + objectClass);

@@ -1,13 +1,11 @@
 package org.codehaus.nanning.prevayler;
 
-import java.io.Serializable;
 import java.security.PrivilegedExceptionAction;
 
 import javax.security.auth.Subject;
 
+import org.codehaus.nanning.AssertionException;
 import org.codehaus.nanning.Invocation;
-import org.codehaus.nanning.prevayler.AuthenticatedCall;
-import org.codehaus.nanning.prevayler.Marshaller;
 
 public class MarshallingCall extends AuthenticatedCall {
     static final long serialVersionUID = -8607314000649422353L;
@@ -79,7 +77,10 @@ public class MarshallingCall extends AuthenticatedCall {
     }
 
     public Object getTarget() {
-        assert target != null;
+        if (target == null) {
+            throw new AssertionException();
+        }
+
         return unmarshal(target);
     }
 

@@ -7,6 +7,7 @@ import java.io.ObjectOutput;
 import java.util.*;
 
 import org.apache.commons.collections.ReferenceMap;
+import org.codehaus.nanning.AssertionException;
 
 public class SoftMap extends ReferenceMap implements Externalizable {
     static final long serialVersionUID = -7396446944555084132L;
@@ -157,9 +158,13 @@ public class SoftMap extends ReferenceMap implements Externalizable {
 
         for (int i = 0; i < num; i++) {
             Object key = in.readObject();
-            assert key != null;
+            if (key == null) {
+                throw new AssertionException();
+            }
             Object value = in.readObject();
-            assert value != null;
+            if (value == null) {
+                throw new AssertionException();
+            }
 
             readBackValues.add(key);
             readBackValues.add(value);

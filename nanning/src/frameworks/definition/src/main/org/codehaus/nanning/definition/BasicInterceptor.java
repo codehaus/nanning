@@ -7,8 +7,8 @@
 package org.codehaus.nanning.definition;
 
 import java.lang.reflect.Method;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.codehaus.nanning.util.Matcher;
+import org.codehaus.nanning.util.RegexpPattern;
 
 import org.codehaus.nanning.attribute.Attributes;
 
@@ -16,10 +16,10 @@ import org.codehaus.nanning.attribute.Attributes;
  * basic interceptor with methodNameFilter support.
  * TODO document BasicInterceptor
  *
- * <!-- $Id: BasicInterceptor.java,v 1.1 2003-07-04 10:53:57 lecando Exp $ -->
+ * <!-- $Id: BasicInterceptor.java,v 1.2 2003-09-05 07:56:42 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
  * @deprecated please use the new {@link org.codehaus.nanning.config.AspectSystem} framework instead.
  */
@@ -45,7 +45,7 @@ public abstract class BasicInterceptor implements DefinitionAwareInterceptor, Fi
             try {
                 methodNameFilterPattern = Attributes.getAttribute(this.getClass(), METHOD_NAME_FILTER_ATTRIBUTE_NAME);
                 // qdox returns [.*] as [. ] so replace [. ] with [.*]; qdox should fix this or we have got to come up with a better work-around
-                methodNameFilterPattern = Pattern.compile(". ").matcher(methodNameFilterPattern).replaceAll(".*");
+                methodNameFilterPattern = RegexpPattern.compile(". ").matcher(methodNameFilterPattern).replaceAll(".*");
 
             } catch (Exception e) {
                 // bad stuff happend so let it intercept
@@ -54,7 +54,7 @@ public abstract class BasicInterceptor implements DefinitionAwareInterceptor, Fi
 
         }
         if (methodNameFilterPattern != null) {
-            Matcher m = Pattern.compile(methodNameFilterPattern).matcher(method.getName());
+            Matcher m = RegexpPattern.compile(methodNameFilterPattern).matcher(method.getName());
             return m.matches();
         }
         // no attribute specified return true.

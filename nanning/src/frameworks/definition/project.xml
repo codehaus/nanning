@@ -46,6 +46,11 @@
             <version>1.5</version>
         </dependency>
 
+        <dependency>
+            <id>oro</id>
+            <version>2.0.7</version>
+        </dependency>
+        
     </dependencies>
 
 </project>

@@ -10,7 +10,7 @@ import java.net.MalformedURLException;
  * TODO document ContractInterceptorTest
  *
  * @author <a href="mailto:jon_tirsen@yahoo.org">Jon Tirs?n</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class ContractInterceptorTest extends AbstractAttributesTest {
     public void test() throws MalformedURLException {
@@ -23,7 +23,7 @@ public class ContractInterceptorTest extends AbstractAttributesTest {
         try {
             contract.increaseBy(-1);
             fail("call allowed with pre-condition violation");
-        } catch (AssertionError shouldHappen) {
+        } catch (Error shouldHappen) {
         }
 
         contract.increaseBy(1);
@@ -31,7 +31,7 @@ public class ContractInterceptorTest extends AbstractAttributesTest {
         try {
             contract.setValue(-1);
             fail("call did not fail with class-invariant violation");
-        } catch (AssertionError shouldHappen) {
+        } catch (Error shouldHappen) {
         }
     }
 }

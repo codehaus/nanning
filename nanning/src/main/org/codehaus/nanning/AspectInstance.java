@@ -13,15 +13,9 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+
+import org.codehaus.nanning.util.LinkedHashSet;
 
 /**
  * The central concept of the Nanning Core, contains mixins.
@@ -36,10 +30,10 @@ import java.util.Set;
  instance.addMixin(mixin);
  </pre></code>
  *
- * <!-- $Id: AspectInstance.java,v 1.3 2003-08-29 15:20:31 lecando Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.4 2003-09-05 07:56:43 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public final class AspectInstance implements InvocationHandler, Serializable {
     static final long serialVersionUID = 5462785783512485056L;
@@ -122,7 +116,9 @@ public final class AspectInstance implements InvocationHandler, Serializable {
      */
     public Mixin getMixinForInterface(Class interfaceClass) {
         Mixin mixinInstance = (Mixin) mixins.get(interfaceClass);
-        assert mixinInstance != null : "there is no mixin for interface " + interfaceClass + " mixins were " + mixins;
+        if (mixinInstance == null) {
+            throw new AssertionException("there is no mixin for interface " + interfaceClass + " mixins were " + mixins);
+        }
         return mixinInstance;
     }
 
@@ -146,7 +142,9 @@ public final class AspectInstance implements InvocationHandler, Serializable {
     private void readObject(ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {
         objectInputStream.defaultReadObject();
         AspectFactory currentAspectFactory = Aspects.getCurrentAspectFactory();
-        assert currentAspectFactory != null : "context AspectFactory not specified, it is not possible to deserialize " + this;
+        if (currentAspectFactory == null) {
+            throw new AssertionException("context AspectFactory not specified, it is not possible to deserialize " + this);
+        }
         aspectFactory = currentAspectFactory;
         aspectFactory.reinitialize(this);
     }
@@ -160,7 +158,9 @@ public final class AspectInstance implements InvocationHandler, Serializable {
      * @param mixin
      */
     public void addMixin(Mixin mixin) {
-        assert proxy == null : "Can't add mixins when proxy has been created.";
+        if (proxy != null) {
+            throw new AssertionException("Can't add mixins when proxy has been created.");
+        }
         Class interfaceClass = mixin.getInterfaceClass();
         bindMixinToInterface(interfaceClass, mixin);
         mixinsList.add(mixin);

@@ -2,10 +2,7 @@ package org.codehaus.nanning.remote;
 
 import java.io.IOException;
 
-import org.codehaus.nanning.AspectInstance;
-import org.codehaus.nanning.Invocation;
-import org.codehaus.nanning.MethodInterceptor;
-import org.codehaus.nanning.Mixin;
+import org.codehaus.nanning.*;
 import org.codehaus.nanning.remote.CouldNotConnectException;
 import org.codehaus.nanning.remote.ExceptionThrown;
 import org.codehaus.nanning.prevayler.MarshallingInputStream;
@@ -19,9 +16,10 @@ public class RemoteAspect implements Aspect, MethodInterceptor {
     private Marshaller marshaller;
 
     public Object invoke(Invocation invocation) throws Throwable {
-        assert invocation.getTarget() instanceof RemoteIdentity :
-                "target is not remote-reference: " + invocation.getTarget();
-        
+        if (!(invocation.getTarget() instanceof RemoteIdentity)) {
+            throw new AssertionException("target is not remote-reference: " + invocation.getTarget());
+        }
+
         RemoteIdentity remoteIdentity = (RemoteIdentity) invocation.getTarget();
 
         ServerConnectionManager connectionManager = remoteIdentity.getConnectionManager();

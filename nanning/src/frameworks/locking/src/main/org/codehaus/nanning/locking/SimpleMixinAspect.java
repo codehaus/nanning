@@ -4,6 +4,7 @@ import org.codehaus.nanning.config.Aspect;
 import org.codehaus.nanning.AspectInstance;
 import org.codehaus.nanning.Mixin;
 import org.codehaus.nanning.AspectException;
+import org.codehaus.nanning.AssertionException;
 
 import java.util.Arrays;
 
@@ -29,9 +30,10 @@ public abstract class SimpleMixinAspect implements Aspect, Cloneable {
             targetClass = targetClass.getSuperclass();
             interfaces = targetClass.getInterfaces();
         }
-        assert targetClass != SimpleMixinAspect.class && interfaces.length == 1 :
-                "your aspects class " + targetClass + " does not implement exactly one interface  " + Arrays.asList(interfaces) +
-                " you have to specify the mixins interface manually using setInterfaceClass(Class)";
+        if (targetClass == SimpleMixinAspect.class || interfaces.length != 1) {
+            throw new AssertionException("your aspects class " + targetClass + " does not implement exactly one interface  " + Arrays.asList(interfaces) +
+                                         " you have to specify the mixins interface manually using setInterfaceClass(Class)");
+        }
         Class interfaceClass = interfaces[0];
         return interfaceClass;
     }

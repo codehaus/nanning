@@ -1,5 +1,7 @@
 package org.codehaus.nanning.samples;
 
+import org.codehaus.nanning.AssertionException;
+
 public class StopWatch {
     ///CLOVER:OFF
 
@@ -41,23 +43,29 @@ public class StopWatch {
     }
 
     public double getTimeSpent(int numberOfIterations) {
-        assert stopped : "you need to invoke stop() first";
+        assertStopped();
         return getTimeSpent() / (double) numberOfIterations;
     }
 
     public double getMemoryUsed(int numberOfIterations) {
-        assert stopped : "you need to invoke stop() first";
+        assertStopped();
         return getMemoryUsed() / (double) numberOfIterations;
     }
 
     public String getTimeSpentSeconds() {
-        assert stopped : "you need to invoke stop() first";
+        assertStopped();
         return getTimeSpent() / MILLIS_PER_SECOND + "s";
     }
 
     public String getMemoryUsedKs() {
-        assert stopped : "you need to invoke stop() first";
+        assertStopped();
         return getMemoryUsed() / BYTES_PER_K + "k";
+    }
+
+    private void assertStopped() {
+        if (!stopped) {
+            throw new AssertionException("you need to invoke stop() first");
+        }
     }
     ///CLOVER:ON
 }
