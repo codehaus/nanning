@@ -1,16 +1,16 @@
 package com.tirsen.nanning.samples.prevayler;
 
 public class MyObjectImpl implements MyObject {
-    private String attribute;
+    private String value;
     private MyObject myObject;
     private boolean wasFinalized;
 
-    public String getAttribute() {
-        return attribute;
+    public String getValue() {
+        return value;
     }
 
-    public void setAttribute(String attribute) {
-        this.attribute = attribute;
+    public void setValue(String attribute) {
+        this.value = attribute;
     }
 
     public void setMyObject(MyObject myObject) {

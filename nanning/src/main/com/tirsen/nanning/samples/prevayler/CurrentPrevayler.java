@@ -21,7 +21,7 @@ public class CurrentPrevayler {
         return identifyingSystem;
     }
 
-    static void setSystem(IdentifyingSystem system) {
+    public static void setSystem(IdentifyingSystem system) {
         currentSystem.set(system);
     }
 
@@ -36,8 +36,8 @@ public class CurrentPrevayler {
         setSystem(prevayler == null ? null : (IdentifyingSystem) prevayler.system());
     }
 
-    static boolean isReplaying() {
-        return getSystem() != null;
+    public static boolean isReplaying() {
+        return getSystem() != null && getPrevayler() == null;
     }
 
     public static void enterTransaction() {

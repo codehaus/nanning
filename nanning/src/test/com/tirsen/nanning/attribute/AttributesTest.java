@@ -10,48 +10,50 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * TODO document AttributesTest
  *
- * <!-- $Id: AttributesTest.java,v 1.4 2003-01-24 13:29:30 tirsen Exp $ -->
+ * <!-- $Id: AttributesTest.java,v 1.5 2003-02-20 15:36:06 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.4 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.5 $
  */
 public class AttributesTest extends AbstractAttributesTest {
 
     public void testClassAttributes() throws IOException, NoSuchMethodException, NoSuchFieldException {
         ClassAttributes classAttributes = Attributes.getAttributes(AttributesTestClass.class);
-        assertEquals("classValue", classAttributes.getAttribute("classAttribute"));
-        assertTrue(classAttributes.hasAttribute("classAttribute"));
-        assertFalse(classAttributes.hasAttribute("stupidAttribute"));
+        assertEquals("classValue", classAttributes.getAttribute("class.attribute"));
+        assertTrue(classAttributes.hasAttribute("class.attribute"));
+        assertFalse(classAttributes.hasAttribute("stupid.attribute"));
         Field field = AttributesTestClass.class.getDeclaredField("field");
-        assertEquals("fieldValue", classAttributes.getAttribute(field, "fieldAttribute"));
-        assertTrue(classAttributes.hasAttribute(field, "fieldAttribute"));
-        assertFalse(classAttributes.hasAttribute(field, "stupidAttribute"));
+        assertEquals("fieldValue", classAttributes.getAttribute(field, "field.attribute"));
+        assertTrue(classAttributes.hasAttribute(field, "field.attribute"));
+        assertFalse(classAttributes.hasAttribute(field, "stupid.attribute"));
         Method method = AttributesTestClass.class.getMethod("method", null);
-        assertEquals("methodValue", classAttributes.getAttribute(method, "methodAttribute"));
-        assertTrue(classAttributes.hasAttribute(method, "methodAttribute"));
-        assertFalse(classAttributes.hasAttribute(method, "stupidAttribute"));
+        assertEquals("methodValue", classAttributes.getAttribute(method, "method.attribute"));
+        assertTrue(classAttributes.hasAttribute(method, "method.attribute"));
+        assertFalse(classAttributes.hasAttribute(method, "stupid.attribute"));
         Method argMethod = AttributesTestClass.class.getMethod("method", new Class[]{String.class, String.class});
-        assertEquals("argMethodValue", classAttributes.getAttribute(argMethod, "methodAttribute"));
-        assertTrue(classAttributes.hasAttribute(argMethod, "methodAttribute"));
-        assertFalse(classAttributes.hasAttribute(argMethod, "stupidAttribute"));
+        assertEquals("argMethodValue", classAttributes.getAttribute(argMethod, "method.attribute"));
+        assertTrue(classAttributes.hasAttribute(argMethod, "method.attribute"));
+        assertFalse(classAttributes.hasAttribute(argMethod, "stupid.attribute"));
     }
 
     public void testAttributes() throws IOException, NoSuchMethodException, NoSuchFieldException {
         // Test compiled source attributes...
-        assertEquals("classValue", Attributes.getAttribute(AttributesTestClass.class, "classAttribute"));
-        assertFalse(Attributes.hasAttribute(AttributesTestClass.class, "stupidAttribute"));
+        assertEquals("classValue", Attributes.getAttribute(AttributesTestClass.class, "class.attribute"));
+        assertFalse(Attributes.hasAttribute(AttributesTestClass.class, "stupid.attribute"));
         Field field = AttributesTestClass.class.getDeclaredField("field");
-        assertEquals("fieldValue", Attributes.getAttribute(field, "fieldAttribute"));
-        assertFalse(Attributes.hasAttribute(field, "stupidAttribute"));
+        assertEquals("fieldValue", Attributes.getAttribute(field, "field.attribute"));
+        assertFalse(Attributes.hasAttribute(field, "stupid.attribute"));
         Method method = AttributesTestClass.class.getMethod("method", null);
-        assertEquals("methodValue", Attributes.getAttribute(method, "methodAttribute"));
-        assertFalse(Attributes.hasAttribute(method, "stupidAttribute"));
+        assertEquals("methodValue", Attributes.getAttribute(method, "method.attribute"));
+        assertFalse(Attributes.hasAttribute(method, "stupid.attribute"));
         Method argMethod = AttributesTestClass.class.getMethod("method", new Class[]{String.class, String.class});
-        assertEquals("argMethodValue", Attributes.getAttribute(argMethod, "methodAttribute"));
-        assertFalse(Attributes.hasAttribute(argMethod, "stupidAttribute"));
+        assertEquals("argMethodValue", Attributes.getAttribute(argMethod, "method.attribute"));
+        assertFalse(Attributes.hasAttribute(argMethod, "stupid.attribute"));
 
 
         // Test xml attributes
@@ -86,6 +88,13 @@ public class AttributesTest extends AbstractAttributesTest {
 
         Method fireMethod = Job.class.getMethod("fireAllEmployees", null);
         assertEquals("true", Attributes.getAttribute(fireMethod, "secure"));
+    }
+
+    public void testJoinTail() {
+        String[] parts = StringUtils.split("field.field.field.attribute", ".");
+        assertEquals("field.attribute", ClassAttributes.joinTail(parts, 2));
+        parts = StringUtils.split("field.field.attribute", ".");
+        assertEquals("attribute", ClassAttributes.joinTail(parts, 2));
     }
 
 }

@@ -2,6 +2,7 @@ package com.tirsen.nanning.samples.prevayler;
 
 import com.tirsen.nanning.Aspects;
 import com.tirsen.nanning.Interceptor;
+import com.tirsen.nanning.attribute.Attributes;
 import org.prevayler.implementation.SnapshotPrevayler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -12,6 +13,7 @@ import java.util.Set;
 import java.util.Iterator;
 import java.util.Collection;
 import java.lang.ref.Reference;
+import java.lang.reflect.Field;
 
 public class GarbageCollectingPrevayler extends SnapshotPrevayler {
     private static final Log logger = LogFactory.getLog(GarbageCollectingPrevayler.class);
@@ -48,6 +50,12 @@ public class GarbageCollectingPrevayler extends SnapshotPrevayler {
     private static Set getReferencedObjects(IdentifyingSystem system) {
         final Set referencedObjects = new HashSet();
         ObjectGraphVisitor.visit(system, new ObjectGraphVisitor() {
+            protected void visitField(Field field, Object container) {
+                if (!Attributes.hasAttribute(field, "weak")) {
+                    super.visitField(field, container);
+                }
+            }
+
             protected void visit(Object o) {
 
                 if (o instanceof String) {
@@ -60,7 +68,7 @@ public class GarbageCollectingPrevayler extends SnapshotPrevayler {
 
                 if (Identity.isEntity(o.getClass())) {
                     referencedObjects.add(o);
-                    logger.debug("Adding refrerenced object: " + o);
+                    logger.debug("Adding referenced object: " + o);
                 }
 
                 if (Aspects.isAspectObject(o)) {

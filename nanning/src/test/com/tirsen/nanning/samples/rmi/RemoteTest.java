@@ -93,13 +93,13 @@ public class RemoteTest extends AbstractAttributesTest {
                 // client side
                 MyService myService = (MyService) clientAspectRepository.newInstance(MyService.class);
                 MyObject myObject = myService.createObject("attributeValue");
-                assertEquals("attribute wrong value", "attributeValue", myObject.getAttribute());
+                assertEquals("attribute wrong value", "attributeValue", myObject.getValue());
 
                 // server side
                 Collection objects = system.getAllRegisteredObjects();
                 assertEquals("object not created on server side", 2, objects.size());
                 Iterator iterator = objects.iterator(); iterator.next();
-                assertEquals("attribute wrong value", "attributeValue", ((MyObject) iterator.next()).getAttribute());
+                assertEquals("attribute wrong value", "attributeValue", ((MyObject) iterator.next()).getValue());
 
                 remoteCallServer.stop();
             }

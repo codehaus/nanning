@@ -12,9 +12,16 @@ public class BasicIdentifyingSystem implements IdentifyingSystem {
     private static final Log logger = LogFactory.getLog(BasicIdentifyingSystem.class);
     private AlarmClock clock;
 
-    private Map objectsById = new HashMap();
-    private Map idsByObject = new IdentityHashMap();
-    private int nextObjectId = 0;
+    /**
+     * @weak
+     */
+    private Map idToObject = new HashMap();
+    /**
+     * @weak
+     */
+    private Map objectToId = new IdentityHashMap();
+
+    private long nextObjectId = 0;
 
     public void clock(AlarmClock alarmClock) {
         this.clock = alarmClock;
@@ -25,30 +32,37 @@ public class BasicIdentifyingSystem implements IdentifyingSystem {
     }
 
     public Collection getAllRegisteredObjects() {
-        return objectsById.values();
+        return idToObject.values();
     }
 
     public long getObjectID(Object object) {
         assert hasObjectID(object) : "object had no ID: " + object;
-        return ((Long) idsByObject.get(object)).longValue();
+        return ((Long) objectToId.get(object)).longValue();
     }
 
     public boolean hasObjectID(Object object) {
-        return idsByObject.containsKey(object);
+        return objectToId.containsKey(object);
     }
 
     public void unregisterObjectID(Object o) {
-        Long id = (Long) idsByObject.remove(o);
-        objectsById.remove(id);
+        assert hasObjectID(o) : "object is not registered";
+        assert o != null;
+        Long id = (Long) objectToId.remove(o);
+        assert id != null;
+        idToObject.remove(id);
     }
 
     public long registerObjectID(Object object) {
+        assert object != null : "can't register null";
         logger.debug("registering object " + object);
         assert !hasObjectID(object) : "already has ID: " + object;
 
         Long id = getNextId();
-        objectsById.put(id, object);
-        idsByObject.put(object, id);
+        assert !idToObject.containsKey(id);
+        assert !objectToId.containsKey(object);
+        assert id != null && object != null;
+        idToObject.put(id, object);
+        objectToId.put(object,  id);
         return id.longValue();
     }
 
@@ -57,7 +71,7 @@ public class BasicIdentifyingSystem implements IdentifyingSystem {
     }
 
     public Object getObjectWithID(long oid) {
-        Object object = objectsById.get(new Long(oid));
+        Object object = idToObject.get(new Long(oid));
         assert object != null : "could not find object with id " + oid;
         assert hasObjectID(object);
         return object;

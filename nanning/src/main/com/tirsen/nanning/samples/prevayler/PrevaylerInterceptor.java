@@ -13,7 +13,7 @@ import com.tirsen.nanning.definition.SingletonInterceptor;
  * TODO document PrevaylerInterceptor
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class PrevaylerInterceptor implements SingletonInterceptor, FilterMethodsInterceptor, ConstructionInterceptor {
 
@@ -22,7 +22,7 @@ public class PrevaylerInterceptor implements SingletonInterceptor, FilterMethods
     }
 
     public boolean interceptsMethod(Method method) {
-        return Attributes.hasAttribute(method, "transaction") || Attributes.hasAttribute(method, "requires-transaction");
+        return Attributes.hasAttribute(method, "transaction") || Attributes.hasAttribute(method, "transaction");
     }
 
     public Object construct(ConstructionInvocation invocation) {
@@ -33,10 +33,14 @@ public class PrevaylerInterceptor implements SingletonInterceptor, FilterMethods
         // only give object ID's if they are created inside Prevayler
         if (CurrentPrevayler.isInTransaction()) {
             if (!CurrentPrevayler.getSystem().hasObjectID(object)) {
-                CurrentPrevayler.getSystem().registerObjectID(object);
+                CurrentPrevayler.getSystem().registerObjectID(invocation.getProxy());
             }
         }
         return object;
+        //        if (CurrentPrevayler.hasPrevayler()) {
+        //            CurrentPrevayler.getSystem().registerObjectID(invocation.getProxy());
+        //        }
+        //        return invocation.getProxy();
     }
 
     public Object invoke(Invocation invocation) throws Throwable {

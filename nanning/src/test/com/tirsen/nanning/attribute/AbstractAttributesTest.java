@@ -7,6 +7,7 @@ import java.net.MalformedURLException;
 
 public abstract class AbstractAttributesTest extends TestCase {
     private static boolean attributesCompiled = false;
+    private static File attributesDir;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -16,21 +17,24 @@ public abstract class AbstractAttributesTest extends TestCase {
     private static void compileAttributes() {
         if (!attributesCompiled) {
             attributesCompiled = true;
-            File targetDir = new File("target" + File.separator + "attributes");
+            attributesDir = new File("target" + File.separator + "attributes");
             try {
-                Attributes.addSearchPath(targetDir.toURL());
+                Attributes.addSearchPath(attributesDir.toURL());
             } catch (MalformedURLException e) {
                 fail(e.getMessage());
             }
+            compileAttributes(new File("src" + File.separator + "test"));
+            compileAttributes(new File("src" + File.separator + "main"));
+            compileAttributes(new File(".." + File.separator + "nanning" + File.separator + "src" + File.separator + "main"));
+            compileAttributes(new File(".." + File.separator + "nanning" + File.separator + "src" + File.separator + "test"));
+        }
+    }
+
+    private static void compileAttributes(File source) {
+        if (source.isDirectory()) {
             AttributesCompiler attributesCompiler = new AttributesCompiler();
-            attributesCompiler.setSrc(new File("src" + File.separator + "test"));
-            attributesCompiler.setDest(targetDir);
-            attributesCompiler.execute();
-            attributesCompiler.setSrc(new File("src" + File.separator + "main"));
-            attributesCompiler.execute();
-            attributesCompiler.setSrc(new File(".." + File.separator + "nanning" + File.separator + "src" + File.separator + "main"));
-            attributesCompiler.execute();
-            attributesCompiler.setSrc(new File(".." + File.separator + "nanning" + File.separator + "src" + File.separator + "test"));
+            attributesCompiler.setSrc(source);
+            attributesCompiler.setDest(attributesDir);
             attributesCompiler.execute();
         }
     }
