@@ -1,0 +1,10 @@
+docs
+maven.log
+target
+velocity.log*
+work
+*.ipr
+*.iws
+*.iml
+lib
+
