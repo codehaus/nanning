@@ -1,0 +1,12 @@
+Nanning release 0.2
+
+Changes since 0.1:
+Almost complete rewrite of 0.1 codebase.
+Completely rewritten simplified Core.
+Several optimizations in Attributes.
+New experimental configuration mechanism (Config) with Aspect/J inspired semantics.
+Transparent persistence in Prevayler sample.
+Remote method invocation in Remote sample.
+Contract, Cache, Trace samples rewritten.
+Serialization support for aspected objects (AspectInstance).
+Many, many, many bug-fixes.
