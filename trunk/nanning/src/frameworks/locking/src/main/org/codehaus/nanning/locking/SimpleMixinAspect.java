@@ -2,7 +2,7 @@ package org.codehaus.nanning.locking;
 
 import org.codehaus.nanning.config.Aspect;
 import org.codehaus.nanning.AspectInstance;
-import org.codehaus.nanning.MixinInstance;
+import org.codehaus.nanning.Mixin;
 import org.codehaus.nanning.AspectException;
 
 import java.util.Arrays;
@@ -46,7 +46,7 @@ public abstract class SimpleMixinAspect implements Aspect, Cloneable {
 
     public void introduce(AspectInstance instance) {
         try {
-            instance.addMixin(new MixinInstance(interfaceClass, clone()));
+            instance.addMixin(new Mixin(interfaceClass, clone()));
         } catch (Exception e) {
             throw new AspectException(e);
         }

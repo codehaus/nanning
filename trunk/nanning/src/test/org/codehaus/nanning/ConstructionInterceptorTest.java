@@ -6,7 +6,7 @@ public class ConstructionInterceptorTest extends TestCase {
     public void testConstructionInterceptor() {
         AspectInstance aspectInstance = new AspectInstance(Intf.class);
         IntfImpl target = new IntfImpl();
-        aspectInstance.addMixin(new MixinInstance(Intf.class, target));
+        aspectInstance.addMixin(new Mixin(Intf.class, target));
         MockConstructionInterceptor mockConstructionInterceptor = new MockConstructionInterceptor();
         aspectInstance.addConstructionInterceptor(mockConstructionInterceptor);
 

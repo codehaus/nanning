@@ -27,19 +27,19 @@ import java.util.Set;
  * The central concept of the Nanning Core, contains mixins.
  * Use like this:
  * <pre><code>
- AspectInstance aspectInstance = new AspectInstance();
- MixinInstance mixinInstance = new MixinInstance();
- mixinInstance.setInterfaceClass(Intf.class);
- mixinInstance.addInterceptor(new MockInterceptor());
- mixinInstance.addInterceptor(new NullInterceptor());
- mixinInstance.setTarget(new Impl());
- aspectInstance.addMixin(mixinInstance);
+ AspectInstance instance = new AspectInstance();
+ Mixin mixin = new Mixin();
+ mixin.setInterfaceClass(Intf.class);
+ mixin.addInterceptor(new MockInterceptor());
+ mixin.addInterceptor(new NullInterceptor());
+ mixin.setTarget(new Impl());
+ instance.addMixin(mixin);
  </pre></code>
  *
- * <!-- $Id: AspectInstance.java,v 1.1 2003-07-04 10:53:59 lecando Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.2 2003-07-12 16:48:16 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public final class AspectInstance implements InvocationHandler, Serializable {
     static final long serialVersionUID = 5462785783512485056L;
@@ -67,7 +67,7 @@ public final class AspectInstance implements InvocationHandler, Serializable {
     private Set getInterfaceClasses() {
         Set interfaces = new HashSet();
         for (Iterator iterator = mixinsList.iterator(); iterator.hasNext();) {
-            MixinInstance mixinInstance = (MixinInstance) iterator.next();
+            Mixin mixinInstance = (Mixin) iterator.next();
             interfaces.add(mixinInstance.getInterfaceClass());
         }
         if (classIdentifier != null) {
@@ -84,7 +84,7 @@ public final class AspectInstance implements InvocationHandler, Serializable {
             Object prevThis = Aspects.getThis();
             try {
                 Aspects.setThis(proxy);
-                MixinInstance mixin = getMixinForInterface(interfaceClass);
+                Mixin mixin = getMixinForInterface(interfaceClass);
                 return mixin.invokeMethod(proxy, method, args);
             } finally {
                 Aspects.setThis(prevThis);
@@ -106,12 +106,12 @@ public final class AspectInstance implements InvocationHandler, Serializable {
     }
 
     Object getTarget(Class interfaceClass) {
-        MixinInstance interfaceInstance = getMixinForInterface(interfaceClass);
+        Mixin interfaceInstance = getMixinForInterface(interfaceClass);
         return interfaceInstance.getTarget();
     }
 
     Set getInterceptors(Class interfaceClass) {
-        MixinInstance interfaceInstance = getMixinForInterface(interfaceClass);
+        Mixin interfaceInstance = getMixinForInterface(interfaceClass);
         return interfaceInstance.getAllInterceptors();
     }
 
@@ -120,8 +120,8 @@ public final class AspectInstance implements InvocationHandler, Serializable {
      * @param interfaceClass
      * @return
      */
-    public MixinInstance getMixinForInterface(Class interfaceClass) {
-        MixinInstance mixinInstance = (MixinInstance) mixins.get(interfaceClass);
+    public Mixin getMixinForInterface(Class interfaceClass) {
+        Mixin mixinInstance = (Mixin) mixins.get(interfaceClass);
         assert mixinInstance != null : "there is no mixin for interface " + interfaceClass + " mixins were " + mixins;
         return mixinInstance;
     }
@@ -131,14 +131,14 @@ public final class AspectInstance implements InvocationHandler, Serializable {
     }
 
     public void setTarget(Class interfaceClass, Object target) {
-        MixinInstance mixinInstance = getMixinForInterface(interfaceClass);
+        Mixin mixinInstance = getMixinForInterface(interfaceClass);
         mixinInstance.setTarget(target);
     }
 
     public Object[] getTargets() {
         Object[] targets = new Object[mixinsList.size()];
         for (int i = 0; i < targets.length; i++) {
-            targets[i] = ((MixinInstance) mixinsList.get(i)).getTarget();
+            targets[i] = ((Mixin) mixinsList.get(i)).getTarget();
         }
         return targets;
     }
@@ -159,7 +159,7 @@ public final class AspectInstance implements InvocationHandler, Serializable {
      * Adds a mixin.
      * @param mixin
      */
-    public void addMixin(MixinInstance mixin) {
+    public void addMixin(Mixin mixin) {
         assert proxy == null : "Can't add mixins when proxy has been created.";
         Class interfaceClass = mixin.getInterfaceClass();
         bindMixinToInterface(interfaceClass, mixin);
@@ -170,7 +170,7 @@ public final class AspectInstance implements InvocationHandler, Serializable {
         this.mixinsList = mixinsList;
         mixins.clear();
         for (Iterator i = mixinsList.iterator(); i.hasNext();) {
-            MixinInstance mixinInstance = (MixinInstance) i.next();
+            Mixin mixinInstance = (Mixin) i.next();
             bindMixinToInterface(mixinInstance.getInterfaceClass(), mixinInstance);
         }
     }
@@ -181,7 +181,7 @@ public final class AspectInstance implements InvocationHandler, Serializable {
      * @param interfaceClass
      * @param mixinInstance
      */
-    private void bindMixinToInterface(Class interfaceClass, MixinInstance mixinInstance) {
+    private void bindMixinToInterface(Class interfaceClass, Mixin mixinInstance) {
         mixins.put(interfaceClass, mixinInstance);
         Class superclass = interfaceClass.getSuperclass();
         if (superclass != null) {
@@ -208,7 +208,7 @@ public final class AspectInstance implements InvocationHandler, Serializable {
         }
 
         for (Iterator mixinIterator = mixinsList.iterator(); mixinIterator.hasNext();) {
-            MixinInstance mixinInstance = (MixinInstance) mixinIterator.next();
+            Mixin mixinInstance = (Mixin) mixinIterator.next();
             Set allInterceptors = mixinInstance.getAllInterceptors();
             for (Iterator interceptorIterator = allInterceptors.iterator(); interceptorIterator.hasNext();) {
                 Interceptor interceptor = (Interceptor) interceptorIterator.next();
@@ -316,7 +316,7 @@ public final class AspectInstance implements InvocationHandler, Serializable {
 
     public void addInterceptor(MethodInterceptor interceptor) {
         for (Iterator iterator = mixinsList.iterator(); iterator.hasNext();) {
-            MixinInstance mixin = (MixinInstance) iterator.next();
+            Mixin mixin = (Mixin) iterator.next();
             mixin.addInterceptor(interceptor);
         }
     }

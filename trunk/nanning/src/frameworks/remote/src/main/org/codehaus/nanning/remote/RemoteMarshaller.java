@@ -5,7 +5,7 @@ import java.util.Iterator;
 
 import org.codehaus.nanning.AspectInstance;
 import org.codehaus.nanning.Aspects;
-import org.codehaus.nanning.MixinInstance;
+import org.codehaus.nanning.Mixin;
 import org.codehaus.nanning.remote.ObjectTable;
 import org.codehaus.nanning.remote.RemoteAspect;
 import org.codehaus.nanning.remote.RemoteIdentity;
@@ -28,7 +28,7 @@ public class RemoteMarshaller implements Marshaller {
             }
 
             public void introduce(AspectInstance aspectInstance) {
-                MixinInstance mixinInstance = new MixinInstance();
+                Mixin mixinInstance = new Mixin();
                 mixinInstance.setInterfaceClass(aspectInstance.getClassIdentifier());
                 aspectInstance.addMixin(mixinInstance);
             }
@@ -116,7 +116,7 @@ public class RemoteMarshaller implements Marshaller {
         Collection mixins = Aspects.getAspectInstance(o).getMixins();
         Iterator iterator = mixins.iterator();
         assert iterator.hasNext() : o + " doesn't have any mixins";
-        MixinInstance mixinInstance = (MixinInstance) iterator.next();
+        Mixin mixinInstance = (Mixin) iterator.next();
         assert !iterator.hasNext() : "don't support several mixins";
 
         Object target = mixinInstance.getTarget();

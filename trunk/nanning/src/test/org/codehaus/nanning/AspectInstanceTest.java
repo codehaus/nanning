@@ -14,10 +14,10 @@ import java.lang.reflect.Proxy;
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: AspectInstanceTest.java,v 1.1 2003-07-04 10:54:00 lecando Exp $ -->
+ * <!-- $Id: AspectInstanceTest.java,v 1.2 2003-07-12 16:48:16 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class AspectInstanceTest extends TestCase {
     private Method callMethod;
@@ -52,7 +52,7 @@ public class AspectInstanceTest extends TestCase {
     public void testAspectInstanceWithOneMixin() {
         AspectInstance instance = new AspectInstance();
         Target target = new Target();
-        instance.addMixin(new MixinInstance(Interface.class, target));
+        instance.addMixin(new Mixin(Interface.class, target));
         Object proxy = instance.getProxy();
         assertTrue(proxy instanceof Interface);
         Interface intf = (Interface) proxy;
@@ -67,7 +67,7 @@ public class AspectInstanceTest extends TestCase {
         AspectInstance instance = new AspectInstance();
 
         final Target target = new Target();
-        MixinInstance mixin = new MixinInstance(Interface.class, target);
+        Mixin mixin = new Mixin(Interface.class, target);
         instance.addMixin(mixin);
         final Interface intf = (Interface) instance.getProxy();
 
@@ -98,7 +98,7 @@ public class AspectInstanceTest extends TestCase {
 
     public void testChangeTarget() {
         AspectInstance instance = new AspectInstance();
-        MixinInstance mixin = new MixinInstance(Interface.class, new Target());
+        Mixin mixin = new Mixin(Interface.class, new Target());
         instance.addMixin(mixin);
         Target target = new Target();
         mixin.setTarget(target);
@@ -107,7 +107,7 @@ public class AspectInstanceTest extends TestCase {
 
     public void testInvocationOnTarget() {
         AspectInstance instance = new AspectInstance();
-        MixinInstance mixin = new MixinInstance(Interface.class, null);
+        Mixin mixin = new Mixin(Interface.class, null);
         instance.addMixin(mixin);
 
         final Interface proxy = (Interface) instance.getProxy();
@@ -125,7 +125,7 @@ public class AspectInstanceTest extends TestCase {
 
     public void testChangeTargetDuringInterception() {
         AspectInstance instance = new AspectInstance();
-        MixinInstance mixin = new MixinInstance(Interface.class, new Target());
+        Mixin mixin = new Mixin(Interface.class, new Target());
         instance.addMixin(mixin);
 
         final Target target = new Target();
@@ -149,14 +149,14 @@ public class AspectInstanceTest extends TestCase {
 
     public void testGetInterceptors() {
         AspectInstance instance = new AspectInstance();
-        MixinInstance mixin = new MixinInstance(Interface.class, new Target());
+        Mixin mixin = new Mixin(Interface.class, new Target());
         MethodInterceptor interceptor = new NOPInterceptor();
         mixin.addInterceptor(interceptor);
         instance.addMixin(mixin);
 
         assertTrue(instance.getAllInterceptors().contains(interceptor));
 
-        MixinInstance mixin2 = new MixinInstance(EmptyInterface.class, null);
+        Mixin mixin2 = new Mixin(EmptyInterface.class, null);
         MethodInterceptor interceptor2 = new NOPInterceptor();
         mixin2.addInterceptor(interceptor2);
         assertTrue(instance.getInterceptors(Interface.class).contains(interceptor));
@@ -165,7 +165,7 @@ public class AspectInstanceTest extends TestCase {
 
     public void testGetMixin() {
         AspectInstance instance = new AspectInstance();
-        MixinInstance mixin = new MixinInstance(Interface.class, new Target());
+        Mixin mixin = new Mixin(Interface.class, new Target());
         instance.addMixin(mixin);
         assertSame(mixin, instance.getMixinForInterface(Interface.class));
         assertTrue(instance.hasMixinForInterface(Interface.class));
@@ -179,7 +179,7 @@ public class AspectInstanceTest extends TestCase {
 
     public void testGetMixinWithInheritance() {
         AspectInstance instance = new AspectInstance();
-        MixinInstance mixin = new MixinInstance(Sub.class, null);
+        Mixin mixin = new Mixin(Sub.class, null);
         instance.addMixin(mixin);
         assertSame(mixin, instance.getMixinForInterface(Base.class));
     }
@@ -216,7 +216,7 @@ public class AspectInstanceTest extends TestCase {
 
     public void testThrowsCorrectExceptions() {
         AspectInstance instance = new AspectInstance();
-        MixinInstance mixin = new MixinInstance(Interface.class, null);
+        Mixin mixin = new Mixin(Interface.class, null);
         instance.addMixin(mixin);
 
         Interface proxy = (Interface) instance.getProxy();
@@ -259,7 +259,7 @@ public class AspectInstanceTest extends TestCase {
 
     public void testThrowCheckedException() {
         AspectInstance instance = new AspectInstance();
-        MixinInstance mixin = new MixinInstance(InterfaceWithException.class, null);
+        Mixin mixin = new Mixin(InterfaceWithException.class, null);
         instance.addMixin(mixin);
 
         InterfaceWithException proxy = (InterfaceWithException) instance.getProxy();
@@ -292,7 +292,7 @@ public class AspectInstanceTest extends TestCase {
                 }
             };
         AspectInstance instance = new AspectInstance();
-        instance.addMixin(new MixinInstance(Interface.class, new Target()));
+        instance.addMixin(new Mixin(Interface.class, new Target()));
         instance.addInterceptor(interceptor);
         assertTrue(instance.getInterceptorsForMethod(callMethod).contains(interceptor));
     }
@@ -301,13 +301,13 @@ public class AspectInstanceTest extends TestCase {
 
     public void testSideAspectAndAspectsOnProxy() throws IllegalAccessException, InstantiationException, NoSuchMethodException {
         AspectInstance aspectInstance = new AspectInstance();
-        MixinInstance mixinInstance = new MixinInstance();
+        Mixin mixinInstance = new Mixin();
         mixinInstance.setInterfaceClass(Intf.class);
         mixinInstance.addInterceptor(new MockInterceptor());
         mixinInstance.addInterceptor(new NullInterceptor());
         mixinInstance.setTarget(new IntfImpl());
         aspectInstance.addMixin(mixinInstance);
-        MixinInstance sideMixinInstance = new MixinInstance();
+        Mixin sideMixinInstance = new Mixin();
         sideMixinInstance.setInterfaceClass(TestMixin.class);
         sideMixinInstance.addInterceptor(new NullInterceptor());
         sideMixinInstance.addInterceptor(new MockInterceptor());
@@ -324,7 +324,7 @@ public class AspectInstanceTest extends TestCase {
     public static void verifySideAspect(Object bigMomma) throws NoSuchMethodException {
         IntfImpl target = (IntfImpl) Aspects.getTarget(bigMomma, Intf.class);
         target.expectThis(bigMomma);
-        MockInterceptor classInterceptor = (MockInterceptor) (Aspects.getInterceptors(bigMomma, Intf.class.getMethods()[0])[0]);
+        MockInterceptor classInterceptor = (MockInterceptor) (Aspects.getAspectInstance(bigMomma).getInterceptorsForMethod(Intf.class.getMethods()[0]).get(0));
         classInterceptor.expectAtIndex(0);
         classInterceptor.expectNumberOfInterceptors(2);
         classInterceptor.expectCalledTimes(1);
@@ -333,7 +333,7 @@ public class AspectInstanceTest extends TestCase {
         classInterceptor.expectTarget(target);
 
         TestMixinImpl sideTarget = (TestMixinImpl) Aspects.getTarget(bigMomma, TestMixin.class);
-        MockInterceptor sideInterceptor = (MockInterceptor) (Aspects.getInterceptors(bigMomma, TestMixin.class.getMethods()[0])[1]);
+        MockInterceptor sideInterceptor = (MockInterceptor) (Aspects.getAspectInstance(bigMomma).getInterceptorsForMethod(TestMixin.class.getMethods()[0]).get(1));
         sideInterceptor.expectAtIndex(1);
         sideInterceptor.expectNumberOfInterceptors(2);
         sideInterceptor.expectCalledTimes(1);
@@ -357,7 +357,7 @@ public class AspectInstanceTest extends TestCase {
 
     public void testNoInterceptors() throws IllegalAccessException, InstantiationException {
         AspectInstance aspectInstance = new AspectInstance();
-        MixinInstance mixinInstance = new MixinInstance();
+        Mixin mixinInstance = new Mixin();
         mixinInstance.setInterfaceClass(Intf.class);
         mixinInstance.setTarget(new IntfImpl());
         aspectInstance.addMixin(mixinInstance);

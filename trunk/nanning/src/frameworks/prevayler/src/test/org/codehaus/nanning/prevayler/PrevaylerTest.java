@@ -8,7 +8,7 @@ import java.util.IdentityHashMap;
 import org.codehaus.nanning.AspectFactory;
 import org.codehaus.nanning.AspectInstance;
 import org.codehaus.nanning.Aspects;
-import org.codehaus.nanning.MixinInstance;
+import org.codehaus.nanning.Mixin;
 import org.codehaus.nanning.prevayler.*;
 import org.codehaus.nanning.attribute.AbstractAttributesTest;
 import org.codehaus.nanning.attribute.Attributes;
@@ -120,7 +120,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
 
     public void testABC() throws ClassNotFoundException, IOException, NoSuchMethodException {
         AspectInstance aspectInstance = Aspects.getAspectInstance(aspectFactory.newInstance(MyObject.class));
-        MixinInstance mixinInstance = (MixinInstance) aspectInstance.getMixins().iterator().next();
+        Mixin mixinInstance = (Mixin) aspectInstance.getMixins().iterator().next();
 
         Method setValue = MyObject.class.getDeclaredMethod("setValue", new Class[]{String.class});
         assertEquals(2, mixinInstance.getInterceptorsForMethod(setValue).size());

@@ -3,7 +3,7 @@ package org.codehaus.nanning.xml;
 import org.codehaus.nanning.config.AspectSystem;
 import org.codehaus.nanning.AspectInstance;
 import org.codehaus.nanning.Aspects;
-import org.codehaus.nanning.MixinInstance;
+import org.codehaus.nanning.Mixin;
 import org.codehaus.nanning.NullInterceptor;
 import org.codehaus.nanning.attribute.AbstractAttributesTest;
 
@@ -31,7 +31,7 @@ public class XMLTest extends AbstractAttributesTest {
 
         AspectInstance instance = Aspects.getAspectInstance(o);
         assertEquals(1, instance.getMixins().size());
-        MixinInstance mixinInstance = (MixinInstance) instance.getMixins().get(0);
+        Mixin mixinInstance = (Mixin) instance.getMixins().get(0);
         assertEquals(2, mixinInstance.getInterceptorsForMethod(method).size());
         assertTrue(mixinInstance.getInterceptorsForMethod(method).get(0) instanceof NullInterceptor);
         assertTrue(mixinInstance.getInterceptorsForMethod(method).get(1) instanceof NullInterceptor);

@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.codehaus.nanning.AspectInstance;
 import org.codehaus.nanning.Invocation;
 import org.codehaus.nanning.MethodInterceptor;
-import org.codehaus.nanning.MixinInstance;
+import org.codehaus.nanning.Mixin;
 import org.codehaus.nanning.remote.CouldNotConnectException;
 import org.codehaus.nanning.remote.ExceptionThrown;
 import org.codehaus.nanning.remote.MarshallingInputStream;

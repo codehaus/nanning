@@ -99,7 +99,7 @@ public class SerializationTest extends AbstractAttributesTest {
 
     private AspectInstance createMultiMixin() {
         AspectInstance aspectInstance = createSingleMixin();
-        MixinInstance mixinInstance = new MixinInstance();
+        Mixin mixinInstance = new Mixin();
         mixinInstance.setInterfaceClass(TestMixin.class);
         mixinInstance.setTarget(new TestMixinImpl());
         aspectInstance.addMixin(mixinInstance);
@@ -109,7 +109,7 @@ public class SerializationTest extends AbstractAttributesTest {
 
     private AspectInstance createSingleMixin() {
         AspectInstance aspectInstance = new AspectInstance(Intf.class);
-        MixinInstance mixinInstance = new MixinInstance();
+        Mixin mixinInstance = new Mixin();
         mixinInstance.setInterfaceClass(Intf.class);
         mixinInstance.setTarget(new IntfImpl());
         aspectInstance.addMixin(mixinInstance);
@@ -120,7 +120,7 @@ public class SerializationTest extends AbstractAttributesTest {
     private void addInterceptors(AspectInstance aspectInstance, int numberOfInterceptors) {
         Collection mixins = aspectInstance.getMixins();
         for (Iterator iterator = mixins.iterator(); iterator.hasNext();) {
-            MixinInstance mixinInstance = (MixinInstance) iterator.next();
+            Mixin mixinInstance = (Mixin) iterator.next();
             for (int i = 0; i < numberOfInterceptors; i++) {
                 mixinInstance.addInterceptor(new NullInterceptor());
             }

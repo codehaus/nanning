@@ -2,7 +2,7 @@ package org.codehaus.nanning.config;
 
 import org.codehaus.nanning.AspectException;
 import org.codehaus.nanning.AspectInstance;
-import org.codehaus.nanning.MixinInstance;
+import org.codehaus.nanning.Mixin;
 
 public class Introductor extends AbstractAspect {
     protected Class interfaceClass;
@@ -15,7 +15,7 @@ public class Introductor extends AbstractAspect {
 
     public void introduce(AspectInstance aspectInstance) {
         if (shouldIntroduce(aspectInstance)) {
-            MixinInstance mixinInstance = new MixinInstance();
+            Mixin mixinInstance = new Mixin();
             mixinInstance.setInterfaceClass(interfaceClass);
             if (targetClass != null) {
                 try {

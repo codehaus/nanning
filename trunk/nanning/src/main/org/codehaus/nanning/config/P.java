@@ -1,7 +1,7 @@
 package org.codehaus.nanning.config;
 
 import org.codehaus.nanning.config.Pointcut;
-import org.codehaus.nanning.MixinInstance;
+import org.codehaus.nanning.Mixin;
 import org.codehaus.nanning.AspectInstance;
 import org.codehaus.nanning.attribute.Attributes;
 
@@ -32,7 +32,7 @@ public class P {
 
     public static Pointcut empty() {
         return new Pointcut() {
-            public boolean adviseMethod(AspectInstance instance, MixinInstance mixin, Method method) {
+            public boolean adviseMethod(AspectInstance instance, Mixin mixin, Method method) {
                 return false;
             }
         };
@@ -55,7 +55,7 @@ public class P {
             this.pointcut2 = pointcut2;
         }
 
-        public boolean adviseMethod(AspectInstance instance, MixinInstance mixin, Method method) {
+        public boolean adviseMethod(AspectInstance instance, Mixin mixin, Method method) {
             return pointcut1.adviseMethod(instance, mixin, method) && pointcut2.adviseMethod(instance, mixin, method);
         }
     }
@@ -67,13 +67,13 @@ public class P {
             this.pointcut = pointcut;
         }
 
-        public boolean adviseMethod(AspectInstance instance, MixinInstance mixin, Method method) {
+        public boolean adviseMethod(AspectInstance instance, Mixin mixin, Method method) {
             return !pointcut.adviseMethod(instance, mixin, method);
         }
     }
 
     public static class All extends Pointcut {
-        public boolean adviseMethod(AspectInstance instance, MixinInstance mixin, Method method) {
+        public boolean adviseMethod(AspectInstance instance, Mixin mixin, Method method) {
             return true;
         }
     }
@@ -85,17 +85,17 @@ public class P {
             this.interfaceClass = interfaceClass;
         }
 
-        public boolean adviseMethod(AspectInstance instance, MixinInstance mixin, Method method) {
+        public boolean adviseMethod(AspectInstance instance, Mixin mixin, Method method) {
             return checkMixin(mixin);
         }
 
-        private boolean checkMixin(MixinInstance mixin) {
+        private boolean checkMixin(Mixin mixin) {
             return mixin.getInterfaceClass() == interfaceClass;
         }
 
         public boolean introduceOn(AspectInstance instance) {
             for (Iterator iterator = instance.getMixins().iterator(); iterator.hasNext();) {
-                MixinInstance mixin = (MixinInstance) iterator.next();
+                Mixin mixin = (Mixin) iterator.next();
                 if (checkMixin(mixin)) {
                     return true;
                 }
@@ -115,7 +115,7 @@ public class P {
             return attribute;
         }
 
-        public boolean adviseMethod(AspectInstance instance, MixinInstance mixin, Method method) {
+        public boolean adviseMethod(AspectInstance instance, Mixin mixin, Method method) {
             return Attributes.hasAttribute(method, attribute);
         }
     }
@@ -129,7 +129,7 @@ public class P {
             this.pointcut2 = pointcut2;
         }
 
-        public boolean adviseMethod(AspectInstance instance, MixinInstance mixin, Method method) {
+        public boolean adviseMethod(AspectInstance instance, Mixin mixin, Method method) {
             return pointcut1.adviseMethod(instance, mixin, method) || pointcut2.adviseMethod(instance, mixin, method);
         }
     }
@@ -141,7 +141,7 @@ public class P {
             this.pattern = Pattern.compile(pattern);
         }
 
-        public boolean adviseMethod(AspectInstance instance, MixinInstance mixin, Method method) {
+        public boolean adviseMethod(AspectInstance instance, Mixin mixin, Method method) {
             return pattern.matcher(method.getName()).matches();
         }
     }

@@ -7,10 +7,14 @@
  */
 package org.codehaus.nanning.cache;
 
+import java.util.Set;
+import java.util.Iterator;
+
 import org.codehaus.nanning.config.AspectSystem;
 import org.codehaus.nanning.config.FindTargetMixinAspect;
 import org.codehaus.nanning.attribute.AbstractAttributesTest;
 import org.codehaus.nanning.Aspects;
+import org.codehaus.nanning.Interceptor;
 import org.codehaus.nanning.cache.CacheAspect;
 import org.codehaus.nanning.cache.CacheInterceptor;
 
@@ -49,10 +53,22 @@ public class CacheTest extends AbstractAttributesTest {
         assertEquals(3, counter.missCount);
         cacheTestCalculations.someHeavyCalculation(1);
         assertEquals(3, counter.missCount);
-        ((CacheInterceptor)
-                Aspects.findFirstInterceptorWithClass(cacheTestCalculations, CacheInterceptor.class)).clearCache();
+
+        clearCache(cacheTestCalculations);
+
         cacheTestCalculations.someHeavyCalculation(1);
         assertEquals(4, counter.missCount);
+    }
+
+    private void clearCache(CacheTestCalculations cacheTestCalculations) {
+        Set allInterceptors = Aspects.getAspectInstance(cacheTestCalculations).getAllInterceptors();
+        for (Iterator iterator = allInterceptors.iterator(); iterator.hasNext();) {
+            Interceptor interceptor = (Interceptor) iterator.next();
+            if (interceptor instanceof CacheInterceptor) {
+                CacheInterceptor cacheInterceptor = (CacheInterceptor) interceptor;
+                cacheInterceptor.clearCache();
+            }
+        }
     }
 
 }

@@ -9,21 +9,18 @@ package org.codehaus.nanning;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  * Utility for accessing and modifying aspected object.
  *
- * <!-- $Id: Aspects.java,v 1.1 2003-07-04 10:53:59 lecando Exp $ -->
+ * <!-- $Id: Aspects.java,v 1.2 2003-07-12 16:48:16 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class Aspects {
-    private static ThreadLocal contextAspectRepository = new InheritableThreadLocal();
+    private static ThreadLocal contextAspectFactory = new InheritableThreadLocal();
     private static ThreadLocal currentThis = new InheritableThreadLocal();
 
     /**
@@ -32,21 +29,8 @@ public class Aspects {
      * @param proxy
      * @return the interceptors.
      */
-    public static List getInterceptors(Object proxy) {
-        Set interceptors = getAspectInstance(proxy).getAllInterceptors();
-        return new ArrayList(interceptors);
-    }
-
-    /**
-     * What interceptors does the aspected object have for the given interface.
-     *
-     * @param proxy
-     * @param interfaceClass
-     * @return the interceptors.
-     */
-    public static Interceptor[] getInterceptors(Object proxy, Class interfaceClass) {
-        Set interceptors = getAspectInstance(proxy).getInterceptors(interfaceClass);
-        return (Interceptor[]) interceptors.toArray(new Interceptor[interceptors.size()]);
+    public static Collection getInterceptors(Object proxy) {
+        return getAspectInstance(proxy).getAllInterceptors();
     }
 
     /**
@@ -79,15 +63,6 @@ public class Aspects {
         getAspectInstance(proxy).setTarget(interfaceClass, target);
     }
 
-    /**
-     * Gets the currently executing aspected object, aspected objects should use this method
-     * instead of <code>this</code>.
-     * @return
-     */
-    public static Object getThis() {
-        return currentThis.get();
-    }
-
     public static boolean isAspectObject(Object o) {
         return o == null ? false : Proxy.isProxyClass(o.getClass());
     }
@@ -96,32 +71,16 @@ public class Aspects {
         return object == null ? null : Aspects.getAspectInstance(object).getTargets();
     }
 
-    public static Interceptor findFirstInterceptorWithClass(Object proxy, Class interceptorClass) {
-        Set allInterceptors = getAspectInstance(proxy).getAllInterceptors();
-        for (Iterator iterator = allInterceptors.iterator(); iterator.hasNext();) {
-            Interceptor interceptor = (Interceptor) iterator.next();
-            if (interceptorClass.isInstance(interceptor)) {
-                return interceptor;
-            }
-        }
-        return null;
-    }
-
     public static AspectFactory getCurrentAspectFactory() {
         if (getThis() != null) {
             return getAspectInstance(getThis()).getAspectFactory();
         } else {
-            return (AspectFactory) contextAspectRepository.get();
+            return (AspectFactory) contextAspectFactory.get();
         }
     }
 
     public static void setContextAspectFactory(AspectFactory factory) {
-        contextAspectRepository.set(factory);
-    }
-
-    public static MethodInterceptor[] getInterceptors(Object proxy, Method method) {
-        List interceptors = getAspectInstance(proxy).getInterceptorsForMethod(method);
-        return (MethodInterceptor[]) interceptors.toArray(new MethodInterceptor[interceptors.size()]);
+        contextAspectFactory.set(factory);
     }
 
     /**
@@ -143,6 +102,15 @@ public class Aspects {
             }
         }
         return null;
+    }
+
+    /**
+     * Gets the currently executing aspected object, aspected objects should use this method
+     * instead of <code>this</code>.
+     * @return
+     */
+    public static Object getThis() {
+        return currentThis.get();
     }
 
     static void setThis(Object proxy) {

@@ -34,12 +34,12 @@ mixin.addInterceptor(method, new MethodInterceptor() {
 }
 </code></pre>
  *
- * <!-- $Id: MixinInstance.java,v 1.1 2003-07-04 10:53:59 lecando Exp $ -->
+ * <!-- $Id: Mixin.java,v 1.1 2003-07-12 16:48:16 lecando Exp $ -->
  *
  * @author $Author: lecando $
  * @version $Revision: 1.1 $
  */
-public class MixinInstance implements Serializable {
+public class Mixin implements Serializable {
     static final long serialVersionUID = 7386027290257587762L;
 
     private Class interfaceClass;
@@ -47,10 +47,10 @@ public class MixinInstance implements Serializable {
 
     private transient Map methodInterceptors = new HashMap();
 
-    public MixinInstance() {
+    public Mixin() {
     }
 
-    public MixinInstance(Class interfaceClass, Object target) {
+    public Mixin(Class interfaceClass, Object target) {
         setInterfaceClass(interfaceClass);
         setTarget(target);
     }
@@ -60,7 +60,7 @@ public class MixinInstance implements Serializable {
     }
 
     public void setTarget(Object target) {
-        assert !(target instanceof MixinInstance);
+        assert !(target instanceof Mixin);
         this.target = target;
     }
 
@@ -156,11 +156,11 @@ public class MixinInstance implements Serializable {
         }
 
         public Object getTarget() {
-            return MixinInstance.this.target;
+            return Mixin.this.target;
         }
 
         public void setTarget(Object target) {
-            MixinInstance.this.setTarget(target);
+            Mixin.this.setTarget(target);
         }
 
         public Object getProxy() {
@@ -213,9 +213,9 @@ public class MixinInstance implements Serializable {
 
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof MixinInstance)) return false;
+        if (!(o instanceof Mixin)) return false;
 
-        final MixinInstance mixinInstance = (MixinInstance) o;
+        final Mixin mixinInstance = (Mixin) o;
 
         if (interfaceClass != null ? !interfaceClass.equals(mixinInstance.interfaceClass) : mixinInstance.interfaceClass != null) return false;
         if (target != null ? !target.equals(mixinInstance.target) : mixinInstance.target != null) return false;
