@@ -11,7 +11,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * TODO document Identity
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class Identity implements Serializable {
     static final long serialVersionUID = 716500751463534855L;
@@ -33,7 +33,7 @@ public class Identity implements Serializable {
     }
 
     public Object resolve(AspectFactory aspectFactory, IdentifyingSystem system) {
-        if (isService(objectClass)) {
+        if (isStatelessService(objectClass)) {
             return aspectFactory.newInstance(identifier);
         }
         if (isEntity(objectClass)) {
@@ -48,8 +48,12 @@ public class Identity implements Serializable {
         return Attributes.hasInheritedAttribute(objectClass, "entity");
     }
 
-    public static boolean isService(Class objectClass) {
+    public static boolean isStatelessService(Class objectClass) {
         return Attributes.hasInheritedAttribute(objectClass, "service");
+    }
+
+    public static boolean isStatefulService(Class objectClass) {
+        return Attributes.hasInheritedAttribute(objectClass, "stateful-service");
     }
 
     public static boolean isPrimitive(Object o) {

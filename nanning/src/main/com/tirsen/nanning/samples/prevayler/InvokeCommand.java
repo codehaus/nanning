@@ -70,4 +70,8 @@ public class InvokeCommand implements Command {
             CurrentPrevayler.setSystem(prev);
         }
     }
+
+    public Call getCall() {
+        return call;
+    }
 }
