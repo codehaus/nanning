@@ -12,10 +12,10 @@ import java.lang.reflect.Proxy;
 /**
  * The definition of an aspected object, specifies interfaces, interceptors and target-objects.
  *
- * <!-- $Id: AspectClass.java,v 1.9 2002-11-17 14:03:33 tirsen Exp $ -->
+ * <!-- $Id: AspectClass.java,v 1.10 2002-11-18 20:56:30 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class AspectClass extends AspectDefinition
 {
@@ -35,14 +35,14 @@ public class AspectClass extends AspectDefinition
 
         AspectInstance aspectInstance = new AspectInstance(this, sideAspectInstances);
 
-        List interfaces = new ArrayList(sideAspectInstances.length);
+        List sideAspects = new ArrayList(sideAspectInstances.length);
         for (int i = 0; i < sideAspectInstances.length; i++)
         {
             SideAspectInstance interfaceInstance = sideAspectInstances[i];
-            interfaces.add(interfaceInstance.getInterfaceClass());
+            sideAspects.add(interfaceInstance.getInterfaceClass());
         }
 
-        Object proxy = instantiateProxy(aspectInstance, interfaces);
+        Object proxy = instantiateProxy(aspectInstance, sideAspects);
 
         aspectInstance.setProxy(proxy);
 
@@ -64,25 +64,16 @@ public class AspectClass extends AspectDefinition
             List instances = new ArrayList(aspectDefinitions.size() + 1);
 
             // add the class-specific interface, interceptors and target
-            SideAspectInstance classInterfaceInstance = createInterfaceInstance();
+            SideAspectInstance classInterfaceInstance = createAspectInstance(new Interceptor[0]);
             instances.add(classInterfaceInstance);
-            List proxyInterceptors = Arrays.asList(classInterfaceInstance.getInterceptors());
+            Interceptor[] classInterceptors = classInterfaceInstance.getAllInterceptors();
 
             for (Iterator iterator = aspectDefinitions.iterator(); iterator.hasNext();)
             {
-                AspectDefinition interfaceDefinition = (AspectDefinition) iterator.next();
-                SideAspectInstance interfaceInstance = interfaceDefinition.createInterfaceInstance();
-
-                // add the interceptors for the class _before_ those defined for the side-aspect
-                int size = proxyInterceptors.size() + interfaceInstance.getInterceptors().length;
-                List interfaceInterceptors = new ArrayList(size);
-                interfaceInterceptors.addAll(proxyInterceptors);
-                interfaceInterceptors.addAll(Arrays.asList(interfaceInstance.getInterceptors()));
-                interfaceInstance.setInterceptors((Interceptor[]) interfaceInterceptors.toArray(new Interceptor[size]));
-
+                AspectDefinition aspectDefinition = (AspectDefinition) iterator.next();
+                SideAspectInstance interfaceInstance = aspectDefinition.createAspectInstance(classInterceptors);
                 instances.add(interfaceInstance);
             }
-
 
             sideAspectInstances = (SideAspectInstance[]) instances.toArray(new SideAspectInstance[0]);
         }

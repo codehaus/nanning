@@ -7,18 +7,16 @@
 package com.tirsen.nanning;
 
 import junit.framework.TestCase;
-import com.tirsen.nanning.*;
-import com.tirsen.nanning.test.*;
 
 import java.lang.reflect.Method;
 
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: AspectClassTest.java,v 1.1 2002-11-17 14:03:34 tirsen Exp $ -->
+ * <!-- $Id: AspectClassTest.java,v 1.2 2002-11-18 20:56:30 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class AspectClassTest extends TestCase
 {
@@ -156,13 +154,7 @@ public class AspectClassTest extends TestCase
         aspectClass.setTarget(TestFilterImpl.class);
         TestFilterIntf instance = (TestFilterIntf) aspectClass.newInstance();
         instance.interceptThis();
-        try
-        {
-            instance.dontInterceptThis();
-        }
-        catch (Throwable doesntWorkYet)
-        {
-        }
+        instance.dontInterceptThis();
     }
 
     public void testThrowsCorrectExceptions()

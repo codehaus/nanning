@@ -11,7 +11,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogConfigurationException;
 import com.tirsen.nanning.AspectClass;
-import com.tirsen.nanning.samples.LogInterceptor;
+import com.tirsen.nanning.samples.TraceInterceptor;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -20,14 +20,14 @@ import java.net.URLClassLoader;
 import java.net.URL;
 
 /**
- * TODO document LogInterceptorTest
+ * TODO document TraceInterceptorTest
  *
- * <!-- $Id: LogInterceptorTest.java,v 1.1 2002-11-17 14:03:34 tirsen Exp $ -->
+ * <!-- $Id: TraceInterceptorTest.java,v 1.1 2002-11-18 20:56:30 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
  * @version $Revision: 1.1 $
  */
-public class LogInterceptorTest extends TestCase
+public class TraceInterceptorTest extends TestCase
 {
     private ClassLoader prevContextClassLoader;
     private String prevFactory;
@@ -197,7 +197,7 @@ public class LogInterceptorTest extends TestCase
         Thread.currentThread().setContextClassLoader(new URLClassLoader(new URL[0]));
         prevFactory = System.getProperty(LogFactory.FACTORY_PROPERTY);
         System.setProperty(LogFactory.FACTORY_PROPERTY,
-                "com.tirsen.nanning.samples.LogInterceptorTest$MockLogFactory");
+                "com.tirsen.nanning.samples.TraceInterceptorTest$MockLogFactory");
     }
 
     protected void tearDown() throws Exception
@@ -236,7 +236,7 @@ public class LogInterceptorTest extends TestCase
     {
         AspectClass aspectClass = new AspectClass();
         aspectClass.setInterface(Intf.class);
-        aspectClass.addInterceptor(LogInterceptor.class);
+        aspectClass.addInterceptor(TraceInterceptor.class);
         aspectClass.setTarget(Impl.class);
 
         assertTrue("failed to patch into commons-logging", LogFactory.getFactory() instanceof MockLogFactory);
