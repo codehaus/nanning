@@ -10,12 +10,12 @@ public interface ContractIntf {
     public void setValue(int value);
 
     /**
-     * "old this.method()" will be executed before the invocation of the method but used in the
-     * post-condition. Variables are named $0, $1, $2 and so on... (in wait for new commons-attributes which will
-     * probably handle this better.)
+     * "{old this.method()}" will be executed before the invocation of the method but used in the
+     * post-condition. Variables are named $0, $1, $2 and so on... (in wait for new commons-attributes which could
+     * perhaps handle this better.)
      *
      * @requires $0 > 0
-     * @ensures old this.getValue() + $0 == this.getValue()
+     * @ensures {old this.getValue()} + $0 == this.getValue()
      */
     public void increaseBy(int value);
 }

@@ -121,6 +121,11 @@
         </dependency>
 
         <dependency>
+            <id>prevayler</id>
+            <version>1.03.003alpha</version>
+        </dependency>
+
+        <dependency>
             <id>log4j</id>
             <version>1.2.6</version>
         </dependency>

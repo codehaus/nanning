@@ -28,10 +28,10 @@ import java.util.*;
  * Hmm... wait, a minute, there's some support for this in QDox, maybe that will work...
  * -- jon
 
- * <!-- $Id: Attributes.java,v 1.6 2002-11-27 13:18:01 lecando Exp $ -->
+ * <!-- $Id: Attributes.java,v 1.7 2002-12-03 07:50:16 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.6 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.7 $
  */
 public class Attributes
 {
@@ -53,8 +53,11 @@ public class Attributes
 
     private static String getProperty(Class klass, String key)
     {
+        System.out.println("key = " + key);
         Properties properties = getProperties(klass);
-        return properties.getProperty(key);
+        String value = properties.getProperty(key);
+        System.out.println("value = " + value);
+        return value;
     }
 
     private static Properties getProperties(Class klass)
@@ -142,7 +145,8 @@ public class Attributes
             for (int i = 0; i < parameterTypes.length; i++)
             {
                 Class parameterType = parameterTypes[i];
-                stringBuffer.append(parameterType.getName());
+                String type = parameterType.getName();
+                stringBuffer.append(type.substring(type.lastIndexOf('.') + 1));
                 if (i + 1 < parameterTypes.length)
                 {
                     stringBuffer.append(',');
