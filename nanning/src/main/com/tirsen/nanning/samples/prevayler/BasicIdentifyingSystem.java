@@ -9,7 +9,10 @@ import java.util.*;
 public class BasicIdentifyingSystem implements IdentifyingSystem {
     private static final Log logger = LogFactory.getLog(BasicIdentifyingSystem.class);
     private AlarmClock clock;
-    protected List objects = new ArrayList();
+
+    private Map objectsById = new HashMap();
+    private Map idsByObject = new IdentityHashMap();
+    private int nextObjectId = 0;
 
     public void clock(AlarmClock alarmClock) {
         this.clock = alarmClock;
@@ -20,31 +23,39 @@ public class BasicIdentifyingSystem implements IdentifyingSystem {
     }
 
     public Collection getAllRegisteredObjects() {
-        return objects;
+        return objectsById.values();
     }
 
     public long getObjectID(Object object) {
         assert hasObjectID(object) : "object had no ID: " + object;
-        return (long) objects.indexOf(object);
+        return ((Long) idsByObject.get(object)).longValue();
     }
 
     public boolean hasObjectID(Object object) {
-        return objects.contains(object);
+        return idsByObject.containsKey(object);
     }
 
     public void unregisterObjectID(Object o) {
-        objects.remove(o);
+        Long id = (Long) idsByObject.remove(o);
+        objectsById.remove(id);
     }
 
     public long registerObjectID(Object object) {
         logger.debug("registering object " + object);
         assert !hasObjectID(object) : "already has ID: " + object;
-        objects.add(object);
-        return (long) objects.indexOf(object);
+
+        Long id = getNextId();
+        objectsById.put(id, object);
+        idsByObject.put(object,  id);
+        return id.longValue();
+    }
+
+    private Long getNextId() {
+        return new Long(nextObjectId++);
     }
 
     public Object getObjectWithID(long oid) {
-        Object object = objects.get((int) oid);
+        Object object = objectsById.get(new Long(oid));
         assert object != null : "could not find object with id " + oid;
         assert hasObjectID(object);
         return object;
