@@ -25,6 +25,9 @@
                 Removed all dependencies (except compile-time attribute-dependencies) from core.
             </action>
             <action dev="tirsen" type="update">
+                Changed license to BSD-style license.
+            </action>
+            <action dev="tirsen" type="update">
                 Various additional clean up.
             </action>
         </release>

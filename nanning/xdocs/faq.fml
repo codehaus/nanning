@@ -12,7 +12,8 @@
                 <p>
                     Check out the sources from
                     <a href="file:///home/tirsen/projects/nanning/target/docs/cvs-usage.html">here</a>.
-                    Build it with <a href="http://maven.apache.org/">Maven</a>.
+                    Build it with
+                    <a href="http://maven.apache.org/">Maven</a>.
                 </p>
             </answer>
         </faq>
@@ -27,7 +28,24 @@
             </question>
             <answer>
                 <p>
-                    Like any other library that comes in a jar. Just make sure it's on your application's classpath.
+                    Nanning comes in several jar-files, the core jar-file is named
+                    <tt>nanning-&lt;version>.jar</tt> and for each
+                    <a href="frameworks/index.html">framework</a> there is an additional jar file named
+                    <tt>nanning-&lt;framework>-&lt;version>.jar</tt>. Just add the jar-files you want to use to the
+                    classpath.
+                </p>
+                <p>
+                    If you are using Maven the dependencies will automatically be downloaded.
+                </p>
+                <p>
+                    Also see <a href="download.html">Download</a>.
+                </p>
+                <p>
+                    You can see what dependencies you need by looking
+                    <a href="dependencies.html">here</a>, each framework
+                    also has their dependencies listed in the same place. Like
+                    <a href="framework/prevayler/dependencies.html">here</a>
+                    for example.
                 </p>
             </answer>
         </faq>
