@@ -12,10 +12,10 @@ import java.lang.reflect.Method;
 /**
  * Description of the current invocation, given to an interceptor upon method-call.
  *
- * <!-- $Id: Invocation.java,v 1.3 2002-10-22 18:56:25 tirsen Exp $ -->
+ * <!-- $Id: Invocation.java,v 1.4 2002-11-25 12:17:07 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.3 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.4 $
  */
 public interface Invocation
 {
@@ -33,6 +33,8 @@ public interface Invocation
      * @return the actual target object.
      */
     Object getTarget();
+
+    void setTarget(Object o);
 
     /**
      * Gets the aspected object the call is part of. (TODO might need to change name...)

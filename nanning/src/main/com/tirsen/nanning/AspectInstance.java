@@ -6,30 +6,26 @@
  */
 package com.tirsen.nanning;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.util.ArrayList;
-import java.util.List;
+
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * TODO document AspectInstance
  *
- * <!-- $Id: AspectInstance.java,v 1.13 2002-11-22 17:22:09 lecando Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.14 2002-11-25 12:17:07 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
-class AspectInstance implements InvocationHandler
-{
+class AspectInstance implements InvocationHandler {
     private static final Method OBJECT_EQUALS_METHOD;
 
     static {
         try {
-            OBJECT_EQUALS_METHOD = Object.class.getMethod("equals", new Class[] { Object.class });
+            OBJECT_EQUALS_METHOD = Object.class.getMethod("equals", new Class[]{Object.class});
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -37,30 +33,24 @@ class AspectInstance implements InvocationHandler
 
     static ThreadLocal currentThis = new ThreadLocal();
 
-    class InvocationImpl implements Invocation
-    {
+    class InvocationImpl implements Invocation {
         private int index = -1;
         private final Method method;
         private final Object[] args;
         private final SideAspectInstance sideAspectInstance;
 
-        public InvocationImpl(Method method, Object[] args, SideAspectInstance interfaceInstance)
-        {
+        public InvocationImpl(Method method, Object[] args, SideAspectInstance interfaceInstance) {
             this.method = method;
             this.args = args;
             this.sideAspectInstance = interfaceInstance;
         }
 
-        public Object invokeNext() throws Throwable
-        {
+        public Object invokeNext() throws Throwable {
             index++;
             Interceptor[] interceptors = sideAspectInstance.getInterceptorsForMethod(method);
-            if (index < interceptors.length)
-            {
+            if (index < interceptors.length) {
                 return interceptors[index].invoke(this);
-            }
-            else
-            {
+            } else {
                 try {
                     return method.invoke(sideAspectInstance.getTarget(), args);
                 } catch (InvocationTargetException e) {
@@ -72,52 +62,44 @@ class AspectInstance implements InvocationHandler
 
         private void throwRealException(InvocationTargetException e) throws Exception {
             Throwable realException = e.getTargetException();
-            if (realException instanceof Error)
-            {
+            if (realException instanceof Error) {
                 throw (Error) realException;
-            }
-            else if (realException instanceof RuntimeException)
-            {
+            } else if (realException instanceof RuntimeException) {
                 throw (RuntimeException) realException;
-            }
-            else
-            {
+            } else {
                 throw (Exception) realException;
             }
         }
 
-        public Interceptor getInterceptor(int index)
-        {
+        public Interceptor getInterceptor(int index) {
             return sideAspectInstance.getAllInterceptors()[index];
         }
 
-        public Object getTarget()
-        {
+        public Object getTarget() {
             return sideAspectInstance.getTarget();
         }
 
-        public Object getProxy()
-        {
+        public void setTarget(Object target) {
+            sideAspectInstance.setTarget(target);
+        }
+
+        public Object getProxy() {
             return proxy;
         }
 
-        public int getCurrentIndex()
-        {
+        public int getCurrentIndex() {
             return index;
         }
 
-        public int getNumberOfInterceptors()
-        {
+        public int getNumberOfInterceptors() {
             return sideAspectInstance.getAllInterceptors().length;
         }
 
-        public Method getMethod()
-        {
+        public Method getMethod() {
             return method;
         }
 
-        public Object[] getArgs()
-        {
+        public Object[] getArgs() {
             return args;
         }
     }
@@ -137,29 +119,22 @@ class AspectInstance implements InvocationHandler
     }
 
     public Object invoke(Object proxy, Method method, Object[] args)
-            throws Throwable
-    {
+            throws Throwable {
         Class interfaceClass = method.getDeclaringClass();
-        if (interfaceClass != Object.class)
-        {
+        if (interfaceClass != Object.class) {
             Object prevThis = currentThis.get();
-            try
-            {
+            try {
                 currentThis.set(proxy);
                 SideAspectInstance interfaceInstance = getSideAspectInstance(interfaceClass);
                 // if it wasn't defined by any of the specified interfaces let's assume it's the default one (ie. index 0)
 
                 Invocation invocation = new InvocationImpl(method, args, interfaceInstance);
                 return invocation.invokeNext();
-            }
-            finally
-            {
+            } finally {
                 currentThis.set(prevThis);
             }
-        }
-        else
-        {
-            if(method.equals("equals") && Aspects.isAspectObject(args[0])) {
+        } else {
+            if (OBJECT_EQUALS_METHOD.equals(method) && Aspects.isAspectObject(args[0])) {
                 args[0] = Aspects.getClassTarget(args[0]);
             }
             // main-target take care of all calls to Object (such as equals, toString and so on)
@@ -167,37 +142,31 @@ class AspectInstance implements InvocationHandler
         }
     }
 
-    Object getTarget(Class interfaceClass)
-    {
+    Object getTarget(Class interfaceClass) {
         SideAspectInstance interfaceInstance = getSideAspectInstance(interfaceClass);
         return interfaceInstance.getTarget();
     }
 
-    Interceptor[] getClassInterceptors()
-    {
+    Interceptor[] getClassInterceptors() {
         // the actual class-specific interface-instance is at the first position
         return sideAspectInstances[0].getAllInterceptors();
     }
 
-    Interceptor[] getInterceptors(Class interfaceClass)
-    {
+    Interceptor[] getInterceptors(Class interfaceClass) {
         SideAspectInstance interfaceInstance = getSideAspectInstance(interfaceClass);
         return interfaceInstance.getAllInterceptors();
     }
 
-    private SideAspectInstance getSideAspectInstance(Class interfaceClass)
-    {
+    private SideAspectInstance getSideAspectInstance(Class interfaceClass) {
         return sideAspectInstances[aspectClass.getSideAspectIndexForInterface(interfaceClass)];
     }
 
-    public void setTarget(Class interfaceClass, Object target)
-    {
+    public void setTarget(Class interfaceClass, Object target) {
         SideAspectInstance sideAspectInstance = getSideAspectInstance(interfaceClass);
         sideAspectInstance.setTarget(target);
     }
 
-    public String toString()
-    {
+    public String toString() {
         SideAspectInstance defaultInterfaceInstance = sideAspectInstances[0];
         return new ToStringBuilder(this)
                 .append("interface", defaultInterfaceInstance.getInterfaceClass().getName())

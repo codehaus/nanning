@@ -23,10 +23,10 @@ import com.tirsen.nanning.jelly.AspectTagLibrary;
 /**
  * TODO document AspectRepository
  *
- * <!-- $Id: AspectRepository.java,v 1.5 2002-11-22 17:22:09 lecando Exp $ -->
+ * <!-- $Id: AspectRepository.java,v 1.6 2002-11-25 12:17:07 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class AspectRepository
 {
@@ -44,7 +44,10 @@ public class AspectRepository
 
     public InterceptorDefinition getInterceptor(Class interceptorClass)
     {
-        return (InterceptorDefinition) interceptorDefinitions.get(interceptorClass);
+        InterceptorDefinition interceptorDefinition =
+                (InterceptorDefinition) interceptorDefinitions.get(interceptorClass);
+        assert interceptorDefinition != null : "no such interceptor defined: " + interceptorClass;
+        return interceptorDefinition;
     }
 
     public void defineAspect(AspectDefinition aspectDefinition)
@@ -133,5 +136,9 @@ public class AspectRepository
 
     public Collection getClasses() {
         return aspectClasses.values();
+    }
+
+    public Object newInstance(Class interfaceClass, Object[] targets) {
+        return getClass(interfaceClass).newInstance(targets);
     }
 }
