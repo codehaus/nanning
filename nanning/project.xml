@@ -78,6 +78,21 @@
     </dependency>
 
     <dependency>
+      <id>commons-jelly</id>
+      <version>1.0-beta-4</version>
+    </dependency>
+
+    <dependency>
+      <id>commons-beanutils</id>
+      <version>1.5</version>
+    </dependency>
+
+    <dependency>
+      <id>dom4j</id>
+      <version>1.4-dev-7</version>
+    </dependency>
+
+    <dependency>
       <id>junit</id>
       <version>3.8.1</version>
     </dependency>
@@ -110,12 +125,26 @@
       <includes>
         <include>**/*Test.java</include>
         <include>**/*Test.class</include>
+        <include>**/*.xml</include>
       </includes>
       <excludes>
         <exclude>**/Abstract*.java</exclude>
         <exclude>**/Abstract*.class</exclude>
       </excludes>
     </unitTest>
+
+
+      <resources>
+        <includes>
+          <include>**/*.xml</include>
+        </includes>
+      </resources>
+
+      <unitTest>
+        <includes>
+          <include>**/*.xml</include>
+        </includes>
+      </resources>
 
   </build>
 </project>

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<aspect-repository>
+    <aspect>
+        <interface>
+            com.tirsen.nanning.test.SideAspect
+        </interface>
+        <interceptor>
+            com.tirsen.nanning.test.NullInterceptor
+        </interceptor>
+        <interceptor>
+            com.tirsen.nanning.test.MockInterceptor
+        </interceptor>
+        <target>
+            com.tirsen.nanning.test.SideAspectImpl
+        </target>
+    </aspect>
+    <class>
+        <interface>
+            com.tirsen.nanning.test.Intf
+        </interface>
+        <interceptor>
+            com.tirsen.nanning.test.MockInterceptor
+        </interceptor>
+        <interceptor>
+            com.tirsen.nanning.test.NullInterceptor
+        </interceptor>
+        <target>
+            com.tirsen.nanning.test.Impl
+        </target>
+
+        <aspect interface="com.tirsen.nanning.test.SideAspect" />
+    </class>
+</aspect-repository>

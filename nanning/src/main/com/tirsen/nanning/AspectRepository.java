@@ -6,19 +6,33 @@
  */
 package com.tirsen.nanning;
 
+import org.apache.commons.jelly.JellyContext;
+import org.apache.commons.jelly.XMLOutput;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.io.ByteArrayOutputStream;
+import java.net.URL;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+
+import com.tirsen.nanning.jelly.AspectTagLibrary;
 
 /**
  * TODO document AspectRepository
  *
- * <!-- $Id: AspectRepository.java,v 1.3 2002-10-30 13:27:42 lecando Exp $ -->
+ * <!-- $Id: AspectRepository.java,v 1.4 2002-11-03 17:14:28 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.3 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.4 $
  */
 public class AspectRepository
 {
+    private static AspectRepository instance;
+    private static final Log logger = LogFactory.getLog(AspectRepository.class);
+
     private final Map interceptorDefinitions = new HashMap();
     private final Map aspectDefinitions = new HashMap();
     private final Map aspectClasses = new HashMap();
@@ -55,6 +69,65 @@ public class AspectRepository
 
     public Object newInstance(Class aspectInterface)
     {
-        return getClass(aspectInterface).newInstance();
+        AspectClass aClass = getClass(aspectInterface);
+        if (aClass == null)
+        {
+            throw new IllegalArgumentException("Did not find aspect-class with interface " +
+                    aspectInterface.getName());
+        }
+        return aClass.newInstance();
+    }
+
+    public static AspectRepository getInstance()
+    {
+        if(instance == null)
+        {
+            instance = new AspectRepository();
+            try
+            {
+                instance.configure(AspectRepository.class.getResource("/aspect-repository.xml"));
+            }
+            catch (Exception e)
+            {
+                logger.warn("failed to configure default instance");
+            }
+        }
+        return instance;
+    }
+
+    /**
+     * Merges all defined aspect-repositories of the xml-file into this one, at least one needs to be defined.
+     *
+     * @param resource
+     * @throws ConfigureException
+     */
+    public void configure(URL resource) throws ConfigureException
+    {
+        JellyContext context = new JellyContext();
+        try
+        {
+            context.registerTagLibrary(AspectTagLibrary.TAG_LIBRARY_URI, new AspectTagLibrary());
+            context.registerTagLibrary("", new AspectTagLibrary());
+            XMLOutput xmlOutput = XMLOutput.createXMLOutput(new ByteArrayOutputStream());
+            context.runScript(resource, xmlOutput);
+        }
+        catch (Exception e)
+        {
+            throw new ConfigureException(e);
+        }
+
+        Collection aspectRepositories = AspectTagLibrary.findDefinedRepositories(context);
+        Iterator iterator = aspectRepositories.iterator();
+        if(!iterator.hasNext())
+        {
+            throw new ConfigureException("No aspect-repository defined.");
+        }
+        while (iterator.hasNext())
+        {
+            AspectRepository configuredRepository = (AspectRepository) iterator.next();
+            this.interceptorDefinitions.putAll(configuredRepository.interceptorDefinitions);
+            this.aspectClasses.putAll(configuredRepository.aspectClasses);
+            this.aspectDefinitions.putAll(configuredRepository.aspectDefinitions);
+        }
     }
 }
