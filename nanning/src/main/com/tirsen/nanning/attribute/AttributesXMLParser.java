@@ -40,7 +40,7 @@ public class AttributesXMLParser {
     }
 
     public void setAttributeValue(String name, String value) {
-        String propertyName = null;
+        String propertyName;
         if (fieldName != null) {
             propertyName = "field." + fieldName + "." + name;
         } else if (methodName != null) {

@@ -23,17 +23,17 @@ import java.util.Map;
 /**
  * TODO document AspectRepository
  *
- * <!-- $Id: AspectRepository.java,v 1.4 2003-01-24 13:29:30 tirsen Exp $ -->
+ * <!-- $Id: AspectRepository.java,v 1.5 2003-01-24 13:40:09 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class AspectRepository implements AspectFactory {
     private static AspectRepository instance;
     private static final Log logger = LogFactory.getLog(AspectRepository.class);
 
-    private final Map interceptorDefinitions = new HashMap();
-    private final Map aspectDefinitions = new HashMap();
+    protected final Map interceptorDefinitions = new HashMap();
+    protected final Map aspectDefinitions = new HashMap();
     protected final Map aspectClasses = new HashMap();
 
     public void defineInterceptor(InterceptorDefinition interceptorDefinition) {

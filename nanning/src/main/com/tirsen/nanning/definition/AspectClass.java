@@ -15,10 +15,10 @@ import java.util.*;
 /**
  * The definition of an aspected object, specifies interfaces, interceptors and target-objects.
  *
- * <!-- $Id: AspectClass.java,v 1.5 2003-01-24 13:29:30 tirsen Exp $ -->
+ * <!-- $Id: AspectClass.java,v 1.6 2003-01-24 13:40:09 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class AspectClass {
     private final List aspectDefinitions = new ArrayList();
@@ -46,7 +46,7 @@ public class AspectClass {
             // iterate the rest of the definitions and addLink the interceptors of the first on to the rest
             for (ListIterator iterator = aspectDefinitions.listIterator(); iterator.hasNext();) {
                 AspectDefinition mixinDefinition = (AspectDefinition) iterator.next();
-                MixinInstance mixinInstance = null;
+                MixinInstance mixinInstance;
                 if (targets != null) {
                     mixinInstance =
                             mixinDefinition.newInstance(targets[iterator.previousIndex()]);
@@ -75,34 +75,6 @@ public class AspectClass {
         Object proxy = aspectInstance.getProxy();
 
         return proxy;
-    }
-
-    MixinInstance[] instantiateSideAspects(Object[] targets) {
-        MixinInstance[] sideAspectInstances;
-        try {
-            List instances = new ArrayList(aspectDefinitions.size());
-
-            // iterate the rest of the definitions and addLink the interceptors of the first on to the rest
-            for (ListIterator iterator = aspectDefinitions.listIterator(); iterator.hasNext();) {
-                AspectDefinition aspectDefinition = (AspectDefinition) iterator.next();
-                MixinInstance aspectInstance = null;
-                if (targets != null) {
-                    aspectInstance =
-                            aspectDefinition.newInstance(targets[iterator.previousIndex()]);
-                } else {
-                    aspectInstance =
-                            aspectDefinition.createMixinInstance();
-                }
-                instances.add(aspectInstance);
-            }
-
-            sideAspectInstances = (MixinInstance[]) instances.toArray(new MixinInstance[0]);
-        } catch (IllegalAccessException e) {
-            throw new AspectException(e);
-        } catch (InstantiationException e) {
-            throw new AspectException(e);
-        }
-        return sideAspectInstances;
     }
 
     private AspectDefinition getClassAspectDefinition() {
@@ -149,14 +121,6 @@ public class AspectClass {
     public void setInterface(Class interfaceClass) {
         getAspectDefinition(0).setInterface(interfaceClass);
         reindexInterfacesToIndex();
-    }
-
-    public int getSideAspectIndexForInterface(Class interfaceClass) {
-        Integer integer = (Integer) interfacesToInstancesIndex.get(interfaceClass);
-        if (integer == null) {
-            throw new IllegalArgumentException("No such interface for this object: " + interfaceClass.getName());
-        }
-        return integer.intValue();
     }
 
     public void addInterceptor(Class aClass) {

@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
  * you can enable and disable contract-checking in the same way you enable and disable assertions (java -ea and so on).
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class ContractInterceptor implements MethodInterceptor {
     private static final Log logger = LogFactory.getLog(ContractInterceptor.class);
@@ -89,7 +89,7 @@ public class ContractInterceptor implements MethodInterceptor {
         return result;
     }
 
-    private String getOldReference(int i) {
+    private static String getOldReference(int i) {
         return "old" + i;
     }
 
@@ -109,7 +109,7 @@ public class ContractInterceptor implements MethodInterceptor {
         }
     }
 
-    private Map createContext(Invocation invocation) {
+    private static Map createContext(Invocation invocation) {
         Map variables = Ognl.createDefaultContext(invocation.getProxy());
         variables.put("this", invocation.getProxy());
         Object[] args = invocation.getArgs();
@@ -149,7 +149,7 @@ public class ContractInterceptor implements MethodInterceptor {
         }
     }
 
-    private Object executeExpression(String expression, Object root, Map context) throws Exception {
+    private static Object executeExpression(String expression, Object root, Map context) throws Exception {
         return Ognl.getValue(Ognl.parseExpression(expression), context, root);
     }
 }
