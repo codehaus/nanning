@@ -1,6 +1,9 @@
 package com.tirsen.nanning.config;
 
+import java.lang.reflect.Method;
+
 import com.tirsen.nanning.*;
+import com.tirsen.nanning.attribute.Attributes;
 import junit.framework.TestCase;
 
 public class Def2Test extends TestCase {
@@ -38,8 +41,11 @@ public class Def2Test extends TestCase {
         callInterceptor.verify();
     }
 
-    public static interface IntfSub extends Intf {}
-    public static class ImplSub extends Impl {}
+    public static interface IntfSub extends Intf {
+    }
+
+    public static class ImplSub extends Impl {
+    }
 
     public void testInheritance() throws NoSuchMethodException {
         AspectSystem aspectSystem = new AspectSystem();
@@ -48,8 +54,8 @@ public class Def2Test extends TestCase {
         Object bigMomma = aspectSystem.newInstance(IntfSub.class);
 
         assertEquals(1,
-                Aspects.getAspectInstance(bigMomma).getMixinForInterface(Intf.class).
-                getInterceptorsForMethod(Intf.class.getMethod("call", new Class[0])).size());
+                     Aspects.getAspectInstance(bigMomma).getMixinForInterface(Intf.class).
+                     getInterceptorsForMethod(Intf.class.getMethod("call", new Class[0])).size());
     }
 
     public void testCreateWithTargets() {
@@ -74,5 +80,22 @@ public class Def2Test extends TestCase {
             fail();
         } catch (IllegalArgumentException e) {
         }
+    }
+
+    public static interface Base {
+        public void m();
+    }
+
+    public static interface Sub extends Base {
+    }
+
+    public static interface C extends Sub, Base {
+    }
+
+    public void testGetAllMethods() throws NoSuchMethodException {
+        assertEquals(12, PointcutAspect.getAllMethods(Object.class).length);
+        assertEquals(1, PointcutAspect.getAllMethods(Base.class).length);
+        assertEquals(1, PointcutAspect.getAllMethods(Sub.class).length);
+        assertEquals(1, PointcutAspect.getAllMethods(C.class).length);
     }
 }

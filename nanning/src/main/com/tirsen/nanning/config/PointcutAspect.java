@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 import com.tirsen.nanning.AspectException;
 import com.tirsen.nanning.AspectInstance;
@@ -51,18 +53,18 @@ public class PointcutAspect implements Aspect {
         }
     }
 
-    private Method[] getAllMethods(Class klass) {
-        List result = getAllMethodsList(klass);
+    static Method[] getAllMethods(Class klass) {
+        Collection result = getAllMethodsCollection(klass);
         return (Method[]) result.toArray(new Method[result.size()]);
     }
 
-    private List getAllMethodsList(Class klass) {
-        ArrayList result = new ArrayList();
+    private static Collection getAllMethodsCollection(Class klass) {
+        Collection result = new HashSet();
         addAllMethods(klass, result);
         return result;
     }
 
-    private void addAllMethods(Class klass, List result) {
+    private static void addAllMethods(Class klass, Collection result) {
         if (klass != null) {
             Method[] methods = klass.getDeclaredMethods();
             for (int i = 0; i < methods.length; i++) {

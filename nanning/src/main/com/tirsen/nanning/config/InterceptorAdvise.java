@@ -47,7 +47,8 @@ public class InterceptorAdvise extends Advise {
             mixinInstance.addInterceptor(method, singletonInterceptor);
         }
         if (stateManagement == PER_METHOD) {
-            mixinInstance.addInterceptor(method, createInterceptor());
+            MethodInterceptor interceptor = createInterceptor();
+            mixinInstance.addInterceptor(method, interceptor);
         }
     }
 }
