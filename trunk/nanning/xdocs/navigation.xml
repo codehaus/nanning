@@ -16,6 +16,8 @@
             <item name="Overview" href="/overview.html"/>
             <item name="Usage" href="/usage.html"/>
             <item name="Frameworks" href="/frameworks/index.html"/>
+            <item name="Changes" href="/changes-report.html"/>
+            <item name="FAQ" href="/faq.html"/>
             <item name="Building" href="/building.html"/>
         </menu>
     </body>

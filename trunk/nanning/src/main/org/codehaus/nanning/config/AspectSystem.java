@@ -35,10 +35,10 @@ public class AspectSystem implements AspectFactory {
      */
     public void initialize(AspectInstance aspectInstance) {
         introduce(aspectInstance);
-        advice(aspectInstance);
+        advise(aspectInstance);
     }
 
-    protected void advice(AspectInstance aspectInstance) {
+    protected void advise(AspectInstance aspectInstance) {
         for (Iterator aspectIterator = aspects.iterator(); aspectIterator.hasNext();) {
             Aspect aspect = (Aspect) aspectIterator.next();
 
@@ -54,11 +54,11 @@ public class AspectSystem implements AspectFactory {
     }
 
     /**
-     * Called after serialization, just advice.
+     * Called after serialization, just advise.
      * @param aspectInstance
      */
     public void reinitialize(AspectInstance aspectInstance) {
-        advice(aspectInstance);
+        advise(aspectInstance);
     }
 
     public List getAspects() {

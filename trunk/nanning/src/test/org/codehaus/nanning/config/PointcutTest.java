@@ -13,72 +13,8 @@ public class PointcutTest extends AbstractAttributesTest {
     private Method methodWithoutAttribute;
     private Method method;
 
-    protected void setUp() throws Exception {
-        super.setUp();
-
-        methodWithAttribute = InterfaceWithAttributes.class.getMethod("methodWithAttribute", null);
-        methodWithoutAttribute = InterfaceWithAttributes.class.getMethod("methodWithoutAttribute", null);
-        method = Interface.class.getMethod("method", null);
-    }
-
     public static interface Interface {
         void method();
-    }
-
-    public void testIntroduceTruePointcut() {
-        Pointcut allPointcut = new Pointcut() {
-            public boolean adviseMethod(AspectInstance instance, Mixin mixin, Method method) {
-                return true;
-            }
-
-            public boolean introduceOn(AspectInstance instance) {
-                return true;
-            }
-        };
-        AspectInstance instance = new AspectInstance();
-        assertTrue(instance.getMixins().isEmpty());
-        Mixin mixin = new Mixin(Interface.class, null);
-        allPointcut.introduce(instance, mixin);
-        assertFalse(instance.getMixins().isEmpty());
-        assertSame(mixin, instance.getMixins().get(0));
-    }
-
-    public void testAdviseFalsePointcut() {
-        Pointcut falsePointcut = new Pointcut() {
-            public boolean adviseMethod(AspectInstance instance, Mixin mixin, Method method) {
-                return false;
-            }
-        };
-
-        AspectInstance aspectInstance = new AspectInstance();
-        aspectInstance.addMixin(new Mixin(Interface.class, null));
-
-        assertEquals(0, aspectInstance.getAllInterceptors().size());
-        falsePointcut.advise(aspectInstance, new MethodInterceptor() {
-            public Object invoke(Invocation invocation) throws Throwable {
-                return null;
-            }
-        });
-        assertEquals(0, aspectInstance.getAllInterceptors().size());
-    }
-
-    public void testAdviseTruePointcut() {
-        Pointcut truePointcut = new Pointcut() {
-            public boolean adviseMethod(AspectInstance instance, Mixin mixin, Method method) {
-                return true;
-            }
-        };
-
-        AspectInstance aspectInstance = new AspectInstance();
-        aspectInstance.addMixin(new Mixin(Interface.class, null));
-
-        assertEquals(0, aspectInstance.getAllInterceptors().size());
-        truePointcut.advise(aspectInstance, new MethodInterceptor() {
-            public Object invoke(Invocation invocation) throws Throwable {
-                return null;
-            }
-        });
-        assertEquals(1, aspectInstance.getAllInterceptors().size());
     }
 
     public interface InterfaceWithAttributes {
@@ -158,5 +94,70 @@ public class PointcutTest extends AbstractAttributesTest {
         instance.addMixin(mixin);
         assertTrue(pointcut.adviseMethod(instance, mixin, methodWithAttribute));
         assertTrue(pointcut.adviseMethod(instance, mixin, methodWithoutAttribute));
+    }
+
+
+    protected void setUp() throws Exception {
+        super.setUp();
+
+        methodWithAttribute = InterfaceWithAttributes.class.getMethod("methodWithAttribute", null);
+        methodWithoutAttribute = InterfaceWithAttributes.class.getMethod("methodWithoutAttribute", null);
+        method = Interface.class.getMethod("method", null);
+    }
+
+    public void testIntroduceTruePointcut() {
+        Pointcut allPointcut = new Pointcut() {
+            public boolean adviseMethod(AspectInstance instance, Mixin mixin, Method method) {
+                return true;
+            }
+
+            public boolean introduceOn(AspectInstance instance) {
+                return true;
+            }
+        };
+        AspectInstance instance = new AspectInstance();
+        assertTrue(instance.getMixins().isEmpty());
+        Mixin mixin = new Mixin(Interface.class, null);
+        allPointcut.introduce(instance, mixin);
+        assertFalse(instance.getMixins().isEmpty());
+        assertSame(mixin, instance.getMixins().get(0));
+    }
+
+    public void testAdviseFalsePointcut() {
+        Pointcut falsePointcut = new Pointcut() {
+            public boolean adviseMethod(AspectInstance instance, Mixin mixin, Method method) {
+                return false;
+            }
+        };
+
+        AspectInstance aspectInstance = new AspectInstance();
+        aspectInstance.addMixin(new Mixin(Interface.class, null));
+
+        assertEquals(0, aspectInstance.getAllInterceptors().size());
+        falsePointcut.advise(aspectInstance, new MethodInterceptor() {
+            public Object invoke(Invocation invocation) throws Throwable {
+                return null;
+            }
+        });
+        assertEquals(0, aspectInstance.getAllInterceptors().size());
+    }
+
+    public void testAdviseTruePointcut() {
+        Pointcut truePointcut = new Pointcut() {
+            public boolean adviseMethod(AspectInstance instance, Mixin mixin, Method method) {
+                return true;
+            }
+        };
+
+        AspectInstance aspectInstance = new AspectInstance();
+        aspectInstance.addMixin(new Mixin(Interface.class, null));
+
+        assertEquals(0, aspectInstance.getAllInterceptors().size());
+        truePointcut.advise(aspectInstance, new MethodInterceptor() {
+            public Object invoke(Invocation invocation) throws Throwable {
+                return null;
+            }
+        });
+        assertEquals(1, aspectInstance.getAllInterceptors().size());
     }
 }

@@ -140,32 +140,36 @@
 
     <preGoal name="xdoc">
 
-        <maven:reactor
-            basedir="${basedir}/src/frameworks"
-            includes="*/project.xml"
-            goals="site"
-            banner="Generating site for"
-            ignoreFailures="false"
-            />
+        <j:if test="${nanning.frameworks.skip == null}">
 
-        <!-- create the parent directory for the docs -->
-        <mkdir dir="${maven.docs.dest}/frameworks"/>
+            <maven:reactor
+                basedir="${basedir}/src/frameworks"
+                includes="*/project.xml"
+                goals="site"
+                banner="Generating site for"
+                ignoreFailures="false"
+                />
 
-        <!-- copy them all to ${maven.docs.dest}/reference/plugins/${plugin.id}/ -->
-        <ant:fileScanner var="frameworkProjects">
-            <fileset dir="${basedir}">
-                <include name="src/frameworks/*/project.xml"/>
-            </fileset>
-        </ant:fileScanner>
-        <j:forEach items="${frameworkProjects.iterator()}" var="framework">
-            <j:set var="frameworkName" value="${framework.parentFile.name}"/>
-            <mkdir dir="${maven.docs.dest}/frameworks/${frameworkName}/"/>
-            <copy toDir="${maven.docs.dest}/frameworks/${frameworkName}/">
-                <fileset dir="${basedir}/src/frameworks/${frameworkName}/target/docs/">
-                    <include name="**"/>
+            <!-- create the parent directory for the docs -->
+            <mkdir dir="${maven.docs.dest}/frameworks"/>
+
+            <!-- copy them all to ${maven.docs.dest}/reference/plugins/${plugin.id}/ -->
+            <ant:fileScanner var="frameworkProjects">
+                <fileset dir="${basedir}">
+                    <include name="src/frameworks/*/project.xml"/>
                 </fileset>
-            </copy>
-        </j:forEach>
+            </ant:fileScanner>
+            <j:forEach items="${frameworkProjects.iterator()}" var="framework">
+                <j:set var="frameworkName" value="${framework.parentFile.name}"/>
+                <mkdir dir="${maven.docs.dest}/frameworks/${frameworkName}/"/>
+                <copy toDir="${maven.docs.dest}/frameworks/${frameworkName}/">
+                    <fileset dir="${basedir}/src/frameworks/${frameworkName}/target/docs/">
+                        <include name="**"/>
+                    </fileset>
+                </copy>
+            </j:forEach>
+
+        </j:if>
 
     </preGoal>
 

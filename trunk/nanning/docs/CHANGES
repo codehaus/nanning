@@ -1,7 +1,10 @@
 0.9
  - Rewrote and expanded the Pointcut-framework, see P-class.
  - Renamed MixinInstance to Mixin.
- - Various additional clean up. 
+ - Changed root-package from com.tirsen to org.codehaus.
+ - Moved all frameworks out of the core.
+ - Removed all dependencies (except compile-time attribute-dependencies) from core.
+ - Various additional clean up.
 
 0.8
  - Moved some frameworks out of core Nanning.

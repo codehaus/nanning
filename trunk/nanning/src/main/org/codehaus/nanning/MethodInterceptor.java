@@ -6,16 +6,16 @@
  */
 package org.codehaus.nanning;
 
-import java.lang.reflect.Method;
+
 
 
 /**
  * Intercepts calls on an interface on it's way to the target, these are nested "on top" of the target.
  *
- * <!-- $Id: MethodInterceptor.java,v 1.1 2003-07-04 10:53:59 lecando Exp $ -->
+ * <!-- $Id: MethodInterceptor.java,v 1.2 2003-07-16 13:05:20 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.1 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.2 $
  */
 public interface MethodInterceptor extends Interceptor {
     /**

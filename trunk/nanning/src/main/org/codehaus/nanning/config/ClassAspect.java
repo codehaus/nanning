@@ -22,7 +22,7 @@ public class ClassAspect extends AspectSystem implements Aspect {
 
     public void advise(AspectInstance aspectInstance) {
         if (shouldConfigure(aspectInstance)) {
-            super.advice(aspectInstance);
+            super.advise(aspectInstance);
         }
     }
 
