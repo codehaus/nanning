@@ -46,8 +46,8 @@ public class BasicIdentifyingSystem implements IdentifyingSystem {
         return clock;
     }
 
-    public Collection getAllRegisteredObjects() {
-        return idToObject.values();
+    public synchronized Collection getAllRegisteredObjects() {
+        return new ArrayList(idToObject.values());
     }
 
     public long getObjectID(Object object) {
@@ -63,7 +63,7 @@ public class BasicIdentifyingSystem implements IdentifyingSystem {
         return idToObject.containsKey(new Long(objectId));
     }
 
-    public void unregisterObjectID(Object o) {
+    public synchronized void unregisterObjectID(Object o) {
         assert hasObjectID(o) : "object is not registered";
         assert o != null;
         Long id = (Long) objectToId.remove(o);
@@ -71,7 +71,7 @@ public class BasicIdentifyingSystem implements IdentifyingSystem {
         idToObject.remove(id);
     }
 
-    public long registerObjectID(Object object) {
+    public synchronized long registerObjectID(Object object) {
         assert object != null : "can't register null";
         assert !hasObjectID(object) : "already has ID: " + object;
 
@@ -85,14 +85,14 @@ public class BasicIdentifyingSystem implements IdentifyingSystem {
         return id.longValue();
     }
 
-    private Long getNextId() {
-        return new Long(nextObjectId++);
-    }
-
     public Object getObjectWithID(long oid) {
         Object object = idToObject.get(new Long(oid));
         assert object != null : "could not find object with id " + oid;
         assert hasObjectID(object);
         return object;
+    }
+
+    private Long getNextId() {
+        return new Long(nextObjectId++);
     }
 }

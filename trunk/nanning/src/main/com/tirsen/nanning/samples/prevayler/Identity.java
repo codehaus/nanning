@@ -1,7 +1,5 @@
 package com.tirsen.nanning.samples.prevayler;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.io.Serializable;
 
 import com.tirsen.nanning.AspectFactory;
@@ -12,7 +10,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * TODO document Identity
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class Identity implements Serializable {
     static final long serialVersionUID = 716500751463534855L;
@@ -34,9 +32,6 @@ public class Identity implements Serializable {
     }
 
     public Object resolve(AspectFactory aspectFactory, IdentifyingSystem system) {
-        if (InputStream.class.isAssignableFrom(objectClass)) {
-            return new ByteArrayInputStream((byte[]) identifier);
-        }
         if (isService(objectClass)) {
             return aspectFactory.newInstance(identifier);
         }

@@ -1,26 +1,16 @@
 package com.tirsen.nanning.samples.prevayler;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.AccessibleObject;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 import com.tirsen.nanning.Aspects;
-import com.tirsen.nanning.Interceptor;
-import org.apache.commons.io.IOUtil;
 
 public class IdentifyingMarshaller implements Marshaller {
     public Object marshal(Object o) {
         if (Identity.isPrimitive(o)) {
             return o;
-        } else if (o instanceof InputStream) {
-            try {
-                return new Identity(InputStream.class, IOUtil.toByteArray(((InputStream) o)));
-            } catch (IOException e) {
-                throw new RuntimeException("could not marshal input-stream");
-            }
         } else if (Identity.isService(o.getClass())) {
             return new Identity(o.getClass(), Aspects.getAspectInstance(o).getClassIdentifier());
         } else if (Identity.isEntity(o.getClass())) {
@@ -33,10 +23,6 @@ public class IdentifyingMarshaller implements Marshaller {
         } else {
             return o;
         }
-    }
-
-    private boolean containsObjectID(Object o) {
-        return false;
     }
 
     public Object unmarshal(Object o) {
