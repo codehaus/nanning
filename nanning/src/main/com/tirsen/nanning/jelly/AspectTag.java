@@ -15,10 +15,10 @@ import com.tirsen.nanning.definition.AspectClass;
 /**
  * TODO document AspectTag
  *
- * <!-- $Id: AspectTag.java,v 1.4 2003-01-12 13:25:40 tirsen Exp $ -->
+ * <!-- $Id: AspectTag.java,v 1.5 2003-01-23 13:53:15 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.4 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.5 $
  */
 public class AspectTag extends TagSupport
 {
@@ -65,7 +65,7 @@ public class AspectTag extends TagSupport
 
         invokeBody(xmlOutput);
 
-        // add aspect to class or define in repository
+        // addLink aspect to class or define in repository
         if(aspectClass != null)
         {
             aspectClass.addAspect(aspectDefinition);

@@ -24,10 +24,10 @@ import java.util.*;
 /**
  * TODO document AspectInstance
  *
- * <!-- $Id: AspectInstance.java,v 1.22 2003-01-18 18:27:25 tirsen Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.23 2003-01-23 13:53:13 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.22 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.23 $
  */
 public class AspectInstance implements InvocationHandler, Externalizable {
     private Object proxy;
@@ -155,7 +155,7 @@ public class AspectInstance implements InvocationHandler, Externalizable {
     }
 
     public void addMixin(MixinInstance mixinInstance) {
-        assert proxy == null : "Can't add mixins when proxy has been created.";
+        assert proxy == null : "Can't addLink mixins when proxy has been created.";
         Class interfaceClass = mixinInstance.getInterfaceClass();
         bindMixinToInterface(interfaceClass, mixinInstance);
         mixinsList.add(mixinInstance);

@@ -19,10 +19,10 @@ import java.io.InputStream;
 import java.io.IOException;
 
 /**
- * <!-- $Id: AttributesTagHandler.java,v 1.1 2003-01-12 13:25:40 tirsen Exp $ -->
+ * <!-- $Id: AttributesTagHandler.java,v 1.2 2003-01-23 13:53:14 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.2 $
  *
  */
 public class AttributesTagHandler extends DefaultHandler {
@@ -120,10 +120,10 @@ public class AttributesTagHandler extends DefaultHandler {
             currentTypeTag = currentTypeTag.trim();
             textData = new StringBuffer(4096);
         } else if (TAG_ATTRIBUTE.equals(qName)) {
-            if (TAG_FIELD.equals((String) tagStack.peek())) {
+            if (TAG_FIELD.equals(tagStack.peek())) {
                 currentPrefix = new StringBuffer();
                 currentPrefix.append(currentFieldName);
-            } else if (TAG_METHOD.equals((String) tagStack.peek())) {
+            } else if (TAG_METHOD.equals(tagStack.peek())) {
                 currentPrefix = new StringBuffer();
                 currentPrefix.append(currentMethodName);
             }

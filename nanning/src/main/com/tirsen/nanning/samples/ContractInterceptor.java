@@ -18,11 +18,11 @@ import java.util.regex.Pattern;
 
 /**
  * TODO document ContractInterceptor.
- * Tip: use <code>Class.desiredAssertionStatus()</code> to check wheather to add this interceptor or not, that way
+ * Tip: use <code>Class.desiredAssertionStatus()</code> to check wheather to addLink this interceptor or not, that way
  * you can enable and disable contract-checking in the same way you enable and disable assertions (java -ea and so on).
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class ContractInterceptor implements MethodInterceptor {
     private static final Log logger = LogFactory.getLog(ContractInterceptor.class);
@@ -44,7 +44,7 @@ public class ContractInterceptor implements MethodInterceptor {
 
         if (checkContracts.get() == null) {
             assertExpressionTrue(invocation, requires,
-                    "precondition violated: {0}");
+                                 "precondition violated: {0}");
 
             // execute and remove the old-references
             if (ensures != null) {
@@ -60,7 +60,7 @@ public class ContractInterceptor implements MethodInterceptor {
                     parsedEnsure.append(head + oldRef + tail);
                     matcher = oldPattern.matcher(tail);
                 }
-                // if there wasn't any old-references just add all of the expression
+                // if there wasn't any old-references just addLink all of the expression
                 if (oldValues.size() == 0) {
                     parsedEnsure.append(ensures);
                 }
@@ -80,7 +80,7 @@ public class ContractInterceptor implements MethodInterceptor {
                 }
 
                 assertExpressionTrue(parsedEnsure.toString(),
-                        invocation.getProxy(), context, "postcondition violated: " + ensures);
+                                     invocation.getProxy(), context, "postcondition violated: " + ensures);
             }
 
             assertExpressionTrue(invocation, invariant, "invariant violated: {0}");
@@ -134,7 +134,7 @@ public class ContractInterceptor implements MethodInterceptor {
                     throw new AssertionError(message);
                 }
             } catch (MethodFailedException e) {
-                if(e.getReason() instanceof Error) {
+                if (e.getReason() instanceof Error) {
                     throw (Error) e.getReason();
                 } else {
                     logger.error("Could not execute expression: " + expression);
