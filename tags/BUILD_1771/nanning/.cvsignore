@@ -1,0 +1,6 @@
+target
+nanning.i*
+*.log*
+junit*
+.classpath
+.project
