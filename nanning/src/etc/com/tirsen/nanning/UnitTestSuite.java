@@ -14,11 +14,12 @@ import com.tirsen.nanning.config.InterceptorAspectTest;
 import com.tirsen.nanning.config.PointcutTest;
 import com.tirsen.nanning.samples.CacheInterceptorTest;
 import com.tirsen.nanning.samples.CacheTest;
-import com.tirsen.nanning.samples.prevayler.ObjectGraphVisitorTest;
-import com.tirsen.nanning.samples.rmi.RemoteTest;
+import com.tirsen.nanning.prevayler.ObjectGraphVisitorTest;
 import com.tirsen.nanning.xml.AspectSystemParserTest;
 import com.tirsen.nanning.locking.PessimisticLockingAspectTest;
 import com.tirsen.nanning.definition.*;
+import com.tirsen.nanning.profiler.ProfilerTest;
+import com.tirsen.nanning.remote.RemoteTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -43,7 +44,7 @@ public class UnitTestSuite {
         suite.addTestSuite(AspectInstanceTest.class);
         suite.addTestSuite(ObjectGraphVisitorTest.class);
         suite.addTestSuite(SerializationTest.class);
-        suite.addTestSuite(RemoteTest.class);
+        suite.addTestSuite(com.tirsen.nanning.remote.RemoteTest.class);
         suite.addTestSuite(AspectClassTest.class);
         suite.addTestSuite(ConstructionInterceptorTest.class);
         suite.addTestSuite(InheritanceTest.class);
@@ -55,7 +56,7 @@ public class UnitTestSuite {
         suite.addTestSuite(AttributeFilterTest.class);
         suite.addTestSuite(MethodFilterTest.class);
 
-        suite.addTestSuite(com.tirsen.nanning.profiler.ProfilerTest.class);
+        suite.addTestSuite(ProfilerTest.class);
 
         suite.addTestSuite(CacheTest.class);
         suite.addTestSuite(CacheInterceptorTest.class);

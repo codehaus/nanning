@@ -6,12 +6,12 @@
  */
 package com.tirsen.nanning;
 
-import com.tirsen.nanning.samples.TraceInterceptorTest;
-import com.tirsen.nanning.samples.prevayler.PrevaylerTest;
-import com.tirsen.nanning.samples.rmi.RemoteCallServerTest;
+import com.tirsen.nanning.prevayler.PrevaylerTest;
 import com.tirsen.nanning.xml.XMLTest;
-import com.tirsen.nanning.contract.ContractInterceptorTest;
 import com.tirsen.nanning.attribute.AttributesTest;
+import com.tirsen.nanning.remote.RemoteCallServerTest;
+import com.tirsen.nanning.trace.TraceInterceptorTest;
+import com.tirsen.nanning.contract.ContractInterceptorTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 

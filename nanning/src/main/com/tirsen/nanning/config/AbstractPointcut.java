@@ -1,28 +1,26 @@
 package com.tirsen.nanning.config;
 
-import com.tirsen.nanning.MixinInstance;
+import com.tirsen.nanning.AspectException;
 import com.tirsen.nanning.AspectInstance;
 import com.tirsen.nanning.MethodInterceptor;
-import com.tirsen.nanning.AspectException;
+import com.tirsen.nanning.MixinInstance;
 
-import java.util.Arrays;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ArrayList;
-import java.lang.reflect.Method;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 
 public abstract class AbstractPointcut implements Pointcut {
     public Method[] methodsToAdvise(AspectInstance instance, MixinInstance mixin) {
-        List methods = new ArrayList(Arrays.asList(mixin.getAllMethods()));
-        CollectionUtils.filter(methods, new Predicate() {
-            public boolean evaluate(Object o) {
-                return adviseMethod((Method) o);
+        Method[] methods = mixin.getAllMethods();
+        List methodsToAdvise = new ArrayList();
+        for (int i = 0; i < methods.length; i++) {
+            Method method = methods[i];
+            if (adviseMethod(method)) {
+                methodsToAdvise.add(method);
             }
-        });
-        return (Method[]) methods.toArray(new Method[methods.size()]);
+        }
+        return (Method[]) methodsToAdvise.toArray(new Method[methodsToAdvise.size()]);
     }
 
     public boolean adviseInstance(AspectInstance instance) {

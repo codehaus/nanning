@@ -17,10 +17,10 @@ import com.tirsen.nanning.*;
 /**
  * TODO document InterceptorDefinition
  *
- * <!-- $Id: InterceptorDefinition.java,v 1.1 2003-07-01 16:08:10 lecando Exp $ -->
+ * <!-- $Id: InterceptorDefinition.java,v 1.2 2003-07-04 06:57:10 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.1 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.2 $
  *
  * @deprecated please use the new {@link com.tirsen.nanning.config.AspectSystem} framework instead.
  */
@@ -99,7 +99,7 @@ public class InterceptorDefinition {
     public boolean interceptsConstructor(Class interfaceClass) {
         Interceptor interceptor = newInstance();
         if (interceptor instanceof ConstructionInterceptor) {
-            return ((ConstructionInterceptor) interceptor).interceptsConstructor(interfaceClass);
+            return true;
         }
         return false;
     }

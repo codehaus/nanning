@@ -8,11 +8,8 @@ import java.util.Map;
 
 import com.tirsen.nanning.Invocation;
 import com.tirsen.nanning.MethodInterceptor;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 public class CacheInterceptor implements MethodInterceptor {
-    private static final Log logger = LogFactory.getLog(CacheInterceptor.class);
 
     /**
      * TODO Should be an LRU-cache
@@ -25,9 +22,6 @@ public class CacheInterceptor implements MethodInterceptor {
         List args = Arrays.asList(invocation.getArgs()); // needs args as collection for hashCode and equals
         Object cachedResult = methodCache.get(args);
         if (cachedResult == null) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("caching call for method " + method + " with args " + args);
-            }
             cachedResult = invocation.invokeNext();
             methodCache.put(args, cachedResult);
         }

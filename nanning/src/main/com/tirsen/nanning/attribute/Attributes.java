@@ -21,10 +21,10 @@ import java.io.IOException;
  * If there are two methods with the same name, same set of arguments with types with same name but
  * in _different_ packages the attributes with same name of these methods will collide.
 
- * <!-- $Id: Attributes.java,v 1.14 2003-06-10 05:26:46 tirsen Exp $ -->
+ * <!-- $Id: Attributes.java,v 1.15 2003-07-04 06:57:11 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 
 public class Attributes {
@@ -180,7 +180,7 @@ public class Attributes {
         if (classAttributes == null) {
             classAttributes = new ClassAttributes(aClass);
             new PropertyFileAttributeLoader().load(classAttributes);
-            new AttributesXMLParser().load(classAttributes);
+//            new AttributesXMLParser().load(classAttributes);
             classAttributesCache.put(aClass, classAttributes);
         }
         return classAttributes;

@@ -13,10 +13,10 @@ import java.lang.reflect.Method;
 /**
  * TODO document AttributesTest
  *
- * <!-- $Id: AttributesTest.java,v 1.11 2003-06-10 11:28:15 lecando Exp $ -->
+ * <!-- $Id: AttributesTest.java,v 1.12 2003-07-04 06:57:11 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.11 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.12 $
  */
 public class AttributesTest extends AbstractAttributesTest {
     public static final String CLASS_ATTRIBUTE = "class.attribute";
@@ -101,38 +101,38 @@ public class AttributesTest extends AbstractAttributesTest {
         assertFalse(Attributes.hasAttribute(argMethod, "stupid.attribute"));
 
 
-        // Test xml attributes
-        //School
-        assertEquals("classValue", Attributes.getAttribute(School.class, "classAttrib"));
-        assertFalse(Attributes.hasAttribute(School.class, "stupidAttribute"));
-        Field xmlfield = School.class.getDeclaredField("name");
-        assertEquals(FIELD_VALUE, Attributes.getAttribute(xmlfield, "fieldAttrib"));
-        assertFalse(Attributes.hasAttribute(xmlfield, "stupidAttribute"));
-        Method xmlMethod = School.class.getMethod("sackAllTeachers", null);
-        assertEquals("false", Attributes.getAttribute(xmlMethod, "secure"));
-        assertFalse(Attributes.hasAttribute(xmlMethod, "stupidAttribute"));
-        Method xmlArgMethod = School.class.getMethod("setName", new Class[]{String.class});
-        assertEquals(METHOD_VALUE, Attributes.getAttribute(xmlArgMethod, "methodAttrib"));
-        assertFalse(Attributes.hasAttribute(xmlArgMethod, "stupidAttribute"));
-
-        // Job - Shows mixed attributes
-        assertEquals("true", Attributes.getAttribute(Job.class, "persistant"));
-        assertEquals("required", Attributes.getAttribute(Job.class, "transaction"));
-        assertEquals("true", Attributes.getAttribute(Job.class, "secure"));
-
-        Field descfield = Job.class.getDeclaredField("description");
-        assertEquals("true", Attributes.getAttribute(descfield, "persistant"));
-        assertEquals("true", Attributes.getAttribute(descfield, "transient"));
-        assertFalse(Attributes.hasAttribute(descfield, "transaction"));
-
-        Method hireMethod = Job.class.getMethod("hireEmployee", new Class[]{String.class, Employee.class});
-        assertEquals("great", Attributes.getAttribute(hireMethod, "nanning"));
-        assertEquals("false", Attributes.getAttribute(hireMethod, "secure"));
-        assertFalse(Attributes.hasAttribute(hireMethod, "transient"));
-        assertTrue(Attributes.hasAttribute(hireMethod, "nanning"));
-
-        Method fireMethod = Job.class.getMethod("fireAllEmployees", null);
-        assertEquals("true", Attributes.getAttribute(fireMethod, "secure"));
+//        // Test xml attributes
+//        //School
+//        assertEquals("classValue", Attributes.getAttribute(School.class, "classAttrib"));
+//        assertFalse(Attributes.hasAttribute(School.class, "stupidAttribute"));
+//        Field xmlfield = School.class.getDeclaredField("name");
+//        assertEquals(FIELD_VALUE, Attributes.getAttribute(xmlfield, "fieldAttrib"));
+//        assertFalse(Attributes.hasAttribute(xmlfield, "stupidAttribute"));
+//        Method xmlMethod = School.class.getMethod("sackAllTeachers", null);
+//        assertEquals("false", Attributes.getAttribute(xmlMethod, "secure"));
+//        assertFalse(Attributes.hasAttribute(xmlMethod, "stupidAttribute"));
+//        Method xmlArgMethod = School.class.getMethod("setName", new Class[]{String.class});
+//        assertEquals(METHOD_VALUE, Attributes.getAttribute(xmlArgMethod, "methodAttrib"));
+//        assertFalse(Attributes.hasAttribute(xmlArgMethod, "stupidAttribute"));
+//
+//        // Job - Shows mixed attributes
+//        assertEquals("true", Attributes.getAttribute(Job.class, "persistant"));
+//        assertEquals("required", Attributes.getAttribute(Job.class, "transaction"));
+//        assertEquals("true", Attributes.getAttribute(Job.class, "secure"));
+//
+//        Field descfield = Job.class.getDeclaredField("description");
+//        assertEquals("true", Attributes.getAttribute(descfield, "persistant"));
+//        assertEquals("true", Attributes.getAttribute(descfield, "transient"));
+//        assertFalse(Attributes.hasAttribute(descfield, "transaction"));
+//
+//        Method hireMethod = Job.class.getMethod("hireEmployee", new Class[]{String.class, Employee.class});
+//        assertEquals("great", Attributes.getAttribute(hireMethod, "nanning"));
+//        assertEquals("false", Attributes.getAttribute(hireMethod, "secure"));
+//        assertFalse(Attributes.hasAttribute(hireMethod, "transient"));
+//        assertTrue(Attributes.hasAttribute(hireMethod, "nanning"));
+//
+//        Method fireMethod = Job.class.getMethod("fireAllEmployees", null);
+//        assertEquals("true", Attributes.getAttribute(fireMethod, "secure"));
     }
 
     public void testHasInheritedAttribute() {

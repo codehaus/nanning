@@ -13,10 +13,10 @@ import junit.framework.Assert;
 /**
  * TODO document MockInterceptor
  *
- * <!-- $Id: MockInterceptor.java,v 1.7 2003-05-11 11:17:17 tirsen Exp $ -->
+ * <!-- $Id: MockInterceptor.java,v 1.8 2003-07-04 06:57:11 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class MockInterceptor implements MethodInterceptor {
     private Object expectTarget;
@@ -61,13 +61,13 @@ public class MockInterceptor implements MethodInterceptor {
 
         Assert.assertSame(this, invocation.getInterceptor(invocation.getCurrentIndex()));
 
-        // check that getNumberOfInterceptors is correct
-        actualNumberOfInterceptors = invocation.getNumberOfInterceptors();
+        // check that getfInterceptorCount is correct
+        actualNumberOfInterceptors = invocation.getfInterceptorCount();
         invocation.getInterceptor(actualNumberOfInterceptors - 1); // should work...
         try {
             invocation.getInterceptor(actualNumberOfInterceptors); // should not work...
             ///CLOVER:OFF
-            Assert.fail("Invocation.getNumberOfInterceptors doesn't work.");
+            Assert.fail("Invocation.getfInterceptorCount doesn't work.");
             ///CLOVER:ON
         } catch (Exception shouldHappen) {
         }

@@ -30,7 +30,7 @@ public class AspectSystem implements AspectFactory {
     }
 
     /**
-     * Let the aspect advice and introduce.
+     * Let the aspects advise and introduce.
      * @param aspectInstance
      */
     public void initialize(AspectInstance aspectInstance) {

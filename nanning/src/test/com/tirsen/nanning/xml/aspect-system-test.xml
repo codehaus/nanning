@@ -4,17 +4,17 @@
 items marked TODO are not yet supported
 -->
 <aspect-system>
-    <!-- defines a global interceptor, will be applied to ALL objects in the system -->
+    <!-- defines a global interceptor, will be applied to ALL objects in the system
+        TODO: scope is currently ignored, always set to PER_METHOD -->
     <interceptor class="com.tirsen.nanning.NullInterceptor" scope="singleton">
         <pointcut attribute="test" />
     </interceptor>
 
     <!-- custom aspect, may add interceptors or mixins as it pleases -->
-    <aspect class="com.tirsen.nanning.samples.prevayler.PrevaylerAspect"/>
+    <aspect class="com.tirsen.nanning.xml.TestAspect"/>
 
     <!-- defines the name of the class that will identify this aspect-class,
-         does not imply that any mixins will be added
-         (TODO in the future one may specify a non-abstract class here and that will be instrumented too) -->
+         does not imply that any mixins will be added -->
     <class name="com.tirsen.nanning.xml.Interface">
 
         <!-- defines a local interceptor, will be applied to this object only -->
@@ -25,7 +25,7 @@ items marked TODO are not yet supported
         </interceptor>
 
         <!-- local custom aspect -->
-        <aspect class="com.tirsen.nanning.samples.CacheAspect"/>
+        <aspect class="com.tirsen.nanning.xml.TestAspect"/>
 
         <!-- the target of the class needs to be defined as a mixin too -->
         <mixin interface="com.tirsen.nanning.xml.Interface" target="com.tirsen.nanning.xml.Target" />
