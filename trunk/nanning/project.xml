@@ -6,6 +6,7 @@
     <logo>/images/nanning.png</logo>
     <currentVersion>0.5-SNAPSHOT</currentVersion>
     <organization>
+        <name>Jon Tirsen</name>
         <url>http://sourceforge.net/projects/nanning</url>
         <logo>http://sourceforge.net/sflogo.php?group_id=64968&amp;type=5</logo>
     </organization>
@@ -22,7 +23,7 @@
     <issueTrackingUrl>
         http://jira.codehaus.org/secure/BrowseProject.jspa?id=10102
     </issueTrackingUrl>
-    <siteAddress>Sourceforge</siteAddress>
+    <siteAddress>shell.sourceforge.net</siteAddress>
     <siteDirectory>/home/groups/n/na/nanning/htdocs</siteDirectory>
     <distributionDirectory>
         /unknownatthistime
@@ -30,7 +31,7 @@
 
     <repository>
         <connection>
-            scm:cvs:pserver:anonymous@cvs.nanning.sourceforge.net:/cvsroot/nanning:nanning
+            scm:cvs:pserver:anonymous@cvs.sourceforge.net:/cvsroot/nanning:nanning
         </connection>
         <url>
             http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/nanning/nanning/
@@ -75,6 +76,24 @@
     </mailingLists>
 
     <developers>
+
+        <developer>
+            <name>Johan Lind</name>
+            <id>behemoth</id>
+            <organization>Lecando AB</organization>
+        </developer>
+
+        <developer>
+            <name>Jimmy Larsson</name>
+            <id>jimmy</id>
+            <organization>Lecando AB</organization>
+        </developer>
+
+        <developer>
+            <name>Robert</name>
+            <id>robert</id>
+            <organization>Lecando AB</organization>
+        </developer>
 
         <developer>
             <name>Jon Tirsen</name>
