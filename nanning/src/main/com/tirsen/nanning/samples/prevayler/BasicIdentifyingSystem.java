@@ -29,6 +29,10 @@ public class BasicIdentifyingSystem implements IdentifyingSystem {
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
+        buildMapsAfterDeserialization();
+    }
+
+    public void buildMapsAfterDeserialization() {
         objectToId = new IdentityHashMap();
         for (Iterator iterator = idToObject.entrySet().iterator(); iterator.hasNext();) {
             Map.Entry entry = (Map.Entry) iterator.next();
@@ -90,7 +94,7 @@ public class BasicIdentifyingSystem implements IdentifyingSystem {
     public Object getObjectWithID(long oid) {
         Object object = idToObject.get(new Long(oid));
         assert object != null : "could not find object with id " + oid;
-        assert hasObjectID(object);
+        assert hasObjectID(object) : "object is not registered";
         return object;
     }
 
