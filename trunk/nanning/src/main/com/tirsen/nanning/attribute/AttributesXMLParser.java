@@ -3,9 +3,9 @@ package com.tirsen.nanning.attribute;
 import org.apache.commons.digester.Digester;
 import org.xml.sax.SAXException;
 
-import java.util.Properties;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 public class AttributesXMLParser {
     private Properties properties;

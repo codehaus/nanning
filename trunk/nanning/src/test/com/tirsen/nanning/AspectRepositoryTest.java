@@ -6,16 +6,16 @@
  */
 package com.tirsen.nanning;
 
-import junit.framework.TestCase;
 import com.tirsen.nanning.definition.*;
+import junit.framework.TestCase;
 
 /**
  * TODO document AspectRepositoryTest
  *
- * <!-- $Id: AspectRepositoryTest.java,v 1.5 2003-01-12 13:25:40 tirsen Exp $ -->
+ * <!-- $Id: AspectRepositoryTest.java,v 1.6 2003-01-24 13:29:30 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class AspectRepositoryTest extends TestCase {
     public void testEmpty() {

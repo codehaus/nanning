@@ -6,20 +6,19 @@
  */
 package com.tirsen.nanning.definition;
 
+import com.tirsen.nanning.AspectException;
 import com.tirsen.nanning.AspectInstance;
 import com.tirsen.nanning.MixinInstance;
-import com.tirsen.nanning.AspectException;
 
 import java.util.*;
-import java.lang.reflect.Proxy;
 
 /**
  * The definition of an aspected object, specifies interfaces, interceptors and target-objects.
  *
- * <!-- $Id: AspectClass.java,v 1.4 2003-01-23 13:53:15 lecando Exp $ -->
+ * <!-- $Id: AspectClass.java,v 1.5 2003-01-24 13:29:30 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.4 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.5 $
  */
 public class AspectClass {
     private final List aspectDefinitions = new ArrayList();

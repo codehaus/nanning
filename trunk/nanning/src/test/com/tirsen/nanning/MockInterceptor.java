@@ -6,8 +6,6 @@
  */
 package com.tirsen.nanning;
 
-import com.tirsen.nanning.MethodInterceptor;
-import com.tirsen.nanning.Invocation;
 import junit.framework.Assert;
 
 import java.lang.reflect.Method;
@@ -15,10 +13,10 @@ import java.lang.reflect.Method;
 /**
  * TODO document MockInterceptor
  *
- * <!-- $Id: MockInterceptor.java,v 1.2 2002-12-03 17:21:01 lecando Exp $ -->
+ * <!-- $Id: MockInterceptor.java,v 1.3 2003-01-24 13:29:30 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.2 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.3 $
  */
 public class MockInterceptor implements MethodInterceptor
 {

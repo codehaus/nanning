@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
  * TODO document PrevaylerInterceptor
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class PrevaylerInterceptor
         implements SingletonInterceptor, FilterMethodsInterceptor, ConstructionInterceptor {
@@ -27,24 +27,16 @@ public class PrevaylerInterceptor
     }
 
     public Object construct(ConstructionInvocation invocation) {
-        if (!CurrentPrevayler.isInTransaction()) {
-            CurrentPrevayler.enterTransaction();
-            try {
-                ConstructCommand command = new ConstructCommand(invocation);
-                return CurrentPrevayler.getPrevayler().executeCommand(command);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            } finally {
-                CurrentPrevayler.exitTransaction();
-            }
+        Object object = invocation.getProxy();
+        if (object instanceof IdentifyingSystem) {
+            ((IdentifyingSystem) object).registerObjectID(object);
         }
-        else {
-            Object object = invocation.getProxy();
+        if (CurrentPrevayler.isInTransaction()) {
             if (!CurrentPrevayler.getSystem().hasObjectID(object)) {
                 CurrentPrevayler.getSystem().registerObjectID(object);
             }
-            return object;
         }
+        return object;
     }
 
     public Object invoke(Invocation invocation) throws Throwable {

@@ -6,36 +6,19 @@
  */
 package com.tirsen.nanning.attribute;
 
-import junit.framework.TestCase;
-
-import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.lang.reflect.Field;
-import java.net.URL;
-import java.net.MalformedURLException;
-
-import com.tirsen.nanning.attribute.AttributesCompiler;
-import com.tirsen.nanning.attribute.Attributes;
-import com.tirsen.nanning.attribute.AttributesTestClass;
+import java.lang.reflect.Method;
 
 /**
  * TODO document AttributesTest
  *
- * <!-- $Id: AttributesTest.java,v 1.3 2003-01-19 22:47:07 tirsen Exp $ -->
+ * <!-- $Id: AttributesTest.java,v 1.4 2003-01-24 13:29:30 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
-public class AttributesTest extends TestCase {
-    private File targetDir;
-    private URL searchPath;
-    private static boolean attributesCompiled = false;
-
-    protected void setUp() throws Exception {
-        super.setUp();
-        compileAttributes();
-    }
+public class AttributesTest extends AbstractAttributesTest {
 
     public void testClassAttributes() throws IOException, NoSuchMethodException, NoSuchFieldException {
         ClassAttributes classAttributes = Attributes.getAttributes(AttributesTestClass.class);
@@ -105,21 +88,4 @@ public class AttributesTest extends TestCase {
         assertEquals("true", Attributes.getAttribute(fireMethod, "secure"));
     }
 
-    public static void compileAttributes() {
-        if (!attributesCompiled) {
-            attributesCompiled = true;
-            File targetDir = new File("target" + File.separator + "attributes");
-            try {
-                Attributes.addSearchPath(targetDir.toURL());
-            } catch (MalformedURLException e) {
-                fail(e.getMessage());
-            }
-            AttributesCompiler attributesCompiler = new AttributesCompiler();
-            attributesCompiler.setSrc(new File("src" + File.separator + "test"));
-            attributesCompiler.setDest(targetDir);
-            attributesCompiler.execute();
-            attributesCompiler.setSrc(new File("src" + File.separator + "main"));
-            attributesCompiler.execute();
-        }
-    }
 }

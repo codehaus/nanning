@@ -7,15 +7,14 @@
 package com.tirsen.nanning;
 
 import junit.framework.Assert;
-import com.tirsen.nanning.Aspects;
 
 /**
  * TODO document Impl
  *
- * <!-- $Id: Impl.java,v 1.1 2002-11-17 14:03:34 tirsen Exp $ -->
+ * <!-- $Id: Impl.java,v 1.2 2003-01-24 13:29:30 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class Impl implements Intf
 {

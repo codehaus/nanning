@@ -6,17 +6,16 @@
  */
 package com.tirsen.nanning.jelly;
 
-import org.apache.commons.jelly.XMLOutput;
-import org.apache.commons.jelly.TagSupport;
 import com.tirsen.nanning.definition.AspectClass;
+import org.apache.commons.jelly.XMLOutput;
 
 /**
  * TODO document AspectClassTag
  *
- * <!-- $Id: AspectClassTag.java,v 1.3 2003-01-12 13:25:40 tirsen Exp $ -->
+ * <!-- $Id: AspectClassTag.java,v 1.4 2003-01-24 13:29:30 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class AspectClassTag extends AspectTag
 {

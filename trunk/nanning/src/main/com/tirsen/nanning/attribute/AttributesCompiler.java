@@ -6,25 +6,22 @@
  */
 package com.tirsen.nanning.attribute;
 
-import com.thoughtworks.qdox.JavaDocBuilder;
 import com.thoughtworks.qdox.parser.impl.JFlexLexer;
 import com.thoughtworks.qdox.parser.impl.Parser;
-import com.thoughtworks.qdox.model.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Task;
 
 import java.io.*;
 import java.util.Properties;
 
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.DirectoryScanner;
-
 /**
  * TODO document AttributesCompiler
  *
- * <!-- $Id: AttributesCompiler.java,v 1.2 2003-01-19 22:47:07 tirsen Exp $ -->
+ * <!-- $Id: AttributesCompiler.java,v 1.3 2003-01-24 13:29:30 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class AttributesCompiler extends Task {
 	private File src;

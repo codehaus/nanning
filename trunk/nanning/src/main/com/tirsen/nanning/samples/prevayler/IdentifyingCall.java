@@ -1,9 +1,8 @@
 package com.tirsen.nanning.samples.prevayler;
 
+import com.tirsen.nanning.Aspects;
 import com.tirsen.nanning.Invocation;
 import com.tirsen.nanning.attribute.Attributes;
-import com.tirsen.nanning.Aspects;
-import com.tirsen.nanning.definition.AspectRepository;
 
 public class IdentifyingCall extends Call {
     public IdentifyingCall(Invocation invocation) {

@@ -6,22 +6,19 @@
  */
 package com.tirsen.nanning;
 
-import com.tirsen.nanning.definition.AspectClass;
-import com.tirsen.nanning.definition.AspectRepository;
-
-import java.lang.reflect.Proxy;
 import java.lang.reflect.Method;
-import java.util.Set;
+import java.lang.reflect.Proxy;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Facade for accessing some important features of aspected objects and their definitions.
  *
- * <!-- $Id: Aspects.java,v 1.14 2003-01-23 13:53:14 lecando Exp $ -->
+ * <!-- $Id: Aspects.java,v 1.15 2003-01-24 13:29:29 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.14 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.15 $
  */
 public class Aspects {
     private static ThreadLocal contextAspectRepository = new ThreadLocal();

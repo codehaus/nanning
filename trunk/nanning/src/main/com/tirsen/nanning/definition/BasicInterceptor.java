@@ -6,23 +6,20 @@
  */
 package com.tirsen.nanning.definition;
 
-import com.tirsen.nanning.definition.InterceptorDefinition;
-import com.tirsen.nanning.definition.DefinitionAwareInterceptor;
 import com.tirsen.nanning.attribute.Attributes;
-import com.tirsen.nanning.definition.FilterMethodsInterceptor;
 
 import java.lang.reflect.Method;
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * basic interceptor with methodNameFilter support.
  * TODO document BasicInterceptor
  *
- * <!-- $Id: BasicInterceptor.java,v 1.1 2003-01-12 13:25:40 tirsen Exp $ -->
+ * <!-- $Id: BasicInterceptor.java,v 1.2 2003-01-24 13:29:30 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 
 public abstract class BasicInterceptor implements DefinitionAwareInterceptor, FilterMethodsInterceptor {

@@ -6,17 +6,17 @@
  */
 package com.tirsen.nanning;
 
-import junit.framework.TestCase;
 import com.tirsen.nanning.definition.AspectClass;
 import com.tirsen.nanning.definition.AspectDefinition;
+import junit.framework.TestCase;
 
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: AspectClassTest.java,v 1.8 2003-01-12 13:25:40 tirsen Exp $ -->
+ * <!-- $Id: AspectClassTest.java,v 1.9 2003-01-24 13:29:30 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class AspectClassTest extends TestCase
 {

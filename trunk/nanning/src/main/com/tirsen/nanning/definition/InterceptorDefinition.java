@@ -6,21 +6,24 @@
  */
 package com.tirsen.nanning.definition;
 
-import com.tirsen.nanning.*;
+import com.tirsen.nanning.AspectException;
+import com.tirsen.nanning.ConstructionInterceptor;
+import com.tirsen.nanning.Interceptor;
+import com.tirsen.nanning.MethodInterceptor;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.HashSet;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * TODO document InterceptorDefinition
  *
- * <!-- $Id: InterceptorDefinition.java,v 1.1 2003-01-12 13:25:40 tirsen Exp $ -->
+ * <!-- $Id: InterceptorDefinition.java,v 1.2 2003-01-24 13:29:30 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class InterceptorDefinition {
     private final Class interceptorClass;

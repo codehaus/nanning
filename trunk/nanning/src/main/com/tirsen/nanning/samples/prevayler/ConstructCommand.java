@@ -1,17 +1,14 @@
 package com.tirsen.nanning.samples.prevayler;
 
-import com.tirsen.nanning.ConstructionInvocation;
-import com.tirsen.nanning.definition.AspectClass;
-import com.tirsen.nanning.definition.AspectRepository;
 import com.tirsen.nanning.Aspects;
-
-import java.io.Serializable;
-
-import org.prevayler.PrevalentSystem;
-import org.prevayler.Command;
+import com.tirsen.nanning.ConstructionInvocation;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.prevayler.Command;
+import org.prevayler.PrevalentSystem;
+
+import java.io.Serializable;
 
 public class ConstructCommand implements Command {
     private static final Log logger = LogFactory.getLog(ConstructCommand.class);

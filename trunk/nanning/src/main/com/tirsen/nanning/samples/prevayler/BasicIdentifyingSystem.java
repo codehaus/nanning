@@ -1,11 +1,14 @@
 package com.tirsen.nanning.samples.prevayler;
 
-import java.util.List;
-import java.util.ArrayList;
-
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.prevayler.AlarmClock;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BasicIdentifyingSystem implements IdentifyingSystem {
+    private static final Log logger = LogFactory.getLog(BasicIdentifyingSystem.class);
     private AlarmClock clock;
     protected List objects = new ArrayList();
 
@@ -22,7 +25,7 @@ public class BasicIdentifyingSystem implements IdentifyingSystem {
     }
 
     public long getObjectID(Object object) {
-        assert hasObjectID(object) : "object had no ID";
+        assert hasObjectID(object) : "object had no ID: " + object;
         return (long) objects.indexOf(object);
     }
 
@@ -31,8 +34,8 @@ public class BasicIdentifyingSystem implements IdentifyingSystem {
     }
 
     public long registerObjectID(Object object) {
-        System.out.println("registering object " + object);
-        assert !hasObjectID(object) : "already has ID";
+        logger.debug("registering object " + object);
+        assert !hasObjectID(object) : "already has ID: " + object;
         objects.add(object);
         return (long) objects.indexOf(object);
     }
