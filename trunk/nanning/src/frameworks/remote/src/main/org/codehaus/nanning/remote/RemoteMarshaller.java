@@ -30,9 +30,9 @@ public class RemoteMarshaller implements Marshaller {
             }
 
             public void introduce(AspectInstance aspectInstance) {
-                Mixin mixinInstance = new Mixin();
-                mixinInstance.setInterfaceClass(aspectInstance.getClassIdentifier());
-                aspectInstance.addMixin(mixinInstance);
+                Mixin mixin = new Mixin();
+                mixin.setInterfaceClass(aspectInstance.getClassIdentifier());
+                aspectInstance.addMixin(mixin);
             }
         });
 
@@ -113,8 +113,8 @@ public class RemoteMarshaller implements Marshaller {
         return objectTable.register(o);
     }
 
-    public static boolean isRemoteStub(Object o) {
-        return getSingleMixinTarget(o) instanceof RemoteIdentity;
+    public boolean isRemoteStub(Object o) {
+        return Aspects.getAspectInstance(o).getAspectFactory() == aspectSystem;
     }
 
     private static Object getSingleMixinTarget(Object o) {
@@ -125,7 +125,7 @@ public class RemoteMarshaller implements Marshaller {
         }
         Mixin mixinInstance = (Mixin) iterator.next();
         if (iterator.hasNext()) {
-            throw new AssertionException("don't support several mixins");
+            throw new AssertionException("don't support several mixins: " + o);
         }
 
         Object target = mixinInstance.getTarget();

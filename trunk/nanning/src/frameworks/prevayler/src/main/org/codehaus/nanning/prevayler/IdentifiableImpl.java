@@ -15,7 +15,7 @@ public class IdentifiableImpl implements Identifiable, Serializable {
 
     public long getObjectID() {
         if (!hasObjectID()) {
-            throw new AssertionException("object " + Aspects.getThis() + " had no object id, use BasicIdentifyingSystem.registerObjectID(Object)");
+            throw new AssertionException("object " + Aspects.getThis() + " had no object id, use BasicIdentifyingSystem.register(Object)");
         }
         return objectID;
     }

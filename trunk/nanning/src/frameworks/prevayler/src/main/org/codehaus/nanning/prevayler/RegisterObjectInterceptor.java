@@ -13,9 +13,7 @@ public class RegisterObjectInterceptor implements ConstructionInterceptor {
 
         if (CurrentPrevayler.isInTransaction()) {
             IdentifyingSystem system = (IdentifyingSystem) CurrentPrevayler.getSystem();
-            if (!((Identifiable) object).hasObjectID()) {
-                system.register(object);
-            }
+            system.register(object);
         }
         return object;
     }

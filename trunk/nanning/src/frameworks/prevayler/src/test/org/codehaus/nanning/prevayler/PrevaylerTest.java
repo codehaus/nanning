@@ -12,6 +12,7 @@ import org.codehaus.nanning.attribute.Attributes;
 import org.codehaus.nanning.config.AspectSystem;
 import org.codehaus.nanning.config.FindTargetMixinAspect;
 import org.prevayler.PrevaylerFactory;
+import junit.framework.Assert;
 
 public class PrevaylerTest extends AbstractAttributesTest {
 
@@ -281,7 +282,31 @@ public class PrevaylerTest extends AbstractAttributesTest {
     }
 
     /**
-     * Big badass functional test. I hate it, I want to kill it...
+     * @entity
+     */
+    public interface TransactionRequired {
+        /**
+         * @transaction-required
+         */
+        public void transactionRequired();
+    }
+
+    public static class TransactionRequiredImpl implements TransactionRequired {
+        public void transactionRequired() {
+            fail("should not have been executed");
+        }
+    }
+
+    public void testCallsToMethodWithTransactionRequiredFailsOutsideATransaction() {
+        TransactionRequired transactionRequired = (TransactionRequired) aspectSystem.newInstance(TransactionRequired.class);
+        try {
+            transactionRequired.transactionRequired();
+        } catch (TransactionRequiredException e) {
+        }
+    }
+
+    /**
+     * Big badass functional test. I hate it, I want to kill it... --jon
      */
 //    public void test() throws Exception {
 //        newPrevayler();
@@ -439,23 +464,6 @@ public class PrevaylerTest extends AbstractAttributesTest {
         assertEquals("value", myObject.getValue());
     }
 
-//    public void testOptionalDataException() throws IOException, ClassNotFoundException {
-//        MySystem mySystem = (MySystem) aspectSystem.newInstance(MySystem.class);
-//        mySystem.register(aspectSystem.newInstance(MyObject.class));
-//        assertEquals(1, ((Identifiable) mySystem).getObjectID());
-//        mySystem = (MySystem) serialize(mySystem);
-//        mySystem = (MySystem) serialize(mySystem);
-//        assertEquals(1, ((Identifiable) mySystem).getObjectID());
-//        assertEquals(2, mySystem.getAllRegisteredObjects().size());
-//    }
-//
-//    private Object serialize(Object o) throws IOException, ClassNotFoundException {
-//        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-//        ObjectOutputStream objectOutputStream = new ObjectOutputStream(buffer);
-//        objectOutputStream.writeObject(o);
-//        return new ObjectInputStream(new ByteArrayInputStream(buffer.toByteArray())).readObject();
-//    }
-
     private MySystem currentSystem() {
         return CurrentPrevayler.hasPrevayler()
                 ? (MySystem) CurrentPrevayler.getSystem()
@@ -466,6 +474,21 @@ public class PrevaylerTest extends AbstractAttributesTest {
         currentPrevayler = new CountingPrevayler(
                 PrevaylerFactory.createPrevayler((Serializable) Aspects.getCurrentAspectFactory().newInstance(MySystem.class),
                                                  prevaylerDir.getAbsolutePath()));
+    }
+
+    public interface TestUnsupportedTransaction {
+        /**
+         * @transaction-unsupported
+         */
+        void callWithUnsupportedTransaction();
+    }
+
+    public static class TestUnsupportedTransactionImpl implements TestUnsupportedTransaction {
+        public void callWithUnsupportedTransaction() {
+            Assert.assertFalse(CheckTransactionUnsupportedInterceptor.isTransactionsSupported());
+            MyObject myObject = (MyObject) Aspects.getCurrentAspectFactory().newInstance(MyObject.class);
+            myObject.setValue("test"); // this call should not be permitted
+        }
     }
 
     public void testUnsupportedTransaction() {

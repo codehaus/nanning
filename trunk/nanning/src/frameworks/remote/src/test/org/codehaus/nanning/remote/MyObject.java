@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 /**
  * @remote
+ * @entity
  */
 public interface MyObject extends Serializable {
     String getValue();

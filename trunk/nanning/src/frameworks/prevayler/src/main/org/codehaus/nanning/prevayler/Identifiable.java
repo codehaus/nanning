@@ -10,7 +10,7 @@ public interface Identifiable {
     boolean hasObjectID();
 
     /**
-     * @transaction
+     * @transaction-required
      */
     void setObjectID(long objectID);
 }
