@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * @entity
  */
-public interface MyObject extends Serializable, FinalizationCallback {
+public interface MyObject extends Serializable {
     String getValue();
 
     /**

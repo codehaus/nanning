@@ -20,8 +20,13 @@ public class InvokeCommand extends ClockedTransaction {
     private static final Log logger = LogFactory.getLog(InvokeCommand.class);
     private AuthenticatedCall call;
 
-    public InvokeCommand(Invocation invocation) throws Exception {
-        call = new AuthenticatedCall(invocation);
+    public InvokeCommand(Invocation invocation, boolean resolveEntities) throws Exception {
+        if (resolveEntities) {
+            call = new IdentifyingCall(invocation);
+            
+        } else {
+            call = new AuthenticatedCall(invocation);
+        }
     }
 
     protected Object executeClocked(ClockedSystem system) throws Exception {
