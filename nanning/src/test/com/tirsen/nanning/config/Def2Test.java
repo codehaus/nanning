@@ -97,5 +97,7 @@ public class Def2Test extends TestCase {
         assertEquals(1, PointcutAspect.getAllMethods(Base.class).length);
         assertEquals(1, PointcutAspect.getAllMethods(Sub.class).length);
         assertEquals(1, PointcutAspect.getAllMethods(C.class).length);
+        
+        assertEquals(1, PointcutAspect.getAllMethods(C.class).length);
     }
 }

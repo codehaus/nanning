@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 
 import com.tirsen.nanning.AspectException;
 import com.tirsen.nanning.AspectInstance;
@@ -14,6 +16,7 @@ import com.tirsen.nanning.MixinInstance;
 
 public class PointcutAspect implements Aspect {
     private List pointcuts = new ArrayList();
+    private static Map methodsCache = new HashMap();
 
     public PointcutAspect() {
     }
@@ -54,8 +57,13 @@ public class PointcutAspect implements Aspect {
     }
 
     static Method[] getAllMethods(Class klass) {
-        Collection result = getAllMethodsCollection(klass);
-        return (Method[]) result.toArray(new Method[result.size()]);
+        Collection methodsCollection = getAllMethodsCollection(klass);
+        Method[] results = (Method[]) methodsCache.get(klass);
+        if (results == null) {
+            results = (Method[]) methodsCollection.toArray(new Method[methodsCollection.size()]);
+            methodsCache.put(klass, results);
+        }
+        return results;
     }
 
     private static Collection getAllMethodsCollection(Class klass) {
