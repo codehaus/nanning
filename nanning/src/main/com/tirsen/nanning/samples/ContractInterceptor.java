@@ -22,14 +22,14 @@ import java.util.ListIterator;
  * you can enable and disable contract-checking in the same way you enable and disable assertions (java -ea and so on).
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class ContractInterceptor implements Interceptor {
     private static final Pattern oldPattern =
-            Pattern.compile("(.*)old ((?:this\\.)?\\p{Alpha}\\p{Alnum}*\\(.*?\\))(.*)");
+            Pattern.compile("(.*)\\{old (.*?)}(.*)");
 
     /**
-     * If this is non-null don't execute contracts.
+     * If this is non-null don't execute contracts, used when executing the expressions. 
      */
     private ThreadLocal checkContracts = new ThreadLocal();
 

@@ -1,6 +1,6 @@
 /*
- * $Header: /home/projects/nanning/scm-cvs/nanning/src/main/com/tirsen/nanning/AttributesCompiler.java,v 1.4 2002-12-03 07:50:16 tirsen Exp $
- * $Revision: 1.4 $
+ * $Header: /home/projects/nanning/scm-cvs/nanning/src/main/com/tirsen/nanning/AttributesBuilder.java,v 1.1 2002-12-03 07:50:16 tirsen Exp $
+ * $Revision: 1.1 $
  * $Date: 2002-12-03 07:50:16 $
  *
  * ====================================================================
@@ -57,92 +57,95 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  *
- * $Id: AttributesCompiler.java,v 1.4 2002-12-03 07:50:16 tirsen Exp $
+ * $Id: AttributesBuilder.java,v 1.1 2002-12-03 07:50:16 tirsen Exp $
  */
 package com.tirsen.nanning;
 
-import com.thoughtworks.qdox.parser.impl.Parser;
-import com.thoughtworks.qdox.parser.impl.JFlexLexer;
-
-import java.io.*;
 import java.util.Properties;
+import java.util.Iterator;
 
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.DirectoryScanner;
+import com.thoughtworks.qdox.parser.Builder;
+import com.thoughtworks.qdox.parser.structs.ClassDef;
+import com.thoughtworks.qdox.parser.structs.FieldDef;
+import com.thoughtworks.qdox.parser.structs.MethodDef;
 
 /**
- * <p><code>AttributesCompilerOld</code> is an Ant Task which
- * uses QDox to generate the attributes files used by the default
- * DefaultAttributeFinder implementation
+ * QDox Builder implementation for creating Properties containing attributes.
  *
- * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @author <a href="mailto:joe@truemesh.com">Joe Walnes</a>
- * @version $Revision: 1.4 $
+ * <p>This Builder should be fed to the QDox Parser where it shall receive callbacks as a source file is parsed.
+ * After the file has been parsed, getProperties() can be called to retrieved the compiled properties of the class.</p>
+ *
+ * <p>An AttributesBuilder can only be used to parse <b>one</b> file at a time. If the AttributesBuilder is to be reused
+ * to parse another file, the reset() method must be called.</p>
+ *
+ * @author <a href="joe@truemesh.com">Joe Walnes</a>
+ * @version $Revision: 1.1 $
  */
-public class AttributesCompiler extends Task {
+public class AttributesBuilder implements Builder {
 
-	private File src;
-	private File dest;
-	private AttributesBuilder builder = new AttributesBuilder();
+	private final Properties properties = new Properties();
+	private final Properties currentAttributes = new Properties();
+    private static final String SEPARATOR = ".";
 
-	public void setSrc(File src) {
-		this.src = src;
+    // Methods needed to implement Builder that we don't care about.
+	public void addPackage(String packageName) {
 	}
 
-	public void setDest(File dest) {
-		this.dest = dest;
+	public void addImport(String importName) {
 	}
 
-	public void execute() {
-		try {
-			System.out.println("Compiling attributes for " + src + " into " + dest);
-			String[] files = getJavaFiles();
-			for (int i = 0; i < files.length; i++) {
-				final File javaFile = new File(src, files[i]);
-				final File attributeFile = getAttributeFile(files[i]);
-				if (!attributeFile.exists() || attributeFile.lastModified() < javaFile.lastModified()) {
-					createAttributesFile(javaFile, attributeFile);
-				}
+	public void addJavaDoc(String text) {
+	}
+
+	public void endClass() {
+	}
+
+	public void addJavaDocTag(String tag, String text) {
+		currentAttributes.setProperty(tag, text);
+	}
+
+	public void beginClass(ClassDef def) {
+		addCurrentAttributes("class");
+	}
+
+	public void addMethod(MethodDef def) {
+		final StringBuffer method = new StringBuffer(def.name);
+		method.append('(');
+		for (Iterator params = def.params.iterator(); params.hasNext();) {
+            FieldDef param = (FieldDef) params.next();
+			method.append(param.type);
+			method.append(',');
+		}
+		if (def.params.size() > 0) {
+			// trim last comma
+			method.setLength(method.length() - 1);
+		}
+		method.append(')');
+		addCurrentAttributes(method.toString());
+	}
+
+	public void addField(FieldDef def) {
+		addCurrentAttributes(def.name);
+	}
+
+	private void addCurrentAttributes(String prefix) {
+		if (currentAttributes.size() > 0) {
+			final Iterator keys = currentAttributes.keySet().iterator();
+			while (keys.hasNext()) {
+				final String key = (String) keys.next();
+				final String value = currentAttributes.getProperty(key);
+				properties.put(prefix + SEPARATOR + key, value);
 			}
-		} catch (IOException e) {
-			throw new BuildException(e);
+			currentAttributes.clear();
 		}
 	}
 
-	private String[] getJavaFiles() {
-		DirectoryScanner scanner = new DirectoryScanner();
-		scanner.setBasedir(src);
-		scanner.setIncludes(new String[]{"**/*.java"});
-		scanner.scan();
-		return scanner.getIncludedFiles();
+	public Properties getProperties() {
+		return properties;
 	}
 
-	private File getAttributeFile(String javaFileName) {
-		File result = new File(dest, javaFileName.substring(0, javaFileName.length() - 5) + ".attributes");
-		result.getParentFile().mkdirs();
-		return result;
-	}
-
-	private void createAttributesFile(File javaFile, File attributeFile) throws IOException {
-		Properties attributes = parseAttributeProperties(javaFile);
-		OutputStream output = new FileOutputStream(attributeFile);
-		try {
-			attributes.store(output, javaFile.getName());
-		} finally {
-			output.close();
-		}
-	}
-
-	private Properties parseAttributeProperties(File javaFile) throws IOException {
-		InputStream input = new FileInputStream(javaFile);
-		try {
-			builder.reset();
-			new Parser(new JFlexLexer(input), builder).parse();
-			return builder.getProperties();
-		} finally {
-			input.close();
-		}
+	public void reset() {
+		properties.clear();
 	}
 
 }

@@ -15,10 +15,10 @@ import junit.framework.TestCase;
 /**
  * TODO document PerformanceTest
  *
- * <!-- $Id: PerformanceTest.java,v 1.4 2002-11-30 22:51:45 tirsen Exp $ -->
+ * <!-- $Id: PerformanceTest.java,v 1.5 2002-12-03 07:50:16 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class PerformanceTest extends TestCase
 {
@@ -26,7 +26,7 @@ public class PerformanceTest extends TestCase
     {
         // these are exceptionally high due to Clover...
         double maxMemoryPerInvocation = 1.6;
-        double timesSlowerTolerance = 41;
+        double timesSlowerTolerance = 48;
         double maxTimePerInvocation = 0.012;
 
         int numberOfInvocations = 100000;
@@ -92,27 +92,30 @@ public class PerformanceTest extends TestCase
 
     public void testInstantiation() throws IllegalAccessException, InstantiationException
     {
-        int timesBiggerTolerance = 69;
-        int timesSlowerTolerance = 6;
+        int timesBiggerTolerance = 41;
+        int timesSlowerTolerance = 4;
 
-        int numberOfInstances = 1000;
+        int numberOfInstances = 10000;
 
         // allocate a set of ordinary instances and check for footprint
-        Impl[] impls = new Impl[numberOfInstances];
+        Object[] objects = new Impl[numberOfInstances];
 
         ///CLOVER:OFF
-        System.gc();
+        System.gc(); System.gc(); System.gc();
         long startMemory = Runtime.getRuntime().freeMemory();
+        System.out.println("startMemory = " + startMemory);
         long startTime = System.currentTimeMillis();
 
         for (int i = 0; i < numberOfInstances; i++)
         {
-            impls[i] = new Impl();
+            objects[i] = new Impl();
         }
 
-        System.gc();
         long ordinaryTime = System.currentTimeMillis() - startTime;
-        long ordinaryMemory = startMemory - Runtime.getRuntime().freeMemory();
+        System.gc(); System.gc(); System.gc();
+        long endMemory = Runtime.getRuntime().freeMemory();
+        System.out.println("endMemory = " + endMemory);
+        long ordinaryMemory = endMemory - startMemory;
         ///CLOVER:ON
 
         double memoryPerOrdinaryInstance = ordinaryMemory / (double) numberOfInstances;
@@ -129,20 +132,25 @@ public class PerformanceTest extends TestCase
 
         // instantiates a bunch of aspect-instances
         ///CLOVER:OFF
-        System.gc();
+        System.gc(); System.gc(); System.gc();
         startMemory = Runtime.getRuntime().freeMemory();
         startTime = System.currentTimeMillis();
 
-        Object[] objects = new Object[numberOfInstances];
+        Object[] aspects = new Object[numberOfInstances];
         for (int i = 0; i < numberOfInstances; i++)
         {
-            objects[i] = aspectClass.newInstance();
+            aspects[i] = aspectClass.newInstance();
         }
 
-        System.gc();
         long aspectsTime = System.currentTimeMillis() - startTime;
-        long memory = startMemory - Runtime.getRuntime().freeMemory();
+        System.gc(); System.gc(); System.gc();
+        long memory = Runtime.getRuntime().freeMemory() - startMemory;
         ///CLOVER:ON
+
+        // do something with the objects after the gc so the compiler doesn't optimize them away
+        for (int i = 0; i < objects.length; i++) {
+            Object object = objects[i];
+        }
 
         double memoryPerInstance = memory / (double) numberOfInstances;
 
