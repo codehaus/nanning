@@ -1,0 +1,198 @@
+
+<project default="jar:install"
+    xmlns:jxr="jxr"
+    xmlns:maven="jelly:maven"
+    xmlns:ant="jelly:ant"
+    xmlns:j="jelly:core">
+
+<!--    <preGoal name="dist:prepare-bin-filesystem">-->
+<!--        <attainGoal name="site:generate"/>-->
+<!--    </preGoal>-->
+<!---->
+<!--    <postGoal name="dist:prepare-src-filesystem">-->
+<!--        <delete file="${maven.dist.src.assembly.dir}/build.xml"/>-->
+<!--        <delete dir="${maven.dist.src.assembly.dir}/src/etc"/>-->
+<!--        <mkdir dir="${maven.dist.src.assembly.dir}/lib"/>-->
+<!---->
+<!--        <copy file="${basedir}/docs/CHANGES" todir="${maven.dist.bin.assembly.dir}"/>-->
+<!--    </postGoal>-->
+<!---->
+<!--    <postGoal name="dist:prepare-bin-filesystem">-->
+<!--        <attainGoal name="gather-libs" />-->
+<!--        <mkdir dir="${maven.dist.bin.assembly.dir}/lib"/>-->
+<!---->
+<!--        <j:forEach var="dep" items="${pom.dependencies}">-->
+<!--            <copy todir="${maven.dist.bin.assembly.dir}/lib"-->
+<!--                file="${maven.repo.local}/${dep.getGroupId()}/jars/${dep.getArtifact()}"/>-->
+<!--        </j:forEach>-->
+<!---->
+<!--        <delete file="${maven.dist.bin.assembly.dir}/${maven.final.name}.jar"/>-->
+<!---->
+<!--        <copy todir="${maven.dist.bin.assembly.dir}/lib">-->
+<!--            <fileset dir="${maven.build.dir}">-->
+<!--                <include name="${maven.final.name}.jar"/>-->
+<!--            </fileset>-->
+<!--        </copy>-->
+
+        <!-- include all framework-jars -->
+<!--        <ant:fileScanner var="frameworkProjects">-->
+<!--            <fileset dir="${basedir}">-->
+<!--                <include name="src/frameworks/*/project.xml"/>-->
+<!--            </fileset>-->
+<!--        </ant:fileScanner>-->
+<!--        <j:forEach items="${frameworkProjects.iterator()}" var="framework">-->
+<!--            <j:set var="frameworkName" value="${framework.parentFile.name}"/>-->
+<!--            <copy toDir="${maven.dist.bin.assembly.dir}/lib">-->
+<!--                <fileset dir="${basedir}/src/frameworks/${frameworkName}/target">-->
+<!--                    <include name="*.jar"/>-->
+<!--                </fileset>-->
+<!--            </copy>-->
+<!--        </j:forEach>-->
+<!---->
+<!--        <copy file="${basedir}/docs/CHANGES" todir="${maven.dist.bin.assembly.dir}"/>-->
+<!--    </postGoal>-->
+
+    <goal name="nanning:frameworks-docs">
+
+        <attainGoal name="jar:install"/>
+
+        <maven:reactor
+            basedir="${basedir}/src/frameworks"
+            includes="*/project.xml"
+            goals="site"
+            banner="Generating docs for"
+            ignoreFailures="false"
+            />
+
+    </goal>
+
+    <preGoal name="clean">
+        <attainGoal name="nanning:frameworks-clean"/>
+    </preGoal>
+
+    <goal name="nanning:frameworks-clean">
+
+        <maven:reactor
+            basedir="${basedir}/src/frameworks"
+            includes="*/project.xml"
+            goals="clean"
+            banner="Cleaning"
+            ignoreFailures="false"
+            />
+
+    </goal>
+
+    <goal name="nanning:frameworks-build">
+
+        <maven:reactor
+            basedir="${basedir}/src/frameworks"
+            includes="*/project.xml"
+            goals="jar:install"
+            banner="Building"
+            ignoreFailures="false"
+            />
+
+    </goal>
+
+    <postGoal name="jar:install">
+
+        <maven:reactor
+            basedir="${basedir}/src/frameworks"
+            includes="*/project.xml"
+            goals="jar:install"
+            banner="Building"
+            ignoreFailures="false"
+            />
+
+    </postGoal>
+
+    <postGoal name="jar:deploy">
+
+        <maven:reactor
+            basedir="${basedir}/src/frameworks"
+            includes="*/project.xml"
+            goals="jar:deploy"
+            banner="Deploying"
+            ignoreFailures="false"
+            />
+
+    </postGoal>
+
+    <preGoal name="xdoc:transform">
+        <!-- use a template to create the plugins home page
+             if it's an xdoc, it must be done before xdoc:transform
+             and should generate to ${maven.gen.docs}/frameworks/index.xml-->
+        <mkdir dir="${maven.gen.docs}/frameworks/"/>
+        <j:file name="${maven.gen.docs}/frameworks/index.xml"
+            prettyPrint="true">
+            <document>
+                <properties>
+                    <title>Nanning Frameworks</title>
+                    <author email="tirsen@codehaus.org">Jon Tirsen</author>
+                </properties>
+                <body>
+                    <section name="Frameworks">
+                        <p>
+                            The following frameworks are built on top of core Nanning. Some are applications of AOP and
+                            can be used as samples, some are higher-level frameworks for using Nanning. This is also
+                            used as a sandbox for components being developed and not yet ready for prime time.
+                        </p>
+                        <ul>
+                            <ant:fileScanner var="frameworkProjects">
+                                <fileset dir="${basedir}">
+                                    <include name="src/frameworks/*/project.xml"/>
+                                </fileset>
+                            </ant:fileScanner>
+                            <j:forEach items="${frameworkProjects.iterator()}" var="framework">
+                                <j:set var="frameworkName" value="${framework.parentFile.name}"/>
+                                <li>
+                                    <a href="./${frameworkName}/index.html">${frameworkName}</a>
+                                </li>
+                            </j:forEach>
+                        </ul>
+                    </section>
+                </body>
+            </document>
+        </j:file>
+
+    </preGoal>
+
+    <preGoal name="xdoc">
+
+        <j:if test="${nanning.frameworks.skip == null}">
+
+            <maven:reactor
+                basedir="${basedir}/src/frameworks"
+                includes="*/project.xml"
+                goals="site"
+                banner="Generating site for"
+                ignoreFailures="false"
+                />
+
+            <!-- create the parent directory for the docs -->
+            <mkdir dir="${maven.docs.dest}/frameworks"/>
+
+            <!-- copy them all to ${maven.docs.dest}/reference/plugins/${plugin.id}/ -->
+            <ant:fileScanner var="frameworkProjects">
+                <fileset dir="${basedir}">
+                    <include name="src/frameworks/*/project.xml"/>
+                </fileset>
+            </ant:fileScanner>
+            <j:forEach items="${frameworkProjects.iterator()}" var="framework">
+                <j:set var="frameworkName" value="${framework.parentFile.name}"/>
+                <mkdir dir="${maven.docs.dest}/frameworks/${frameworkName}/"/>
+                <copy toDir="${maven.docs.dest}/frameworks/${frameworkName}/">
+                    <fileset dir="${basedir}/src/frameworks/${frameworkName}/target/docs/">
+                        <include name="**"/>
+                    </fileset>
+                </copy>
+            </j:forEach>
+
+        </j:if>
+
+    </preGoal>
+
+    <!-- This is needed because of a maven bug or something, please do not delete -->
+    <goal name="lecando:deploy-build"/>
+
+</project>
