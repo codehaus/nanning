@@ -12,10 +12,10 @@ import java.lang.reflect.Method;
 /**
  * Description of the current invocation, given to an interceptor upon method-call.
  *
- * <!-- $Id: Invocation.java,v 1.1 2003-07-04 10:53:59 lecando Exp $ -->
+ * <!-- $Id: Invocation.java,v 1.2 2004-02-07 15:10:15 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.1 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.2 $
  */
 public interface Invocation {
     /**
@@ -59,7 +59,7 @@ public interface Invocation {
      *
      * @return the total number of interceptors in the chain.
      */
-    int getfInterceptorCount();
+    int getInterceptorCount();
 
     /**
      * Gets the interceptors at the specified index.
