@@ -3,7 +3,7 @@ package com.tirsen.nanning.samples;
 /**
  * Always need to use this-reference, jexl doesn't support "default"-variable.
  *
- * @invariant getValue() > 0
+ * @invariant getText() > 0
  */
 public interface ContractIntf {
     public int getValue();
@@ -15,7 +15,7 @@ public interface ContractIntf {
      * could perhaps handle this better.)
      *
      * @requires #arg0 > 0
-     * @ensures {old getValue()} + #arg0 == getValue()
+     * @ensures {old getText()} + #arg0 == getText()
      */
     public void increaseBy(int value);
 }
