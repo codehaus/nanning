@@ -2,16 +2,12 @@ package com.tirsen.nanning.samples.rmi;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 
 import com.tirsen.nanning.Aspects;
 import com.tirsen.nanning.attribute.AbstractAttributesTest;
 import com.tirsen.nanning.config.AspectSystem;
 import com.tirsen.nanning.config.MixinAspect;
 import com.tirsen.nanning.samples.prevayler.*;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
-import org.prevayler.PrevalentSystem;
 import org.prevayler.implementation.SnapshotPrevayler;
 
 public class RemoteTest extends AbstractAttributesTest {
@@ -40,7 +36,7 @@ public class RemoteTest extends AbstractAttributesTest {
 
         // init server side
         Aspects.setContextAspectFactory(serverAspectSystem);
-        prevayler = new SnapshotPrevayler((PrevalentSystem) serverAspectSystem.newInstance(MySystem.class),
+        prevayler = new SnapshotPrevayler(serverAspectSystem.newInstance(MySystem.class),
                                           prevaylerDir.getAbsolutePath());
 
         remoteCallServer = new SocketRemoteCallServer();
@@ -74,14 +70,8 @@ public class RemoteTest extends AbstractAttributesTest {
                 MySystem system = (MySystem) CurrentPrevayler.getSystem();
 
                 // server side
-                Collection objects = system.getAllRegisteredObjects();
-                assertEquals("object not created on server side", 2, objects.size());
-                MyObject myObject = (MyObject) CollectionUtils.find(objects, new Predicate() {
-                    public boolean evaluate(Object o) {
-                        return o instanceof MyObject;
-                    }
-                });
-                assertEquals("attribute wrong value", "attributeValue", myObject.getValue());
+                assertNotNull("object not created on server side", system.getMyObject());
+                assertEquals("attribute wrong value", "attributeValue", system.getMyObject().getValue());
             }
         });
     }
@@ -133,7 +123,7 @@ public class RemoteTest extends AbstractAttributesTest {
         Object service = serverAspectSystem.newInstance(MyStatefulService.class);
 
         RemoteMarshaller clientMarshaller = RemoteMarshaller.createClientSideMarshaller();
-        Identity identity = new RemoteIdentity((Class) Aspects.getAspectInstance(service).getClassIdentifier(), new Long(System.currentTimeMillis()), new SocketConnectionManager("localhost", port));
+        Identity identity = new RemoteIdentity(Aspects.getAspectInstance(service).getClassIdentifier(), new Long(System.currentTimeMillis()), new SocketConnectionManager("localhost", port));
         Object stub = clientMarshaller.unmarshal(identity);
         assertNotNull(stub);
         assertTrue(stub instanceof MyStatefulService);

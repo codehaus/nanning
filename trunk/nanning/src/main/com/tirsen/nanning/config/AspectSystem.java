@@ -21,18 +21,24 @@ public class AspectSystem implements AspectFactory {
     }
 
     public Object newInstance(Class classIdentifier) {
+        AspectInstance aspectInstance = createAspectInstance(classIdentifier);
+        return aspectInstance.getProxy(true);
+    }
+
+    private AspectInstance createAspectInstance(Class classIdentifier) {
         AspectInstance aspectInstance = new AspectInstance(this, classIdentifier);
         for (Iterator iterator = aspects.iterator(); iterator.hasNext();) {
             Aspect aspect = (Aspect) iterator.next();
             aspect.process(aspectInstance);
         }
-        return aspectInstance.getProxy();
+        return aspectInstance;
     }
 
     public Object newInstance(Class classIdentifier, Object[] targets) {
-        Object object = newInstance(classIdentifier);
-        setTargets(object, targets);
-        return object;
+        AspectInstance aspectInstance = createAspectInstance(classIdentifier);
+        Object proxy = aspectInstance.getProxy(false);
+        setTargets(proxy, targets);
+        return proxy;
     }
 
     public void setTargets(Object object, Object[] targets) {

@@ -1,12 +1,13 @@
 package com.tirsen.nanning.samples.prevayler;
 
+import java.util.Collection;
+
 
 /**
  * @entity
  */
-public interface MySystem extends IdentifyingSystem {
+public interface MySystem {
     /**
-     * @ensures hasObjectID(result)
      * @transaction
      */
     MyObject createMyObject();
@@ -17,4 +18,6 @@ public interface MySystem extends IdentifyingSystem {
     void setMyObject(MyObject myObject);
 
     MyObject getMyObject();
+
+    Collection getAllObjects();
 }

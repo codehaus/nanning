@@ -1,8 +1,12 @@
 package com.tirsen.nanning.samples.prevayler;
 
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.ArrayList;
+
 import com.tirsen.nanning.Aspects;
 
-public class MySystemImpl extends BasicIdentifyingSystem implements MySystem {
+public class MySystemImpl implements MySystem, Serializable {
     private MyObject myObject;
 
     public MyObject createMyObject() {
@@ -15,5 +19,19 @@ public class MySystemImpl extends BasicIdentifyingSystem implements MySystem {
 
     public MyObject getMyObject() {
         return myObject;
+    }
+
+    public Collection getAllObjects() {
+        Collection result = new ArrayList();
+        addAllObjects(result, myObject);
+        return result;
+    }
+
+    private void addAllObjects(Collection result, MyObject myObject) {
+        if (myObject == null) {
+            return;
+        }
+        result.add(myObject);
+        addAllObjects(result, myObject.getMyObject());
     }
 }
