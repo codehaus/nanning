@@ -68,7 +68,7 @@ public class IdentifyingCall extends Call {
             return null;
         }
         if (object instanceof Identifiable) {
-            return new Identity(object.getClass(), new Integer(CurrentPrevayler.getSystem().getOID(object)));
+            return new Identity(object.getClass(), new Long(CurrentPrevayler.getSystem().getOID(object)));
         }
 
         throw new IllegalArgumentException("Can't identify " + object);

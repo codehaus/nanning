@@ -9,7 +9,7 @@ import org.prevayler.Prevayler;
  * TODO document PrevaylerInterceptor
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class PrevaylerInterceptor
         implements SingletonInterceptor, FilterMethodsInterceptor, ConstructionInterceptor {
@@ -85,5 +85,12 @@ public class PrevaylerInterceptor
     public void setPrevayler(Prevayler prevayler) {
         this.prevayler = prevayler;
         setSystem((IdentifyingSystem) prevayler.system());
+    }
+
+    public static PrevaylerInterceptor getPrevaylerInterceptor() {
+        InterceptorDefinition interceptorDefinition =
+                Aspects.getCurrentAspectRepository().getInterceptor(PrevaylerInterceptor.class);
+        PrevaylerInterceptor prevaylerInterceptor = (PrevaylerInterceptor) interceptorDefinition.getSingleton();
+        return prevaylerInterceptor;
     }
 }

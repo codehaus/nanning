@@ -5,33 +5,5 @@ import java.util.List;
 
 import org.prevayler.AlarmClock;
 
-public class MySystem implements IdentifyingSystem {
-    private AlarmClock clock;
-    private List objects = new ArrayList();
-
-    public void clock(AlarmClock alarmClock) {
-        this.clock = alarmClock;
-    }
-
-    public AlarmClock clock() {
-        return clock;
-    }
-
-    public List getObjects() {
-        return objects;
-    }
-
-    public void registerOID(Object object) {
-        if(!objects.contains(object)) {
-            objects.add(object);
-        }
-    }
-
-    public int getOID(Object object) {
-        return objects.indexOf(object);
-    }
-
-    public Object getObjectWithID(int oid) {
-        return objects.get(oid);
-    }
+public class MySystem extends BasicIdentifyingSystem {
 }
