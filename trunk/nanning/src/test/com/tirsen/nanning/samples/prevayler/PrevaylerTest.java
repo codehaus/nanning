@@ -1,14 +1,18 @@
 package com.tirsen.nanning.samples.prevayler;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.IdentityHashMap;
-import java.util.List;
-import java.lang.reflect.Method;
 
 import com.tirsen.nanning.AspectFactory;
-import com.tirsen.nanning.Aspects;
 import com.tirsen.nanning.AspectInstance;
+import com.tirsen.nanning.Aspects;
 import com.tirsen.nanning.MixinInstance;
 import com.tirsen.nanning.attribute.AbstractAttributesTest;
 import com.tirsen.nanning.attribute.Attributes;
@@ -50,26 +54,26 @@ public class PrevaylerTest extends AbstractAttributesTest {
         CurrentPrevayler.withPrevayler(prevayler, new Runnable() {
             public void run() {
                 MyObject insideObject = currentMySystem().createMyObject();
-                prevayler.assertNumberOfCommands("create should result in one command only", 1);
+                prevayler.assertNumberOfCommands("create should not result in a command", 0);
                 currentMySystem().setMyObject(insideObject);
-                prevayler.assertNumberOfCommands("set should result in one command only", 2);
+                prevayler.assertNumberOfCommands("set should result in one command only", 1);
 
                 insideObject.setValue("oldValue");
-                prevayler.assertNumberOfCommands(3);
+                prevayler.assertNumberOfCommands(2);
                 insideObject.setValue("newValue");
-                prevayler.assertNumberOfCommands(4);
+                prevayler.assertNumberOfCommands(3);
 
                 MyObject outsideObject = (MyObject) aspectFactory.newInstance(MyObject.class);
-                prevayler.assertNumberOfCommands("no command when object created outside prevayler", 4);
+                prevayler.assertNumberOfCommands("no command when object created outside prevayler", 3);
 
                 MyObject outsideNestedObject = (MyObject) aspectFactory.newInstance(MyObject.class);
-                prevayler.assertNumberOfCommands("no command when object created outside prevayler", 4);
+                prevayler.assertNumberOfCommands("no command when object created outside prevayler", 3);
 
                 outsideObject.setMyObject(outsideNestedObject);
 //                prevayler.assertNumberOfCommands("no command when operating on object outside prevayler", 4);
                 prevayler.assertNumberOfCommands("commands operating on objects outside prevayler still generates " +
                                                  "commands (they shouldn't really but we haven't implemented that yet)",
-                                                 5);
+                                                 4);
 
                 // mixing prevayler and non-prevayler stuff the other way around will mess things up
                 // uncomment this line and watch the nice little assert failure
@@ -78,7 +82,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
 
                 insideObject.setMyObject(outsideObject);
                 prevayler.assertNumberOfCommands(
-                        "command when operating on object inside prevayler with object outside prevayler", 6);
+                        "command when operating on object inside prevayler with object outside prevayler", 5);
 
                 Collection objects = currentMySystem().getAllObjects();
                 assertEquals("objects not created ", 3, objects.size());
@@ -134,9 +138,9 @@ public class PrevaylerTest extends AbstractAttributesTest {
         CurrentPrevayler.withPrevayler(prevayler, new Runnable() {
             public void run() {
                 MyObject myObject = currentMySystem().createMyObject();
-                prevayler.assertNumberOfCommands(1);
+                prevayler.assertNumberOfCommands(0);
                 myObject.setABC(null);
-                prevayler.assertNumberOfCommands(2);
+                prevayler.assertNumberOfCommands(1);
             }
         });
     }
@@ -229,5 +233,14 @@ public class PrevaylerTest extends AbstractAttributesTest {
         } catch (IllegalStateException shouldHappen) {
         }
         assertTrue(CheckTransactionUnsupportedInterceptor.isTransactionsSupported());
+    }
+
+    public void testIsTransactional() throws NoSuchMethodException {
+        assertFalse(PrevaylerInterceptor.isTransactional(null));
+        assertFalse(PrevaylerInterceptor.isTransactional(Object.class));
+        assertTrue(PrevaylerInterceptor.isTransactional(MySystem.class));
+        assertFalse(PrevaylerInterceptor.transactionalReturnValue(
+                MySystem.class.getMethod("setMyObject", new Class[] { MyObject.class })));
+        assertTrue(PrevaylerInterceptor.transactionalReturnValue(MySystem.class.getMethod("createMyObject", null)));
     }
 }
