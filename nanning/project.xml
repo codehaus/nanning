@@ -32,10 +32,10 @@
 
     <repository>
         <connection>
-            scm:cvs:pserver:anonymous@cvs.sourceforge.net:/cvsroot/nanning:nanning
+            scm:cvs:pserver:anoncvs@cvs.codehaus.org:/cvsroot/nanning:nanning
         </connection>
         <url>
-            http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/nanning/nanning/
+            http://cvs.codehaus.org/cgi-bin/viewcvs.cgi/nanning/nanning/
         </url>
     </repository>
 
