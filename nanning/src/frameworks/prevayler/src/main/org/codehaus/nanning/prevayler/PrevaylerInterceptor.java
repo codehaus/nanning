@@ -5,14 +5,14 @@ import java.lang.reflect.Method;
 import org.codehaus.nanning.Invocation;
 import org.codehaus.nanning.MethodInterceptor;
 import org.codehaus.nanning.prevayler.CurrentPrevayler;
-import org.codehaus.nanning.prevayler.InvokeCommand;
+import org.codehaus.nanning.prevayler.InvokeTransaction;
 import org.codehaus.nanning.attribute.Attributes;
 
 /**
  * TODO document PrevaylerInterceptor
  *
  * @author <a href="mailto:jon_tirsen@yahoo.org">Jon Tirs?n</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class PrevaylerInterceptor implements MethodInterceptor {
     public PrevaylerInterceptor() {
@@ -32,7 +32,7 @@ public class PrevaylerInterceptor implements MethodInterceptor {
                 && (PrevaylerUtils.isService(invocation.getTargetInterface()) ||
                 PrevaylerUtils.isEntity(invocation.getTargetInterface())))
         {
-            InvokeCommand command = new InvokeCommand(invocation);
+            InvokeTransaction command = new InvokeTransaction(invocation);
             return CurrentPrevayler.getPrevayler().execute(command);
         } else {
             return invocation.invokeNext();

@@ -2,7 +2,6 @@ package org.codehaus.nanning.prevayler;
 
 import java.util.Collection;
 
-//import org.prevayler.util.clock.ClockedSystem;
 import org.codehaus.nanning.prevayler.MyObject;
 
 
@@ -37,4 +36,16 @@ public interface MySystem extends IdentifyingSystem {
      * @transaction
      */
     void add(Object o);
+
+    /**
+     * @transaction
+     */
+    void setSimpleObject(Object o);
+
+    Object getSimpleObject();
+
+    /**
+     * @transaction
+     */
+    Object newInstance(Class objectClass);
 }

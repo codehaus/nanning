@@ -46,12 +46,12 @@ public class CountingPrevayler extends FilterPrevayler {
         StringBuffer transactionLog = new StringBuffer();
         for (Iterator iterator = transactions.iterator(); iterator.hasNext();) {
             Object transaction = iterator.next();
-            if (transaction instanceof InvokeCommand) {
-                InvokeCommand invokeCommand = (InvokeCommand) transaction;
+            if (transaction instanceof InvokeTransaction) {
+                InvokeTransaction invokeTransaction = (InvokeTransaction) transaction;
                 if (transactionLog.length() != 0) {
                     transactionLog.append(" ");
                 }
-                transactionLog.append(invokeCommand.getCall().getMethod().getName());
+                transactionLog.append(invokeTransaction.getMethodName());
             }
         }
         return transactionLog.toString();

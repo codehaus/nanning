@@ -1,4 +1,4 @@
-package org.codehaus.nanning.remote;
+package org.codehaus.nanning.prevayler;
 
 import org.codehaus.nanning.prevayler.Marshaller;
 
