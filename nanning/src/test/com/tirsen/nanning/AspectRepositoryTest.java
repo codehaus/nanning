@@ -11,10 +11,10 @@ import junit.framework.TestCase;
 /**
  * TODO document AspectRepositoryTest
  *
- * <!-- $Id: AspectRepositoryTest.java,v 1.3 2002-11-30 18:23:56 tirsen Exp $ -->
+ * <!-- $Id: AspectRepositoryTest.java,v 1.4 2002-12-04 07:45:33 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class AspectRepositoryTest extends TestCase
 {
@@ -83,7 +83,9 @@ public class AspectRepositoryTest extends TestCase
     public void testConfigure() throws NoSuchMethodException, ConfigureException
     {
         AspectRepository aspectRepository = new AspectRepository();
-        aspectRepository.configure(AspectRepositoryTest.class.getResource("aspect-repository-test.xml"));
+        java.net.URL resource = AspectRepositoryTest.class.getResource("aspect-repository-test.xml");
+        System.out.println("resource = " + resource);
+        aspectRepository.configure(resource);
 
 //        AspectRepository aspectRepository = AspectRepository.getInstance();
         Object bigMomma = aspectRepository.newInstance(Intf.class);

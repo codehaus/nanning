@@ -22,10 +22,10 @@ import java.net.URL;
 /**
  * TODO document TraceInterceptorTest
  *
- * <!-- $Id: TraceInterceptorTest.java,v 1.1 2002-11-18 20:56:30 tirsen Exp $ -->
+ * <!-- $Id: TraceInterceptorTest.java,v 1.2 2002-12-04 07:45:33 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class TraceInterceptorTest extends TestCase
 {
@@ -83,7 +83,8 @@ public class TraceInterceptorTest extends TestCase
 
         public void error(Object message, Throwable throwable)
         {
-            actualMessages.add("ERROR " + message);
+            String m = "ERROR " + message;
+            actualMessages.add(m);
         }
 
         public void trace(Object message)
@@ -242,7 +243,7 @@ public class TraceInterceptorTest extends TestCase
         assertTrue("failed to patch into commons-logging", LogFactory.getFactory() instanceof MockLogFactory);
         MockLog mockLog = ((MockLogFactory) LogFactory.getFactory()).getMockLog();
         mockLog.expectAddMessage(">>> call(hej, svej)");
-        mockLog.expectAddMessage("<<< call(hej, svej) = hej tillbax!");
+        mockLog.expectAddMessage("<<< call(hej, svej) took 0.0 ms, result hej tillbax!");
         Intf intf = (Intf) aspectClass.newInstance();
         intf.call("hej", "svej");
         mockLog.verify();
@@ -250,7 +251,7 @@ public class TraceInterceptorTest extends TestCase
         mockLog.reset();
         aspectClass.setTarget(ErrorImpl.class);
         mockLog.expectAddMessage(">>> call(hej, svej)");
-        mockLog.expectAddMessage("ERROR <<< call(hej, svej) threw exception");
+        mockLog.expectAddMessage("ERROR <<< call(hej, svej) threw exception, took 0.0");
         intf = (Intf) aspectClass.newInstance();
         try
         {
