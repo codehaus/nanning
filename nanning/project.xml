@@ -5,8 +5,8 @@
   <id>nanning</id>
   <currentVersion>0.1</currentVersion>
   <organization>
-    <url>http://sourceforge.net/</url>
-    <logo>http://sourceforge.net/sflogo.php?group_id=47411&amp;type=5</logo>
+    <url>http://sourceforge.net/projects/nanning</url>
+    <logo>http://sourceforge.net/sflogo.php?group_id=64968&amp;type=5</logo>
   </organization>
   <inceptionYear>2002</inceptionYear>
   <package>com.tirsen.nanning</package>
@@ -14,13 +14,13 @@
   <shortDescription>Nanning is a simple yet scaleable aspect-oriented framework.</shortDescription>
 
   <description>
-  	Nanning is a simple yet scaleable aspect-oriented framework. It is experimental and may never see the light
-  	of the day.
+  	Nanning is a simple yet scaleable aspect-oriented framework based on the ideas of implementing AOP in Java
+  	outlined by Rickard Oberg in his blog.
   </description>
 
   <url>http://nanning.sourceforge.net</url>
   <issueTrackingUrl>
-    http://sourceforge.net/tracker/?group_id=53105&amp;atid=469121
+    http://sourceforge.net/tracker/?group_id=64968
   </issueTrackingUrl>
   <siteAddress>Sourceforge</siteAddress>
   <siteDirectory>/home/groups/n/na/nanning/htdocs</siteDirectory>

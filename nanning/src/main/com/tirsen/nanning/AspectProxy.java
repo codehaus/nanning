@@ -6,32 +6,30 @@
  */
 package com.tirsen.nanning;
 
-import java.lang.reflect.Proxy;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Iterator;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * TODO document AspectProxy
  *
- * <!-- $Id: AspectProxy.java,v 1.1.1.1 2002-10-20 09:33:53 tirsen Exp $ -->
+ * <!-- $Id: AspectProxy.java,v 1.2 2002-10-21 21:07:31 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1.1.1 $
+ * @version $Revision: 1.2 $
  */
-public class AspectProxy
+public class AspectProxy implements InvocationHandler
 {
-    private Class interfaceClass;
-    private Object realObject;
-    private Aspect[] aspects = new Aspect[0];
+    private Object target;
+    private Interceptor[] aspects;
     private Object proxy;
 
     public AspectProxy(Object implementation)
     {
-        this.realObject = implementation;
+        this.target = implementation;
     }
 
     public static AspectProxy create(Object implementation)
@@ -40,69 +38,106 @@ public class AspectProxy
         return aspectProxy;
     }
 
-    private class MyInvoicationHandler implements InvocationHandler
+    public Object invoke(Object proxy, Method method, Object[] args)
+            throws Throwable
     {
-        public Object invoke(Object proxy, Method method, Object[] args)
-                throws Throwable
-        {
-            AspectContext aspectChain = new AspectChainImpl();
-            return aspectChain.invokeNext(method, args, aspectChain);
-        }
+        Invocation invocation = new InvocationImpl(method, args);
+        return invocation.invokeNext(invocation);
     }
 
-    private class AspectChainImpl implements AspectContext
+    private class InvocationImpl implements Invocation
     {
-        private int index = 0;
+        private int index = -1;
+        private Method method;
+        private Object[] args;
 
-        public Object invokeNext(Method method, Object[] args, AspectContext aspectChain) throws Throwable
+        public InvocationImpl(Method method, Object[] args)
         {
-            if(index < aspects.length)
+            this.method = method;
+            this.args = args;
+        }
+
+        public Object invokeNext(Invocation invocation) throws Throwable
+        {
+            index++;
+            if (aspects != null && index < aspects.length)
             {
-                return aspects[index++].invoke(method, args, aspectChain);
+                return aspects[index].invoke(invocation);
             }
             else
             {
-                return method.invoke(realObject, args);
+                return method.invoke(target, args);
             }
         }
 
-        public Object getRealObject()
+        public Object getTarget()
         {
-            return realObject;
+            return target;
         }
 
         public Object getProxy()
         {
-            return AspectProxy.this.getProxy();
+            return AspectProxy.this.proxy;
         }
-    }
 
-    public void setInterfaceClass(Class interfaceClass)
-    {
-        this.interfaceClass = interfaceClass;
-    }
-
-    public Object getProxy()
-    {
-        if (proxy == null)
+        public int getCurrentIndex()
         {
-            proxy = createProxy();
+            return index;
         }
-        return proxy;
+
+        public int getNumberOfAspects()
+        {
+            return aspects.length;
+        }
+
+        public Interceptor getAspect(int index)
+        {
+            return aspects[index];
+        }
+
+        public Method getMethod()
+        {
+            return method;
+        }
+
+        public Object[] getArgs()
+        {
+            return args;
+        }
     }
 
-    private Object createProxy()
+    public Object createProxy(Class[] interfaceClasses)
     {
-        return Proxy.newProxyInstance(this.getClass().getClassLoader(),
-                        new Class[] { interfaceClass },
-                        new MyInvoicationHandler());
+        // TODO: check that proxy is not already created
+        return proxy =
+                Proxy.newProxyInstance(getClass().getClassLoader(),
+                        interfaceClasses,
+                        this);
     }
 
-    public void addAspect(Aspect aspect)
+    public void addAspect(Interceptor aspect)
     {
-        List aspectsList = new ArrayList(aspects.length + 1);
-        aspectsList.addAll(Arrays.asList(aspects));
+        List aspectsList = null;
+        if (aspects != null)
+        {
+            aspectsList = new ArrayList(aspects.length + 1);
+            aspectsList.addAll(Arrays.asList(aspects));
+        }
+        else
+        {
+            aspectsList = new ArrayList();
+        }
         aspectsList.add(aspect);
-        aspects = (Aspect[]) aspectsList.toArray(new Aspect[0]);
+        aspects = (Interceptor[]) aspectsList.toArray(new Interceptor[0]);
+    }
+
+    Interceptor[] getAspects()
+    {
+        return aspects;
+    }
+
+    public Object getTarget()
+    {
+        return target;
     }
 }
