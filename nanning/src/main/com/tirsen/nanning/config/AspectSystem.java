@@ -44,7 +44,9 @@ public class AspectSystem implements AspectFactory {
             mixin.setTarget(myTarget);
             targetsList.remove(myTarget);
         }
-        assert targetsList.isEmpty() : "could not find mixin for target(s) " + targetsList;
+        if (!targetsList.isEmpty()) {
+            throw new IllegalArgumentException("could not find mixin for target(s) " + targetsList);
+        }
         return object;
     }
 
