@@ -32,7 +32,11 @@ public class RemoteAspect extends PointcutAspect implements MethodInterceptor {
             Object result = marshaller.unmarshal(input.readObject());
             if (result instanceof ExceptionThrown) {
                 ExceptionThrown exceptionThrown = (ExceptionThrown) result;
-                throw exceptionThrown.getThrowable().fillInStackTrace();
+                Throwable throwable = exceptionThrown.getThrowable();
+                if (throwable == null) {
+                    throwable = new RuntimeException("Remote error but exception was null");
+                }
+                throw throwable.fillInStackTrace();
             }
             return result;
         } finally {
