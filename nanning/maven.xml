@@ -5,8 +5,4 @@
       <attainGoal name="clover"/>
     </preGoal>
     
-    <goal name="tasklist">
-    	<!-- might be a bug in cvs-snapshot taken at 26th of october -->
-    </goal>
-
 </project>

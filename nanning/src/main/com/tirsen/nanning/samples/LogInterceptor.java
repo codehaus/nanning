@@ -14,10 +14,10 @@ import org.apache.commons.logging.Log;
 /**
  * TODO document LogInterceptor
  *
- * <!-- $Id: LogInterceptor.java,v 1.1 2002-10-28 18:51:01 tirsen Exp $ -->
+ * <!-- $Id: LogInterceptor.java,v 1.2 2002-10-28 21:45:34 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class LogInterceptor implements Interceptor
 {
@@ -32,7 +32,7 @@ public class LogInterceptor implements Interceptor
         {
             Object arg = args[i];
             methodCallMessage.append(arg);
-            if(i + 1 != args.length)
+            if(i + 1 < args.length)
             {
                 methodCallMessage.append(", ");
             }
