@@ -9,8 +9,13 @@ import java.io.Serializable;
 
 import org.prevayler.PrevalentSystem;
 import org.prevayler.Command;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class ConstructCommand implements Command {
+    private static final Log logger = LogFactory.getLog(ConstructCommand.class);
+
     private Object classIdentifier;
 
     public ConstructCommand(ConstructionInvocation invocation) {
@@ -18,14 +23,18 @@ public class ConstructCommand implements Command {
     }
 
     public Serializable execute(PrevalentSystem prevalentSystem) throws Exception {
-        PrevaylerInterceptor.getPrevaylerInterceptor().enterTransaction();
-        CurrentPrevayler.setSystem((IdentifyingSystem) prevalentSystem);
+        logger.debug("executing " + this + " on system " + prevalentSystem);
+        CurrentPrevayler.enterCommand((IdentifyingSystem) prevalentSystem);
         try {
             Object o = Aspects.getCurrentAspectFactory().newInstance(classIdentifier);
-            CurrentPrevayler.getSystem().getObjectID(o);
+            assert CurrentPrevayler.getSystem().hasObjectID(o);
             return (Serializable) o;
         } finally {
-            PrevaylerInterceptor.getPrevaylerInterceptor().exitTransaction();
+            CurrentPrevayler.exitCommand();
         }
+    }
+
+    public String toString() {
+        return new ToStringBuilder(this).append("class", classIdentifier).toString();
     }
 }

@@ -9,6 +9,8 @@ package com.tirsen.nanning;
 import com.tirsen.nanning.definition.AspectRepository;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 
 import java.io.Externalizable;
 import java.io.IOException;
@@ -22,10 +24,10 @@ import java.util.*;
 /**
  * TODO document AspectInstance
  *
- * <!-- $Id: AspectInstance.java,v 1.20 2003-01-12 13:25:40 tirsen Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.21 2003-01-16 10:17:48 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.20 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.21 $
  */
 public class AspectInstance implements InvocationHandler, Externalizable {
     private Object proxy;
@@ -209,5 +211,15 @@ public class AspectInstance implements InvocationHandler, Externalizable {
         result = mixinsList.hashCode();
         result = 29 * result + (classIdentifier != null ? classIdentifier.hashCode() : 0);
         return result;
+    }
+
+    public String toString() {
+        if (mixinsList.size() == 1) {
+            return mixinsList.get(0).toString();
+        }
+        return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE)
+                .append("class", classIdentifier)
+                .append("mixins", mixinsList)
+                .toString();
     }
 }
