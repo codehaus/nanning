@@ -11,10 +11,10 @@ import java.lang.reflect.Proxy;
 /**
  * Facade for accessing some important features of aspected objects and their definitions.
  *
- * <!-- $Id: Aspects.java,v 1.9 2002-11-24 12:29:09 tirsen Exp $ -->
+ * <!-- $Id: Aspects.java,v 1.10 2002-11-27 13:18:01 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.9 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.10 $
  */
 public class Aspects
 {
@@ -95,5 +95,9 @@ public class Aspects
             }
         }
         return null;
+    }
+
+    public static AspectClass getAspectClass(Object proxy) {
+        return getAspectInstance(proxy).getAspectClass();
     }
 }

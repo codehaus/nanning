@@ -28,10 +28,10 @@ import java.util.*;
  * Hmm... wait, a minute, there's some support for this in QDox, maybe that will work...
  * -- jon
 
- * <!-- $Id: Attributes.java,v 1.5 2002-11-24 12:29:09 tirsen Exp $ -->
+ * <!-- $Id: Attributes.java,v 1.6 2002-11-27 13:18:01 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.5 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.6 $
  */
 public class Attributes
 {
@@ -39,13 +39,14 @@ public class Attributes
 
     private static List searchPaths = new ArrayList();
     private static Map propertiesCache = new HashMap();
+    private static Map methodPropertyNameCache = new HashMap();
 
     public static String getAttribute(Class klass, String attribute)
     {
-        return getProperty(klass, attributeName(klass, attribute));
+        return getProperty(klass, propertyName(klass, attribute));
     }
 
-    private static String attributeName(Class klass, String attribute)
+    private static String propertyName(Class klass, String attribute)
     {
         return "class." + attribute;
     }
@@ -126,38 +127,40 @@ public class Attributes
 
     public static String getAttribute(Method method, String attribute)
     {
-        String name = attributeName(method, attribute);
+        String name = propertyName(method, attribute);
         return getProperty(method.getDeclaringClass(), name);
     }
 
-    private static String attributeName(Method method, String attribute)
+    private static String propertyName(Method method, String attribute)
     {
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(method.getName());
-        stringBuffer.append('(');
-        Class[] parameterTypes = method.getParameterTypes();
-        for (int i = 0; i < parameterTypes.length; i++)
-        {
-            Class parameterType = parameterTypes[i];
-            stringBuffer.append(parameterType.getName());
-            if (i + 1 < parameterTypes.length)
+        String propertyName = (String) methodPropertyNameCache.get(method);
+        if(propertyName == null) {
+            StringBuffer stringBuffer = new StringBuffer();
+            stringBuffer.append(method.getName());
+            stringBuffer.append('(');
+            Class[] parameterTypes = method.getParameterTypes();
+            for (int i = 0; i < parameterTypes.length; i++)
             {
-                stringBuffer.append(',');
+                Class parameterType = parameterTypes[i];
+                stringBuffer.append(parameterType.getName());
+                if (i + 1 < parameterTypes.length)
+                {
+                    stringBuffer.append(',');
+                }
             }
+            stringBuffer.append(')');
+            propertyName = stringBuffer.toString();
+            methodPropertyNameCache.put(method, propertyName);
         }
-        stringBuffer.append(')');
-        stringBuffer.append('.');
-        stringBuffer.append(attribute);
-        String name = stringBuffer.toString();
-        return name;
+        return propertyName + "." + attribute;
     }
 
     public static String getAttribute(Field field, String attribute)
     {
-        return getProperty(field.getDeclaringClass(), attributeName(field, attribute));
+        return getProperty(field.getDeclaringClass(), propertyName(field, attribute));
     }
 
-    private static String attributeName(Field field, String attribute)
+    private static String propertyName(Field field, String attribute)
     {
         return field.getName() + '.' + attribute;
     }
@@ -174,16 +177,16 @@ public class Attributes
 
     public static boolean hasAttribute(Class klass, String attribute)
     {
-        return getProperties(klass).containsKey(attributeName(klass, attribute));
+        return getProperties(klass).containsKey(propertyName(klass, attribute));
     }
 
     public static boolean hasAttribute(Method method, String attribute)
     {
-        return getProperties(method.getDeclaringClass()).containsKey(attributeName(method, attribute));
+        return getProperties(method.getDeclaringClass()).containsKey(propertyName(method, attribute));
     }
 
     public static boolean hasAttribute(Field field, String attribute)
     {
-        return getProperties(field.getDeclaringClass()).containsKey(attributeName(field, attribute));
+        return getProperties(field.getDeclaringClass()).containsKey(propertyName(field, attribute));
     }
 }
