@@ -12,10 +12,10 @@ import java.lang.reflect.Proxy;
 /**
  * The definition of an aspected object, specifies interfaces, interceptors and target-objects.
  *
- * <!-- $Id: AspectClass.java,v 1.14 2002-12-03 13:55:24 lecando Exp $ -->
+ * <!-- $Id: AspectClass.java,v 1.15 2002-12-03 17:04:32 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class AspectClass {
     private final List aspectDefinitions = new ArrayList();
@@ -49,7 +49,7 @@ public class AspectClass {
 
         Object proxy = instantiateProxy(aspectInstance, sideAspects);
 
-        aspectInstance.setProxy(proxy);
+        aspectInstance.init(proxy);
 
         return proxy;
     }

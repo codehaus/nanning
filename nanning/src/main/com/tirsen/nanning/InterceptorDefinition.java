@@ -15,14 +15,14 @@ import java.lang.reflect.Method;
 /**
  * TODO document InterceptorDefinition
  *
- * <!-- $Id: InterceptorDefinition.java,v 1.6 2002-11-30 22:51:45 tirsen Exp $ -->
+ * <!-- $Id: InterceptorDefinition.java,v 1.7 2002-12-03 17:04:58 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.6 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.7 $
  */
 public class InterceptorDefinition {
     private final Class interceptorClass;
-    private Interceptor statelessInterceptorSingleton;
+    private Interceptor singletonInterceptor;
     private Map mapAttributes;
     private Set negativeCache = new HashSet();
     private Set positiveCache = new HashSet();
@@ -31,20 +31,24 @@ public class InterceptorDefinition {
         this.interceptorClass = interceptorClass;
     }
 
-    public Interceptor newInstance() throws InstantiationException, IllegalAccessException {
-        Interceptor instance;
-        if (statelessInterceptorSingleton != null) {
-            instance = statelessInterceptorSingleton;
-        } else if (SingletonInterceptor.class.isAssignableFrom(interceptorClass)) {
-            instance = statelessInterceptorSingleton = (Interceptor) interceptorClass.newInstance();
-        } else {
-            instance = (Interceptor) interceptorClass.newInstance();
-        }
+    public Interceptor newInstance() {
+        try {
+            Interceptor instance;
+            if (singletonInterceptor != null) {
+                instance = singletonInterceptor;
+            } else if (SingletonInterceptor.class.isAssignableFrom(interceptorClass)) {
+                instance = singletonInterceptor = (Interceptor) interceptorClass.newInstance();
+            } else {
+                instance = (Interceptor) interceptorClass.newInstance();
+            }
 
-        if (instance instanceof DefinitionAwareInterceptor) {
-            ((DefinitionAwareInterceptor) instance).setInterceptorDefinition(this);
+            if (instance instanceof DefinitionAwareInterceptor) {
+                ((DefinitionAwareInterceptor) instance).setInterceptorDefinition(this);
+            }
+            return instance;
+        } catch (Exception e) {
+            throw new AspectException(e);
         }
-        return instance;
     }
 
     public Class getInterceptorClass() {
@@ -79,11 +83,30 @@ public class InterceptorDefinition {
                 positiveCache.add(method);
                 return true;
             }
-        } else {
+        } else if(interceptor instanceof MethodInterceptor) {
             positiveCache.add(method);
             return true;
         }
         negativeCache.add(interceptor);
         return false;
+    }
+
+    public boolean interceptsConstructor(Class interfaceClass) {
+        Interceptor interceptor = newInstance();
+        if(interceptor instanceof ConstructionInterceptor) {
+            return ((ConstructionInterceptor) interceptor).interceptsConstructor(interfaceClass);
+        }
+        return false;
+    }
+
+    public Interceptor getSingleton() {
+        if(singletonInterceptor == null) {
+            newInstance();
+        }
+        if(singletonInterceptor == null) {
+            throw new IllegalStateException("This is not a singleton-interceptor: " + interceptorClass);
+        }
+
+        return singletonInterceptor;
     }
 }

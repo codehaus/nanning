@@ -1,6 +1,6 @@
 package com.tirsen.nanning.samples;
 
-import com.tirsen.nanning.Interceptor;
+import com.tirsen.nanning.MethodInterceptor;
 import com.tirsen.nanning.Invocation;
 import com.tirsen.nanning.Attributes;
 import org.apache.commons.jexl.JexlHelper;
@@ -22,9 +22,9 @@ import java.util.ListIterator;
  * you can enable and disable contract-checking in the same way you enable and disable assertions (java -ea and so on).
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
-public class ContractInterceptor implements Interceptor {
+public class ContractInterceptor implements MethodInterceptor {
     private static final Pattern oldPattern =
             Pattern.compile("(.*)\\{old (.*?)}(.*)");
 
