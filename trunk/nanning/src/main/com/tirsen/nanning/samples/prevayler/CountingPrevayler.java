@@ -30,4 +30,8 @@ public class CountingPrevayler extends GarbageCollectingPrevayler {
     public void assertNumberOfCommands(int expectedNumber) {
         Assert.assertEquals("wrong number of commands in log", expectedNumber, numberOfCommandsInLog);
     }
+
+    public int getNumberOfCommandsInLog() {
+        return numberOfCommandsInLog;
+    }
 }
