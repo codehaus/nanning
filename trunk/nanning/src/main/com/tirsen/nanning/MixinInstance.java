@@ -14,10 +14,10 @@ import java.util.*;
 /**
  * TODO document AspectDefinition
  *
- * <!-- $Id: MixinInstance.java,v 1.6 2003-02-20 15:35:59 lecando Exp $ -->
+ * <!-- $Id: MixinInstance.java,v 1.7 2003-03-03 10:07:33 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public final class MixinInstance {
     private Class interfaceClass;
@@ -32,16 +32,7 @@ public final class MixinInstance {
     }
 
     public void setTarget(Object target) {
-        checkTarget(target);
         this.target = target;
-    }
-
-    void checkTarget(Object target) {
-        if(target == null) {
-            return;
-        }
-
-        assert interfaceClass.isInstance(target) : "target does not implement interface " + target;
     }
 
     public Class getInterfaceClass() {

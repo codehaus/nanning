@@ -3,16 +3,16 @@ package com.tirsen.nanning.samples.prevayler;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.util.List;
 
-import com.tirsen.nanning.Aspects;
+import com.tirsen.nanning.AspectFactory;
 import com.tirsen.nanning.attribute.Attributes;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * TODO document Identity
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class Identity implements Serializable {
     static final long serialVersionUID = 716500751463534855L;
@@ -33,15 +33,15 @@ public class Identity implements Serializable {
         return identifier;
     }
 
-    public Object resolve() {
+    public Object resolve(AspectFactory aspectFactory, IdentifyingSystem system) {
         if (InputStream.class.isAssignableFrom(objectClass)) {
             return new ByteArrayInputStream((byte[]) identifier);
         }
         if (isService(objectClass)) {
-            return Aspects.getCurrentAspectFactory().newInstance(identifier);
+            return aspectFactory.newInstance(identifier);
         }
         if (isEntity(objectClass)) {
-            return CurrentPrevayler.getSystem().getObjectWithID(((Long) identifier).longValue());
+            return system.getObjectWithID(((Long) identifier).longValue());
         }
         throw new IllegalArgumentException("Can't resolve objects of " + objectClass);
     }
@@ -70,5 +70,28 @@ public class Identity implements Serializable {
         } else {
             return false;
         }
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Identity)) return false;
+
+        final Identity identity = (Identity) o;
+
+        if (!identifier.equals(identity.identifier)) return false;
+        if (!objectClass.equals(identity.objectClass)) return false;
+
+        return true;
+    }
+
+    public int hashCode() {
+        int result;
+        result = objectClass.hashCode();
+        result = 29 * result + identifier.hashCode();
+        return result;
+    }
+
+    public String toString() {
+        return new ToStringBuilder(this).append("objectClass", objectClass).append("identifier", identifier).toString();
     }
 }

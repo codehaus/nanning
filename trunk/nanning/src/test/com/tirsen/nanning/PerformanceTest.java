@@ -17,10 +17,10 @@ import com.tirsen.nanning.samples.StopWatch;
 /**
  * TODO document PerformanceTest
  *
- * <!-- $Id: PerformanceTest.java,v 1.14 2003-02-20 15:36:05 lecando Exp $ -->
+ * <!-- $Id: PerformanceTest.java,v 1.15 2003-03-03 10:07:40 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class PerformanceTest extends AbstractAttributesTest
 {
@@ -155,13 +155,13 @@ public class PerformanceTest extends AbstractAttributesTest
         long maxMemory = 200;
 
         // let the cache do it's thang
-        Attributes.getAttribute(AttributesTestClass.class, "classAttribute");
+        Attributes.getAttribute(AttributesTestClass.class, "class.attribute");
         Method method = AttributesTestClass.class.getMethod("method", null);
         StopWatch stopWatch = new StopWatch(true);
 
         for (int i = 0; i < 1000; i++) {
-            assertEquals("classValue", Attributes.getAttribute(AttributesTestClass.class, "classAttribute"));
-            assertEquals("methodValue", Attributes.getAttribute(method, "methodAttribute"));
+            assertEquals("classValue", Attributes.getAttribute(AttributesTestClass.class, "class.attribute"));
+            assertEquals("methodValue", Attributes.getAttribute(method, "method.attribute"));
         }
 
         stopWatch.stop();
@@ -177,13 +177,13 @@ public class PerformanceTest extends AbstractAttributesTest
         long maxMemory = 180000;
 
         // let the cache do it's thang
-        Attributes.getInheritedAttribute(AttributesTestClass.class, "classAttribute");
+        Attributes.getInheritedAttribute(AttributesTestClass.class, "class.attribute");
         Method method = AttributesTestClass.class.getMethod("method", null);
         StopWatch stopWatch = new StopWatch(true);
 
         for (int i = 0; i < 1000; i++) {
-            assertEquals("classValue", Attributes.getInheritedAttribute(AttributesTestClass.class, "classAttribute"));
-            assertEquals("methodValue", Attributes.getAttribute(method, "methodAttribute"));
+            assertEquals("classValue", Attributes.getInheritedAttribute(AttributesTestClass.class, "class.attribute"));
+            assertEquals("methodValue", Attributes.getAttribute(method, "method.attribute"));
         }
 
         stopWatch.stop();

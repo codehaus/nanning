@@ -23,10 +23,10 @@ import org.apache.commons.lang.builder.ToStringStyle;
 /**
  * TODO document AspectInstance
  *
- * <!-- $Id: AspectInstance.java,v 1.28 2003-02-20 15:35:58 lecando Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.29 2003-03-03 10:07:33 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  */
 public final class AspectInstance implements InvocationHandler, Externalizable {
     static final long serialVersionUID = 5462785783512485056L;
@@ -192,7 +192,7 @@ public final class AspectInstance implements InvocationHandler, Externalizable {
         if (constructionInterceptors != null) {
             result.addAll(constructionInterceptors);
         }
-        for (Iterator mixinIterator = mixins.values().iterator(); mixinIterator.hasNext();) {
+        for (Iterator mixinIterator = mixinsList.iterator(); mixinIterator.hasNext();) {
             MixinInstance mixinInstance = (MixinInstance) mixinIterator.next();
             Set allInterceptors = mixinInstance.getAllInterceptors();
             for (Iterator interceptorIterator = allInterceptors.iterator(); interceptorIterator.hasNext();) {
