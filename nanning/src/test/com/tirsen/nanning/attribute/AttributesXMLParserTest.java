@@ -17,10 +17,10 @@ import java.util.Properties;
 /**
  * TODO document AttributesTagHandlerTest
  *
- * <!-- $Id: AttributesXMLParserTest.java,v 1.1 2003-01-12 13:25:40 tirsen Exp $ -->
+ * <!-- $Id: AttributesXMLParserTest.java,v 1.2 2003-01-19 22:47:08 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class AttributesXMLParserTest extends TestCase {
     public void testAttributes() throws IOException, NoSuchMethodException, NoSuchFieldException, SAXException {
@@ -38,13 +38,13 @@ public class AttributesXMLParserTest extends TestCase {
         assertEquals("true", jobClassAttributes.get("class.secure"));
 
         //check field attributes
-        assertEquals("true", jobClassAttributes.get("description.persistant"));
+        assertEquals("true", jobClassAttributes.get("field.description.persistant"));
 
-        assertEquals("true", jobClassAttributes.get("boss.bastard"));
+        assertEquals("true", jobClassAttributes.get("field.boss.bastard"));
 
         //check method attributes
-        assertEquals("true", jobClassAttributes.get("fireAllEmployees().secure"));
-        assertEquals("false", jobClassAttributes.get("hireEmployee(String,Employee).secure"));
+        assertEquals("true", jobClassAttributes.get("method.fireAllEmployees().secure"));
+        assertEquals("false", jobClassAttributes.get("method.hireEmployee(String,Employee).secure"));
     }
 
 }

@@ -42,9 +42,9 @@ public class AttributesXMLParser {
     public void setAttributeValue(String name, String value) {
         String propertyName = null;
         if (fieldName != null) {
-            propertyName = fieldName + "." + name;
+            propertyName = "field." + fieldName + "." + name;
         } else if (methodName != null) {
-            propertyName = methodName + "(" + ((argumentList == null) ? "" : argumentList) + ")" + "." + name;
+            propertyName = "method." + methodName + "(" + ((argumentList == null) ? "" : argumentList) + ")" + "." + name;
         } else {
             propertyName = "class." + name;
         }

@@ -19,7 +19,7 @@ import com.thoughtworks.qdox.parser.structs.MethodDef;
  * to parse another file, the reset() method must be called.</p>
  *
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class AttributesBuilder implements Builder {
 
@@ -49,7 +49,9 @@ public class AttributesBuilder implements Builder {
 	}
 
 	public void addMethod(MethodDef def) {
-		final StringBuffer method = new StringBuffer(def.name);
+		final StringBuffer method = new StringBuffer();
+        method.append("method.");
+        method.append(def.name);
 		method.append('(');
 		for (Iterator params = def.params.iterator(); params.hasNext();) {
             FieldDef param = (FieldDef) params.next();
@@ -65,7 +67,7 @@ public class AttributesBuilder implements Builder {
 	}
 
 	public void addField(FieldDef def) {
-		addCurrentAttributes(def.name);
+		addCurrentAttributes("field." + def.name);
 	}
 
 	private void addCurrentAttributes(String prefix) {

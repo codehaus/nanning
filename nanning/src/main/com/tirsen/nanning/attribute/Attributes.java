@@ -28,10 +28,10 @@ import java.util.*;
  * Hmm... wait, a minute, there's some support for this in QDox, maybe that will work...
  * -- jon
 
- * <!-- $Id: Attributes.java,v 1.4 2003-01-19 12:09:04 tirsen Exp $ -->
+ * <!-- $Id: Attributes.java,v 1.5 2003-01-19 22:47:07 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 
 public class Attributes {
@@ -40,32 +40,27 @@ public class Attributes {
     private static List searchPaths = new ArrayList();
     private static Map propertiesCache = new HashMap();
     private static Map methodPropertyNameCache = new HashMap();
-    private static Map xmlAttributes = new HashMap();
+    private static Map classAttributesCache = new HashMap();
 
     public static String getAttribute(Class klass, String attribute) {
-        return getProperty(klass, propertyName(klass, attribute));
+        return getAttributes(klass).getAttribute(attribute);
     }
 
-    private static String propertyName(Class klass, String attribute) {
-        return "class." + attribute;
-    }
-
-    private static String getProperty(Class klass, String key) {
-        Properties properties = getProperties(klass);
-        if (properties != null) {
-            String value = properties.getProperty(key);
-            return value;
-        } else {
-            return null;
-        }
-    }
-
-    private static Properties getProperties(Class klass) {
+    static Properties getProperties(Class klass) {
         Properties properties = (Properties) propertiesCache.get(klass);
         if (properties == null) {
             InputStream inputStream = null;
             try {
+                properties = (Properties) propertiesCache.get(klass);
+                if (properties == null) {
+                    properties = new Properties();
+                    propertiesCache.put(klass, properties);
+                }
+                assert properties != null : "no properties created for " + klass;
+
                 String className = klass.getName();
+
+                boolean found = false;
 
                 // load the JavaDoc-tags
                 inputStream = findFile(klass, className.substring(className.lastIndexOf('.') + 1) + ".attributes");
@@ -74,14 +69,11 @@ public class Attributes {
                 }
 
                 if (inputStream != null) {
-                    properties = maybeCreateProperties(klass);
-
                     properties.load(inputStream);
-                }
-
-                if (inputStream != null) {
+                    found = true;
                     inputStream.close();
                 }
+
                 inputStream = null;
 
                 // load the XML-defined attributes
@@ -91,8 +83,12 @@ public class Attributes {
                 }
 
                 if (inputStream != null) {
-                    properties = maybeCreateProperties(klass);
                     properties.putAll(AttributesXMLParser.parseXML(inputStream));
+                    found = true;
+                }
+
+                if (!found) {
+                    logger.warn("could not find attributes for " + klass + " on classpath or in " + searchPaths);
                 }
             } catch (MalformedURLException e) {
                 throw new RuntimeException("Error fetching properties for " + klass, e);
@@ -109,15 +105,6 @@ public class Attributes {
                     }
                 }
             }
-        }
-        return properties;
-    }
-
-    private static Properties maybeCreateProperties(Class klass) {
-        Properties properties = (Properties) propertiesCache.get(klass);
-        if (properties == null) {
-            properties = new Properties();
-            propertiesCache.put(klass, properties);
         }
         return properties;
     }
@@ -143,13 +130,12 @@ public class Attributes {
     }
 
     public static String getAttribute(Method method, String attribute) {
-        String name = propertyName(method, attribute);
-        return getProperty(method.getDeclaringClass(), name);
+        return getAttributes(method.getDeclaringClass()).getAttribute(method, attribute);
     }
 
-    private static String propertyName(Method method, String attribute) {
-        String propertyName = (String) methodPropertyNameCache.get(method);
-        if (propertyName == null) {
+    static String methodSignature(Method method) {
+        String signature = (String) methodPropertyNameCache.get(method);
+        if (signature == null) {
             StringBuffer stringBuffer = new StringBuffer();
             stringBuffer.append(method.getName());
             stringBuffer.append('(');
@@ -163,18 +149,14 @@ public class Attributes {
                 }
             }
             stringBuffer.append(')');
-            propertyName = stringBuffer.toString();
-            methodPropertyNameCache.put(method, propertyName);
+            signature = stringBuffer.toString();
+            methodPropertyNameCache.put(method, signature);
         }
-        return propertyName + "." + attribute;
+        return signature;
     }
 
     public static String getAttribute(Field field, String attribute) {
-        return getProperty(field.getDeclaringClass(), propertyName(field, attribute));
-    }
-
-    private static String propertyName(Field field, String attribute) {
-        return field.getName() + '.' + attribute;
+        return getAttributes(field.getDeclaringClass()).getAttribute(field, attribute);
     }
 
     public static void addSearchPath(URL searchPath) {
@@ -186,30 +168,15 @@ public class Attributes {
     }
 
     public static boolean hasAttribute(Class klass, String attribute) {
-        Properties properties = getProperties(klass);
-        if (properties == null) {
-            return false;
-        }
-        return properties.containsKey(propertyName(klass, attribute));
+        return getAttributes(klass).hasAttribute(attribute);
     }
 
-    public static boolean hasAttribute
-            (Method
-            method, String
-            attribute) {
-        Properties properties = getProperties(method.getDeclaringClass());
-        if (properties == null) {
-            return false;
-        }
-        return properties.containsKey(propertyName(method, attribute));
+    public static boolean hasAttribute(Method method, String attribute) {
+        return getAttributes(method.getDeclaringClass()).hasAttribute(method, attribute);
     }
 
     public static boolean hasAttribute(Field field, String attribute) {
-        Properties properties = getProperties(field.getDeclaringClass());
-        if (properties == null) {
-            return false;
-        }
-        return properties.containsKey(propertyName(field, attribute));
+        return getAttributes(field.getDeclaringClass()).hasAttribute(field, attribute);
     }
 
     public static String getInheritedAttribute(Class aClass, String attribute) {
@@ -258,6 +225,11 @@ public class Attributes {
     }
 
     public static ClassAttributes getAttributes(Class aClass) {
-        return new ClassAttributes(aClass);
+        ClassAttributes classAttributes = (ClassAttributes) classAttributesCache.get(aClass);
+        if (classAttributes == null) {
+            classAttributes = new ClassAttributes(aClass);
+            classAttributesCache.put(aClass, classAttributes);
+        }
+        return classAttributes;
     }
 }
