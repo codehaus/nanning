@@ -13,6 +13,8 @@ import com.tirsen.nanning.definition.InterceptorDefinition;
 import com.tirsen.nanning.samples.prevayler.*;
 import org.prevayler.PrevalentSystem;
 import org.prevayler.implementation.SnapshotPrevayler;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 
 public class RemoteTest extends AbstractAttributesTest {
     private AspectRepository serverAspectRepository;
@@ -98,8 +100,12 @@ public class RemoteTest extends AbstractAttributesTest {
                 // server side
                 Collection objects = system.getAllRegisteredObjects();
                 assertEquals("object not created on server side", 2, objects.size());
-                Iterator iterator = objects.iterator(); iterator.next();
-                assertEquals("attribute wrong value", "attributeValue", ((MyObject) iterator.next()).getValue());
+                myObject = (MyObject) CollectionUtils.find(objects, new Predicate() {
+                    public boolean evaluate(Object o) {
+                        return o instanceof MyObject;
+                    }
+                });
+                assertEquals("attribute wrong value", "attributeValue", myObject.getValue());
 
                 remoteCallServer.stop();
             }

@@ -10,8 +10,6 @@ import java.lang.reflect.Method;
 public class Call implements Serializable {
     static final long serialVersionUID = -3336463259251779539L;
     
-    private static final Log logger = LogFactory.getLog(Call.class);
-
     protected Object target;
     protected Object[] args;
     private Object classIdentifier;
