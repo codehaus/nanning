@@ -7,18 +7,15 @@
 package com.tirsen.nanning.test;
 
 import junit.framework.TestCase;
-import com.tirsen.nanning.AspectClass;
-import com.tirsen.nanning.AspectDefinition;
-import com.tirsen.nanning.Aspects;
-import com.tirsen.nanning.Interceptor;
+import com.tirsen.nanning.*;
 
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: AspectClassTest.java,v 1.8 2002-11-03 18:45:47 tirsen Exp $ -->
+ * <!-- $Id: AspectClassTest.java,v 1.9 2002-11-05 20:46:39 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class AspectClassTest extends TestCase
 {
@@ -57,6 +54,34 @@ public class AspectClassTest extends TestCase
     public static interface ErrorIntf
     {
         void call() throws Exception;
+    }
+
+    public static class StatelessInterceptorImpl implements Interceptor, StatelessInterceptor
+    {
+        public Object invoke(Invocation invocation) throws Throwable
+        {
+            return invocation.invokeNext();
+        }
+    }
+
+    public void testStatelessInterceptor()
+    {
+        AspectClass aspectClass = new AspectClass();
+        aspectClass.setInterface(Intf.class);
+        aspectClass.addInterceptor(new InterceptorDefinition(StatelessInterceptorImpl.class));
+        aspectClass.addInterceptor(new InterceptorDefinition(MockInterceptor.class));
+        aspectClass.setTarget(Impl.class);
+
+        Object proxy = aspectClass.newInstance();
+        Interceptor statelessInterceptor = Aspects.getInterceptors(proxy)[0];
+        Interceptor interceptor = Aspects.getInterceptors(proxy)[1];
+        assertTrue(statelessInterceptor instanceof StatelessInterceptor);
+
+        Object proxy2 = aspectClass.newInstance();
+        Interceptor statelessInterceptor2 = Aspects.getInterceptors(proxy2)[0];
+        Interceptor interceptor2 = Aspects.getInterceptors(proxy2)[1];
+        assertSame(statelessInterceptor, statelessInterceptor2);
+        assertNotSame(interceptor, interceptor2);
     }
 
     public void testThrowsCorrectExceptions() {
