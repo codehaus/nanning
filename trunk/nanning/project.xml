@@ -4,7 +4,7 @@
     <name>Nanning Aspects</name>
     <id>nanning</id>
     <logo>/images/nanning.png</logo>
-    <currentVersion>0.8</currentVersion>
+    <currentVersion>0.9</currentVersion>
     <groupId>nanning</groupId>
     <organization>
         <name>Jon Tirsen</name>
@@ -40,6 +40,11 @@
     </repository>
 
     <versions>
+        <version>
+            <id>0.8</id>
+            <name>0.8</name>
+            <tag>RELEASE_0_8</tag>
+        </version>
         <version>
             <id>0.7</id>
             <name>0.7</name>
