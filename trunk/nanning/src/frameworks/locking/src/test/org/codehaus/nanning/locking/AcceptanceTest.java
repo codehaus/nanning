@@ -2,8 +2,8 @@ package org.codehaus.nanning.locking;
 
 import org.codehaus.nanning.attribute.AbstractAttributesTest;
 import org.codehaus.nanning.config.AspectSystem;
-import org.codehaus.nanning.config.AttributePointcut;
 import org.codehaus.nanning.config.FindTargetMixinAspect;
+import org.codehaus.nanning.config.P;
 
 public class AcceptanceTest extends AbstractAttributesTest {
     public static interface Book {
@@ -30,7 +30,7 @@ public class AcceptanceTest extends AbstractAttributesTest {
     public void testPessimisticLocking() {
         AspectSystem aspectSystem = new AspectSystem();
         aspectSystem.addAspect(new FindTargetMixinAspect());
-        aspectSystem.addAspect(new PessimisticLockingAspect(new AttributePointcut("transaction")));
+        aspectSystem.addAspect(new PessimisticLockingAspect(P.methodAttribute("transaction")));
 
         Book book = (Book) aspectSystem.newInstance(Book.class);
         book.setTitle("Crime and Punishment");

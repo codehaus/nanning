@@ -12,7 +12,7 @@ public class ProfilerTest extends AbstractAttributesTest {
             public void run() {
                 AspectSystem aspectSystem = new AspectSystem();
                 aspectSystem.addAspect(new FindTargetMixinAspect());
-                aspectSystem.addAspect(new InterceptorAspect(new AttributePointcut("profile"), new ProfilerInterceptor()));
+                aspectSystem.addAspect(new InterceptorAspect(P.methodAttribute("profile"), new ProfilerInterceptor()));
                 Profiled profiled = (Profiled) aspectSystem.newInstance(Profiled.class);
 
                 profiled.someMethod();
@@ -32,7 +32,7 @@ public class ProfilerTest extends AbstractAttributesTest {
             public void run() {
                 AspectSystem aspectSystem = new AspectSystem();
                 aspectSystem.addAspect(new FindTargetMixinAspect());
-                aspectSystem.addAspect(new InterceptorAspect(new AttributePointcut("profile"), new ProfilerInterceptor()));
+                aspectSystem.addAspect(new InterceptorAspect(P.methodAttribute("profile"), new ProfilerInterceptor()));
                 Profiled profiled = (Profiled) aspectSystem.newInstance(Profiled.class);
                 ProfilerInterceptor.setMinDuration(100L);
                 profiled.delayTwoHundredMillis();
