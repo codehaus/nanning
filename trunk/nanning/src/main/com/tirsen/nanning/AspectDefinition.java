@@ -13,16 +13,16 @@ import java.util.Iterator;
 /**
  * Defines an interface that's to be added to an aspected object.
  *
- * <!-- $Id: InterfaceDefinition.java,v 1.3 2002-10-23 21:26:43 tirsen Exp $ -->
+ * <!-- $Id: AspectDefinition.java,v 1.1 2002-10-27 12:13:18 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.1 $
  */
-public class InterfaceDefinition
+public class AspectDefinition
 {
-    private Class interfaceClass;
-    private List aspectClasses = new ArrayList();
-    private Class targetClass;
+    protected Class interfaceClass;
+    protected List interceptorClasses = new ArrayList();
+    protected Class targetClass;
 
     /**
      * Specify interface to use.
@@ -41,7 +41,7 @@ public class InterfaceDefinition
      */
     public void addInterceptor(Class aspectClass)
     {
-        aspectClasses.add(aspectClass);
+        interceptorClasses.add(aspectClass);
     }
 
     /**
@@ -54,13 +54,13 @@ public class InterfaceDefinition
         this.targetClass = targetClass;
     }
 
-    InterfaceInstance newInstance() throws IllegalAccessException, InstantiationException
+    SideAspectInstance createInterfaceInstance() throws IllegalAccessException, InstantiationException
     {
-        InterfaceInstance interfaceInstance = new InterfaceInstance();
+        SideAspectInstance interfaceInstance = new SideAspectInstance();
         interfaceInstance.setInterface(interfaceClass);
 
-        List instances = new ArrayList(aspectClasses.size());
-        for (Iterator iterator = aspectClasses.iterator(); iterator.hasNext();)
+        List instances = new ArrayList(interceptorClasses.size());
+        for (Iterator iterator = interceptorClasses.iterator(); iterator.hasNext();)
         {
             Class aspectClass = (Class) iterator.next();
             instances.add(aspectClass.newInstance());

@@ -6,21 +6,17 @@
  */
 package com.tirsen.nanning;
 
-import org.apache.commons.collections.CollectionUtils;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
- * TODO document InterfaceDefinition
+ * TODO document AspectDefinition
  *
- * <!-- $Id: InterfaceInstance.java,v 1.2 2002-10-23 21:26:43 tirsen Exp $ -->
+ * <!-- $Id: SideAspectInstance.java,v 1.1 2002-10-27 12:13:18 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.1 $
  */
-class InterfaceInstance
+class SideAspectInstance
 {
     private Class interfaceClass;
     private Interceptor[] interceptors;

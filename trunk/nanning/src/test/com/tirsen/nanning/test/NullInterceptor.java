@@ -10,14 +10,14 @@ import com.tirsen.nanning.Interceptor;
 import com.tirsen.nanning.Invocation;
 
 /**
- * TODO document NullAspect
+ * TODO document NullInterceptor
  *
- * <!-- $Id: NullAspect.java,v 1.2 2002-10-22 18:56:25 tirsen Exp $ -->
+ * <!-- $Id: NullInterceptor.java,v 1.1 2002-10-27 12:13:18 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.1 $
  */
-public class NullAspect implements Interceptor
+public class NullInterceptor implements Interceptor
 {
     public Object invoke(Invocation invocation) throws Throwable
     {

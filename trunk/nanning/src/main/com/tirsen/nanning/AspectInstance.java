@@ -16,26 +16,21 @@ import java.util.List;
 /**
  * TODO document AspectInstance
  *
- * <!-- $Id: AspectInstance.java,v 1.3 2002-10-23 21:26:43 tirsen Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.4 2002-10-27 12:13:18 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 class AspectInstance implements InvocationHandler
 {
-    /**
-     * The interceptors for the instance <em>itself</em>. This field is actually redundant, but we'll keep it for now.
-     */
-    private Interceptor[] proxyInterceptors;
-
     class InvocationImpl implements Invocation
     {
         private int index = -1;
         private Method method;
         private Object[] args;
-        private InterfaceInstance interfaceInstance;
+        private SideAspectInstance interfaceInstance;
 
-        public InvocationImpl(Method method, Object[] args, InterfaceInstance interfaceInstance)
+        public InvocationImpl(Method method, Object[] args, SideAspectInstance interfaceInstance)
         {
             this.method = method;
             this.args = args;
@@ -93,18 +88,17 @@ class AspectInstance implements InvocationHandler
     }
 
     private Object proxy;
-    private InterfaceInstance[] interfaceInstances;
+    private SideAspectInstance[] interfaceInstances;
     private HashMap interfacesToInstancesIndex;
 
-    public AspectInstance(Interceptor[] interceptors, InterfaceInstance[] interfaceInstances)
+    public AspectInstance(SideAspectInstance[] interfaceInstances)
     {
-        this.proxyInterceptors = interceptors;
         this.interfaceInstances = interfaceInstances;
         // index this up for faster invocations
         interfacesToInstancesIndex = new HashMap();
         for (int i = 0; i < interfaceInstances.length; i++)
         {
-            InterfaceInstance interfaceInstance = interfaceInstances[i];
+            SideAspectInstance interfaceInstance = interfaceInstances[i];
             interfacesToInstancesIndex.put(interfaceInstance.getInterfaceClass(), interfaceInstance);
         }
     }
@@ -113,7 +107,7 @@ class AspectInstance implements InvocationHandler
             throws Throwable
     {
         Class interfaceClass = method.getDeclaringClass();
-        InterfaceInstance interfaceInstance = (InterfaceInstance) interfacesToInstancesIndex.get(interfaceClass);
+        SideAspectInstance interfaceInstance = (SideAspectInstance) interfacesToInstancesIndex.get(interfaceClass);
 
         Invocation invocation = new InvocationImpl(method, args, interfaceInstance);
         return invocation.invokeNext();
@@ -124,7 +118,7 @@ class AspectInstance implements InvocationHandler
         List interfaces = new ArrayList(interfaceInstances.length);
         for (int i = 0; i < interfaceInstances.length; i++)
         {
-            InterfaceInstance interfaceInstance = interfaceInstances[i];
+            SideAspectInstance interfaceInstance = interfaceInstances[i];
             interfaces.add(interfaceInstance.getInterfaceClass());
         }
 
@@ -135,18 +129,19 @@ class AspectInstance implements InvocationHandler
 
     Object getTarget(Class interfaceClass)
     {
-        InterfaceInstance interfaceInstance = (InterfaceInstance) interfacesToInstancesIndex.get(interfaceClass);
+        SideAspectInstance interfaceInstance = (SideAspectInstance) interfacesToInstancesIndex.get(interfaceClass);
         return interfaceInstance.getTarget();
     }
 
     public Interceptor[] getProxyInterceptors()
     {
-        return proxyInterceptors;
+        // the actual class-specific interface-instance is at the first position
+        return interfaceInstances[0].getInterceptors();
     }
 
     public Interceptor[] getInterceptors(Class interfaceClass)
     {
-        InterfaceInstance interfaceInstance = (InterfaceInstance) interfacesToInstancesIndex.get(interfaceClass);
+        SideAspectInstance interfaceInstance = (SideAspectInstance) interfacesToInstancesIndex.get(interfaceClass);
         return interfaceInstance.getInterceptors();
     }
 }

@@ -7,28 +7,25 @@
 package com.tirsen.nanning.test;
 
 import com.tirsen.nanning.AspectClass;
-import com.tirsen.nanning.InterfaceDefinition;
 import junit.framework.TestCase;
 
 /**
  * TODO document PerformanceTest
  *
- * <!-- $Id: PerformanceTest.java,v 1.3 2002-10-23 21:26:43 tirsen Exp $ -->
+ * <!-- $Id: PerformanceTest.java,v 1.4 2002-10-27 12:13:18 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class PerformanceTest extends TestCase
 {
     public void testPerformanceAndMemory() throws IllegalAccessException, InstantiationException
     {
-        AspectClass aspectClass = AspectClass.create();
-        InterfaceDefinition interfaceDefinition = new InterfaceDefinition();
-        interfaceDefinition.setInterface(Intf.class);
-        interfaceDefinition.addInterceptor(NullAspect.class);
-        interfaceDefinition.addInterceptor(NullAspect.class);
-        interfaceDefinition.setTarget(Impl.class);
-        aspectClass.addInterface(interfaceDefinition);
+        AspectClass aspectClass = new AspectClass();
+        aspectClass.setInterface(Intf.class);
+        aspectClass.addInterceptor(NullInterceptor.class);
+        aspectClass.addInterceptor(NullInterceptor.class);
+        aspectClass.setTarget(Impl.class);
 
         Intf intf = (Intf) aspectClass.newInstance();
 
@@ -90,13 +87,11 @@ public class PerformanceTest extends TestCase
         double maxMemoryPerInstance = memoryPerOrdinaryInstance * timesBiggerTolerance;
 
         // setup a factory
-        AspectClass aspectClass = AspectClass.create();
-        InterfaceDefinition interfaceDefinition = new InterfaceDefinition();
-        interfaceDefinition.setInterface(Intf.class);
-        interfaceDefinition.addInterceptor(NullAspect.class);
-        interfaceDefinition.addInterceptor(NullAspect.class);
-        interfaceDefinition.setTarget(Impl.class);
-        aspectClass.addInterface(interfaceDefinition);
+        AspectClass aspectClass = new AspectClass();
+        aspectClass.setInterface(Intf.class);
+        aspectClass.addInterceptor(NullInterceptor.class);
+        aspectClass.addInterceptor(NullInterceptor.class);
+        aspectClass.setTarget(Impl.class);
 
         // instantiates a bunch of aspect-instances
         ///CLOVER:OFF
