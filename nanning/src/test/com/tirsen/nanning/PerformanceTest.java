@@ -15,10 +15,10 @@ import junit.framework.TestCase;
 /**
  * TODO document PerformanceTest
  *
- * <!-- $Id: PerformanceTest.java,v 1.2 2002-11-18 20:56:30 tirsen Exp $ -->
+ * <!-- $Id: PerformanceTest.java,v 1.3 2002-11-30 18:23:56 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class PerformanceTest extends TestCase
 {
@@ -26,7 +26,7 @@ public class PerformanceTest extends TestCase
     {
         // these are exceptionally high due to Clover...
         double maxMemoryPerInvocation = 1.6;
-        double maxTimePerInvocation = 0.011;
+        double maxTimePerInvocation = 0.012;
 
         AspectClass aspectClass = new AspectClass();
         aspectClass.setInterface(Intf.class);

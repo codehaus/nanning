@@ -54,11 +54,19 @@
         <developer>
             <name>Jon Tirsen</name>
             <id>tirsen</id>
-            <email>tirsen@users.sourceforge.net</email>
-            <organization></organization>
+            <email>tirsen AT users DOT sourceforge DOT net</email>
+            <organization>Lecando AB</organization>
         </developer>
 
     </developers>
+
+    <contributors>
+
+        <contributor>
+            <name>Talip Ozturk</name>
+        </contributor>
+
+    </contributors>
 
     <dependencies>
 

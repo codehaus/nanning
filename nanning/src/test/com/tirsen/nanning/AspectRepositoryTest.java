@@ -11,10 +11,10 @@ import junit.framework.TestCase;
 /**
  * TODO document AspectRepositoryTest
  *
- * <!-- $Id: AspectRepositoryTest.java,v 1.2 2002-11-18 20:56:30 tirsen Exp $ -->
+ * <!-- $Id: AspectRepositoryTest.java,v 1.3 2002-11-30 18:23:56 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class AspectRepositoryTest extends TestCase
 {
@@ -70,7 +70,7 @@ public class AspectRepositoryTest extends TestCase
             aspectClass.addInterceptor(aspectRepository.getInterceptor(MockInterceptor.class));
             aspectClass.addInterceptor(aspectRepository.getInterceptor(NullInterceptor.class));
             aspectClass.setTarget(Impl.class);
-            aspectClass.addSideAspect(aspectRepository.getAspect(SideAspect.class));
+            aspectClass.addAspect(aspectRepository.getAspect(SideAspect.class));
             aspectRepository.defineClass(aspectClass);
 
             assertSame(aspectClass, aspectRepository.getClass(Intf.class));

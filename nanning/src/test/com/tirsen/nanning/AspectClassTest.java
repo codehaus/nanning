@@ -13,10 +13,10 @@ import java.lang.reflect.Method;
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: AspectClassTest.java,v 1.3 2002-11-24 12:29:09 tirsen Exp $ -->
+ * <!-- $Id: AspectClassTest.java,v 1.4 2002-11-30 18:23:56 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class AspectClassTest extends TestCase
 {
@@ -89,8 +89,18 @@ public class AspectClassTest extends TestCase
     {
     }
 
+    public static class InheritedImpl extends Impl implements InheritedIntf {
+    }
+
     public static interface InheritedSideAspect extends Intf, SideAspect
     {
+    }
+
+    public static class InheritedSideAspectImpl extends SideAspectImpl implements InheritedSideAspect
+    {
+        public void call() {
+            fail("should never be called");
+        }
     }
 
     public void testInheritance()
@@ -98,12 +108,13 @@ public class AspectClassTest extends TestCase
         AspectClass aspectClass = new AspectClass();
         aspectClass.setInterface(InheritedIntf.class);
         aspectClass.addInterceptor(MockInterceptor.class);
-        aspectClass.setTarget(Impl.class);
+        aspectClass.setTarget(InheritedImpl.class);
         AspectDefinition aspectDefinition = new AspectDefinition();
         // note that this interface also extends Intf, but that will never get called since
         // the class-aspect will take precedence
         aspectDefinition.setInterface(InheritedSideAspect.class);
-        aspectDefinition.setTarget(SideAspectImpl.class);
+        aspectDefinition.setTarget(InheritedSideAspectImpl.class);
+        aspectClass.addAspect(aspectDefinition);
         InheritedIntf proxy = (InheritedIntf) aspectClass.newInstance();
 
         MockInterceptor classInterceptor = (MockInterceptor) Aspects.getInterceptors(proxy)[0];
@@ -167,7 +178,7 @@ public class AspectClassTest extends TestCase
 
         Intf proxy = (Intf) aspectClass.newInstance();
 
-        Aspects.setTarget(proxy, Intf.class, new Intf()
+        Aspects.setTarget(proxy, Intf.class, new Impl()
         {
             public void call()
             {
@@ -201,7 +212,7 @@ public class AspectClassTest extends TestCase
         aspectDefinition.addInterceptor(NullInterceptor.class);
         aspectDefinition.addInterceptor(MockInterceptor.class);
         aspectDefinition.setTarget(SideAspectImpl.class);
-        aspectClass.addSideAspect(aspectDefinition);
+        aspectClass.addAspect(aspectDefinition);
 
         Object bigMomma = aspectClass.newInstance();
 
