@@ -25,7 +25,9 @@ public class MySystem implements IdentifyingSystem {
     }
 
     public void registerOID(Object object) {
-        objects.add(object);
+        if(!objects.contains(object)) {
+            objects.add(object);
+        }
     }
 
     public int getOID(Object object) {

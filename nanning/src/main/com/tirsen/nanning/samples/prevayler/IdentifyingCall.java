@@ -1,6 +1,8 @@
 package com.tirsen.nanning.samples.prevayler;
 
 import com.tirsen.nanning.Invocation;
+import com.tirsen.nanning.Attributes;
+import com.tirsen.nanning.Aspects;
 
 public class IdentifyingCall extends Call {
     public IdentifyingCall(Invocation invocation) {
@@ -10,7 +12,7 @@ public class IdentifyingCall extends Call {
     }
 
     private Object[] marshalArguments(Object[] args) {
-        if(args == null) {
+        if (args == null) {
             return null;
         }
 
@@ -35,7 +37,7 @@ public class IdentifyingCall extends Call {
     }
 
     private Object[] unmarshalArguments(Object[] args) {
-        if(args == null) {
+        if (args == null) {
             return null;
         }
 
@@ -54,7 +56,7 @@ public class IdentifyingCall extends Call {
             return o;
         } else if (Character.class.isInstance(o)) {
             return o;
-        } else if(o instanceof Identity) {
+        } else if (o instanceof Identity) {
             return resolve((Identity) o);
         } else {
             throw new IllegalArgumentException("Can't resolve " + o);
@@ -62,14 +64,18 @@ public class IdentifyingCall extends Call {
     }
 
     protected Identity identify(Object object) {
-        if(object instanceof Identifiable) {
+        if (Attributes.hasAttribute(getInterfaceClass(), "service")) {
+            return null;
+        }
+        if (object instanceof Identifiable) {
             return new Identity(object.getClass(), new Integer(CurrentPrevayler.getSystem().getOID(object)));
         }
+
         throw new IllegalArgumentException("Can't identify " + object);
     }
 
     protected Object resolve(Identity identity) {
-        if(Identifiable.class.isAssignableFrom(identity.getObjectClass())) {
+        if (Identifiable.class.isAssignableFrom(identity.getObjectClass())) {
             return CurrentPrevayler.getSystem().getObjectWithID(((Integer) identity.getIdentifier()).intValue());
         }
         throw new IllegalArgumentException("Can't resolve " + identity.getObjectClass());
@@ -80,6 +86,10 @@ public class IdentifyingCall extends Call {
     }
 
     public Object getTarget() {
-        return resolve((Identity) target);
+        if (target == null) {
+            return Aspects.getCurrentAspectRepository().newInstance(getInterfaceClass());
+        } else {
+            return resolve((Identity) target);
+        }
     }
 }

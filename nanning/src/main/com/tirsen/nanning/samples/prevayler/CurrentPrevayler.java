@@ -10,28 +10,25 @@ import org.prevayler.Prevayler;
  * same time.
  */
 public class CurrentPrevayler {
-    private static IdentifyingSystem currentSystem;
-    private static Prevayler prevayler;
-
     public static IdentifyingSystem getSystem() {
-        return currentSystem;
+        return getPrevaylerInterceptor().getSystem();
     }
 
     public static void setSystem(IdentifyingSystem system) {
-        CurrentPrevayler.currentSystem = system;
+        getPrevaylerInterceptor().setSystem(system);
     }
 
     public static Prevayler getPrevayler() {
-        return prevayler;
+        return getPrevaylerInterceptor().getPrevayler();
     }
 
     public static void setPrevayler(Prevayler prevayler) {
-        CurrentPrevayler.prevayler = prevayler;
-        CurrentPrevayler.setSystem((IdentifyingSystem) prevayler.system());
+        getPrevaylerInterceptor().setPrevayler(prevayler);
     }
 
     public static PrevaylerInterceptor getPrevaylerInterceptor() {
-        InterceptorDefinition interceptorDefinition = Aspects.getCurrentAspectRepository().getInterceptor(PrevaylerInterceptor.class);
+        InterceptorDefinition interceptorDefinition =
+                Aspects.getCurrentAspectRepository().getInterceptor(PrevaylerInterceptor.class);
         PrevaylerInterceptor prevaylerInterceptor = (PrevaylerInterceptor) interceptorDefinition.getSingleton();
         return prevaylerInterceptor;
     }
