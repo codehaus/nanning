@@ -19,15 +19,14 @@ import java.util.Iterator;
 /**
  * TODO document AttributesCompiler
  *
- * <!-- $Id: AttributesCompiler.java,v 1.8 2003-06-10 11:28:14 lecando Exp $ -->
+ * <!-- $Id: AttributesCompiler.java,v 1.9 2003-06-12 14:18:17 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class AttributesCompiler extends Task {
     private File src;
     private File dest;
-    private AttributesBuilder builder = new AttributesBuilder();
 
     public void setSrc(File src) {
         this.src = src;
@@ -46,7 +45,7 @@ public class AttributesCompiler extends Task {
                 final File javaFile = new File(src, files[i]);
                 final File attributeFile = getAttributeFile(files[i]);
                 if (!attributeFile.exists() || attributeFile.lastModified() < javaFile.lastModified()) {
-                    createAttributesFile(javaFile, attributeFile);
+                    createAttributeFiles(javaFile);
                     if (!hasCompiled) {
                         System.out.println("Compiling attributes for " + src + " into " + dest);
                         hasCompiled = true;
@@ -73,7 +72,7 @@ public class AttributesCompiler extends Task {
         return result;
     }
 
-    private void createAttributesFile(File javaFile, File attributeFile) throws IOException {
+    private void createAttributeFiles(File javaFile) throws IOException {
         List result = parseClassAttribute(javaFile);
         for (Iterator iterator = result.iterator(); iterator.hasNext();) {
             ClassPropertiesHelper properties = (ClassPropertiesHelper) iterator.next();
@@ -84,9 +83,9 @@ public class AttributesCompiler extends Task {
     List parseClassAttribute(File javaFile) throws IOException {
         InputStream input = new FileInputStream(javaFile);
         try {
-            builder.reset();
+            AttributesBuilder builder = new AttributesBuilder();
             new Parser(new JFlexLexer(input), builder).parse();
-            return builder.getClassPropertiesHelper();
+            return builder.getClassPropertiesHelpers();
         } finally {
             input.close();
         }

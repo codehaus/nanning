@@ -21,7 +21,7 @@ import com.thoughtworks.qdox.parser.structs.MethodDef;
  * to parse another file, the reset() method must be called.</p>
  *
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class AttributesBuilder implements Builder {
 
@@ -125,14 +125,8 @@ public class AttributesBuilder implements Builder {
         }
     }
 
-    public List getClassPropertiesHelper() {
+    public List getClassPropertiesHelpers() {
         assert classPropertiesHelperStack.isEmpty();
         return classPropertiesHelpers;
-    }
-
-    public void reset() {
-        assert classPropertiesHelperStack.isEmpty();
-        classPropertiesHelperStack.clear();
-        classPropertiesHelpers.clear();
     }
 }
