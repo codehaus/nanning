@@ -21,11 +21,18 @@ public class AspectSystem implements AspectFactory {
     private AspectInstance createAspectInstance(Class classIdentifier) {
         AspectInstance aspectInstance = new AspectInstance(this, classIdentifier);
 
-        introduce(aspectInstance);
-        advice(aspectInstance);
-        adviceMixins(aspectInstance);
+        initialize(aspectInstance);
 
         return aspectInstance;
+    }
+
+    /**
+     * Let the aspect advice and introduce.
+     * @param aspectInstance
+     */
+    public void initialize(AspectInstance aspectInstance) {
+        introduce(aspectInstance);
+        advice(aspectInstance);
     }
 
     protected void advice(AspectInstance aspectInstance) {
@@ -34,6 +41,7 @@ public class AspectSystem implements AspectFactory {
 
             aspect.advise(aspectInstance);
         }
+        adviceMixins(aspectInstance);
     }
 
     protected void adviceMixins(AspectInstance aspectInstance) {
@@ -54,8 +62,12 @@ public class AspectSystem implements AspectFactory {
         }
     }
 
+    /**
+     * Called after serialization, just advice.
+     * @param aspectInstance
+     */
     public void reinitialize(AspectInstance aspectInstance) {
-        adviceMixins(aspectInstance);
+        advice(aspectInstance);
     }
 
     public List getAspects() {
