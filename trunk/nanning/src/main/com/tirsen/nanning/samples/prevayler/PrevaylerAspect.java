@@ -2,6 +2,7 @@ package com.tirsen.nanning.samples.prevayler;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Iterator;
 
 import com.tirsen.nanning.AspectInstance;
 import com.tirsen.nanning.MixinInstance;
@@ -10,28 +11,29 @@ import com.tirsen.nanning.config.Aspect;
 /**
  * TODO document PrevaylerInterceptor
  *
- * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.8 $
+ * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirs?n</a>
+ * @version $Revision: 1.9 $
  */
 public class PrevaylerAspect implements Aspect {
-    private List interceptors;
+    private TransactionUnsupportedInterceptor unsupportedInterceptor;
+    private CheckTransactionUnsupportedInterceptor checkUnsupportedInterceptor;
+    private PrevaylerInterceptor prevaylerInterceptor;
 
     public PrevaylerAspect() {
-        TransactionUnsupportedInterceptor unsupportedInterceptor = new TransactionUnsupportedInterceptor();
-        CheckTransactionUnsupportedInterceptor checkUnsupportedInterceptor = new CheckTransactionUnsupportedInterceptor();
-        PrevaylerInterceptor prevaylerInterceptor = new PrevaylerInterceptor();
-        interceptors = Arrays.asList(new Object[] { unsupportedInterceptor, checkUnsupportedInterceptor, prevaylerInterceptor });
+        unsupportedInterceptor = new TransactionUnsupportedInterceptor();
+        checkUnsupportedInterceptor = new CheckTransactionUnsupportedInterceptor();
+        prevaylerInterceptor = new PrevaylerInterceptor();
     }
 
-    public Object advise(AspectInstance aspectInstance, MixinInstance mixin) {
-        return interceptors;
+    public void adviseMixin(AspectInstance aspectInstance, MixinInstance mixin) {
+        mixin.addInterceptor(unsupportedInterceptor);
+        mixin.addInterceptor(checkUnsupportedInterceptor);
+        mixin.addInterceptor(prevaylerInterceptor);
     }
 
-    public Object adviseConstruction(AspectInstance aspectInstance) {
-        return null;
+    public void advise(AspectInstance aspectInstance) {
     }
 
-    public Object introduce(AspectInstance aspectInstance) {
-        return null;
+    public void introduce(AspectInstance aspectInstance) {
     }
 }

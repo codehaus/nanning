@@ -12,10 +12,10 @@ import java.lang.reflect.Method;
 /**
  * Intercepts calls on an interface on it's way to the target, these are nested "on top" of the target.
  *
- * <!-- $Id: MethodInterceptor.java,v 1.4 2003-05-09 14:57:45 lecando Exp $ -->
+ * <!-- $Id: MethodInterceptor.java,v 1.5 2003-05-11 11:17:17 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.4 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.5 $
  */
 public interface MethodInterceptor extends Interceptor {
     /**
@@ -26,6 +26,4 @@ public interface MethodInterceptor extends Interceptor {
      * @throws Throwable if the interceptors or the target-object throws an exception.
      */
     Object invoke(Invocation invocation) throws Throwable;
-
-    boolean interceptsMethod(AspectInstance aspectInstance, MixinInstance mixin, Method method);
 }

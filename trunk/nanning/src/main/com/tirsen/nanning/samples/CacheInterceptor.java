@@ -6,15 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.tirsen.nanning.Invocation;
-import com.tirsen.nanning.MethodInterceptor;
-import com.tirsen.nanning.MixinInstance;
-import com.tirsen.nanning.AspectInstance;
+import com.tirsen.nanning.*;
 import com.tirsen.nanning.attribute.Attributes;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class CacheInterceptor implements MethodInterceptor {
+public class CacheInterceptor implements MethodInterceptor, FilterMethodsInterceptor {
     private static final Log logger = LogFactory.getLog(CacheInterceptor.class);
 
     /**
@@ -22,7 +19,7 @@ public class CacheInterceptor implements MethodInterceptor {
      */
     private Map cache = new HashMap();
 
-    public boolean interceptsMethod(AspectInstance aspectInstance, MixinInstance mixin, Method method) {
+    public boolean interceptsMethod(MixinInstance mixin, Method method) {
         return Attributes.hasAttribute(method, "cache");
     }
 

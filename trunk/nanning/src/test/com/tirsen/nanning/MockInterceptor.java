@@ -13,10 +13,10 @@ import junit.framework.Assert;
 /**
  * TODO document MockInterceptor
  *
- * <!-- $Id: MockInterceptor.java,v 1.6 2003-05-09 14:57:49 lecando Exp $ -->
+ * <!-- $Id: MockInterceptor.java,v 1.7 2003-05-11 11:17:17 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.6 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.7 $
  */
 public class MockInterceptor implements MethodInterceptor {
     private Object expectTarget;
@@ -32,10 +32,6 @@ public class MockInterceptor implements MethodInterceptor {
     private int actualNumberOfInterceptors;
 
     public MockInterceptor() {
-    }
-
-    public boolean interceptsMethod(AspectInstance aspectInstance, MixinInstance mixin, Method method) {
-        return true;
     }
 
     public void verify() {

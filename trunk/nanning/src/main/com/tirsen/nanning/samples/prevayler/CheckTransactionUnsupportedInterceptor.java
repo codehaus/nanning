@@ -2,13 +2,10 @@ package com.tirsen.nanning.samples.prevayler;
 
 import java.lang.reflect.Method;
 
-import com.tirsen.nanning.MethodInterceptor;
-import com.tirsen.nanning.Invocation;
-import com.tirsen.nanning.MixinInstance;
-import com.tirsen.nanning.AspectInstance;
+import com.tirsen.nanning.*;
 import com.tirsen.nanning.attribute.Attributes;
 
-public class CheckTransactionUnsupportedInterceptor implements MethodInterceptor {
+public class CheckTransactionUnsupportedInterceptor implements MethodInterceptor, FilterMethodsInterceptor {
     private static ThreadLocal transactionsUnsupported = new ThreadLocal();
 
     static boolean isTransactionsSupported() {
@@ -31,7 +28,7 @@ public class CheckTransactionUnsupportedInterceptor implements MethodInterceptor
         return invocation.invokeNext();
     }
 
-    public boolean interceptsMethod(AspectInstance aspectInstance, MixinInstance mixin, Method method) {
+    public boolean interceptsMethod(MixinInstance mixin, Method method) {
         return Attributes.hasAttribute(method, "transaction");
     }
 }

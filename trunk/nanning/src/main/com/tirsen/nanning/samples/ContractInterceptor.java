@@ -24,8 +24,8 @@ import org.apache.commons.logging.LogFactory;
  * Tip: use <code>Class.desiredAssertionStatus()</code> to check wheather to addLink this interceptor or not, that way
  * you can enable and disable contract-checking in the same way you enable and disable assertions (java -ea and so on).
  *
- * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.10 $
+ * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirs?n</a>
+ * @version $Revision: 1.11 $
  */
 public class ContractInterceptor implements MethodInterceptor {
     private static final Log logger = LogFactory.getLog(ContractInterceptor.class);
@@ -38,10 +38,6 @@ public class ContractInterceptor implements MethodInterceptor {
     private ThreadLocal checkContracts = new ThreadLocal();
 
     
-    public boolean interceptsMethod(AspectInstance aspectInstance, MixinInstance mixin, Method method) {
-        return true;
-    }
-
     public Object invoke(Invocation invocation) throws Throwable {
         String ensures = Attributes.getAttribute(invocation.getMethod(), "ensures");
         String requires = Attributes.getAttribute(invocation.getMethod(), "requires");

@@ -88,7 +88,7 @@ public class SerializationTest extends AbstractAttributesTest {
         Collection mixins = aspectInstance.getMixins();
         for (Iterator iterator = mixins.iterator(); iterator.hasNext();) {
             MixinInstance mixinInstance = (MixinInstance) iterator.next();
-            mixinInstance.addInterceptor(aspectInstance, new NullInterceptor());
+            mixinInstance.addInterceptor(new NullInterceptor());
         }
     }
 }

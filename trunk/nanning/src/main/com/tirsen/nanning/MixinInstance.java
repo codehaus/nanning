@@ -14,10 +14,10 @@ import java.util.*;
 /**
  * TODO document AspectDefinition
  *
- * <!-- $Id: MixinInstance.java,v 1.11 2003-05-09 14:57:45 lecando Exp $ -->
+ * <!-- $Id: MixinInstance.java,v 1.12 2003-05-11 11:17:17 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.11 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.12 $
  */
 public final class MixinInstance {
     private Class interfaceClass;
@@ -159,18 +159,39 @@ public final class MixinInstance {
      * Adds this interceptor to all methods.
      * @param interceptor
      */
-    public void addInterceptor(AspectInstance aspectInstance, Interceptor interceptor) {
+    public void addInterceptor(Interceptor interceptor) {
         assert !(interceptor instanceof ConstructionInterceptor) : "Construction interceptors are added on the aspect instance";
-        Method[] methods = getMethods();
+        Method[] methods = getAllMethods();
         for (int i = 0; i < methods.length; i++) {
             Method method = methods[i];
-            if (interceptor instanceof MethodInterceptor) {
-                MethodInterceptor methodInterceptor = (MethodInterceptor) interceptor;
-                if (methodInterceptor.interceptsMethod(aspectInstance, this, method)) {
-                    addInterceptor(method, methodInterceptor);
+            if (interceptor instanceof FilterMethodsInterceptor) {
+                FilterMethodsInterceptor filterMethodsInterceptor = (FilterMethodsInterceptor) interceptor;
+                if (filterMethodsInterceptor.interceptsMethod(this, method)) {
+                    addInterceptor(method, (MethodInterceptor) interceptor);
                 }
+            } else {
+                addInterceptor(method, (MethodInterceptor) interceptor);
             }
         }
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MixinInstance)) return false;
+
+        final MixinInstance mixinInstance = (MixinInstance) o;
+
+        if (interfaceClass != null ? !interfaceClass.equals(mixinInstance.interfaceClass) : mixinInstance.interfaceClass != null) return false;
+        if (target != null ? !target.equals(mixinInstance.target) : mixinInstance.target != null) return false;
+
+        return true;
+    }
+
+    public int hashCode() {
+        int result;
+        result = (interfaceClass != null ? interfaceClass.hashCode() : 0);
+        result = 29 * result + (target != null ? target.hashCode() : 0);
+        return result;
     }
 
     /**
@@ -182,11 +203,11 @@ public final class MixinInstance {
         getInterceptorsForMethod(method).add(interceptor);
     }
 
-    public Method[] getMethods() {
+    public Method[] getAllMethods() {
         return interfaceClass.getMethods();
     }
 
     public String toString() {
-        return "mixin{" + getTarget().toString() + "}";
+        return "mixin{" + getTarget() + "}";
     }
 }

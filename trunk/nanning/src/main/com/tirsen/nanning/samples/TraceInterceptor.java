@@ -19,16 +19,12 @@ import org.apache.commons.logging.LogFactory;
 /**
  * TODO document TraceInterceptor
  *
- * <!-- $Id: TraceInterceptor.java,v 1.8 2003-05-09 14:57:47 lecando Exp $ -->
+ * <!-- $Id: TraceInterceptor.java,v 1.9 2003-05-11 11:17:17 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.8 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.9 $
  */
 public class TraceInterceptor implements MethodInterceptor, SingletonInterceptor {
-
-    public boolean interceptsMethod(AspectInstance aspectInstance, MixinInstance mixin, Method method) {
-        return true;
-    }
 
     public Object invoke(Invocation invocation) throws Throwable {
         StopWatch watch = new StopWatch(false);

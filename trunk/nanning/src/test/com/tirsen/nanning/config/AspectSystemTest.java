@@ -12,45 +12,39 @@ public class AspectSystemTest extends TestCase {
         aspectSystem.addAspect(new Aspect() {
             private MockInterceptor mockInterceptor = new MockInterceptor();
 
-            public Object advise(AspectInstance aspectInstance, MixinInstance mixin) {
-                return mockInterceptor;
+            public void adviseMixin(AspectInstance aspectInstance, MixinInstance mixin) {
+                mixin.addInterceptor(mockInterceptor);
             }
 
-            public Object adviseConstruction(AspectInstance aspectInstance) {
-                return null;
+            public void advise(AspectInstance aspectInstance) {
             }
 
-            public Object introduce(AspectInstance aspectInstance) {
-                return null;
-            } 
+            public void introduce(AspectInstance aspectInstance) {
+            }
         });
         final NullInterceptor nullInterceptor = new NullInterceptor();
         aspectSystem.addAspect(new Aspect() {
-            public Object advise(AspectInstance aspectInstance, MixinInstance mixin) {
-                return nullInterceptor;
+            public void adviseMixin(AspectInstance aspectInstance, MixinInstance mixin) {
+                mixin.addInterceptor(nullInterceptor);
             }
 
-            public Object adviseConstruction(AspectInstance aspectInstance) {
-                return null;
+            public void advise(AspectInstance aspectInstance) {
             }
 
-            public Object introduce(AspectInstance aspectInstance) {
-                return null;
+            public void introduce(AspectInstance aspectInstance) {
             }
         });
         final MockConstructionInterceptor constructionInterceptor = new MockConstructionInterceptor();
 
         aspectSystem.addAspect(new Aspect() {
-            public Object introduce(AspectInstance aspectInstance) {
-                return null;
+            public void introduce(AspectInstance aspectInstance) {
             }
 
-            public Object advise(AspectInstance aspectInstance, MixinInstance mixin) {
-                return null;
+            public void adviseMixin(AspectInstance aspectInstance, MixinInstance mixin) {
             }
 
-            public Object adviseConstruction(AspectInstance aspectInstance) {
-                return constructionInterceptor;
+            public void advise(AspectInstance aspectInstance) {
+                aspectInstance.addConstructionInterceptor(constructionInterceptor);
             }
         });
 
@@ -89,16 +83,14 @@ public class AspectSystemTest extends TestCase {
         AspectSystem aspectSystem = new AspectSystem();
         aspectSystem.addAspect(new FindTargetMixinAspect());
         aspectSystem.addAspect(new Aspect() {
-            public Object advise(AspectInstance aspectInstance, MixinInstance mixin) {
-                return new NullInterceptor();
+            public void adviseMixin(AspectInstance aspectInstance, MixinInstance mixin) {
+                mixin.addInterceptor(new NullInterceptor());
             }
 
-            public Object adviseConstruction(AspectInstance aspectInstance) {
-                return null;
+            public void advise(AspectInstance aspectInstance) {
             }
 
-            public Object introduce(AspectInstance aspectInstance) {
-                return null;
+            public void introduce(AspectInstance aspectInstance) {
             }
         });
         Object bigMomma = aspectSystem.newInstance(IntfSub.class);
