@@ -24,6 +24,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
         AspectSystem aspectSystem = new AspectSystem();
         aspectSystem.addAspect(new MixinAspect(MySystem.class, MySystemImpl.class));
         aspectSystem.addAspect(new MixinAspect(MyObject.class, MyObjectImpl.class));
+        aspectSystem.addAspect(new MixinAspect(TestUnsupportedTransaction.class, TestUnsupportedTransactionImpl.class));
         aspectSystem.addAspect(new PrevaylerAspect());
 
         aspectFactory = aspectSystem;
@@ -219,5 +220,17 @@ public class PrevaylerTest extends AbstractAttributesTest {
         CountingPrevayler prevayler = new CountingPrevayler((IdentifyingSystem) aspectFactory.newInstance(MySystem.class),
                                                             prevaylerDir.getAbsolutePath());
         return prevayler;
+    }
+
+    public void testUnsupportedTransaction() {
+        assertTrue(CheckTransactionUnsupportedInterceptor.isTransactionsSupported());
+        TestUnsupportedTransaction testUnsupportedTransaction =
+                (TestUnsupportedTransaction) aspectFactory.newInstance(TestUnsupportedTransaction.class);
+        try {
+            testUnsupportedTransaction.callWithUnsupportedTransaction();
+            fail();
+        } catch (IllegalStateException shouldHappen) {
+        }
+        assertTrue(CheckTransactionUnsupportedInterceptor.isTransactionsSupported());
     }
 }
