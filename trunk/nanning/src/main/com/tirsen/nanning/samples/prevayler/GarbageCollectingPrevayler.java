@@ -28,9 +28,11 @@ public class GarbageCollectingPrevayler extends SnapshotPrevayler {
 
     public void takeSnapshot() throws IOException {
         synchronized (snapshotLock) {
+            logger.info("taking snapshot");
             IdentifyingSystem system = (IdentifyingSystem) system();
             garbageCollectSystem(system);
             super.takeSnapshot();
+            logger.info("snapshot taken");
         }
     }
 
@@ -41,12 +43,12 @@ public class GarbageCollectingPrevayler extends SnapshotPrevayler {
     }
 
     public static void garbageCollectSystem(IdentifyingSystem system) {
-        logger.info("Garbage collecting system");
+        logger.info("garbage collecting system");
         Set referencedObjects = getReferencedObjects(system);
         Collection unreferencedObjects = new HashSet(system.getAllRegisteredObjects());
         unreferencedObjects.removeAll(referencedObjects);
 
-        logger.info("Garbage collected " + unreferencedObjects.size() + " number of objects");
+        logger.info("garbage collect reclaimed " + unreferencedObjects.size() + " number of objects");
 
         for (Iterator iterator = unreferencedObjects.iterator(); iterator.hasNext();) {
             Object unreferencedObject = iterator.next();
