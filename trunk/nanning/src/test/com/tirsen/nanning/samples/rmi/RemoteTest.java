@@ -1,5 +1,10 @@
 package com.tirsen.nanning.samples.rmi;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Iterator;
+
 import com.tirsen.nanning.Aspects;
 import com.tirsen.nanning.attribute.AbstractAttributesTest;
 import com.tirsen.nanning.definition.AspectClass;
@@ -8,10 +13,6 @@ import com.tirsen.nanning.definition.InterceptorDefinition;
 import com.tirsen.nanning.samples.prevayler.*;
 import org.prevayler.PrevalentSystem;
 import org.prevayler.implementation.SnapshotPrevayler;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
 
 public class RemoteTest extends AbstractAttributesTest {
     private AspectRepository serverAspectRepository;
@@ -95,9 +96,10 @@ public class RemoteTest extends AbstractAttributesTest {
                 assertEquals("attribute wrong value", "attributeValue", myObject.getAttribute());
 
                 // server side
-                List objects = system.getObjects();
+                Collection objects = system.getAllRegisteredObjects();
                 assertEquals("object not created on server side", 2, objects.size());
-                assertEquals("attribute wrong value", "attributeValue", ((MyObject) objects.get(1)).getAttribute());
+                Iterator iterator = objects.iterator(); iterator.next();
+                assertEquals("attribute wrong value", "attributeValue", ((MyObject) iterator.next()).getAttribute());
 
                 remoteCallServer.stop();
             }

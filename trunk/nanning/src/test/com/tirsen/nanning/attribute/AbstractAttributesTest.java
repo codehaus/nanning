@@ -28,6 +28,10 @@ public abstract class AbstractAttributesTest extends TestCase {
             attributesCompiler.execute();
             attributesCompiler.setSrc(new File("src" + File.separator + "main"));
             attributesCompiler.execute();
+            attributesCompiler.setSrc(new File(".." + File.separator + "nanning" + File.separator + "src" + File.separator + "main"));
+            attributesCompiler.execute();
+            attributesCompiler.setSrc(new File(".." + File.separator + "nanning" + File.separator + "src" + File.separator + "test"));
+            attributesCompiler.execute();
         }
     }
 }

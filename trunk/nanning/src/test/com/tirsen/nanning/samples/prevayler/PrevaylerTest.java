@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Collection;
+import java.util.Iterator;
 
 public class PrevaylerTest extends AbstractAttributesTest {
 
@@ -82,9 +84,10 @@ public class PrevaylerTest extends AbstractAttributesTest {
                 assertTrue("even nested objects put inside Prevayler should get object IDs (this is tricky stuff!)",
                         currentMySystem().hasObjectID(outsideNestedObject));
 
-                List objects = currentMySystem().getObjects();
+                Collection  objects = currentMySystem().getAllRegisteredObjects();
                 assertEquals("objects not created ", 4, objects.size());
-                insideObject = (MyObject) objects.get(1);
+                Iterator iterator = objects.iterator(); iterator.next();
+                insideObject = (MyObject) iterator.next();
                 assertEquals("attribute not correct value", "newValue", insideObject.getAttribute());
                 assertNotNull(insideObject.getMyObject());
             }
@@ -102,9 +105,10 @@ public class PrevaylerTest extends AbstractAttributesTest {
         final CountingPrevayler prevayler = newPrevayler();
         CurrentPrevayler.withPrevayler(prevayler, new Runnable() {
             public void run() {
-                List objects = currentMySystem().getObjects();
+                Collection objects = currentMySystem().getAllRegisteredObjects();
                 assertEquals("objects not persisted", 4, objects.size());
-                MyObject myObject = (MyObject) objects.get(1);
+                Iterator iterator = objects.iterator(); iterator.next();
+                MyObject myObject = (MyObject) iterator.next();
                 assertEquals("property not correct value", "newValue", myObject.getAttribute());
                 prevayler.assertNumberOfCommands("just checking, should be no commands", 0);
 
@@ -123,7 +127,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
                 MyObject myObject = (MyObject) aspectFactory.newInstance(MyObject.class);
                 currentMySystem().setMyObject(myObject);
                 myObject.setMyObject((MyObject) aspectFactory.newInstance(MyObject.class));
-                assertEquals("three objects should have been created", 3, currentMySystem().getObjects().size());
+                assertEquals("three objects should have been created", 3, currentMySystem().getAllRegisteredObjects().size());
             }
         });
 
@@ -132,12 +136,12 @@ public class PrevaylerTest extends AbstractAttributesTest {
         prevayler = newPrevayler();
         CurrentPrevayler.withPrevayler(prevayler, new Runnable() {
             public void run() {
-                assertEquals("three objects should be left", 3, currentMySystem().getObjects().size());
+                assertEquals("three objects should be left", 3, currentMySystem().getAllRegisteredObjects().size());
                 // removing one of the objects
                 assertNotNull(currentMySystem().getMyObject().getMyObject());
                 currentMySystem().getMyObject().setMyObject(null);
                 assertEquals("garbage collect on snapshot only, three object should be here still",
-                        3, currentMySystem().getObjects().size());
+                        3, currentMySystem().getAllRegisteredObjects().size());
             }
         });
 
@@ -146,7 +150,28 @@ public class PrevaylerTest extends AbstractAttributesTest {
         prevayler = newPrevayler();
         CurrentPrevayler.withPrevayler(prevayler, new Runnable() {
             public void run() {
-                assertEquals("two objects should be left, one garbage collected", 2, currentMySystem().getObjects().size());
+                assertNull(currentMySystem().getMyObject().getMyObject());
+                assertEquals("two objects should be left, one garbage collected", 2, currentMySystem().getAllRegisteredObjects().size());
+            }
+        });
+
+    }
+
+    public void testFinalizationCallback() throws Exception {
+        CurrentPrevayler.withPrevayler(newPrevayler(), new PrevaylerAction() {
+            public Object run() throws Exception {
+                MySystem mySystem = currentMySystem();
+                MyObject myObject = (MyObject) aspectFactory.newInstance(MyObject.class);
+                mySystem.setMyObject(myObject);
+                GarbageCollectingPrevayler.garbageCollectSystem(mySystem);
+                assertEquals("gc didn't work", 2, mySystem.getAllRegisteredObjects().size());
+                assertFalse("finalization called too early", myObject.wasFinalized());
+                mySystem.setMyObject(null);
+                GarbageCollectingPrevayler.garbageCollectSystem(mySystem);
+                assertEquals("gc didn't work", 1, mySystem.getAllRegisteredObjects().size());
+                assertTrue("finalization not called", myObject.wasFinalized());
+
+                return null;
             }
         });
     }

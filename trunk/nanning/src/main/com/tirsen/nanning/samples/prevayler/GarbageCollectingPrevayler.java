@@ -7,6 +7,9 @@ import org.prevayler.implementation.SnapshotPrevayler;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Iterator;
+import java.util.Collection;
+import java.lang.ref.Reference;
 
 public class GarbageCollectingPrevayler extends SnapshotPrevayler {
     public GarbageCollectingPrevayler(IdentifyingSystem system, String path) throws IOException, ClassNotFoundException {
@@ -20,9 +23,27 @@ public class GarbageCollectingPrevayler extends SnapshotPrevayler {
     }
 
     public static void garbageCollectSystem(IdentifyingSystem system) {
+        Set referencedObjects = getReferencedObjects(system);
+        Collection unreferencedObjects = new HashSet(system.getAllRegisteredObjects());
+        unreferencedObjects.removeAll(referencedObjects);
+
+        for (Iterator iterator = unreferencedObjects.iterator(); iterator.hasNext();) {
+            Object unreferencedObject = iterator.next();
+            system.unregisterObjectID(unreferencedObject);
+            if (unreferencedObject instanceof FinalizationCallback) {
+                FinalizationCallback finalizationCallback = (FinalizationCallback) unreferencedObject;
+                finalizationCallback.finalizationCallback();
+            }
+        }
+    }
+
+    private static Set getReferencedObjects(IdentifyingSystem system) {
         final Set referencedObjects = new HashSet();
         ObjectGraphVisitor.visit(system, new ObjectGraphVisitor() {
             protected void visit(Object o) {
+                if (o instanceof Reference) {
+                    return;
+                }
                 if (Identity.isEntity(o.getClass())) {
                     referencedObjects.add(o);
                 }
@@ -39,11 +60,10 @@ public class GarbageCollectingPrevayler extends SnapshotPrevayler {
                 } else if (Identity.isMarshalByValue(o)) {
                     // also skip any value objects, they shouldn't contain references to entities anyway
                 } else {
-                    System.out.println("going in");
                     super.visit(o);
                 }
             }
         });
-        system.keepTheseObjects(referencedObjects);
+        return referencedObjects;
     }
 }
