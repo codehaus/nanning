@@ -12,7 +12,7 @@ import com.tirsen.nanning.attribute.Attributes;
  * TODO document Identity
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class Identity implements Serializable {
     private Class objectClass;
@@ -62,6 +62,8 @@ public class Identity implements Serializable {
         } else if (o instanceof Character) {
             return true;
         } else if (o instanceof Class) {
+            return true;
+        } else if (o instanceof Boolean) {
             return true;
         } else if (Attributes.hasInheritedAttribute(o.getClass(), "marshal-by-value")) {
             return true;
