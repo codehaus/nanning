@@ -6,19 +6,16 @@
  */
 package com.tirsen.nanning;
 
-import com.tirsen.nanning.attribute.AttributesTest;
-import com.tirsen.nanning.attribute.AttributesXMLParserTest;
-import com.tirsen.nanning.attribute.AttributesCompilerTest;
-import com.tirsen.nanning.attribute.ClassPropertiesHelperTest;
 import com.tirsen.nanning.attribute.AttributesBuilderTest;
+import com.tirsen.nanning.attribute.AttributesXMLParserTest;
+import com.tirsen.nanning.attribute.ClassPropertiesHelperTest;
 import com.tirsen.nanning.config.AspectSystemTest;
-import com.tirsen.nanning.config.PointcutTest;
 import com.tirsen.nanning.config.InterceptorAspectTest;
+import com.tirsen.nanning.config.PointcutTest;
+import com.tirsen.nanning.samples.CacheInterceptorTest;
+import com.tirsen.nanning.samples.CacheTest;
 import com.tirsen.nanning.samples.prevayler.ObjectGraphVisitorTest;
 import com.tirsen.nanning.samples.rmi.RemoteTest;
-import com.tirsen.nanning.samples.CacheTest;
-import com.tirsen.nanning.samples.CacheInterceptorTest;
-import com.tirsen.nanning.profiler.ProfilerTest;
 import com.tirsen.nanning.xml.AspectSystemParserTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
