@@ -110,7 +110,7 @@ public class IdentifyingMarshallerTest extends AbstractAttributesTest {
             marshaller.unmarshal(object1);
             fail("Should not be able to unmarshal a partially registered graph");
 
-        } catch (IllegalArgumentException shouldHappen) {
+        } catch (AssertionError shouldHappen) {
         }
     }
 

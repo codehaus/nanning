@@ -9,7 +9,7 @@ import com.tirsen.nanning.config.Aspect;
  * TODO document PrevaylerInterceptor
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirs?n</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class PrevaylerAspect implements Aspect {
     private TransactionUnsupportedInterceptor unsupportedInterceptor;
@@ -21,11 +21,11 @@ public class PrevaylerAspect implements Aspect {
         this(false);
     }
 
-    public PrevaylerAspect(boolean resolveEntities) {
+    public PrevaylerAspect(boolean useIdentification) {
         unsupportedInterceptor = new TransactionUnsupportedInterceptor();
         checkUnsupportedInterceptor = new CheckTransactionUnsupportedInterceptor();
-        prevaylerInterceptor = new PrevaylerInterceptor(resolveEntities);
-        if (resolveEntities) {
+        prevaylerInterceptor = new PrevaylerInterceptor(useIdentification);
+        if (useIdentification) {
             registerObjectInterceptor = new RegisterObjectInterceptor();
         }
     }
