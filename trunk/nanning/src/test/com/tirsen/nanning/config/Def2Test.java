@@ -19,18 +19,23 @@ public class Def2Test extends TestCase {
         assertTrue(bigMomma instanceof Intf);
         assertTrue(bigMomma instanceof TestMixin);
 
-        Interceptor[] interceptors = Aspects.getInterceptors(bigMomma);
-        assertEquals(3, interceptors.length);
+        assertEquals(3, Aspects.getInterceptors(bigMomma).length);
 
         constructionInterceptor.verify();
 
-        assertSame(nullInterceptor, interceptors[1]);
-        MockInterceptor mockInterceptor2 = (MockInterceptor) interceptors[0];
-        MockInterceptor mockInterceptor = (MockInterceptor) interceptors[2];
+        assertSame(nullInterceptor,
+                Aspects.getAspectInstance(bigMomma).getMixinForInterface(Intf.class).
+                getInterceptorsForMethod(Intf.class.getMethod("call", new Class[0])).get(1));
+        MockInterceptor callInterceptor =
+                (MockInterceptor) Aspects.getAspectInstance(bigMomma).getMixinForInterface(Intf.class).
+                getInterceptorsForMethod(Intf.class.getMethod("call", new Class[0])).get(0);
+        MockInterceptor mixinCallInterceptor =
+                (MockInterceptor) Aspects.getAspectInstance(bigMomma).getMixinForInterface(TestMixin.class).
+                getInterceptorsForMethod(TestMixin.class.getMethod("mixinCall", new Class[0])).get(0);
         ((TestMixin) bigMomma).mixinCall();
-        mockInterceptor.verify();
+        mixinCallInterceptor.verify();
         ((Intf) bigMomma).call();
-        mockInterceptor2.verify();
+        callInterceptor.verify();
     }
 
     public void testCreateWithTargets() {

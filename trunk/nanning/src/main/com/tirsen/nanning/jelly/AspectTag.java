@@ -11,14 +11,15 @@ import com.tirsen.nanning.definition.AspectDefinition;
 import com.tirsen.nanning.definition.AspectRepository;
 import org.apache.commons.jelly.TagSupport;
 import org.apache.commons.jelly.XMLOutput;
+import org.apache.commons.jelly.JellyTagException;
 
 /**
  * TODO document AspectTag
  *
- * <!-- $Id: AspectTag.java,v 1.6 2003-01-24 13:29:30 tirsen Exp $ -->
+ * <!-- $Id: AspectTag.java,v 1.7 2003-03-12 22:34:53 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class AspectTag extends TagSupport
 {
@@ -36,8 +37,7 @@ public class AspectTag extends TagSupport
         return aspectDefinition;
     }
 
-    public void doTag(XMLOutput xmlOutput) throws Exception
-    {
+    public void doTag(XMLOutput xmlOutput) throws JellyTagException {
         // find repository and class where I'm contained
         AspectRepository aspectRepository = null;
         AspectClass aspectClass = null;

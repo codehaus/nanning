@@ -17,10 +17,10 @@ import junit.framework.TestSuite;
 /**
  * TODO document UnitTestSuite
  *
- * <!-- $Id: UnitTestSuite.java,v 1.11 2003-02-10 20:01:08 tirsen Exp $ -->
+ * <!-- $Id: UnitTestSuite.java,v 1.12 2003-03-12 22:34:55 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class UnitTestSuite {
     ///CLOVER:OFF
@@ -38,6 +38,7 @@ public class UnitTestSuite {
         suite.addTestSuite(ObjectGraphVisitorTest.class);
         suite.addTestSuite(InheritanceTest.class);
         suite.addTestSuite(Def2Test.class);
+        suite.addTestSuite(SerializationTest.class);
         return suite;
     }
     ///CLOVER:ON
