@@ -1,13 +1,8 @@
 package org.codehaus.nanning.prevayler;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.Set;
-import java.util.HashSet;
-import java.lang.reflect.AccessibleObject;
 
 import org.codehaus.nanning.Aspects;
-import org.codehaus.nanning.prevayler.CurrentPrevayler;
 
 public class IdentifyingMarshaller implements Marshaller, Serializable {
     static final long serialVersionUID = 7285806267400465332L;

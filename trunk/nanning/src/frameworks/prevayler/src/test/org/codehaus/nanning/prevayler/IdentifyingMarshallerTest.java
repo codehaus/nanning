@@ -93,7 +93,7 @@ public class IdentifyingMarshallerTest extends AbstractAttributesTest {
         marshaller.unmarshal(object1);
         CurrentPrevayler.exitTransaction();
         assertTrue(system.hasObjectID(object1));
-        assertTrue(system.hasObjectID(object2));
+        assertFalse(system.hasObjectID(object2));
     }
 
     public void TODOtestUnmarshalMixedGraph() {
