@@ -9,20 +9,19 @@ package com.tirsen.nanning;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
  * TODO document AspectInstance
  *
- * <!-- $Id: AspectInstance.java,v 1.9 2002-11-03 18:45:47 tirsen Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.10 2002-11-06 17:50:06 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 class AspectInstance implements InvocationHandler
 {
@@ -114,19 +113,13 @@ class AspectInstance implements InvocationHandler
     }
 
     private Object proxy;
-    private final SideAspectInstance[] interfaceInstances;
-    private final HashMap interfacesToInstancesIndex;
+    private final SideAspectInstance[] sideAspectInstances;
+    private final AspectClass aspectClass;
 
-    public AspectInstance(SideAspectInstance[] interfaceInstances)
+    public AspectInstance(AspectClass aspectClass)
     {
-        this.interfaceInstances = interfaceInstances;
-        // index this up for faster invocations
-        interfacesToInstancesIndex = new HashMap();
-        for (int i = 0; i < interfaceInstances.length; i++)
-        {
-            SideAspectInstance interfaceInstance = interfaceInstances[i];
-            interfacesToInstancesIndex.put(interfaceInstance.getInterfaceClass(), interfaceInstance);
-        }
+        this.aspectClass = aspectClass;
+        this.sideAspectInstances = aspectClass.instantiateSideAspects();
     }
 
     public Object invoke(Object proxy, Method method, Object[] args)
@@ -139,7 +132,7 @@ class AspectInstance implements InvocationHandler
             try
             {
                 currentThis.set(proxy);
-                SideAspectInstance interfaceInstance = (SideAspectInstance) interfacesToInstancesIndex.get(interfaceClass);
+                SideAspectInstance interfaceInstance = getSideAspectInstance(interfaceClass);
                 // if it wasn't defined by any of the specified interfaces let's assume it's the default one (ie. index 0)
 
                 Invocation invocation = new InvocationImpl(method, args, interfaceInstance);
@@ -159,10 +152,10 @@ class AspectInstance implements InvocationHandler
 
     Object createProxy()
     {
-        List interfaces = new ArrayList(interfaceInstances.length);
-        for (int i = 0; i < interfaceInstances.length; i++)
+        List interfaces = new ArrayList(sideAspectInstances.length);
+        for (int i = 0; i < sideAspectInstances.length; i++)
         {
-            SideAspectInstance interfaceInstance = interfaceInstances[i];
+            SideAspectInstance interfaceInstance = sideAspectInstances[i];
             interfaces.add(interfaceInstance.getInterfaceClass());
         }
 
@@ -180,7 +173,7 @@ class AspectInstance implements InvocationHandler
     Interceptor[] getProxyInterceptors()
     {
         // the actual class-specific interface-instance is at the first position
-        return interfaceInstances[0].getInterceptors();
+        return sideAspectInstances[0].getInterceptors();
     }
 
     Interceptor[] getInterceptors(Class interfaceClass)
@@ -191,7 +184,7 @@ class AspectInstance implements InvocationHandler
 
     private SideAspectInstance getSideAspectInstance(Class interfaceClass)
     {
-        return (SideAspectInstance) interfacesToInstancesIndex.get(interfaceClass);
+        return sideAspectInstances[aspectClass.getSideAspectIndexForInterface(interfaceClass)];
     }
 
     public void setTarget(Class interfaceClass, Object target)
@@ -202,7 +195,7 @@ class AspectInstance implements InvocationHandler
 
     public String toString()
     {
-        SideAspectInstance defaultInterfaceInstance = interfaceInstances[0];
+        SideAspectInstance defaultInterfaceInstance = sideAspectInstances[0];
         return new ToStringBuilder(this)
                 .append("interface", defaultInterfaceInstance.getInterfaceClass().getName())
                 .append("target", defaultInterfaceInstance.getTarget())

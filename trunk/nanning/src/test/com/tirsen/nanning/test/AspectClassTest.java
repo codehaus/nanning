@@ -12,10 +12,10 @@ import com.tirsen.nanning.*;
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: AspectClassTest.java,v 1.9 2002-11-05 20:46:39 tirsen Exp $ -->
+ * <!-- $Id: AspectClassTest.java,v 1.10 2002-11-06 17:50:06 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class AspectClassTest extends TestCase
 {
@@ -84,7 +84,35 @@ public class AspectClassTest extends TestCase
         assertNotSame(interceptor, interceptor2);
     }
 
-    public void testThrowsCorrectExceptions() {
+    public static interface InheritedIntf extends Intf
+    {
+    }
+
+    public static interface InheritedSideAspect extends Intf, SideAspect
+    {
+    }
+
+    public void testInheritance()
+    {
+        AspectClass aspectClass = new AspectClass();
+        aspectClass.setInterface(InheritedIntf.class);
+        aspectClass.addInterceptor(MockInterceptor.class);
+        aspectClass.setTarget(Impl.class);
+        AspectDefinition aspectDefinition = new AspectDefinition();
+        // note that this interface also extends Intf, but that will never get called since
+        // the class-aspect will take precedence
+        aspectDefinition.setInterface(InheritedSideAspect.class);
+        aspectDefinition.setTarget(SideAspectImpl.class);
+        InheritedIntf proxy = (InheritedIntf) aspectClass.newInstance();
+
+        MockInterceptor classInterceptor = (MockInterceptor) Aspects.getInterceptors(proxy)[0];
+        classInterceptor.expectTarget(Aspects.getTarget(proxy, Intf.class));
+
+        proxy.call();
+    }
+
+    public void testThrowsCorrectExceptions()
+    {
         AspectClass aspectClass = new AspectClass();
         aspectClass.setInterface(Intf.class);
         aspectClass.addInterceptor(MockInterceptor.class);
@@ -93,18 +121,25 @@ public class AspectClassTest extends TestCase
 
         Intf proxy = (Intf) aspectClass.newInstance();
 
-        Aspects.setTarget(proxy, Intf.class, new Intf() {
-            public void call() {
+        Aspects.setTarget(proxy, Intf.class, new Intf()
+        {
+            public void call()
+            {
                 throw new BlahongaException();
             }
         });
 
-        try {
+        try
+        {
             proxy.call();
             fail();
-        } catch (BlahongaException shouldHappen) {
+        }
+        catch (BlahongaException shouldHappen)
+        {
             System.out.println("shouldHappen = " + shouldHappen);
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             fail();
         }
     }
