@@ -5,9 +5,17 @@ import org.prevayler.PrevalentSystem;
 public interface IdentifyingSystem extends PrevalentSystem {
     Object getObjectWithID(long oid);
 
+    /**
+     * @requires hasObjectID(object)
+     */
     long getObjectID(Object object);
 
-    void registerObjectID(Object o);
+    /**
+     * @requires object != null
+     * @ensures hasObjectID(object)
+     * @ensures getObjectWithID(getObjectID(object)) == object
+     */
+    long registerObjectID(Object object);
 
-    boolean hasObjectID(Object o);
+    boolean hasObjectID(Object object);
 }

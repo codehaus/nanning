@@ -1,20 +1,20 @@
 package com.tirsen.nanning.samples;
 
-import com.tirsen.nanning.MethodInterceptor;
 import com.tirsen.nanning.Invocation;
+import com.tirsen.nanning.MethodInterceptor;
 import com.tirsen.nanning.attribute.Attributes;
-import org.apache.commons.jexl.JexlHelper;
-import org.apache.commons.jexl.JexlContext;
-import org.apache.commons.jexl.Expression;
-import org.apache.commons.jexl.ExpressionFactory;
+import ognl.MethodFailedException;
+import ognl.Ognl;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.text.MessageFormat;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * TODO document ContractInterceptor.
@@ -22,19 +22,20 @@ import java.util.ListIterator;
  * you can enable and disable contract-checking in the same way you enable and disable assertions (java -ea and so on).
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class ContractInterceptor implements MethodInterceptor {
+    private static final Log logger = LogFactory.getLog(ContractInterceptor.class);
     private static final Pattern oldPattern =
             Pattern.compile("(.*)\\{old (.*?)}(.*)");
 
     /**
-     * If this is non-null don't execute contracts, used when executing the expressions. 
+     * If this is non-null don't execute contracts, used when executing the expressions.
      */
     private ThreadLocal checkContracts = new ThreadLocal();
 
     public Object invoke(Invocation invocation) throws Throwable {
-        String ensures = Attributes.getAttribute(invocation.getMethod(), "ensures");;
+        String ensures = Attributes.getAttribute(invocation.getMethod(), "ensures");
         String requires = Attributes.getAttribute(invocation.getMethod(), "requires");
         String invariant = Attributes.getAttribute(invocation.getMethod().getDeclaringClass(), "invariant");
 
@@ -50,12 +51,12 @@ public class ContractInterceptor implements MethodInterceptor {
                 oldValues = new ArrayList();
                 parsedEnsure = new StringBuffer();
                 Matcher matcher = oldPattern.matcher(ensures);
-                while(matcher.matches()) {
+                while (matcher.matches()) {
                     String head = matcher.group(1);
                     String old = matcher.group(2);
                     String tail = matcher.group(3);
                     oldValues.add(executeExpression(invocation, old));
-                    String oldRef = getOldReference(oldValues.size() - 1);
+                    String oldRef = "#" + getOldReference(oldValues.size() - 1);
                     parsedEnsure.append(head + oldRef + tail);
                     matcher = oldPattern.matcher(tail);
                 }
@@ -71,15 +72,15 @@ public class ContractInterceptor implements MethodInterceptor {
         if (checkContracts.get() == null) {
 
             // check ensures with old-references
-            if(parsedEnsure != null) {
-                Expression expression = parseExpression(parsedEnsure.toString());
-                JexlContext context = createContext(invocation);
+            if (parsedEnsure != null) {
+                Map context = createContext(invocation);
                 for (ListIterator iterator = oldValues.listIterator(); iterator.hasNext();) {
                     Object oldValue = iterator.next();
-                    context.getVars().put(getOldReference(iterator.previousIndex()), oldValue);
+                    context.put(getOldReference(iterator.previousIndex()), oldValue);
                 }
 
-                assertExpressionTrue(expression, context, "postcondition violated: " + ensures);
+                assertExpressionTrue(parsedEnsure.toString(),
+                        invocation.getProxy(), context, "postcondition violated: " + ensures);
             }
 
             assertExpressionTrue(invocation, invariant, "invariant violated: {0}");
@@ -89,70 +90,66 @@ public class ContractInterceptor implements MethodInterceptor {
     }
 
     private String getOldReference(int i) {
-        return "$old" + i;
+        return "old" + i;
     }
 
-    private Object executeExpression(Invocation invocation, String expressionString) {
-        Expression expression = null;
-        expression = parseExpression(expressionString);
-        JexlContext jc = createContext(invocation);
+    private Object executeExpression(Invocation invocation, String expression) {
+        Map context = createContext(invocation);
         try {
-            return executeExpression(expression, jc);
+            return executeExpression(expression, invocation.getProxy(), context);
         } catch (Exception e) {
-            throw new RuntimeException("Could not execute: " + expressionString, e);
+            throw new RuntimeException("Could not execute: " + expression, e);
         }
     }
 
-    private Expression parseExpression(String expressionString) {
-        try {
-            return ExpressionFactory.createExpression(expressionString);
-        } catch (Exception e) {
-            throw new RuntimeException("Could not parse: " + expressionString, e);
+    private void assertExpressionTrue(Invocation invocation, String expression, String message) {
+        if (expression != null) {
+            Map context = createContext(invocation);
+            assertExpressionTrue(expression, invocation.getProxy(), context, MessageFormat.format(message, new Object[]{expression}));
         }
     }
 
-    private void assertExpressionTrue(Invocation invocation, String expressionString, String message) {
-        if (expressionString != null) {
-            Expression expression = parseExpression(expressionString);
-            JexlContext jc = createContext(invocation);
-            assertExpressionTrue(expression, jc, MessageFormat.format(message, new Object[] { expressionString }));
-        }
-    }
-
-    private JexlContext createContext(Invocation invocation) {
-        JexlContext jc = JexlHelper.createContext();
-        jc.getVars().put("", invocation.getProxy());
-        jc.getVars().put("this", invocation.getProxy());
+    private Map createContext(Invocation invocation) {
+        Map variables = Ognl.createDefaultContext(invocation.getProxy());
+        variables.put("this", invocation.getProxy());
         Object[] args = invocation.getArgs();
         if (args != null) {
             for (int i = 0; i < args.length; i++) {
                 Object arg = args[i];
-                jc.getVars().put("$" + i, arg);
+                variables.put("arg" + i, arg);
             }
         }
-        return jc;
+        return variables;
     }
 
-    private void assertExpressionTrue(Expression expression, JexlContext jc, String message) {
-        try {
-            boolean result;
-            Boolean aBoolean = (Boolean) executeExpression(expression, jc);
-            result = aBoolean.booleanValue();
-            if(!result) {
-                throw new AssertionError(message);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Could not execute: " + expression.getExpression(), e);
-        }
-    }
-
-    private Object executeExpression(Expression expression, JexlContext jc) throws Exception {
+    private void assertExpressionTrue(String expression, Object root, Map context, String message) {
         // disable execution of contracts when contracts are executed (to avoid looping)
-        checkContracts.set(checkContracts);
-        try {
-            return expression.evaluate(jc);
-        } finally {
-            checkContracts.set(null);
+        if (checkContracts.get() == null) {
+            checkContracts.set(checkContracts);
+            try {
+                boolean result;
+                Boolean aBoolean = (Boolean) executeExpression(expression, root, context);
+                result = aBoolean.booleanValue();
+                if (!result) {
+                    throw new AssertionError(message);
+                }
+            } catch (MethodFailedException e) {
+                if(e.getReason() instanceof Error) {
+                    throw (Error) e.getReason();
+                } else {
+                    logger.error("Could not execute expression: " + expression);
+                    throw new AssertionError("Could not execute expression: " + expression);
+                }
+            } catch (Exception e) {
+                logger.error("Could not execute expression: " + expression);
+                throw new AssertionError("Could not execute expression: " + expression);
+            } finally {
+                checkContracts.set(null);
+            }
         }
+    }
+
+    private Object executeExpression(String expression, Object root, Map context) throws Exception {
+        return Ognl.getValue(Ognl.parseExpression(expression), context, root);
     }
 }

@@ -1,102 +1,61 @@
 package com.tirsen.nanning.samples.prevayler;
 
-import java.lang.reflect.Method;
-
-import com.tirsen.nanning.*;
+import com.tirsen.nanning.ConstructionInterceptor;
+import com.tirsen.nanning.ConstructionInvocation;
+import com.tirsen.nanning.Invocation;
 import com.tirsen.nanning.attribute.Attributes;
 import com.tirsen.nanning.definition.FilterMethodsInterceptor;
-import com.tirsen.nanning.definition.InterceptorDefinition;
 import com.tirsen.nanning.definition.SingletonInterceptor;
-import com.tirsen.nanning.definition.AspectRepository;
-import org.prevayler.Prevayler;
+
+import java.lang.reflect.Method;
 
 /**
  * TODO document PrevaylerInterceptor
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class PrevaylerInterceptor
         implements SingletonInterceptor, FilterMethodsInterceptor, ConstructionInterceptor {
-    private ThreadLocal inTransaction = new ThreadLocal();
-    private IdentifyingSystem system;
-    private Prevayler prevayler;
 
     public boolean interceptsConstructor(Class interfaceClass) {
-        return Attributes.hasAttribute(interfaceClass, "instantiation-is-prevayler-command");
+        return Attributes.hasAttribute(interfaceClass, "entity");
     }
 
     public boolean interceptsMethod(Method method) {
-        return Attributes.hasAttribute(method, "prevayler-command");
+        return Attributes.hasAttribute(method, "transaction");
     }
 
     public Object construct(ConstructionInvocation invocation) {
-        if (!isInTransaction()) {
-            enterTransaction();
+        if (!CurrentPrevayler.isInTransaction()) {
+            CurrentPrevayler.enterTransaction();
             try {
                 ConstructCommand command = new ConstructCommand(invocation);
                 return CurrentPrevayler.getPrevayler().executeCommand(command);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             } finally {
-                exitTransaction();
+                CurrentPrevayler.exitTransaction();
             }
         }
         else {
             Object object = invocation.getProxy();
-            CurrentPrevayler.getSystem().getObjectID(object);
+            CurrentPrevayler.getSystem().registerObjectID(object);
             return object;
         }
     }
 
-    void exitTransaction() {
-        inTransaction.set(null);
-    }
-
-    void enterTransaction() {
-        inTransaction.set(inTransaction); // any non-null object will do really
-    }
-
     public Object invoke(Invocation invocation) throws Throwable {
-        if (!isInTransaction()) {
-            enterTransaction();
+        if (!CurrentPrevayler.isInTransaction()) {
+            CurrentPrevayler.enterTransaction();
             try {
                 InvokeCommand command = new InvokeCommand(invocation);
                 return CurrentPrevayler.getPrevayler().executeCommand(command);
             } finally {
-                exitTransaction();
+                CurrentPrevayler.exitTransaction();
             }
         } else {
             return invocation.invokeNext();
         }
-    }
-
-    private boolean isInTransaction() {
-        return inTransaction.get() != null;
-    }
-
-    public void setSystem(IdentifyingSystem system) {
-        this.system = system;
-    }
-
-    public IdentifyingSystem getSystem() {
-        return system;
-    }
-
-    public Prevayler getPrevayler() {
-        return prevayler;
-    }
-
-    public void setPrevayler(Prevayler prevayler) {
-        this.prevayler = prevayler;
-        setSystem((IdentifyingSystem) prevayler.system());
-    }
-
-    public static PrevaylerInterceptor getPrevaylerInterceptor() {
-        // I think this might have to be done some other way...
-        InterceptorDefinition interceptorDefinition =
-                AspectRepository.getCurrentAspectRepository().getInterceptor(PrevaylerInterceptor.class);
-        PrevaylerInterceptor prevaylerInterceptor = (PrevaylerInterceptor) interceptorDefinition.getSingleton();
-        return prevaylerInterceptor;
     }
 }

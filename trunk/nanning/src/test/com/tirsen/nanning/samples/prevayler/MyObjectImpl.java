@@ -2,6 +2,7 @@ package com.tirsen.nanning.samples.prevayler;
 
 public class MyObjectImpl implements MyObject {
     private String attribute;
+    private MyObject myObject;
 
     public String getAttribute() {
         return attribute;
@@ -9,6 +10,10 @@ public class MyObjectImpl implements MyObject {
 
     public void setAttribute(String attribute) {
         this.attribute = attribute;
+    }
+
+    public void setMyObject(MyObject myObject) {
+        this.myObject = myObject;
     }
 
     public boolean equals(Object o) {

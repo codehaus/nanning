@@ -19,25 +19,25 @@ public class InvokeCommand implements Command {
     }
 
     public Serializable execute(PrevalentSystem system) throws Exception {
-        Object target = call.getTarget();
-        Object[] args = call.getArgs();
-        Method method = call.getMethod();
-        return execute(system, method, target, args);
+        CurrentPrevayler.setSystem((IdentifyingSystem) system);
+        CurrentPrevayler.enterTransaction();
+        try {
+            Object target = call.getTarget();
+            Object[] args = call.getArgs();
+            Method method = call.getMethod();
+            return execute(system, method, target, args);
+        } finally {
+            CurrentPrevayler.exitTransaction();
+        }
     }
 
     protected Serializable execute(
             PrevalentSystem system, Method method, Object unmarshalledTarget, Object[] unmarshalledArgs) {
-        PrevaylerInterceptor.getPrevaylerInterceptor().enterTransaction();
-        CurrentPrevayler.setSystem((IdentifyingSystem) system);
         try {
-            try {
-                return (Serializable) method.invoke(unmarshalledTarget, unmarshalledArgs);
-            } catch (Exception e) {
-                logger.fatal("Failed to execute command.", e);
-                throw new RuntimeException(e);
-            }
-        } finally {
-            PrevaylerInterceptor.getPrevaylerInterceptor().exitTransaction();
+            return (Serializable) method.invoke(unmarshalledTarget, unmarshalledArgs);
+        } catch (Exception e) {
+            logger.fatal("Failed to execute command.", e);
+            throw new RuntimeException(e);
         }
     }
 

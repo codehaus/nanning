@@ -7,7 +7,7 @@ import com.tirsen.nanning.samples.prevayler.MyObject;
  */
 public interface MyService {
     /**
-     * @prevayler-command
+     * @transaction
      */
     MyObject createObject(String attributeValue);
 }

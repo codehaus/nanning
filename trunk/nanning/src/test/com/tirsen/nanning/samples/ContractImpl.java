@@ -4,10 +4,10 @@ package com.tirsen.nanning.samples;
  * TODO document ContractImpl
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class ContractImpl implements ContractIntf {
-    private int value;
+    private int value = 1;
 
     public int getValue() {
         return value;

@@ -14,10 +14,10 @@ import java.lang.reflect.Method;
 /**
  * Defines an interface that's to be added to an aspected object.
  *
- * <!-- $Id: AspectDefinition.java,v 1.1 2003-01-12 13:25:40 tirsen Exp $ -->
+ * <!-- $Id: AspectDefinition.java,v 1.2 2003-01-18 18:27:26 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class AspectDefinition
 {
@@ -163,6 +163,17 @@ public class AspectDefinition
             }
         }
         return proxy;
+    }
+
+    public List getConstructionInterceptors() {
+        List interceptors = new ArrayList();
+        for (Iterator iterator = interceptorDefinitions.iterator(); iterator.hasNext();) {
+            InterceptorDefinition interceptorDefinition = (InterceptorDefinition) iterator.next();
+            if(interceptorDefinition.interceptsConstructor(getInterfaceClass())) {
+                interceptors.add(interceptorDefinition.newInstance());
+            }
+        }
+        return interceptors;
     }
 
     public Collection getInterceptorDefinitions() {

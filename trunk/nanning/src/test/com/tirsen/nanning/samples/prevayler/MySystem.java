@@ -5,5 +5,12 @@ import java.util.List;
 
 import org.prevayler.AlarmClock;
 
-public class MySystem extends BasicIdentifyingSystem {
+public interface MySystem extends IdentifyingSystem {
+    /**
+     * @ensures hasObjectID(result)
+     * @prevayler-commmand
+     */
+    MyObject createMyObject();
+
+    List getObjects();
 }

@@ -24,10 +24,10 @@ import java.util.*;
 /**
  * TODO document AspectInstance
  *
- * <!-- $Id: AspectInstance.java,v 1.21 2003-01-16 10:17:48 lecando Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.22 2003-01-18 18:27:25 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.21 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.22 $
  */
 public class AspectInstance implements InvocationHandler, Externalizable {
     private Object proxy;
@@ -43,10 +43,10 @@ public class AspectInstance implements InvocationHandler, Externalizable {
     private Object[] serializeTargets;
 
 
-    static ThreadLocal currentThis = new ThreadLocal();
     private List mixinsList = new ArrayList();
     private AspectFactory aspectFactory;
     private Object classIdentifier;
+    private List constructionInterceptors;
 
     public AspectInstance() {
     }
@@ -56,13 +56,9 @@ public class AspectInstance implements InvocationHandler, Externalizable {
         this.classIdentifier = classIdentifier;
     }
 
-    public Object getProxy() {
-        if(proxy == null) {
-            Set interfaces = new HashSet(CollectionUtils.collect(mixins.values(), new Transformer() {
-                public Object transform(Object o) {
-                    return ((MixinInstance) o).getInterfaceClass();
-                }
-            }));
+    public Object createProxy() {
+        if (proxy == null) {
+            Set interfaces = getInterfaceClasses();
             proxy = Proxy.newProxyInstance(getClass().getClassLoader(),
                     (Class[]) interfaces.toArray(new Class[0]),
                     this);
@@ -70,25 +66,38 @@ public class AspectInstance implements InvocationHandler, Externalizable {
         return proxy;
     }
 
+    public void setConstructionInterceptors(List constructionInterceptors) {
+        this.constructionInterceptors = constructionInterceptors;
+    }
+
+    private Set getInterfaceClasses() {
+        Set interfaces = new HashSet(CollectionUtils.collect(mixins.values(), new Transformer() {
+            public Object transform(Object o) {
+                return ((MixinInstance) o).getInterfaceClass();
+            }
+        }));
+        return interfaces;
+    }
+
     public Object invoke(Object proxy, Method method, Object[] args)
             throws Throwable {
         Class interfaceClass = method.getDeclaringClass();
         if (interfaceClass != Object.class) {
-            Object prevThis = currentThis.get();
+            Object prevThis = Aspects.currentThis.get();
             try {
-                currentThis.set(proxy);
+                Aspects.currentThis.set(proxy);
                 MixinInstance interfaceInstance = getMixinForInterface(interfaceClass);
                 return interfaceInstance.invokeMethod(proxy, method, args);
             } finally {
-                currentThis.set(prevThis);
+                Aspects.currentThis.set(prevThis);
             }
         } else {
             // for methods defined on Object:
             // change all proxies into AspectInstances and the call this aspect instance
-            if(args != null) {
+            if (args != null) {
                 for (int i = 0; i < args.length; i++) {
                     Object arg = args[i];
-                    if(Aspects.isAspectObject(arg)) {
+                    if (Aspects.isAspectObject(arg)) {
                         args[i] = Aspects.getAspectInstance(arg);
                     }
                 }
@@ -175,6 +184,9 @@ public class AspectInstance implements InvocationHandler, Externalizable {
 
     public Set getAllInterceptors() {
         Set result = new HashSet();
+        if (constructionInterceptors != null) {
+            result.addAll(constructionInterceptors);
+        }
         for (Iterator mixinIterator = mixins.values().iterator(); mixinIterator.hasNext();) {
             MixinInstance mixinInstance = (MixinInstance) mixinIterator.next();
             Set allInterceptors = mixinInstance.getAllInterceptors();
@@ -211,6 +223,52 @@ public class AspectInstance implements InvocationHandler, Externalizable {
         result = mixinsList.hashCode();
         result = 29 * result + (classIdentifier != null ? classIdentifier.hashCode() : 0);
         return result;
+    }
+
+    public class ConstructionInvocationImpl implements ConstructionInvocation {
+        private Object proxy;
+        private Class interfaceClass;
+
+        public ConstructionInvocationImpl(Object proxy, Class interfaceClass) {
+            this.proxy = proxy;
+            this.interfaceClass = interfaceClass;
+        }
+
+        public Object getProxy() {
+            return proxy;
+        }
+
+        public Object getTarget() {
+            return Aspects.getTarget(proxy, interfaceClass);
+        }
+
+        public void setTarget(Object target) {
+            Aspects.setTarget(proxy, interfaceClass, target);
+        }
+    }
+
+    public Object getProxy() {
+        Object proxy = createProxy();
+        if (constructionInterceptors != null) {
+            Object prevThis = Aspects.currentThis.get();
+            try {
+                Aspects.currentThis.set(proxy);
+                for (Iterator iterator = constructionInterceptors.iterator(); iterator.hasNext();) {
+                    ConstructionInterceptor constructionInterceptor = (ConstructionInterceptor) iterator.next();
+                    Set interfaceClasses = getInterfaceClasses();
+                    for (Iterator interfaceIterator = interfaceClasses.iterator(); interfaceIterator.hasNext();) {
+                        Class interfaceClass = (Class) interfaceIterator.next();
+                        if (constructionInterceptor.interceptsConstructor(interfaceClass)) {
+                            proxy = constructionInterceptor.construct(new ConstructionInvocationImpl(proxy, interfaceClass));
+                        }
+                    }
+                }
+            } finally {
+                constructionInterceptors = null;
+                Aspects.currentThis.set(prevThis);
+            }
+        }
+        return proxy;
     }
 
     public String toString() {
