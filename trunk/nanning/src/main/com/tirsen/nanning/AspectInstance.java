@@ -6,19 +6,18 @@
  */
 package com.tirsen.nanning;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import org.apache.commons.lang.builder.ToStringBuilder;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 
 /**
  * TODO document AspectInstance
  *
- * <!-- $Id: AspectInstance.java,v 1.15 2002-11-30 22:51:45 tirsen Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.16 2002-12-03 17:04:35 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.15 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.16 $
  */
 class AspectInstance implements InvocationHandler {
     private static final Method OBJECT_EQUALS_METHOD;
@@ -38,84 +37,21 @@ class AspectInstance implements InvocationHandler {
 
     static ThreadLocal currentThis = new ThreadLocal();
 
-    class InvocationImpl implements Invocation {
-        private int index = -1;
-        private final Method method;
-        private final Object[] args;
-        private final SideAspectInstance sideAspectInstance;
-
-        public InvocationImpl(Method method, Object[] args, SideAspectInstance interfaceInstance) {
-            this.method = method;
-            this.args = args;
-            this.sideAspectInstance = interfaceInstance;
-        }
-
-        public Object invokeNext() throws Throwable {
-            index++;
-            Interceptor[] interceptors = sideAspectInstance.getInterceptorsForMethod(method);
-            if (index < interceptors.length) {
-                return interceptors[index].invoke(this);
-            } else {
-                try {
-                    return method.invoke(sideAspectInstance.getTarget(), args);
-                } catch (InvocationTargetException e) {
-                    throwRealException(e);
-                    throw e;
-                }
-            }
-        }
-
-        private void throwRealException(InvocationTargetException e) throws Exception {
-            Throwable realException = e.getTargetException();
-            if (realException instanceof Error) {
-                throw (Error) realException;
-            } else if (realException instanceof RuntimeException) {
-                throw (RuntimeException) realException;
-            } else {
-                throw (Exception) realException;
-            }
-        }
-
-        public Interceptor getInterceptor(int index) {
-            return sideAspectInstance.getAllInterceptors()[index];
-        }
-
-        public Object getTarget() {
-            return sideAspectInstance.getTarget();
-        }
-
-        public void setTarget(Object target) {
-            sideAspectInstance.setTarget(target);
-        }
-
-        public Object getProxy() {
-            return proxy;
-        }
-
-        public int getCurrentIndex() {
-            return index;
-        }
-
-        public int getNumberOfInterceptors() {
-            return sideAspectInstance.getAllInterceptors().length;
-        }
-
-        public Method getMethod() {
-            return method;
-        }
-
-        public Object[] getArgs() {
-            return args;
-        }
-    }
-
     public AspectInstance(AspectClass aspectClass, SideAspectInstance[] sideAspectInstances) {
         this.sideAspectInstances = sideAspectInstances;
         this.aspectClass = aspectClass;
     }
 
-    void setProxy(Object proxy) {
+    void init(Object proxy) {
         this.proxy = proxy;
+        invokeConstructor();
+    }
+
+    private void invokeConstructor() {
+        for (int i = 0; i < sideAspectInstances.length; i++) {
+            SideAspectInstance sideAspectInstance = sideAspectInstances[i];
+            sideAspectInstance.invokeConstructor(proxy);
+        }
     }
 
     public Object invoke(Object proxy, Method method, Object[] args)
@@ -128,8 +64,7 @@ class AspectInstance implements InvocationHandler {
                 SideAspectInstance interfaceInstance = getSideAspectInstance(interfaceClass);
                 // if it wasn't defined by any of the specified interfaces let's assume it's the default one (ie. index 0)
 
-                Invocation invocation = new InvocationImpl(method, args, interfaceInstance);
-                return invocation.invokeNext();
+                return interfaceInstance.invokeMethod(proxy, method, args);
             } finally {
                 currentThis.set(prevThis);
             }

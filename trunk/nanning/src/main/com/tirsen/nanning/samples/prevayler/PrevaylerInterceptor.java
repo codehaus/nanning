@@ -9,43 +9,92 @@ import java.lang.reflect.Method;
  * TODO document PrevaylerInterceptor
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class PrevaylerInterceptor
-        implements SingletonInterceptor, FilterMethodsInterceptor, DefinitionAwareInterceptor
-{
+        implements SingletonInterceptor, FilterMethodsInterceptor, DefinitionAwareInterceptor, ConstructionInterceptor {
     private ThreadLocal inTransaction = new ThreadLocal();
-    private Class commandClass;
+    private Class constructCommandClass;
+    private Class invokeCommandClass;
     private Prevayler prevayler;
 
     public void setInterceptorDefinition(InterceptorDefinition interceptorDefinition) {
-        try {
-            setCommandClass(Class.forName((String) interceptorDefinition.getAttribute("commandClass")));
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+        String constructCommandClassName = (String) interceptorDefinition.getAttribute("constructCommandClass");
+        if (constructCommandClassName != null) {
+            try {
+                setConstructCommandClass(Class.forName(constructCommandClassName));
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
         }
-        setPrevayler((Prevayler) interceptorDefinition.getAttribute("prevayler"));
+        String invokeCommandClassName = (String) interceptorDefinition.getAttribute("invokeCommandClass");
+        if (invokeCommandClassName != null) {
+            try {
+                setInvokeCommandClass(Class.forName(invokeCommandClassName));
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        Prevayler prevayler = (Prevayler) interceptorDefinition.getAttribute("prevayler");
+        if (prevayler != null) {
+            setPrevayler(prevayler);
+        }
     }
 
-    public void setCommandClass(Class commandClass) {
-        this.commandClass = commandClass;
+    public void setConstructCommandClass(Class constructCommandClass) {
+        this.constructCommandClass = constructCommandClass;
+    }
+
+    public void setInvokeCommandClass(Class invokeCommandClass) {
+        this.invokeCommandClass = invokeCommandClass;
     }
 
     public void setPrevayler(Prevayler prevayler) {
         this.prevayler = prevayler;
     }
 
+    public boolean interceptsConstructor(Class interfaceClass) {
+        return Attributes.hasAttribute(interfaceClass, "instantiation-is-prevayler-command");
+    }
+
     public boolean interceptsMethod(Method method) {
         return Attributes.hasAttribute(method, "prevayler-command");
     }
 
-    public Object invoke(Invocation invocation) throws Throwable {
-        if(!isInTransaction()) {
-            InvocationCommand command = (InvocationCommand) commandClass.newInstance();
-            command.setInvocation(invocation);
-            return prevayler.executeCommand(command);
+    public void construct(ConstructionInvocation invocation) {
+        if (!isInTransaction()) {
+            enterTransaction();
+            try {
+                ConstructCommand command = (ConstructCommand) constructCommandClass.newInstance();
+                command.setInvocation(invocation);
+                prevayler.executeCommand(command);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            } finally {
+                exitTransaction();
+            }
         }
-        else {
+    }
+
+    private void exitTransaction() {
+        inTransaction.set(null);
+    }
+
+    private void enterTransaction() {
+        inTransaction.set(inTransaction); // any non-null object will do really
+    }
+
+    public Object invoke(Invocation invocation) throws Throwable {
+        if (!isInTransaction()) {
+            enterTransaction();
+            try {
+                InvocationCommand command = (InvocationCommand) invokeCommandClass.newInstance();
+                command.setInvocation(invocation);
+                return prevayler.executeCommand(command);
+            } finally {
+                exitTransaction();
+            }
+        } else {
             return invocation.invokeNext();
         }
     }

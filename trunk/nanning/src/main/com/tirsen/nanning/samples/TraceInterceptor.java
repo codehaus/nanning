@@ -6,7 +6,7 @@
  */
 package com.tirsen.nanning.samples;
 
-import com.tirsen.nanning.Interceptor;
+import com.tirsen.nanning.MethodInterceptor;
 import com.tirsen.nanning.Invocation;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
@@ -14,12 +14,12 @@ import org.apache.commons.logging.Log;
 /**
  * TODO document TraceInterceptor
  *
- * <!-- $Id: TraceInterceptor.java,v 1.1 2002-11-18 20:56:30 tirsen Exp $ -->
+ * <!-- $Id: TraceInterceptor.java,v 1.2 2002-12-03 17:05:15 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.2 $
  */
-public class TraceInterceptor implements Interceptor
+public class TraceInterceptor implements MethodInterceptor
 {
     public Object invoke(Invocation invocation) throws Throwable
     {

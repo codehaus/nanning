@@ -12,12 +12,12 @@ package com.tirsen.nanning;
  *
  * TODO document DefinitionAwareInterceptor
  *
- * <!-- $Id: DefinitionAwareInterceptor.java,v 1.1 2002-11-30 18:23:56 tirsen Exp $ -->
+ * <!-- $Id: DefinitionAwareInterceptor.java,v 1.2 2002-12-03 17:04:50 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.2 $
  */
 
-public interface DefinitionAwareInterceptor extends Interceptor {
+public interface DefinitionAwareInterceptor extends MethodInterceptor {
     void setInterceptorDefinition(InterceptorDefinition interceptorDefinition);
 }
