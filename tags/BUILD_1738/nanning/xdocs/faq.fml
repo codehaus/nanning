@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faqs title="Frequently Asked Questions">
+
+    <part id="build">
+        <title>Building</title>
+
+        <faq id="how-build">
+            <question>
+                How do I build Nanning?
+            </question>
+            <answer>
+                <p>
+                    Check out the sources from
+                    <a href="file:///home/tirsen/projects/nanning/target/docs/cvs-usage.html">here</a>.
+                    Build it with <a href="http://maven.apache.org/">Maven</a>.
+                </p>
+            </answer>
+        </faq>
+    </part>
+
+    <part id="install">
+        <title>Installation</title>
+
+        <faq id="how-install">
+            <question>
+                How do I install Nanning?
+            </question>
+            <answer>
+                <p>
+                    Like any other library that comes in a jar. Just make sure it's on your application's classpath.
+                </p>
+            </answer>
+        </faq>
+    </part>
+</faqs>

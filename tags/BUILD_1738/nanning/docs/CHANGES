@@ -1,0 +1,50 @@
+0.9
+ - Rewrote and expanded the Pointcut-framework, see P-class.
+ - Renamed MixinInstance to Mixin.
+ - Changed root-package from com.tirsen to org.codehaus.
+ - Moved all frameworks out of the core.
+ - Removed all dependencies (except compile-time attribute-dependencies) from core.
+ - Various additional clean up.
+
+0.8
+ - Moved some frameworks out of core Nanning.
+ - Support for inner classes in attributes, somewhat refactored.
+ - Changed pointcut model a little bit.
+ - Remote framework now supports marshalling nested objects.
+
+0.7
+ Internal release only...
+
+0.6
+ - Initial implementation of new XML format based on AspectSystem.
+ - Large set of smaller refactorings and bugfixes.
+
+0.5
+ - Reimplemented AspectSystem with better abstractions (and much better performance).
+ - Profiler sample from Khalil Bouhamza.
+
+Prevayler framework:
+ - Reimplemented optional Object ID support.
+
+0.4
+
+Prevayler framework:
+ - Introduced ClockedTransaction
+ - Refactored CountingPrevayler and so on into FilterPrevayler
+ - Added some sanity asserts for common missusages of CheckpointPrevayler
+
+
+0.3:
+Prevayler framework:
+ - Switched to CheckpointPrevayler and Prevayler 2.0. Object IDs removed.
+
+0.2:
+ - Almost complete rewrite of 0.1 codebase.
+ - Completely rewritten simplified Core.
+ - Several optimizations in Attributes.
+ - New experimental configuration mechanism (Config) with Aspect/J inspired semantics.
+ - Transparent persistence in Prevayler sample.
+ - Remote method invocation in Remote sample.
+ - Contract, Cache, Trace samples rewritten.
+ - Serialization support for aspected objects (AspectInstance).
+ - Many, many, many bug-fixes.
