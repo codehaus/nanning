@@ -6,35 +6,41 @@
  */
 package com.tirsen.nanning.samples;
 
-import com.tirsen.nanning.MethodInterceptor;
 import com.tirsen.nanning.Invocation;
-import org.apache.commons.logging.LogFactory;
+import com.tirsen.nanning.MethodInterceptor;
+import com.tirsen.nanning.SingletonInterceptor;
 import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * TODO document TraceInterceptor
  *
- * <!-- $Id: TraceInterceptor.java,v 1.2 2002-12-03 17:05:15 lecando Exp $ -->
+ * <!-- $Id: TraceInterceptor.java,v 1.3 2002-12-03 17:11:54 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
-public class TraceInterceptor implements MethodInterceptor
+public class TraceInterceptor implements MethodInterceptor, SingletonInterceptor
 {
     public Object invoke(Invocation invocation) throws Throwable
     {
+        StopWatch watch = new StopWatch();
+        watch.start();
+
         Log log = LogFactory.getLog(invocation.getTarget().getClass());
         StringBuffer methodCallMessage = new StringBuffer();
         methodCallMessage.append(invocation.getMethod().getName());
         methodCallMessage.append('(');
         Object[] args = invocation.getArgs();
-        for (int i = 0; i < args.length; i++)
-        {
-            Object arg = args[i];
-            methodCallMessage.append(arg);
-            if (i + 1 < args.length)
+        if (args != null) {
+            for (int i = 0; i < args.length; i++)
             {
-                methodCallMessage.append(", ");
+                Object arg = args[i];
+                methodCallMessage.append(arg);
+                if (i + 1 < args.length)
+                {
+                    methodCallMessage.append(", ");
+                }
             }
         }
         methodCallMessage.append(')');
@@ -47,12 +53,14 @@ public class TraceInterceptor implements MethodInterceptor
         }
         catch (Throwable e)
         {
-            log.error("<<< " + methodCallMessage + " threw exception", e);
+            watch.stop();
+            log.error("<<< " + methodCallMessage + " threw exception, took " + watch.getTime() + " ms", e);
             throw e;
         }
         finally
         {
-            log.debug("<<< " + methodCallMessage + " = " + result);
+            watch.stop();
+            log.debug("<<< " + methodCallMessage + ", took " + watch.getTime() + " ms, result " + result);
         }
     }
 }
