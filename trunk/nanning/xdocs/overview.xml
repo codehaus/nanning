@@ -19,6 +19,11 @@
                 </p>
                 <ul>
                     <li>
+                        An aspected object consists of a set of mixins. A an interface, a target-object and a set of
+                        interceptors (advises on method-calls), these interceptors intercept calls on the interface on
+                        it's way to the target.
+                    </li>
+                    <li>
                         An aspect consists of an interface, a target-object and a set of interceptors
                         (advises on method-calls), these interceptors intercept calls on the interface on
                         it's way to the target.
@@ -47,6 +52,9 @@
                         <a href="http://jakarta.apache.org/commons/sandbox/jelly">Jelly-script</a>.
                     </li>
                     <li>
+                        Method-selectors that selects what methods an interceptor should intercept.
+                    </li>
+                    <li>
                         Super-simple implementation. Really! Anybody can do it! Even me!
                     </li>
                 </ul>
@@ -61,7 +69,8 @@
                         You can only advise on method-call pointcuts which is far from the power that
                         for example <a href="http://www.aspectj.org">AspectJ</a> offers. On the other hand
                         compared to the complexity of AspectJ Nanning is much, much simpler. In reality
-                        many of the benefits of AOP can be reached with this simple construct.
+                        many of the benefits of AOP can be reached with this simple construct. At the moment there is
+                        also some experimental support for intercepting object-instantiation.
                     </li>
                     <li>
                         All your objects need to have interface and implementation separated, that is all
@@ -69,7 +78,7 @@
                         implemented by the actual class. In contrast to EJB your implementation must
                         implement the interface, which also forces your implementation to stay in sync
                         with your interface. (This is actually good, because the java-compiler will choke
-                        if they're out sync before your code even hits unit-tests.)
+                        if they're out of sync before your code even hits unit-tests.)
                     </li>
                     <li>
                         You'll get indeterministic effects if your interface has a method with same name as
@@ -86,9 +95,6 @@
                 <ul>
                     <li>
                         No support for inheriting interceptors by inheriting interfaces.
-                    </li>
-                    <li>
-                        Method-selectors that selects what methods an interceptor should intercept.
                     </li>
                     <li>
                         A mega-cool logo.
