@@ -22,10 +22,10 @@ import com.tirsen.nanning.attribute.AttributesTestClass;
 /**
  * TODO document AttributesTest
  *
- * <!-- $Id: AttributesTest.java,v 1.1 2003-01-12 13:25:40 tirsen Exp $ -->
+ * <!-- $Id: AttributesTest.java,v 1.2 2003-01-19 12:09:04 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class AttributesTest extends TestCase {
     private File targetDir;
@@ -44,6 +44,25 @@ public class AttributesTest extends TestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
         Attributes.removeSearchPath(searchPath);
+    }
+
+    public void testClassAttributes() throws IOException, NoSuchMethodException, NoSuchFieldException {
+        ClassAttributes classAttributes = Attributes.getAttributes(AttributesTestClass.class);
+        assertEquals("classValue", classAttributes.getAttribute("classAttribute"));
+        assertTrue(classAttributes.hasAttribute("classAttribute"));
+        assertFalse(classAttributes.hasAttribute("stupidAttribute"));
+        Field field = AttributesTestClass.class.getDeclaredField("field");
+        assertEquals("fieldValue", classAttributes.getAttribute(field, "fieldAttribute"));
+        assertTrue(classAttributes.hasAttribute(field, "fieldAttribute"));
+        assertFalse(classAttributes.hasAttribute(field, "stupidAttribute"));
+        Method method = AttributesTestClass.class.getMethod("method", null);
+        assertEquals("methodValue", classAttributes.getAttribute(method, "methodAttribute"));
+        assertTrue(classAttributes.hasAttribute(method, "methodAttribute"));
+        assertFalse(classAttributes.hasAttribute(method, "stupidAttribute"));
+        Method argMethod = AttributesTestClass.class.getMethod("method", new Class[]{String.class, String.class});
+        assertEquals("argMethodValue", classAttributes.getAttribute(argMethod, "methodAttribute"));
+        assertTrue(classAttributes.hasAttribute(argMethod, "methodAttribute"));
+        assertFalse(classAttributes.hasAttribute(argMethod, "stupidAttribute"));
     }
 
     public void testAttributes() throws IOException, NoSuchMethodException, NoSuchFieldException {
