@@ -18,13 +18,23 @@ import java.util.List;
 /**
  * TODO document AspectInstance
  *
- * <!-- $Id: AspectInstance.java,v 1.12 2002-11-18 20:56:30 tirsen Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.13 2002-11-22 17:22:09 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.12 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.13 $
  */
 class AspectInstance implements InvocationHandler
 {
+    private static final Method OBJECT_EQUALS_METHOD;
+
+    static {
+        try {
+            OBJECT_EQUALS_METHOD = Object.class.getMethod("equals", new Class[] { Object.class });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     static ThreadLocal currentThis = new ThreadLocal();
 
     class InvocationImpl implements Invocation
@@ -149,8 +159,11 @@ class AspectInstance implements InvocationHandler
         }
         else
         {
-            // I take care of all calls to Object (such as equals, toString and so on)
-            return method.invoke(this, args);
+            if(method.equals("equals") && Aspects.isAspectObject(args[0])) {
+                args[0] = Aspects.getClassTarget(args[0]);
+            }
+            // main-target take care of all calls to Object (such as equals, toString and so on)
+            return method.invoke(sideAspectInstances[0].getTarget(), args);
         }
     }
 
@@ -160,7 +173,7 @@ class AspectInstance implements InvocationHandler
         return interfaceInstance.getTarget();
     }
 
-    Interceptor[] getProxyInterceptors()
+    Interceptor[] getClassInterceptors()
     {
         // the actual class-specific interface-instance is at the first position
         return sideAspectInstances[0].getAllInterceptors();
@@ -190,5 +203,18 @@ class AspectInstance implements InvocationHandler
                 .append("interface", defaultInterfaceInstance.getInterfaceClass().getName())
                 .append("target", defaultInterfaceInstance.getTarget())
                 .toString();
+    }
+
+    public AspectClass getAspectClass() {
+        return aspectClass;
+    }
+
+    public Object[] getTargets() {
+        Object[] targets = new Object[sideAspectInstances.length];
+        for (int i = 0; i < sideAspectInstances.length; i++) {
+            SideAspectInstance sideAspectInstance = sideAspectInstances[i];
+            targets[i] = sideAspectInstance.getTarget();
+        }
+        return targets;
     }
 }

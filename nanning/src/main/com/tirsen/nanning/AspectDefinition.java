@@ -12,10 +12,10 @@ import java.lang.reflect.Method;
 /**
  * Defines an interface that's to be added to an aspected object.
  *
- * <!-- $Id: AspectDefinition.java,v 1.5 2002-11-18 20:56:30 tirsen Exp $ -->
+ * <!-- $Id: AspectDefinition.java,v 1.6 2002-11-22 17:22:09 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.5 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.6 $
  */
 public class AspectDefinition
 {
@@ -69,6 +69,10 @@ public class AspectDefinition
     public void setTarget(Class targetClass)
     {
         this.targetClass = targetClass;
+    }
+
+    public Class getTarget() {
+        return targetClass;
     }
 
     SideAspectInstance createAspectInstance(Interceptor[] topInterceptors)

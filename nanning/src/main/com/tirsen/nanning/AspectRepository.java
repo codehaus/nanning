@@ -23,10 +23,10 @@ import com.tirsen.nanning.jelly.AspectTagLibrary;
 /**
  * TODO document AspectRepository
  *
- * <!-- $Id: AspectRepository.java,v 1.4 2002-11-03 17:14:28 tirsen Exp $ -->
+ * <!-- $Id: AspectRepository.java,v 1.5 2002-11-22 17:22:09 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.4 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.5 $
  */
 public class AspectRepository
 {
@@ -129,5 +129,9 @@ public class AspectRepository
             this.aspectClasses.putAll(configuredRepository.aspectClasses);
             this.aspectDefinitions.putAll(configuredRepository.aspectDefinitions);
         }
+    }
+
+    public Collection getClasses() {
+        return aspectClasses.values();
     }
 }
