@@ -23,10 +23,10 @@ import com.tirsen.nanning.jelly.AspectTagLibrary;
 /**
  * TODO document AspectRepository
  *
- * <!-- $Id: AspectRepository.java,v 1.7 2002-11-27 13:18:01 lecando Exp $ -->
+ * <!-- $Id: AspectRepository.java,v 1.8 2002-12-03 13:55:24 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class AspectRepository  
 {
@@ -46,7 +46,9 @@ public class AspectRepository
     {
         InterceptorDefinition interceptorDefinition =
                 (InterceptorDefinition) interceptorDefinitions.get(interceptorClass);
-        assert interceptorDefinition != null : "no such interceptor defined: " + interceptorClass;
+        if(interceptorDefinition == null) {
+            throw new IllegalArgumentException("no such interceptor defined: " + interceptorClass);
+        }
         return interceptorDefinition;
     }
 

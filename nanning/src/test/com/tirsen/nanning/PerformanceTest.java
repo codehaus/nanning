@@ -6,19 +6,15 @@
  */
 package com.tirsen.nanning;
 
-import com.tirsen.nanning.AspectClass;
-import com.tirsen.nanning.Impl;
-import com.tirsen.nanning.Intf;
-import com.tirsen.nanning.NullInterceptor;
 import junit.framework.TestCase;
 
 /**
  * TODO document PerformanceTest
  *
- * <!-- $Id: PerformanceTest.java,v 1.5 2002-12-03 07:50:16 tirsen Exp $ -->
+ * <!-- $Id: PerformanceTest.java,v 1.6 2002-12-03 13:55:24 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.5 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.6 $
  */
 public class PerformanceTest extends TestCase
 {
@@ -92,8 +88,8 @@ public class PerformanceTest extends TestCase
 
     public void testInstantiation() throws IllegalAccessException, InstantiationException
     {
-        int timesBiggerTolerance = 41;
-        int timesSlowerTolerance = 4;
+        int timesBiggerTolerance = 69;
+        int timesSlowerTolerance = 866;
 
         int numberOfInstances = 10000;
 

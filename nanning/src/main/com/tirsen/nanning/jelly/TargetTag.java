@@ -12,10 +12,10 @@ import org.apache.commons.jelly.XMLOutput;
 /**
  * TODO document TargetTag
  *
- * <!-- $Id: TargetTag.java,v 1.1 2002-11-03 19:05:33 tirsen Exp $ -->
+ * <!-- $Id: TargetTag.java,v 1.2 2002-12-03 13:55:24 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.2 $
  */
 public class TargetTag extends TagSupport
 {
@@ -23,6 +23,6 @@ public class TargetTag extends TagSupport
     {
         Class targetClass =
                 Thread.currentThread().getContextClassLoader().loadClass(getBodyText().trim());
-        ((AspectTag) getParent()).getAspectDefinition().setTarget(targetClass);
+        ((AspectTag) getParent()).setTarget(targetClass);
     }
 }

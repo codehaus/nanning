@@ -1,17 +1,15 @@
 package com.tirsen.nanning.samples.prevayler;
 
 import com.tirsen.nanning.*;
-import com.tirsen.nanning.samples.prevayler.Identity;
+import org.prevayler.Prevayler;
 
 import java.lang.reflect.Method;
-
-import org.prevayler.Prevayler;
 
 /**
  * TODO document PrevaylerInterceptor
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class PrevaylerInterceptor
         implements SingletonInterceptor, FilterMethodsInterceptor, DefinitionAwareInterceptor
