@@ -7,6 +7,8 @@
 package org.codehaus.nanning.definition;
 
 import java.lang.reflect.Method;
+import java.util.Set;
+import java.util.List;
 
 import org.codehaus.nanning.definition.AspectClass;
 import org.codehaus.nanning.definition.InterceptorDefinition;
@@ -17,10 +19,10 @@ import junit.framework.TestCase;
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: InterceptorTest.java,v 1.1 2003-07-04 10:53:57 lecando Exp $ -->
+ * <!-- $Id: InterceptorTest.java,v 1.2 2003-07-12 16:48:16 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class InterceptorTest extends TestCase {
     public void testInterceptor() throws IllegalAccessException, InstantiationException, NoSuchMethodException {
@@ -33,7 +35,8 @@ public class InterceptorTest extends TestCase {
         Intf intf = (Intf) aspectClass.newInstance();
         IntfImpl impl = (IntfImpl) Aspects.getTarget(intf, Intf.class);
 
-        Interceptor[] interceptors = Aspects.getInterceptors(intf, Intf.class);
+        Set interceptorsSet = Aspects.getAspectInstance(intf).getMixinForInterface(Intf.class).getAllInterceptors();
+        Interceptor[] interceptors = (Interceptor[]) interceptorsSet.toArray(new Interceptor[interceptorsSet.size()]);
         MockInterceptor interceptor = (MockInterceptor) interceptors[0];
         MockInterceptor interceptor2 = (MockInterceptor) interceptors[1];
 
@@ -68,13 +71,17 @@ public class InterceptorTest extends TestCase {
         aspectClass.setTarget(IntfImpl.class);
 
         Object proxy = aspectClass.newInstance();
-        Interceptor singletonInterceptor = Aspects.getInterceptors(proxy, Intf.class.getMethod("call", null))[0];
-        Interceptor interceptor = Aspects.getInterceptors(proxy, Intf.class.getMethod("call", null))[1];
+        List interceptors = Aspects.getAspectInstance(proxy).getInterceptorsForMethod(Intf.class.getMethod("call", null));
+        Interceptor singletonInterceptor = ((MethodInterceptor[]) interceptors.toArray(new MethodInterceptor[interceptors.size()]))[0];
+        List interceptors1 = Aspects.getAspectInstance(proxy).getInterceptorsForMethod(Intf.class.getMethod("call", null));
+        Interceptor interceptor = ((MethodInterceptor[]) interceptors1.toArray(new MethodInterceptor[interceptors1.size()]))[1];
         assertTrue(singletonInterceptor instanceof SingletonInterceptor);
 
         Object proxy2 = aspectClass.newInstance();
-        Interceptor singletonInterceptor2 = Aspects.getInterceptors(proxy2, Intf.class.getMethod("call", null))[0];
-        Interceptor interceptor2 = Aspects.getInterceptors(proxy2, Intf.class.getMethod("call", null))[1];
+        List interceptors2 = Aspects.getAspectInstance(proxy2).getInterceptorsForMethod(Intf.class.getMethod("call", null));
+        Interceptor singletonInterceptor2 = ((MethodInterceptor[]) interceptors2.toArray(new MethodInterceptor[interceptors2.size()]))[0];
+        List interceptors3 = Aspects.getAspectInstance(proxy2).getInterceptorsForMethod(Intf.class.getMethod("call", null));
+        Interceptor interceptor2 = ((MethodInterceptor[]) interceptors3.toArray(new MethodInterceptor[interceptors3.size()]))[1];
         assertSame("singleton interceptor instantiated twice", singletonInterceptor, singletonInterceptor2);
         assertNotSame("ordinary interceptor not instantiated twice", interceptor, interceptor2);
     }

@@ -19,13 +19,13 @@ public class InheritanceTest extends TestCase {
 
     public void testInheritance() {
         AspectInstance instance = new AspectInstance();
-        MixinInstance mixin = new MixinInstance(InheritedIntf.class, new InheritedImpl());
+        Mixin mixin = new Mixin(InheritedIntf.class, new InheritedImpl());
         mixin.addInterceptor(new MockInterceptor());
         instance.addMixin(mixin);
 
         InheritedIntf proxy = (InheritedIntf) instance.getProxy();
 
-        MockInterceptor classInterceptor = (MockInterceptor) Aspects.getInterceptors(proxy).get(0);
+        MockInterceptor classInterceptor = (MockInterceptor) Aspects.getInterceptors(proxy).iterator().next();
         classInterceptor.expectTarget(Aspects.getTarget(proxy, Intf.class));
 
         proxy.call();

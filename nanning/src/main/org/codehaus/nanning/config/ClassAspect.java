@@ -1,7 +1,7 @@
 package org.codehaus.nanning.config;
 
 import org.codehaus.nanning.AspectInstance;
-import org.codehaus.nanning.MixinInstance;
+import org.codehaus.nanning.Mixin;
 
 public class ClassAspect extends AspectSystem implements Aspect {
     private Class classIdentifier;

@@ -1,7 +1,7 @@
 package org.codehaus.nanning.contract;
 
 import org.codehaus.nanning.AspectInstance;
-import org.codehaus.nanning.MixinInstance;
+import org.codehaus.nanning.Mixin;
 import org.codehaus.nanning.attribute.AbstractAttributesTest;
 
 import java.net.MalformedURLException;
@@ -10,12 +10,12 @@ import java.net.MalformedURLException;
  * TODO document ContractInterceptorTest
  *
  * @author <a href="mailto:jon_tirsen@yahoo.org">Jon Tirs?n</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class ContractInterceptorTest extends AbstractAttributesTest {
     public void test() throws MalformedURLException {
         AspectInstance instance = new AspectInstance();
-        instance.addMixin(new MixinInstance(ContractIntf.class, new ContractImpl()));
+        instance.addMixin(new Mixin(ContractIntf.class, new ContractImpl()));
         instance.addInterceptor(new ContractInterceptor());
 
         ContractIntf contract = (ContractIntf) instance.getProxy();

@@ -10,15 +10,15 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 import org.codehaus.nanning.MethodInterceptor;
-import org.codehaus.nanning.MixinInstance;
+import org.codehaus.nanning.Mixin;
 
 /**
  * Defines an interface that's to be added to an aspected object.
  *
- * <!-- $Id: AspectDefinition.java,v 1.1 2003-07-04 10:53:57 lecando Exp $ -->
+ * <!-- $Id: AspectDefinition.java,v 1.2 2003-07-12 16:48:16 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
  * @deprecated please use the new {@link org.codehaus.nanning.config.AspectSystem} framework instead.
  */
@@ -71,7 +71,7 @@ public class AspectDefinition {
         this.targetClass = targetClass;
     }
 
-    MixinInstance createMixinInstance()
+    Mixin createMixinInstance()
             throws IllegalAccessException, InstantiationException {
         if (targetClass != null) {
             return newInstance(targetClass.newInstance());
@@ -84,10 +84,10 @@ public class AspectDefinition {
         return interfaceClass;
     }
 
-    MixinInstance newInstance(Object target) {
+    Mixin newInstance(Object target) {
         checkTarget(target);
 
-        MixinInstance mixinInstance = new MixinInstance();
+        Mixin mixinInstance = new Mixin();
         mixinInstance.setInterfaceClass(getInterfaceClass());
 
         for (Iterator iterator = interceptorDefinitions.iterator(); iterator.hasNext();) {

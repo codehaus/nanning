@@ -2,7 +2,7 @@ package org.codehaus.nanning.config;
 
 import org.codehaus.nanning.attribute.Attributes;
 import org.codehaus.nanning.AspectInstance;
-import org.codehaus.nanning.MixinInstance;
+import org.codehaus.nanning.Mixin;
 
 import java.lang.reflect.Method;
 
@@ -17,7 +17,7 @@ public class AttributePointcut extends Pointcut {
         return attribute;
     }
 
-    public boolean adviseMethod(AspectInstance instance, MixinInstance mixin, Method method) {
+    public boolean adviseMethod(AspectInstance instance, Mixin mixin, Method method) {
         return Attributes.hasAttribute(method, attribute);
     }
 }

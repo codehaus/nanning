@@ -2,7 +2,7 @@ package org.codehaus.nanning.locking;
 
 import junit.framework.TestCase;
 import org.codehaus.nanning.AspectInstance;
-import org.codehaus.nanning.MixinInstance;
+import org.codehaus.nanning.Mixin;
 import org.codehaus.nanning.config.P;
 
 public class PessimisticLockingAspectTest extends TestCase {
@@ -19,7 +19,7 @@ public class PessimisticLockingAspectTest extends TestCase {
 
     private AspectInstance createLockAspectedInstance(Interface target) {
         AspectInstance instance = new AspectInstance();
-        instance.addMixin(new MixinInstance(Interface.class, target));
+        instance.addMixin(new Mixin(Interface.class, target));
         lockAspect.introduce(instance);
         lockAspect.advise(instance);
         return instance;
@@ -36,7 +36,7 @@ public class PessimisticLockingAspectTest extends TestCase {
     public void testIntroduce() {
         AspectInstance instance = createLockAspectedInstance(null);
         assertEquals(2, instance.getMixins().size());
-        MixinInstance mixin = instance.getMixinForInterface(Lockable.class);
+        Mixin mixin = instance.getMixinForInterface(Lockable.class);
         assertNotNull(mixin);
         assertNotNull(mixin.getTarget());
 

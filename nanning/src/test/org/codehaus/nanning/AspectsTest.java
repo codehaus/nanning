@@ -11,10 +11,10 @@ import junit.framework.TestCase;
 /**
  * TODO document AspectsTest
  *
- * <!-- $Id: AspectsTest.java,v 1.1 2003-07-04 10:54:00 lecando Exp $ -->
+ * <!-- $Id: AspectsTest.java,v 1.2 2003-07-12 16:48:16 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class AspectsTest extends TestCase {
 
@@ -27,7 +27,7 @@ public class AspectsTest extends TestCase {
 
     public void testSetTargetChangesTarget() {
         AspectInstance instance = new AspectInstance();
-        MixinInstance mixin = new MixinInstance(Intf.class, new IntfImpl());
+        Mixin mixin = new Mixin(Intf.class, new IntfImpl());
         instance.addMixin(mixin);
         Object proxy = instance.getProxy();
 
@@ -48,7 +48,7 @@ public class AspectsTest extends TestCase {
 
     public void testIsAndGetAspectInstanceWorkForReflectCreatedProxy() {
         AspectInstance instance = new AspectInstance();
-        instance.addMixin(new MixinInstance(Interface.class, null));
+        instance.addMixin(new Mixin(Interface.class, null));
         Interface o = (Interface) instance.getProxy();
         assertTrue(Aspects.isAspectObject(o));
     }

@@ -2,7 +2,7 @@ package org.codehaus.nanning.cache;
 
 import org.codehaus.nanning.attribute.AbstractAttributesTest;
 import org.codehaus.nanning.AspectInstance;
-import org.codehaus.nanning.MixinInstance;
+import org.codehaus.nanning.Mixin;
 import org.codehaus.nanning.cache.CacheInterceptor;
 
 import java.lang.reflect.Method;
@@ -23,7 +23,7 @@ public class CacheInterceptorTest extends AbstractAttributesTest {
 
     public void testIntercept() {
         AspectInstance aspectInstance = new AspectInstance();
-        MixinInstance mixin = new MixinInstance(CacheTestCalculations.class, null);
+        Mixin mixin = new Mixin(CacheTestCalculations.class, null);
         mixin.addInterceptor(someHeavyCalculationMethod, cacheInterceptor);
         aspectInstance.addMixin(mixin);
         mixin.setTarget(new CacheTestCalculations() {

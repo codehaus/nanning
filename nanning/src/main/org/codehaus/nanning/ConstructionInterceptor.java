@@ -9,5 +9,4 @@ package org.codehaus.nanning;
 
 public interface ConstructionInterceptor extends Interceptor {
     Object construct(ConstructionInvocation invocation);
-
 }

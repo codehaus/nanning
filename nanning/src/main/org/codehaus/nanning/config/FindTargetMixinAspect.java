@@ -2,7 +2,7 @@ package org.codehaus.nanning.config;
 
 import org.codehaus.nanning.AspectException;
 import org.codehaus.nanning.AspectInstance;
-import org.codehaus.nanning.MixinInstance;
+import org.codehaus.nanning.Mixin;
 
 public class FindTargetMixinAspect implements Aspect {
     private static final String DEFAULT_IMPLEMENTATION_SUFFIX = "Impl";
@@ -25,7 +25,7 @@ public class FindTargetMixinAspect implements Aspect {
             return;
         }
 
-        MixinInstance mixin = new MixinInstance();
+        Mixin mixin = new Mixin();
 
         Class interfaceClass = aspectInstance.getClassIdentifier();
         Class targetClass = findImpl(interfaceClass);

@@ -1,6 +1,6 @@
 package org.codehaus.nanning.config;
 
-import org.codehaus.nanning.MixinInstance;
+import org.codehaus.nanning.Mixin;
 import org.codehaus.nanning.AspectInstance;
 import org.codehaus.nanning.MethodInterceptor;
 import org.codehaus.nanning.Invocation;
@@ -27,7 +27,7 @@ public class PointcutTest extends AbstractAttributesTest {
 
     public void testIntroduceTruePointcut() {
         Pointcut allPointcut = new Pointcut() {
-            public boolean adviseMethod(AspectInstance instance, MixinInstance mixin, Method method) {
+            public boolean adviseMethod(AspectInstance instance, Mixin mixin, Method method) {
                 return true;
             }
 
@@ -37,7 +37,7 @@ public class PointcutTest extends AbstractAttributesTest {
         };
         AspectInstance instance = new AspectInstance();
         assertTrue(instance.getMixins().isEmpty());
-        MixinInstance mixin = new MixinInstance(Interface.class, null);
+        Mixin mixin = new Mixin(Interface.class, null);
         allPointcut.introduce(instance, mixin);
         assertFalse(instance.getMixins().isEmpty());
         assertSame(mixin, instance.getMixins().get(0));
@@ -45,13 +45,13 @@ public class PointcutTest extends AbstractAttributesTest {
 
     public void testAdviseFalsePointcut() {
         Pointcut falsePointcut = new Pointcut() {
-            public boolean adviseMethod(AspectInstance instance, MixinInstance mixin, Method method) {
+            public boolean adviseMethod(AspectInstance instance, Mixin mixin, Method method) {
                 return false;
             }
         };
 
         AspectInstance aspectInstance = new AspectInstance();
-        aspectInstance.addMixin(new MixinInstance(Interface.class, null));
+        aspectInstance.addMixin(new Mixin(Interface.class, null));
 
         assertEquals(0, aspectInstance.getAllInterceptors().size());
         falsePointcut.advise(aspectInstance, new MethodInterceptor() {
@@ -64,13 +64,13 @@ public class PointcutTest extends AbstractAttributesTest {
 
     public void testAdviseTruePointcut() {
         Pointcut truePointcut = new Pointcut() {
-            public boolean adviseMethod(AspectInstance instance, MixinInstance mixin, Method method) {
+            public boolean adviseMethod(AspectInstance instance, Mixin mixin, Method method) {
                 return true;
             }
         };
 
         AspectInstance aspectInstance = new AspectInstance();
-        aspectInstance.addMixin(new MixinInstance(Interface.class, null));
+        aspectInstance.addMixin(new Mixin(Interface.class, null));
 
         assertEquals(0, aspectInstance.getAllInterceptors().size());
         truePointcut.advise(aspectInstance, new MethodInterceptor() {
@@ -131,17 +131,17 @@ public class PointcutTest extends AbstractAttributesTest {
     }
 
     public void testIsMixinInterfaceSelectsMethods() {
-        assertTrue(P.isMixinInterface(Interface.class).adviseMethod(null, new MixinInstance(Interface.class, null), null));
-        assertFalse(P.isMixinInterface(InterfaceWithAttributes.class).adviseMethod(null, new MixinInstance(Interface.class, null), null));
+        assertTrue(P.isMixinInterface(Interface.class).adviseMethod(null, new Mixin(Interface.class, null), null));
+        assertFalse(P.isMixinInterface(InterfaceWithAttributes.class).adviseMethod(null, new Mixin(Interface.class, null), null));
     }
 
     public void testIsMixinInterfaceSelectsInstance() {
         AspectInstance instance = new AspectInstance();
-        instance.addMixin(new MixinInstance(Interface.class, null));
+        instance.addMixin(new Mixin(Interface.class, null));
         assertTrue(P.isMixinInterface(Interface.class).introduceOn(instance));
 
         instance = new AspectInstance();
-        instance.addMixin(new MixinInstance(InterfaceWithAttributes.class, null));
+        instance.addMixin(new Mixin(InterfaceWithAttributes.class, null));
         assertFalse(P.isMixinInterface(Interface.class).introduceOn(instance));
     }
 
@@ -149,12 +149,12 @@ public class PointcutTest extends AbstractAttributesTest {
         Pointcut pointcut = P.and(P.methodName("method.*"), P.not(P.isMixinInterface(Interface.class)));
 
         AspectInstance instance = new AspectInstance();
-        MixinInstance mixin = new MixinInstance(Interface.class, null);
+        Mixin mixin = new Mixin(Interface.class, null);
         instance.addMixin(mixin);
         assertFalse(pointcut.adviseMethod(instance, mixin, method));
 
         instance = new AspectInstance();
-        mixin = new MixinInstance(InterfaceWithAttributes.class, null);
+        mixin = new Mixin(InterfaceWithAttributes.class, null);
         instance.addMixin(mixin);
         assertTrue(pointcut.adviseMethod(instance, mixin, methodWithAttribute));
         assertTrue(pointcut.adviseMethod(instance, mixin, methodWithoutAttribute));

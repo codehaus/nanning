@@ -1,14 +1,13 @@
 package org.codehaus.nanning.config;
 
-import org.codehaus.nanning.MixinInstance;
-import org.codehaus.nanning.AspectInstance;
-import org.codehaus.nanning.MethodInterceptor;
-import org.codehaus.nanning.AspectException;
-
+import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ArrayList;
-import java.lang.reflect.Method;
+
+import org.codehaus.nanning.AspectException;
+import org.codehaus.nanning.AspectInstance;
+import org.codehaus.nanning.MethodInterceptor;
+import org.codehaus.nanning.Mixin;
 
 public abstract class Pointcut {
 
@@ -33,7 +32,7 @@ public abstract class Pointcut {
     public void advise(AspectInstance instance, MethodInterceptor interceptor, Class interceptorClass) {
         List mixins = instance.getMixins();
         for (Iterator iterator = mixins.iterator(); iterator.hasNext();) {
-            MixinInstance mixin = (MixinInstance) iterator.next();
+            Mixin mixin = (Mixin) iterator.next();
             Method[] methods = mixin.getAllMethods();
             for (int i = 0; i < methods.length; i++) {
                 Method method = methods[i];
@@ -62,7 +61,7 @@ public abstract class Pointcut {
      * @param method
      * @return
      */
-    public boolean adviseMethod(AspectInstance instance, MixinInstance mixin, Method method) {
+    public boolean adviseMethod(AspectInstance instance, Mixin mixin, Method method) {
         return false;
     }
 
@@ -76,7 +75,7 @@ public abstract class Pointcut {
         return false;
     }
 
-    public void introduce(AspectInstance instance, MixinInstance mixin) {
+    public void introduce(AspectInstance instance, Mixin mixin) {
         if (introduceOn(instance)) {
             instance.addMixin(mixin);
         }

@@ -6,18 +6,22 @@
  */
 package org.codehaus.nanning.definition;
 
+import java.lang.reflect.Method;
+import java.util.List;
+
 import org.codehaus.nanning.definition.AspectClass;
 import org.codehaus.nanning.definition.AspectDefinition;
 import org.codehaus.nanning.Aspects;
+import org.codehaus.nanning.MethodInterceptor;
 import junit.framework.TestCase;
 
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: AspectClassTest.java,v 1.1 2003-07-04 10:53:57 lecando Exp $ -->
+ * <!-- $Id: AspectClassTest.java,v 1.2 2003-07-12 16:48:16 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class AspectClassTest extends TestCase {
     public static class BlahongaException extends RuntimeException {
@@ -70,8 +74,9 @@ public class AspectClassTest extends TestCase {
     public static void verifySideAspect(Object bigMomma) throws NoSuchMethodException {
         IntfImpl target = (IntfImpl) Aspects.getTarget(bigMomma, Intf.class);
         target.expectThis(bigMomma);
+        List interceptors = Aspects.getAspectInstance(bigMomma).getInterceptorsForMethod(Intf.class.getMethod("call", null));
         MockInterceptor classInterceptor =
-                (MockInterceptor) (Aspects.getInterceptors(bigMomma, Intf.class.getMethod("call", null))[0]);
+                (MockInterceptor) (((MethodInterceptor[]) interceptors.toArray(new MethodInterceptor[interceptors.size()]))[0]);
         classInterceptor.expectAtIndex(0);
         classInterceptor.expectNumberOfInterceptors(2);
         classInterceptor.expectCalledTimes(1);
@@ -80,8 +85,9 @@ public class AspectClassTest extends TestCase {
         classInterceptor.expectTarget(target);
 
         TestMixinImpl sideTarget = (TestMixinImpl) Aspects.getTarget(bigMomma, TestMixin.class);
+        List interceptors1 = Aspects.getAspectInstance(bigMomma).getInterceptorsForMethod(TestMixin.class.getMethod("mixinCall", null));
         MockInterceptor sideInterceptor =
-                (MockInterceptor) (Aspects.getInterceptors(bigMomma, TestMixin.class.getMethod("mixinCall", null))[1]);
+                (MockInterceptor) (((MethodInterceptor[]) interceptors1.toArray(new MethodInterceptor[interceptors1.size()]))[1]);
         sideInterceptor.expectAtIndex(1);
         sideInterceptor.expectNumberOfInterceptors(2);
         sideInterceptor.expectCalledTimes(1);

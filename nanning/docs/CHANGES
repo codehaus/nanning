@@ -1,8 +1,13 @@
+0.9
+ - Rewrote and expanded the Pointcut-framework, see P-class.
+ - Renamed MixinInstance to Mixin.
+ - Various additional clean up. 
+
 0.8
  - Moved some frameworks out of core Nanning.
  - Support for inner classes in attributes, somewhat refactored.
  - Changed pointcut model a little bit.
- - Remote framework now supports marshalling nested objects. 
+ - Remote framework now supports marshalling nested objects.
 
 0.7
  Internal release only...

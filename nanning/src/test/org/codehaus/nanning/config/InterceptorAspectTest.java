@@ -1,7 +1,7 @@
 package org.codehaus.nanning.config;
 
 import org.codehaus.nanning.AspectInstance;
-import org.codehaus.nanning.MixinInstance;
+import org.codehaus.nanning.Mixin;
 import org.codehaus.nanning.MethodInterceptor;
 import org.codehaus.nanning.Invocation;
 import junit.framework.TestCase;
@@ -11,7 +11,7 @@ import java.util.Collections;
 
 public class InterceptorAspectTest extends TestCase {
     private AspectInstance instance;
-    private MixinInstance mixin;
+    private Mixin mixin;
     private NOPInterceptor interceptor;
     private Method method;
     private Method method2;
@@ -32,7 +32,7 @@ public class InterceptorAspectTest extends TestCase {
         super.setUp();
 
         instance = new AspectInstance();
-        mixin = new MixinInstance(Interface.class, null);
+        mixin = new Mixin(Interface.class, null);
         instance.addMixin(mixin);
 
         interceptor = new NOPInterceptor();
@@ -62,7 +62,7 @@ public class InterceptorAspectTest extends TestCase {
 
     public void testPerInstance() {
         AspectInstance instance2 = new AspectInstance();
-        instance2.addMixin(new MixinInstance(Interface.class, null));
+        instance2.addMixin(new Mixin(Interface.class, null));
 
         InterceptorAspect interceptorAspect = new InterceptorAspect(NOPInterceptor.class, InterceptorAspect.PER_INSTANCE);
         assertEquals(InterceptorAspect.PER_INSTANCE, interceptorAspect.getStateManagement());
@@ -79,7 +79,7 @@ public class InterceptorAspectTest extends TestCase {
 
     public void testFalsePointcut() {
         InterceptorAspect interceptorAspect = new InterceptorAspect(new Pointcut() {
-            public boolean adviseMethod(AspectInstance instance, MixinInstance mixin, Method method) {
+            public boolean adviseMethod(AspectInstance instance, Mixin mixin, Method method) {
                 return false;
             }
         }, interceptor);

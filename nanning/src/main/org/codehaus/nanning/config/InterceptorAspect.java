@@ -3,7 +3,7 @@ package org.codehaus.nanning.config;
 import org.codehaus.nanning.AspectException;
 import org.codehaus.nanning.AspectInstance;
 import org.codehaus.nanning.MethodInterceptor;
-import org.codehaus.nanning.MixinInstance;
+import org.codehaus.nanning.Mixin;
 
 import java.lang.reflect.Method;
 

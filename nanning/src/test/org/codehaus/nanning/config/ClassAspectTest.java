@@ -2,7 +2,7 @@ package org.codehaus.nanning.config;
 
 import junit.framework.TestCase;
 import org.codehaus.nanning.AspectInstance;
-import org.codehaus.nanning.MixinInstance;
+import org.codehaus.nanning.Mixin;
 
 public class ClassAspectTest extends TestCase {
     private boolean wasCalled;
