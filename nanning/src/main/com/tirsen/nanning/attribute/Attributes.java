@@ -28,10 +28,10 @@ import java.util.*;
  * Hmm... wait, a minute, there's some support for this in QDox, maybe that will work...
  * -- jon
 
- * <!-- $Id: Attributes.java,v 1.3 2003-01-16 15:41:05 lecando Exp $ -->
+ * <!-- $Id: Attributes.java,v 1.4 2003-01-19 12:09:04 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.3 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.4 $
  */
 
 public class Attributes {
@@ -216,7 +216,7 @@ public class Attributes {
         if (aClass == null) {
             return null;
         }
-        
+
         if (hasAttribute(aClass, attribute)) {
             return getAttribute(aClass, attribute);
         } else {
@@ -255,5 +255,9 @@ public class Attributes {
             }
             return false;
         }
+    }
+
+    public static ClassAttributes getAttributes(Class aClass) {
+        return new ClassAttributes(aClass);
     }
 }

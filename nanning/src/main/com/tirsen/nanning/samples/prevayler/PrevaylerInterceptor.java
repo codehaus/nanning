@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
  * TODO document PrevaylerInterceptor
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class PrevaylerInterceptor
         implements SingletonInterceptor, FilterMethodsInterceptor, ConstructionInterceptor {
@@ -40,7 +40,9 @@ public class PrevaylerInterceptor
         }
         else {
             Object object = invocation.getProxy();
-            CurrentPrevayler.getSystem().registerObjectID(object);
+            if (!CurrentPrevayler.getSystem().hasObjectID(object)) {
+                CurrentPrevayler.getSystem().registerObjectID(object);
+            }
             return object;
         }
     }

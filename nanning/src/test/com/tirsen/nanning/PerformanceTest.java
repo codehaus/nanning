@@ -9,14 +9,15 @@ package com.tirsen.nanning;
 import junit.framework.TestCase;
 import com.tirsen.nanning.samples.StopWatch;
 import com.tirsen.nanning.definition.AspectClass;
+import com.tirsen.nanning.attribute.Attributes;
 
 /**
  * TODO document PerformanceTest
  *
- * <!-- $Id: PerformanceTest.java,v 1.10 2003-01-12 13:25:40 tirsen Exp $ -->
+ * <!-- $Id: PerformanceTest.java,v 1.11 2003-01-19 12:09:04 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class PerformanceTest extends TestCase
 {
@@ -24,8 +25,8 @@ public class PerformanceTest extends TestCase
     {
         // these are exceptionally high due to Clover...
         double maxMemoryPerInvocation = 1.6;
-        double timesSlowerTolerance = 53;
-        double maxTimePerInvocation = 0.013;
+        double timesSlowerTolerance = 52;
+        double maxTimePerInvocation = 0.007;
 
         int numberOfInvocations = 100000;
 
@@ -67,11 +68,11 @@ public class PerformanceTest extends TestCase
         System.out.println();
         System.out.println("timesSlower = " + timesSlower);
         System.out.println("timesMoreMemory = " + timesMoreMemory);
-        System.out.println("ordinaryTime = " + ordinary.getTimeSpent());
-        System.out.println("ordinaryMemory = " + ordinary.getMemoryUsed());
-        System.out.println("aspectsTime = " + aspect.getTimeSpent());
-        System.out.println("aspectsMemory = " + aspect.getMemoryUsed());
-        System.out.println("memoryPerInvocation = " + aspect.getMemoryUsed(numberOfInvocations));
+//        System.out.println("ordinaryTime = " + ordinary.getTimeSpent());
+//        System.out.println("ordinaryMemory = " + ordinary.getMemoryUsed());
+//        System.out.println("aspectsTime = " + aspect.getTimeSpent());
+//        System.out.println("aspectsMemory = " + aspect.getMemoryUsed());
+//        System.out.println("memoryPerInvocation = " + aspect.getMemoryUsed(numberOfInvocations));
         System.out.println("timePerInvocation = " + aspect.getTimeSpent(numberOfInvocations));
 
         assertTrue("memory per invocation exceeded", aspect.getMemoryUsed(numberOfInvocations) < maxMemoryPerInvocation);
@@ -82,7 +83,7 @@ public class PerformanceTest extends TestCase
     public void testInstantiation() throws IllegalAccessException, InstantiationException
     {
         int timesBiggerTolerance = 69;
-        int timesSlowerTolerance = 866;
+//        int timesSlowerTolerance = 866;
 
         int numberOfInstances = 10000;
 
@@ -132,17 +133,57 @@ public class PerformanceTest extends TestCase
         double timesSlower = aspect.getTimeSpent() / ordinary.getTimeSpent();
 
         System.out.println();
-        System.out.println("ordinaryTime = " + ordinary.getTimeSpent());
-        System.out.println("aspectsTime = " + aspect.getTimeSpent());
+//        System.out.println("ordinaryTime = " + ordinary.getTimeSpent());
+//        System.out.println("aspectsTime = " + aspect.getTimeSpent());
         System.out.println("times slower = " + timesSlower);
 
-        System.out.println("memory = " + aspect.getMemoryUsed());
-        System.out.println("memoryPerOrdinaryInstance = " + ordinary.getMemoryUsed(numberOfInstances));
-        System.out.println("maxMemoryPerInstance = " + maxMemoryPerInstance);
+//        System.out.println("memory = " + aspect.getMemoryUsed());
+//        System.out.println("memoryPerOrdinaryInstance = " + ordinary.getMemoryUsed(numberOfInstances));
+//        System.out.println("maxMemoryPerInstance = " + maxMemoryPerInstance);
+//        System.out.println("memoryPerInstance = " + aspect.getMemoryUsed(numberOfInstances));
         System.out.println("times bigger = " + timesBigger);
-        System.out.println("memoryPerInstance = " + aspect.getMemoryUsed(numberOfInstances));
 
         assertTrue("memory per instance exceeded", timesBiggerTolerance > timesBigger);
 //        assertTrue("time per instantiation exceeded", timesSlowerTolerance > timesSlower);
+    }
+
+    public void testAttributes() {
+        long maxTime = 2672;
+        long maxMemory = 355753;
+
+        // let the cache do it's thang
+        Attributes.getAttribute(AttributesTestClass.class, "classAttribute");
+        StopWatch stopWatch = new StopWatch(true);
+
+        for (int i = 0; i < 1000; i++) {
+            Attributes.getAttribute(AttributesTestClass.class, "classAttribute");
+        }
+
+        stopWatch.stop();
+        System.out.println();
+        System.out.println("time spent " + stopWatch.getTimeSpent());
+        System.out.println("memory used " + stopWatch.getMemoryUsed());
+        assertTrue("time exceeded", stopWatch.getTimeSpent() < maxTime);
+        assertTrue("memory exceeded", stopWatch.getMemoryUsed() < maxMemory);
+    }
+
+    public void testInheritedAttributes() {
+        long maxTime = 4454;
+        long maxMemory = 369409;
+
+        // let the cache do it's thang
+        Attributes.getInheritedAttribute(AttributesTestClass.class, "classAttribute");
+        StopWatch stopWatch = new StopWatch(true);
+
+        for (int i = 0; i < 1000; i++) {
+            Attributes.getInheritedAttribute(AttributesTestClass.class, "classAttribute");
+        }
+
+        stopWatch.stop();
+        System.out.println();
+        System.out.println("time spent " + stopWatch.getTimeSpent());
+        System.out.println("memory used " + stopWatch.getMemoryUsed());
+        assertTrue("time exceeded", stopWatch.getTimeSpent() < maxTime);
+        assertTrue("memory exceeded", stopWatch.getMemoryUsed() < maxMemory);
     }
 }

@@ -20,7 +20,7 @@ public class PrevaylerTest extends TestCase {
 
     private File prevaylerDir;
     private PrevaylerInterceptor prevaylerInterceptor;
-    private Prevayler prevayler;
+    private SnapshotPrevayler prevayler;
     private MySystem system;
 
     protected void setUp() throws Exception {
@@ -70,8 +70,16 @@ public class PrevaylerTest extends TestCase {
         assertEquals("attribute not correct value", "newValue", ((MyObject) objects.get(0)).getAttribute());
 
         // reload database
+        checkMySystem();
+
+        // reload database with snapshot
+        prevayler.takeSnapshot();
+        checkMySystem();
+    }
+
+    private void checkMySystem() throws IOException, ClassNotFoundException {
         initPrevayler();
-        objects = system.getObjects();
+        List objects = system.getObjects();
         assertEquals("object not persisted", 1, objects.size());
         assertEquals("property not correct value", "newValue", ((MyObject) objects.get(0)).getAttribute());
     }
