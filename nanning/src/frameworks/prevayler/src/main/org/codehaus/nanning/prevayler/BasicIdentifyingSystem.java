@@ -1,9 +1,11 @@
 package org.codehaus.nanning.prevayler;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
-import java.lang.ref.Reference;
 import java.util.*;
 
 import org.apache.commons.logging.Log;
@@ -64,7 +66,6 @@ public class BasicIdentifyingSystem extends IdentifiableImpl implements Identify
             throw new IllegalStateException("You have to be inside a transaction to register objects");
         }
 
-
         if (!(object instanceof Identifiable)) {
             throw new AssertionException("Object is not instance of Identifiable");
         }
@@ -72,11 +73,17 @@ public class BasicIdentifyingSystem extends IdentifiableImpl implements Identify
         long id = getNextId();
 
         Identifiable identifiable = (Identifiable) object;
-        identifiable.setObjectID(id);
 
-        if (isIDRegistered(identifiable.getObjectID())) {
+        if (identifiable.hasObjectID()) {
             throw new AssertionException("Object already registered");
         }
+
+        identifiable.setObjectID(id);
+
+        if (isIDRegistered(id)) {
+            throw new AssertionException("Object already registered");
+        }
+
         register(identifiable);
 
         return id;

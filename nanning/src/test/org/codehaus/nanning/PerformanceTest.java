@@ -16,16 +16,16 @@ import java.lang.reflect.Method;
 /**
  * TODO document PerformanceTest
  *
- * <!-- $Id: PerformanceTest.java,v 1.2 2003-07-12 16:48:16 lecando Exp $ -->
+ * <!-- $Id: PerformanceTest.java,v 1.3 2003-09-11 11:25:37 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class PerformanceTest extends AbstractAttributesTest {
     public void testInvocation() throws IllegalAccessException, InstantiationException {
         // these are exceptionally high due to Clover...
-        double maxMemoryPerInvocation = 8;
-        double timesSlowerTolerance = 22;
+        double maxMemoryPerInvocation = 15;
+        double timesSlowerTolerance = 4;
         double maxTimePerInvocation = 0.014;
 
         int numberOfInvocations = 100000;
@@ -73,9 +73,9 @@ public class PerformanceTest extends AbstractAttributesTest {
         //        System.out.println("memoryPerInvocation = " + aspect.getMemoryUsed(numberOfInvocations));
         System.out.println("timePerInvocation = " + aspect.getTimeSpent(numberOfInvocations));
 
-        assertTrue("memory per invocation exceeded", aspect.getMemoryUsed(numberOfInvocations) < maxMemoryPerInvocation);
-        assertTrue("time per invocation exceeded", aspect.getTimeSpent(numberOfInvocations) < maxTimePerInvocation);
-        assertTrue("time per invocation exceeded", timesSlowerTolerance > timesSlower);
+        assertLowerThan("memory per invocation exceeded", aspect.getMemoryUsed(numberOfInvocations), maxMemoryPerInvocation);
+        assertLowerThan("time per invocation exceeded", aspect.getTimeSpent(numberOfInvocations), maxTimePerInvocation);
+        assertLowerThan("time per invocation exceeded", timesSlower, timesSlowerTolerance);
     }
 
     public void testAttributes() throws NoSuchMethodException {
@@ -96,12 +96,16 @@ public class PerformanceTest extends AbstractAttributesTest {
         System.out.println();
         System.out.println("time spent " + stopWatch.getTimeSpent());
         System.out.println("memory used " + stopWatch.getMemoryUsed());
-        assertTrue("time exceeded", stopWatch.getTimeSpent() <= maxTime);
-        assertTrue("memory exceeded", stopWatch.getMemoryUsed() <= maxMemory);
+        assertLowerThan("time exceeded", stopWatch.getTimeSpent(), maxTime);
+        assertLowerThan("memory exceeded", stopWatch.getMemoryUsed(), maxMemory);
+    }
+
+    private void assertLowerThan(String reason, double observed, double maximum) {
+        assertTrue(reason + ", " + observed + " > " + maximum, observed <= maximum);
     }
 
     public void testInheritedAttributes() throws NoSuchMethodException {
-        long maxTime = 17;
+        long maxTime = 60;
         long maxMemory = 180000;
 
         // let the cache do it's thang
@@ -118,7 +122,7 @@ public class PerformanceTest extends AbstractAttributesTest {
         System.out.println();
         System.out.println("time spent " + stopWatch.getTimeSpent());
         System.out.println("memory used " + stopWatch.getMemoryUsed());
-        assertTrue("time exceeded", stopWatch.getTimeSpent() < maxTime);
-        assertTrue("memory exceeded", stopWatch.getMemoryUsed() < maxMemory);
+        assertLowerThan("time exceeded", stopWatch.getTimeSpent(), maxTime);
+        assertLowerThan("memory exceeded", stopWatch.getMemoryUsed(), maxMemory);
     }
 }
