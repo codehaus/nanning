@@ -10,6 +10,7 @@ import com.tirsen.nanning.attribute.AttributesTest;
 import com.tirsen.nanning.attribute.AttributesXMLParserTest;
 import com.tirsen.nanning.config.Def2Test;
 import com.tirsen.nanning.samples.prevayler.ObjectGraphVisitorTest;
+import com.tirsen.nanning.samples.CacheTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -17,10 +18,10 @@ import junit.framework.TestSuite;
 /**
  * TODO document UnitTestSuite
  *
- * <!-- $Id: UnitTestSuite.java,v 1.13 2003-03-21 17:11:14 lecando Exp $ -->
+ * <!-- $Id: UnitTestSuite.java,v 1.14 2003-04-14 17:32:59 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.13 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.14 $
  */
 public class UnitTestSuite {
     ///CLOVER:OFF
@@ -39,6 +40,7 @@ public class UnitTestSuite {
         suite.addTestSuite(InheritanceTest.class);
         suite.addTestSuite(Def2Test.class);
         suite.addTestSuite(SerializationTest.class);
+        suite.addTestSuite(CacheTest.class);
         return suite;
     }
     ///CLOVER:ON

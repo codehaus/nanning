@@ -3,6 +3,7 @@
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
+ * (C) 2003 Jon Tirsen
  */
 package com.tirsen.nanning;
 
@@ -13,19 +14,19 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Facade for accessing some important features of aspected objects and their definitions.
+ * Utility for accessing and modifying aspected object.
  *
- * <!-- $Id: Aspects.java,v 1.19 2003-03-27 18:19:33 lecando Exp $ -->
+ * <!-- $Id: Aspects.java,v 1.20 2003-04-14 17:32:55 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.19 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.20 $
  */
 public class Aspects {
     private static ThreadLocal contextAspectRepository = new InheritableThreadLocal();
     static ThreadLocal currentThis = new InheritableThreadLocal();
 
     /**
-     * Gets the interceptors that belongs to the proxy
+     * Gets the interceptors that belongs to the proxy.
      *
      * @param proxy
      * @return the interceptors.
@@ -58,16 +59,32 @@ public class Aspects {
         return getAspectInstance(proxy).getTarget(interfaceClass);
     }
 
+    /**
+     * Gets the AspectInstance of the given aspected object.
+     * @param proxy
+     * @return
+     */
     public static AspectInstance getAspectInstance(Object proxy) {
         AspectInstance aspectInstance = (AspectInstance) Proxy.getInvocationHandler(proxy);
         assert aspectInstance != null;
         return aspectInstance;
     }
 
+    /**
+     * Sets the target of the mixin with the specified interface.
+     * @param proxy
+     * @param interfaceClass
+     * @param target
+     */
     public static void setTarget(Object proxy, Class interfaceClass, Object target) {
         getAspectInstance(proxy).setTarget(interfaceClass, target);
     }
 
+    /**
+     * Gets the currently executing aspected object, aspected objects should use this method
+     * instead of <code>this</code>.
+     * @return
+     */
     public static Object getThis() {
         return currentThis.get();
     }
@@ -108,6 +125,12 @@ public class Aspects {
         return (MethodInterceptor[]) interceptors.toArray(new MethodInterceptor[interceptors.size()]);
     }
 
+    /**
+     * Given a proxy-class returns the first real interface it implements.
+     *
+     * @param proxyClass proxyClass to inspect.
+     * @return first real interface implemented by proxyClass.
+     */
     public static Class getRealClass(Class proxyClass) {
         if (!Proxy.isProxyClass(proxyClass)) {
             return proxyClass;

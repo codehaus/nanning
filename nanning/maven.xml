@@ -10,7 +10,7 @@
 
         <j:forEach var="dep" items="${pom.dependencies}">
             <copy todir="${maven.dist.bin.assembly.dir}/lib"
-                file="${maven.repo.local}/${dep.getProjectId()}/jars/${dep.getArtifact()}" />
+                file="${maven.repo.local}/${dep.getGroupId()}/jars/${dep.getArtifact()}" />
         </j:forEach>
 
         <delete file="${maven.dist.bin.assembly.dir}/${maven.final.name}.jar" />

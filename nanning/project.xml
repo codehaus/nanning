@@ -84,11 +84,6 @@
     <dependencies>
 
         <dependency>
-            <id>commons-io</id>
-            <version>0.2-dev.20020717.100545</version>
-        </dependency>
-
-        <dependency>
             <id>commons-collections</id>
             <version>2.1</version>
         </dependency>

@@ -9,10 +9,10 @@ package com.tirsen.nanning.attribute;
 /**
  * TODO document AttributesTestClass
  *
- * <!-- $Id: AttributesTestClass.java,v 1.3 2003-03-21 17:11:14 lecando Exp $ -->
+ * <!-- $Id: AttributesTestClass.java,v 1.4 2003-04-14 17:33:00 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.3 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.4 $
  *
  * @class.attribute classValue
  */
@@ -33,6 +33,13 @@ public class AttributesTestClass {
      * @method.attribute argMethodValue
      */
     public void method(String arg, String arg2) {
+    }
+
+    /**
+     * @method.attribute arrayArgMethodValue
+     */
+    public void method(String[] args) {
+
     }
     ///CLOVER:ON
 }

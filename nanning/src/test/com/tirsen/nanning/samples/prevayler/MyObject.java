@@ -21,4 +21,9 @@ public interface MyObject extends Serializable, FinalizationCallback {
     MyObject getMyObject();
 
     boolean wasFinalized();
+
+    /**
+     * @transaction
+     */
+    void setABC(String[] abc);
 }

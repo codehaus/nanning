@@ -3,10 +3,15 @@ package com.tirsen.nanning.samples.prevayler;
 import java.io.*;
 import java.util.Collection;
 import java.util.IdentityHashMap;
+import java.util.List;
+import java.lang.reflect.Method;
 
 import com.tirsen.nanning.AspectFactory;
 import com.tirsen.nanning.Aspects;
+import com.tirsen.nanning.AspectInstance;
+import com.tirsen.nanning.MixinInstance;
 import com.tirsen.nanning.attribute.AbstractAttributesTest;
+import com.tirsen.nanning.attribute.Attributes;
 import com.tirsen.nanning.config.AspectSystem;
 import com.tirsen.nanning.config.MixinAspect;
 import org.apache.commons.collections.CollectionUtils;
@@ -119,6 +124,27 @@ public class PrevaylerTest extends AbstractAttributesTest {
                 // this object will not be identified correctly in the command and you will have two copies of the
                 // "same" object
                 //                assertSame(myObject, myObject.getMyObject().getMyObject().getMyObject());
+            }
+        });
+    }
+
+    public void testABC() throws ClassNotFoundException, IOException, NoSuchMethodException {
+        AspectInstance aspectInstance = Aspects.getAspectInstance(aspectFactory.newInstance(MyObject.class));
+        MixinInstance mixinInstance = (MixinInstance) aspectInstance.getMixins().iterator().next();
+        Method setValue = MyObject.class.getDeclaredMethod("setValue", new Class[] { String.class });
+        assertEquals(2, mixinInstance.getInterceptorsForMethod(setValue).size());
+        Method setABC = MyObject.class.getDeclaredMethod("setABC", new Class[] { String[].class });
+        assertTrue(Attributes.getAttributes(MyObject.class).hasAttribute(setABC, "transaction"));
+        assertTrue(Attributes.hasAttribute(setABC, "transaction"));
+        assertEquals(2, mixinInstance.getInterceptorsForMethod(setABC).size());
+
+        final CountingPrevayler prevayler = newPrevayler();
+        CurrentPrevayler.withPrevayler(prevayler, new Runnable() {
+            public void run() {
+                MyObject myObject = currentMySystem().createMyObject();
+                prevayler.assertNumberOfCommands(1);
+                myObject.setABC(null);
+                prevayler.assertNumberOfCommands(2);
             }
         });
     }
