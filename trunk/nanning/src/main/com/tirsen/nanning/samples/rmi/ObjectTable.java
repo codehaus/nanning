@@ -8,7 +8,7 @@ class ObjectTable {
     private static final int DEFAULT_TIMEOUT = 60 * 60 * 1000;
 
     private Map objectToId = new HashMap();
-    private Map idToStampedObject = new HashMap();
+    private Map idToReference = new HashMap();
 
     private long currentId = 0;
     private long timeout;
@@ -22,29 +22,32 @@ class ObjectTable {
     }
 
     Object getFromID(Object id) {
-        TimeStampedObject o = (TimeStampedObject) idToStampedObject.get(id);
+        LocalReference o = (LocalReference) idToReference.get(id);
         assert o != null;
         o.touch();
         cleanupStale();
-        return o.getObject();
+        return o.getReferred();
     }
 
-    private void cleanupStale() {
-        for (Iterator i = idToStampedObject.values().iterator(); i.hasNext();) {
-            TimeStampedObject stampedObject = (TimeStampedObject) i.next();
-            if (stampedObject.isStale()) {
-                objectToId.remove(stampedObject.getObject());
-                i.remove();
+    private synchronized void cleanupStale() {
+        try {
+            for (Iterator i = idToReference.values().iterator(); i.hasNext();) {
+                LocalReference ref = (LocalReference) i.next();
+                if (ref.isStale(timeout)) {
+                    objectToId.remove(ref.getReferred());
+                    i.remove();
+                }
             }
+        } catch (Exception ignore) {
         }
     }
 
-    Object register(Object o) {
+    synchronized Object register(Object o) {
         Object id = objectToId.get(o);
         if (id == null) {
             id = newId();
             objectToId.put(o, id);
-            idToStampedObject.put(id, new TimeStampedObject(o, System.currentTimeMillis()));
+            idToReference.put(id, new LocalReference(o));
         }
         return id;
     }
@@ -59,39 +62,34 @@ class ObjectTable {
 
     boolean isIDRegistered(Object id) {
         cleanupStale();
-        return idToStampedObject.containsKey(id);
+        return idToReference.containsKey(id);
     }
 
-    public void clear() {
+    public synchronized void clear() {
         objectToId.clear();
-        idToStampedObject.clear();
+        idToReference.clear();
         currentId = 0;
     }
 
-    private class TimeStampedObject {
+    private static class LocalReference {
         private Object object;
-        private long timeStamp;
+        private long lastTimeTouched;
 
-
-        public TimeStampedObject(Object object, long timeStamp) {
+        LocalReference(Object object) {
             this.object = object;
-            this.timeStamp = timeStamp;
+            touch();
         }
 
-        public long getTimeStamp() {
-            return timeStamp;
-        }
-
-        public Object getObject() {
+        Object getReferred() {
             return object;
         }
 
-        public void touch() {
-            timeStamp = System.currentTimeMillis();
+        void touch() {
+            lastTimeTouched = System.currentTimeMillis();
         }
 
-        public boolean isStale() {
-            return System.currentTimeMillis() - getTimeStamp() >= timeout;
+        boolean isStale(long timeout) {
+            return System.currentTimeMillis() - lastTimeTouched >= timeout;
         }
     }
 }
