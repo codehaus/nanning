@@ -7,14 +7,13 @@
 package com.tirsen.nanning;
 
 
-
 /**
  * TODO document AspectDefinition
  *
- * <!-- $Id: SideAspectInstance.java,v 1.1 2002-10-27 12:13:18 tirsen Exp $ -->
+ * <!-- $Id: SideAspectInstance.java,v 1.2 2002-10-30 20:10:54 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 class SideAspectInstance
 {

@@ -20,10 +20,10 @@ import com.tirsen.nanning.Attributes;
 /**
  * TODO document AttributesTest
  *
- * <!-- $Id: AttributesTest.java,v 1.1 2002-10-28 21:45:34 tirsen Exp $ -->
+ * <!-- $Id: AttributesTest.java,v 1.2 2002-10-30 20:10:55 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class AttributesTest extends TestCase
 {
@@ -58,7 +58,7 @@ public class AttributesTest extends TestCase
         assertEquals("fieldValue", Attributes.getAttribute(field, "fieldAttribute"));
         Method method = AttributesTestClass.class.getMethod("method", null);
         assertEquals("methodValue", Attributes.getAttribute(method, "methodAttribute"));
-        Method argMethod = AttributesTestClass.class.getMethod("method", new Class[] { String.class });
+        Method argMethod = AttributesTestClass.class.getMethod("method", new Class[]{String.class});
         assertEquals("argMethodValue", Attributes.getAttribute(argMethod, "methodAttribute"));
     }
 }

@@ -12,10 +12,10 @@ import java.lang.reflect.Proxy;
 /**
  * Facade for accessing some important features of aspected objects and their definitions.
  *
- * <!-- $Id: Aspects.java,v 1.5 2002-10-30 13:27:42 lecando Exp $ -->
+ * <!-- $Id: Aspects.java,v 1.6 2002-10-30 20:10:54 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.5 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.6 $
  */
 public class Aspects
 {
@@ -59,7 +59,8 @@ public class Aspects
         return (AspectInstance) Proxy.getInvocationHandler(proxy);
     }
 
-    public static void setTarget(Object proxy, Class interfaceClass, Object target) {
+    public static void setTarget(Object proxy, Class interfaceClass, Object target)
+    {
         getAspectInstance(proxy).setTarget(interfaceClass, target);
     }
 }

@@ -31,10 +31,10 @@ import java.util.Properties;
  * Hmm... wait, a minute, there's some support for this in QDox, maybe that will work...
  * -- jon
 
- * <!-- $Id: Attributes.java,v 1.2 2002-10-30 13:27:42 lecando Exp $ -->
+ * <!-- $Id: Attributes.java,v 1.3 2002-10-30 20:10:54 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.2 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.3 $
  */
 public class Attributes
 {
@@ -47,7 +47,8 @@ public class Attributes
         return getProperty(klass, attributeName(klass, attribute));
     }
 
-    private static String attributeName(Class klass, String attribute) {
+    private static String attributeName(Class klass, String attribute)
+    {
         return "class." + attribute;
     }
 
@@ -57,7 +58,8 @@ public class Attributes
         return properties.getProperty(key);
     }
 
-    private static Properties getProperties(Class klass) {
+    private static Properties getProperties(Class klass)
+    {
         Properties properties;
         InputStream inputStream = null;
         try
@@ -76,7 +78,7 @@ public class Attributes
             }
 
             logger.debug("searching on search-path");
-            if(inputStream == null)
+            if (inputStream == null)
             {
                 for (Iterator iterator = searchPaths.iterator(); iterator.hasNext();)
                 {
@@ -87,7 +89,7 @@ public class Attributes
                 }
             }
 
-            if(inputStream != null)
+            if (inputStream != null)
             {
                 properties = new Properties();
                 properties.load(inputStream);
@@ -107,7 +109,7 @@ public class Attributes
         }
         finally
         {
-            if(inputStream != null)
+            if (inputStream != null)
             {
                 try
                 {
@@ -128,7 +130,8 @@ public class Attributes
         return getProperty(method.getDeclaringClass(), name);
     }
 
-    private static String attributeName(Method method, String attribute) {
+    private static String attributeName(Method method, String attribute)
+    {
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append(method.getName());
         stringBuffer.append('(');
@@ -137,7 +140,7 @@ public class Attributes
         {
             Class parameterType = parameterTypes[i];
             stringBuffer.append(parameterType.getName());
-            if(i + 1 < parameterTypes.length)
+            if (i + 1 < parameterTypes.length)
             {
                 stringBuffer.append(',');
             }
@@ -154,7 +157,8 @@ public class Attributes
         return getProperty(field.getDeclaringClass(), attributeName(field, attribute));
     }
 
-    private static String attributeName(Field field, String attribute) {
+    private static String attributeName(Field field, String attribute)
+    {
         return field.getName() + '.' + attribute;
     }
 
@@ -168,15 +172,18 @@ public class Attributes
         searchPaths.add(searchPath);
     }
 
-    public static boolean hasAttribute(Class klass, String attribute) {
+    public static boolean hasAttribute(Class klass, String attribute)
+    {
         return getProperties(klass).containsKey(attributeName(klass, attribute));
     }
 
-    public static boolean hasAttribute(Method method, String attribute) {
+    public static boolean hasAttribute(Method method, String attribute)
+    {
         return getProperties(method.getDeclaringClass()).containsKey(attributeName(method, attribute));
     }
 
-    public static boolean hasAttribute(Field field, String attribute) {
+    public static boolean hasAttribute(Field field, String attribute)
+    {
         return getProperties(field.getDeclaringClass()).containsKey(attributeName(field, attribute));
     }
 }

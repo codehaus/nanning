@@ -16,10 +16,10 @@ import java.util.List;
 /**
  * TODO document AspectInstance
  *
- * <!-- $Id: AspectInstance.java,v 1.6 2002-10-30 13:27:42 lecando Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.7 2002-10-30 20:10:54 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.6 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.7 $
  */
 class AspectInstance implements InvocationHandler
 {
@@ -41,7 +41,7 @@ class AspectInstance implements InvocationHandler
         {
             index++;
             Interceptor[] interceptors = interfaceInstance.getInterceptors();
-            if(index < interceptors.length)
+            if (index < interceptors.length)
             {
                 return interceptors[index].invoke(this);
             }
@@ -145,11 +145,13 @@ class AspectInstance implements InvocationHandler
         return interfaceInstance.getInterceptors();
     }
 
-    private SideAspectInstance getSideAspectInstance(Class interfaceClass) {
+    private SideAspectInstance getSideAspectInstance(Class interfaceClass)
+    {
         return (SideAspectInstance) interfacesToInstancesIndex.get(interfaceClass);
     }
 
-    public void setTarget(Class interfaceClass, Object target) {
+    public void setTarget(Class interfaceClass, Object target)
+    {
         SideAspectInstance sideAspectInstance = getSideAspectInstance(interfaceClass);
         sideAspectInstance.setTarget(target);
     }

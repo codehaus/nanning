@@ -20,10 +20,10 @@ import java.util.Iterator;
 /**
  * TODO document LogInterceptorTest
  *
- * <!-- $Id: LogInterceptorTest.java,v 1.1 2002-10-29 19:19:31 tirsen Exp $ -->
+ * <!-- $Id: LogInterceptorTest.java,v 1.2 2002-10-30 20:10:54 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class LogInterceptorTest extends TestCase
 {
@@ -100,7 +100,7 @@ public class LogInterceptorTest extends TestCase
         {
             Iterator actualIterator = actualMessages.iterator();
             Iterator expectIterator = expectMessages.iterator();
-            while(expectIterator.hasNext())
+            while (expectIterator.hasNext())
             {
                 String expectedMessage = (String) expectIterator.next();
                 assertTrue("log output not as expected", actualIterator.hasNext());

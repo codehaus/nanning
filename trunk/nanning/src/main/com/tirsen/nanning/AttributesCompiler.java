@@ -21,10 +21,10 @@ import org.apache.tools.ant.BuildException;
 /**
  * TODO document AttributesCompiler
  *
- * <!-- $Id: AttributesCompiler.java,v 1.2 2002-10-30 13:27:42 lecando Exp $ -->
+ * <!-- $Id: AttributesCompiler.java,v 1.3 2002-10-30 20:10:54 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.2 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.3 $
  */
 public class AttributesCompiler extends Task
 {
@@ -43,7 +43,8 @@ public class AttributesCompiler extends Task
 
     public void execute()
     {
-        try {
+        try
+        {
             System.out.println("Compiling attributes for " + src + " into " + dest);
             JavaDocBuilder javaDocBuilder = new JavaDocBuilder();
             javaDocBuilder.addSourceTree(src);
@@ -75,7 +76,7 @@ public class AttributesCompiler extends Task
                         {
                             JavaParameter parameter = parameters[parameterIndex];
                             name.append(parameter.getType().getValue());
-                            if(parameterIndex + 1 < parameters.length)
+                            if (parameterIndex + 1 < parameters.length)
                             {
                                 name.append(',');
                             }
@@ -101,7 +102,9 @@ public class AttributesCompiler extends Task
                     }
                 }
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             throw new BuildException(e);
         }
     }
