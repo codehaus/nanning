@@ -152,11 +152,11 @@ public class ClassPropertiesHelper {
             Class[] parameterTypes = method.getParameterTypes();
             for (int i = 0; i < parameterTypes.length; i++) {
                 Class parameterType = parameterTypes[i];
+                if (parameterType.isArray()) {
+                    parameterType = parameterType.getComponentType();
+                }
                 String type = parameterType.getName();
                 type = type.substring(type.lastIndexOf('.') + 1);
-                if (type.lastIndexOf(';') != -1) {
-                    type = type.substring(0, type.lastIndexOf(';'));
-                }
                 stringBuffer.append(type);
                 if (i + 1 < parameterTypes.length) {
                     stringBuffer.append(',');
