@@ -9,14 +9,14 @@ package com.tirsen.nanning.attribute;
 /**
  * TODO document AttributesTestClass
  *
- * <!-- $Id: AttributesTestClass.java,v 1.4 2003-04-14 17:33:00 tirsen Exp $ -->
+ * <!-- $Id: AttributesTestClass.java,v 1.5 2003-05-20 07:45:09 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.4 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.5 $
  *
  * @class.attribute classValue
  */
-public class AttributesTestClass {
+public class AttributesTestClass implements AttributesTestInterface {
     ///CLOVER:OFF
     /**
      * @field.attribute fieldValue

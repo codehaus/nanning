@@ -40,13 +40,18 @@ public class FindTargetMixinAspect implements Aspect {
     }
 
     private Class findImpl(Class interfaceClass) {
+        Class impl = findImpl(interfaceClass, implementationSuffix);
+        assert impl != null : "could not find target for " + interfaceClass;
+        return impl;
+    }
+    
+    public static Class findImpl(Class interfaceClass, String implementationSuffix) {
         String name = interfaceClass.getName();
         int packageEnd = name.lastIndexOf('.');
         String className = name.substring(0, packageEnd) + name.substring(packageEnd) + implementationSuffix;
         try {
             return Class.forName(className);
         } catch (ClassNotFoundException e) {
-            assert false : "could not find target for " + interfaceClass;
             return null;
         }
     }
