@@ -4,7 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
-package com.tirsen.nanning;
+package com.tirsen.nanning.definition;
 
 import org.apache.commons.jelly.JellyContext;
 import org.apache.commons.jelly.XMLOutput;
@@ -13,22 +13,23 @@ import org.apache.commons.logging.LogFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 import com.tirsen.nanning.jelly.AspectTagLibrary;
+import com.tirsen.nanning.definition.AspectClass;
+import com.tirsen.nanning.definition.AspectDefinition;
+import com.tirsen.nanning.AspectFactory;
+import com.tirsen.nanning.Aspects;
 
 /**
  * TODO document AspectRepository
  *
- * <!-- $Id: AspectRepository.java,v 1.9 2002-12-11 15:11:55 lecando Exp $ -->
+ * <!-- $Id: AspectRepository.java,v 1.1 2003-01-12 13:25:40 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.9 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.1 $
  */
-public class AspectRepository {
+public class AspectRepository implements AspectFactory {
     private static AspectRepository instance;
     private static final Log logger = LogFactory.getLog(AspectRepository.class);
 
@@ -71,12 +72,7 @@ public class AspectRepository {
         return aspectClass;
     }
 
-    public Object newInstance(Class aspectInterface) {
-        AspectClass aClass = getClass(aspectInterface);
-        return aClass.newInstance();
-    }
-
-    public static AspectRepository getInstance() {
+    public static AspectFactory getInstance() {
         if (instance == null) {
             instance = new AspectRepository();
             try {
@@ -92,7 +88,7 @@ public class AspectRepository {
      * Merges all defined aspect-repositories of the xml-file into this one, at least one needs to be defined.
      *
      * @param resource
-     * @throws ConfigureException
+     * @throws com.tirsen.nanning.definition.ConfigureException
      */
     public void configure(URL resource) throws ConfigureException {
         JellyContext context = new JellyContext();
@@ -122,7 +118,18 @@ public class AspectRepository {
         return aspectClasses.values();
     }
 
-    public Object newInstance(Class interfaceClass, Object[] targets) {
-        return getClass(interfaceClass).newInstance(targets);
+    public Object newInstance(Object aspectInterface) {
+        return newInstance(aspectInterface, null);
     }
+
+    public Object newInstance(Object aspectInterface, Object[] targets) {
+        assert aspectInterface instanceof Class : "aspect-classes are identified by the interface-class of their first mixin";
+        Object instance = getClass((Class) aspectInterface).newInstance(targets);
+        return instance;
+    }
+
+    public static AspectRepository getCurrentAspectRepository() {
+        return (AspectRepository) Aspects.getCurrentAspectFactory();
+    }
+
 }

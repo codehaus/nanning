@@ -21,14 +21,10 @@ public class BasicIdentifyingSystem implements IdentifyingSystem {
         return objects;
     }
 
-    public long registerOID(Object object) {
+    public long getObjectID(Object object) {
         if(!objects.contains(object)) {
             objects.add(object);
         }
-        return getOID(object);
-    }
-
-    public long getOID(Object object) {
         return (long) objects.indexOf(object);
     }
 

@@ -8,7 +8,7 @@
 package com.tirsen.nanning;
 
 import com.tirsen.nanning.Invocation;
-import com.tirsen.nanning.BasicInterceptor;
+import com.tirsen.nanning.definition.BasicInterceptor;
 
 import java.util.ArrayList;
 import java.util.List;

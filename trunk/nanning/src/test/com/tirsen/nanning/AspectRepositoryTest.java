@@ -7,35 +7,30 @@
 package com.tirsen.nanning;
 
 import junit.framework.TestCase;
+import com.tirsen.nanning.definition.*;
 
 /**
  * TODO document AspectRepositoryTest
  *
- * <!-- $Id: AspectRepositoryTest.java,v 1.4 2002-12-04 07:45:33 tirsen Exp $ -->
+ * <!-- $Id: AspectRepositoryTest.java,v 1.5 2003-01-12 13:25:40 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
-public class AspectRepositoryTest extends TestCase
-{
-    public void testEmpty()
-    {
-        AspectRepository aspectRepository = new AspectRepository();
+public class AspectRepositoryTest extends TestCase {
+    public void testEmpty() {
+        AspectFactory aspectRepository = new AspectRepository();
 
-        try
-        {
+        try {
             aspectRepository.newInstance(Intf.class);
             ///CLOVER:OFF
             fail("could instantiate aspect before it was configured");
             ///CLOVER:ON
-        }
-        catch (IllegalArgumentException shouldHappen)
-        {
+        } catch (IllegalArgumentException shouldHappen) {
         }
     }
 
-    public void testConfig() throws InstantiationException, IllegalAccessException
-    {
+    public void testConfig() throws InstantiationException, IllegalAccessException {
         AspectRepository aspectRepository = new AspectRepository();
 
         // the braces are here to isolate the lexical spaces to ensure that the lexical space is in the repository
@@ -80,11 +75,9 @@ public class AspectRepositoryTest extends TestCase
         intf.call();
     }
 
-    public void testConfigure() throws NoSuchMethodException, ConfigureException
-    {
+    public void testConfigure() throws NoSuchMethodException, ConfigureException {
         AspectRepository aspectRepository = new AspectRepository();
         java.net.URL resource = AspectRepositoryTest.class.getResource("aspect-repository-test.xml");
-        System.out.println("resource = " + resource);
         aspectRepository.configure(resource);
 
 //        AspectRepository aspectRepository = AspectRepository.getInstance();

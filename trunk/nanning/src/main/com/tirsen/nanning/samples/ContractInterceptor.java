@@ -2,7 +2,7 @@ package com.tirsen.nanning.samples;
 
 import com.tirsen.nanning.MethodInterceptor;
 import com.tirsen.nanning.Invocation;
-import com.tirsen.nanning.Attributes;
+import com.tirsen.nanning.attribute.Attributes;
 import org.apache.commons.jexl.JexlHelper;
 import org.apache.commons.jexl.JexlContext;
 import org.apache.commons.jexl.Expression;
@@ -22,7 +22,7 @@ import java.util.ListIterator;
  * you can enable and disable contract-checking in the same way you enable and disable assertions (java -ea and so on).
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class ContractInterceptor implements MethodInterceptor {
     private static final Pattern oldPattern =
@@ -142,11 +142,12 @@ public class ContractInterceptor implements MethodInterceptor {
                 throw new AssertionError(message);
             }
         } catch (Exception e) {
-            throw new RuntimeException("Could not execute: " + expression, e);
+            throw new RuntimeException("Could not execute: " + expression.getExpression(), e);
         }
     }
 
     private Object executeExpression(Expression expression, JexlContext jc) throws Exception {
+        // disable execution of contracts when contracts are executed (to avoid looping)
         checkContracts.set(checkContracts);
         try {
             return expression.evaluate(jc);

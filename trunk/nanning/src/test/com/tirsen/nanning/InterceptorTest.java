@@ -10,13 +10,18 @@ import junit.framework.TestCase;
 
 import java.lang.reflect.Method;
 
+import com.tirsen.nanning.definition.AspectClass;
+import com.tirsen.nanning.definition.InterceptorDefinition;
+import com.tirsen.nanning.definition.SingletonInterceptor;
+import com.tirsen.nanning.definition.FilterMethodsInterceptor;
+
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: InterceptorTest.java,v 1.1 2002-12-11 10:57:52 lecando Exp $ -->
+ * <!-- $Id: InterceptorTest.java,v 1.2 2003-01-12 13:25:40 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.1 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.2 $
  */
 public class InterceptorTest extends TestCase
 {
@@ -61,8 +66,7 @@ public class InterceptorTest extends TestCase
         }
     }
 
-    public void testStatelessInterceptor()
-    {
+    public void testStatelessInterceptor() throws NoSuchMethodException {
         AspectClass aspectClass = new AspectClass();
         aspectClass.setInterface(Intf.class);
         aspectClass.addInterceptor(new InterceptorDefinition(StatelessInterceptorImpl.class));
@@ -70,15 +74,15 @@ public class InterceptorTest extends TestCase
         aspectClass.setTarget(Impl.class);
 
         Object proxy = aspectClass.newInstance();
-        Interceptor statelessInterceptor = Aspects.getInterceptors(proxy)[0];
-        Interceptor interceptor = Aspects.getInterceptors(proxy)[1];
-        assertTrue(statelessInterceptor instanceof SingletonInterceptor);
+        Interceptor singletonInterceptor = Aspects.getInterceptors(proxy, Intf.class.getMethod("call", null))[0];
+        Interceptor interceptor = Aspects.getInterceptors(proxy, Intf.class.getMethod("call", null))[1];
+        assertTrue(singletonInterceptor instanceof SingletonInterceptor);
 
         Object proxy2 = aspectClass.newInstance();
-        Interceptor statelessInterceptor2 = Aspects.getInterceptors(proxy2)[0];
-        Interceptor interceptor2 = Aspects.getInterceptors(proxy2)[1];
-        assertSame(statelessInterceptor, statelessInterceptor2);
-        assertNotSame(interceptor, interceptor2);
+        Interceptor singletonInterceptor2 = Aspects.getInterceptors(proxy2, Intf.class.getMethod("call", null))[0];
+        Interceptor interceptor2 = Aspects.getInterceptors(proxy2, Intf.class.getMethod("call", null))[1];
+        assertSame("singleton interceptor instantiated twice", singletonInterceptor, singletonInterceptor2);
+        assertNotSame("ordinary interceptor not instantiated twice", interceptor, interceptor2);
     }
 
     public static class TestFilterMethodsInterceptor implements FilterMethodsInterceptor

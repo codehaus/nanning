@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.tirsen.nanning.Attributes;
-import com.tirsen.nanning.FilterMethodsInterceptor;
+import com.tirsen.nanning.attribute.Attributes;
+import com.tirsen.nanning.definition.FilterMethodsInterceptor;
 import com.tirsen.nanning.Invocation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

@@ -12,11 +12,13 @@ public class Call implements Serializable {
 
     protected Object target;
     protected Object[] args;
+    private Object classIdentifier;
     private Class interfaceClass;
     private Class[] parameterTypes;
     private String methodName;
 
     public Call(Invocation invocation) {
+        classIdentifier = invocation.getAspectInstance().getClassIdentifier();
         interfaceClass = invocation.getTargetInterface();
         methodName = invocation.getMethod().getName();
         parameterTypes = invocation.getMethod().getParameterTypes();
@@ -34,6 +36,10 @@ public class Call implements Serializable {
 
     public Class getInterfaceClass() {
         return interfaceClass;
+    }
+
+    public Object getClassIdentifier() {
+        return classIdentifier;
     }
 
     public Object[] getArgs() {

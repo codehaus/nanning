@@ -8,17 +8,17 @@ package com.tirsen.nanning.jelly;
 
 import org.apache.commons.jelly.TagSupport;
 import org.apache.commons.jelly.XMLOutput;
-import com.tirsen.nanning.AspectDefinition;
-import com.tirsen.nanning.AspectRepository;
-import com.tirsen.nanning.AspectClass;
+import com.tirsen.nanning.definition.AspectDefinition;
+import com.tirsen.nanning.definition.AspectRepository;
+import com.tirsen.nanning.definition.AspectClass;
 
 /**
  * TODO document AspectTag
  *
- * <!-- $Id: AspectTag.java,v 1.3 2002-12-03 13:55:24 lecando Exp $ -->
+ * <!-- $Id: AspectTag.java,v 1.4 2003-01-12 13:25:40 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.3 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.4 $
  */
 public class AspectTag extends TagSupport
 {

@@ -7,18 +7,16 @@
 package com.tirsen.nanning;
 
 import junit.framework.TestCase;
-import com.tirsen.nanning.definition.AspectClass;
-import com.tirsen.nanning.definition.AspectDefinition;
 
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: AspectClassTest.java,v 1.8 2003-01-12 13:25:40 tirsen Exp $ -->
+ * <!-- $Id: AspectInstanceTest.java,v 1.1 2003-01-12 13:25:40 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.1 $
  */
-public class AspectClassTest extends TestCase
+public class AspectInstanceTest extends TestCase
 {
     public static class BlahongaException extends RuntimeException
     {
@@ -26,13 +24,15 @@ public class AspectClassTest extends TestCase
 
     public void testThrowsCorrectExceptions()
     {
-        AspectClass aspectClass = new AspectClass();
-        aspectClass.setInterface(Intf.class);
-        aspectClass.addInterceptor(MockInterceptor.class);
-        aspectClass.addInterceptor(MockInterceptor.class);
-        aspectClass.setTarget(Impl.class);
+        AspectInstance aspectInstance = new AspectInstance();
+        MixinInstance mixinInstance = new MixinInstance();
+        mixinInstance.setInterfaceClass(Intf.class);
+        mixinInstance.addInterceptor(new MockInterceptor());
+        mixinInstance.addInterceptor(new MockInterceptor());
+        mixinInstance.setTarget(new Impl());
+        aspectInstance.addMixin(mixinInstance);
 
-        Intf proxy = (Intf) aspectClass.newInstance();
+        Intf proxy = (Intf) aspectInstance.getProxy();
 
         Aspects.setTarget(proxy, Intf.class, new Impl()
         {
@@ -58,19 +58,21 @@ public class AspectClassTest extends TestCase
 
     public void testSideAspectAndAspectsOnProxy() throws IllegalAccessException, InstantiationException, NoSuchMethodException
     {
-        AspectClass aspectClass = new AspectClass();
-        aspectClass.setInterface(Intf.class);
-        aspectClass.addInterceptor(MockInterceptor.class);
-        aspectClass.addInterceptor(NullInterceptor.class);
-        aspectClass.setTarget(Impl.class);
-        AspectDefinition aspectDefinition = new AspectDefinition();
-        aspectDefinition.setInterface(SideAspect.class);
-        aspectDefinition.addInterceptor(NullInterceptor.class);
-        aspectDefinition.addInterceptor(MockInterceptor.class);
-        aspectDefinition.setTarget(SideAspectImpl.class);
-        aspectClass.addAspect(aspectDefinition);
+        AspectInstance aspectInstance = new AspectInstance();
+        MixinInstance mixinInstance = new MixinInstance();
+        mixinInstance.setInterfaceClass(Intf.class);
+        mixinInstance.addInterceptor(new MockInterceptor());
+        mixinInstance.addInterceptor(new NullInterceptor());
+        mixinInstance.setTarget(new Impl());
+        aspectInstance.addMixin(mixinInstance);
+        MixinInstance sideMixinInstance = new MixinInstance();
+        sideMixinInstance.setInterfaceClass(SideAspect.class);
+        sideMixinInstance.addInterceptor(new NullInterceptor());
+        sideMixinInstance.addInterceptor(new MockInterceptor());
+        sideMixinInstance.setTarget(new SideAspectImpl());
+        aspectInstance.addMixin(sideMixinInstance);
 
-        Object bigMomma = aspectClass.newInstance();
+        Object bigMomma = aspectInstance.getProxy();
 
         assertEquals(4, Aspects.getInterceptors(bigMomma).length);
 
@@ -81,8 +83,7 @@ public class AspectClassTest extends TestCase
     {
         Impl target = (Impl) Aspects.getTarget(bigMomma, Intf.class);
         target.expectThis(bigMomma);
-        MockInterceptor classInterceptor =
-                (MockInterceptor) (Aspects.getInterceptors(bigMomma, Intf.class.getMethod("call", null))[0]);
+        MockInterceptor classInterceptor = (MockInterceptor) (Aspects.getInterceptors(bigMomma, Intf.class.getMethods()[0])[0]);
         classInterceptor.expectAtIndex(0);
         classInterceptor.expectNumberOfInterceptors(2);
         classInterceptor.expectCalledTimes(1);
@@ -91,8 +92,7 @@ public class AspectClassTest extends TestCase
         classInterceptor.expectTarget(target);
 
         SideAspectImpl sideTarget = (SideAspectImpl) Aspects.getTarget(bigMomma, SideAspect.class);
-        MockInterceptor sideInterceptor =
-                (MockInterceptor) (Aspects.getInterceptors(bigMomma, SideAspect.class.getMethod("sideCall", null))[1]);
+        MockInterceptor sideInterceptor = (MockInterceptor) (Aspects.getInterceptors(bigMomma, SideAspect.class.getMethods()[0])[1]);
         sideInterceptor.expectAtIndex(1);
         sideInterceptor.expectNumberOfInterceptors(2);
         sideInterceptor.expectCalledTimes(1);
@@ -116,10 +116,12 @@ public class AspectClassTest extends TestCase
 
     public void testNoAspects() throws IllegalAccessException, InstantiationException
     {
-        AspectClass aspectClass = new AspectClass();
-        aspectClass.setInterface(Intf.class);
-        aspectClass.setTarget(Impl.class);
-        Intf intf = (Intf) aspectClass.newInstance();
+        AspectInstance aspectInstance = new AspectInstance();
+        MixinInstance mixinInstance = new MixinInstance();
+        mixinInstance.setInterfaceClass(Intf.class);
+        mixinInstance.setTarget(new Impl());
+        aspectInstance.addMixin(mixinInstance);
+        Intf intf = (Intf) aspectInstance.getProxy();
 
         Impl impl = (Impl) Aspects.getTarget(intf, Intf.class);
 

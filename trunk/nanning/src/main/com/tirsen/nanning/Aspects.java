@@ -6,15 +6,22 @@
  */
 package com.tirsen.nanning;
 
+import com.tirsen.nanning.definition.AspectClass;
+import com.tirsen.nanning.definition.AspectRepository;
+
 import java.lang.reflect.Proxy;
+import java.lang.reflect.Method;
+import java.util.Set;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Facade for accessing some important features of aspected objects and their definitions.
  *
- * <!-- $Id: Aspects.java,v 1.11 2002-12-11 15:11:55 lecando Exp $ -->
+ * <!-- $Id: Aspects.java,v 1.12 2003-01-12 13:25:40 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.11 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.12 $
  */
 public class Aspects
 {
@@ -28,7 +35,8 @@ public class Aspects
      */
     public static Interceptor[] getInterceptors(Object proxy)
     {
-        return getAspectInstance(proxy).getClassInterceptors();
+        Set interceptors = getAspectInstance(proxy).getAllInterceptors();
+        return (Interceptor[]) interceptors.toArray(new Interceptor[interceptors.size()]);
     }
 
     /**
@@ -40,7 +48,8 @@ public class Aspects
      */
     public static Interceptor[] getInterceptors(Object proxy, Class interfaceClass)
     {
-        return getAspectInstance(proxy).getInterceptors(interfaceClass);
+        Set interceptors = getAspectInstance(proxy).getInterceptors(interfaceClass);
+        return (Interceptor[]) interceptors.toArray(new Interceptor[interceptors.size()]);
     }
 
     /**
@@ -55,7 +64,7 @@ public class Aspects
         return getAspectInstance(proxy).getTarget(interfaceClass);
     }
 
-    static AspectInstance getAspectInstance(Object proxy)
+    public static AspectInstance getAspectInstance(Object proxy)
     {
         return (AspectInstance) Proxy.getInvocationHandler(proxy);
     }
@@ -74,24 +83,14 @@ public class Aspects
         return o == null ? true : Proxy.isProxyClass(o.getClass());
     }
 
-    public static Object getClassTarget(Object value) {
-        return value == null ? null : getTarget(value, getAspectInstance(value).getAspectClass().getInterfaceClass());
-    }
-
     public static Object[] getTargets(Object object) {
         return object == null ? null : Aspects.getAspectInstance(object).getTargets();
     }
 
-    /**
-     * TODO only search class-interceptors at the moment.
-     * @param o
-     * @param interceptorClass
-     * @return
-     */
-    public static Interceptor findInterceptorByClass(Object o, Class interceptorClass) {
-        Interceptor[] interceptors = getAspectInstance(o).getClassInterceptors();
-        for (int i = 0; i < interceptors.length; i++) {
-            Interceptor interceptor = interceptors[i];
+    public static Interceptor findFirstInterceptorWithClass(Object proxy, Class interceptorClass) {
+        Set allInterceptors = getAspectInstance(proxy).getAllInterceptors();
+        for (Iterator iterator = allInterceptors.iterator(); iterator.hasNext();) {
+            Interceptor interceptor = (Interceptor) iterator.next();
             if(interceptorClass.isInstance(interceptor)) {
                 return interceptor;
             }
@@ -99,19 +98,20 @@ public class Aspects
         return null;
     }
 
-    public static AspectClass getAspectClass(Object proxy) {
-        return getAspectInstance(proxy).getAspectClass();
-    }
-
-    public static AspectRepository getCurrentAspectRepository() {
+    public static AspectFactory getCurrentAspectFactory() {
         if(getThis() != null) {
-            return getAspectInstance(getThis()).getAspectClass().getAspectRepository();
+            return getAspectInstance(getThis()).getAspectFactory();
         } else {
-            return (AspectRepository) contextAspectRepository.get();
+            return (AspectFactory) contextAspectRepository.get();
         }
     }
 
-    public static void setContextAspectRepository(AspectRepository aspectRepository) {
+    public static void setContextAspectFactory(AspectFactory aspectRepository) {
         contextAspectRepository.set(aspectRepository);
+    }
+
+    public static MethodInterceptor[] getInterceptors(Object proxy, Method method) {
+        List interceptors = getAspectInstance(proxy).getInterceptorsForMethod(method);
+        return (MethodInterceptor[]) interceptors.toArray(new MethodInterceptor[interceptors.size()]);
     }
 }

@@ -10,7 +10,7 @@ import junit.framework.TestCase;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogConfigurationException;
-import com.tirsen.nanning.AspectClass;
+import com.tirsen.nanning.definition.AspectClass;
 import com.tirsen.nanning.samples.TraceInterceptor;
 
 import java.util.List;
@@ -22,10 +22,10 @@ import java.net.URL;
 /**
  * TODO document TraceInterceptorTest
  *
- * <!-- $Id: TraceInterceptorTest.java,v 1.4 2002-12-11 10:57:52 lecando Exp $ -->
+ * <!-- $Id: TraceInterceptorTest.java,v 1.5 2003-01-12 13:25:40 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.4 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.5 $
  */
 public class TraceInterceptorTest extends TestCase
 {

@@ -9,9 +9,40 @@
     <body>
 
         <section name="Usage">
-            <subsection name="Using aspects">
+            <subsection name="Building an aspected object">
                 <p>
-                    This is an example from the unit-tests:
+                    This builds an aspected object consisting of two mixins one implementing the interface Intf and the
+                    other implementing SideAspect. Both mixins have the interceptors MockInterceptor and NullInterceptor
+                    applied to all methods.
+                </p>
+                <source><![CDATA[
+AspectInstance aspectInstance = new AspectInstance();
+MixinInstance mixinInstance = new MixinInstance();
+mixinInstance.setInterfaceClass(Intf.class);
+mixinInstance.addInterceptor(new MockInterceptor());
+mixinInstance.addInterceptor(new NullInterceptor());
+mixinInstance.setTarget(new Impl());
+aspectInstance.addMixin(mixinInstance);
+MixinInstance sideMixinInstance = new MixinInstance();
+sideMixinInstance.setInterfaceClass(SideAspect.class);
+sideMixinInstance.addInterceptor(new NullInterceptor());
+sideMixinInstance.addInterceptor(new MockInterceptor());
+sideMixinInstance.setTarget(new SideAspectImpl());
+aspectInstance.addMixin(sideMixinInstance);
+
+Object bigMomma = aspectInstance.getProxy();
+
+Intf intf = (Intf) intf;
+intf.call();
+
+SideAspect sideAspect = (SideAspect) intf;
+sideAspect.call();
+                ]]></source>
+            </subsection>
+            <subsection name="Using AspectClass">
+                <p>
+                    This is the older format for instantiating aspected objects. This example builds a configuration
+                    object that can be used to instantiate an aspected object.
                 </p>
                 <source><![CDATA[
 AspectClass aspectClass = new AspectClass();
@@ -90,8 +121,7 @@ assertEquals("argMethodValue", Attributes.getAttribute(argMethod, "methodAttribu
                 ]]></source>
                 <p>
                     The attributes-compiler can also be used as an ant-task (or better yet! inside
-                    <a
-                        href="http://jakarta.apache.org/maven">maven</a>). This is left as an exercise
+                    <a href="http://jakarta.apache.org/maven">maven</a>). This is left as an exercise
                     for the interested reader (yeah, yeah, I'm lazy...).
                 </p>
             </subsection>

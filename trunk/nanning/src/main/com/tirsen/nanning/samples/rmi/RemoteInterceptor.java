@@ -6,7 +6,7 @@ import java.net.Socket;
 
 import com.tirsen.nanning.Invocation;
 import com.tirsen.nanning.MethodInterceptor;
-import com.tirsen.nanning.SingletonInterceptor;
+import com.tirsen.nanning.definition.SingletonInterceptor;
 import com.tirsen.nanning.samples.prevayler.Call;
 
 public class RemoteInterceptor implements MethodInterceptor, SingletonInterceptor {

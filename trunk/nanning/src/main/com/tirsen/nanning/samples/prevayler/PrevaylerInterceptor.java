@@ -3,13 +3,18 @@ package com.tirsen.nanning.samples.prevayler;
 import java.lang.reflect.Method;
 
 import com.tirsen.nanning.*;
+import com.tirsen.nanning.attribute.Attributes;
+import com.tirsen.nanning.definition.FilterMethodsInterceptor;
+import com.tirsen.nanning.definition.InterceptorDefinition;
+import com.tirsen.nanning.definition.SingletonInterceptor;
+import com.tirsen.nanning.definition.AspectRepository;
 import org.prevayler.Prevayler;
 
 /**
  * TODO document PrevaylerInterceptor
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class PrevaylerInterceptor
         implements SingletonInterceptor, FilterMethodsInterceptor, ConstructionInterceptor {
@@ -39,7 +44,7 @@ public class PrevaylerInterceptor
         }
         else {
             Object object = invocation.getProxy();
-            CurrentPrevayler.getSystem().registerOID(object);
+            CurrentPrevayler.getSystem().getObjectID(object);
             return object;
         }
     }
@@ -88,8 +93,9 @@ public class PrevaylerInterceptor
     }
 
     public static PrevaylerInterceptor getPrevaylerInterceptor() {
+        // I think this might have to be done some other way...
         InterceptorDefinition interceptorDefinition =
-                Aspects.getCurrentAspectRepository().getInterceptor(PrevaylerInterceptor.class);
+                AspectRepository.getCurrentAspectRepository().getInterceptor(PrevaylerInterceptor.class);
         PrevaylerInterceptor prevaylerInterceptor = (PrevaylerInterceptor) interceptorDefinition.getSingleton();
         return prevaylerInterceptor;
     }

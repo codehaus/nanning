@@ -4,22 +4,25 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
-package com.tirsen.nanning;
+package com.tirsen.nanning.definition;
+
+import com.tirsen.nanning.definition.InterceptorDefinition;
+import com.tirsen.nanning.definition.DefinitionAwareInterceptor;
+import com.tirsen.nanning.attribute.Attributes;
+import com.tirsen.nanning.definition.FilterMethodsInterceptor;
 
 import java.lang.reflect.Method;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 /**
- * basic interceptor with methodNameFilter support. it would have been nicer to have
- * FilterMethodsInterceptor as Interface so that we can implement it and many others instead of directly
- * extending it.
+ * basic interceptor with methodNameFilter support.
  * TODO document BasicInterceptor
  *
- * <!-- $Id: BasicInterceptor.java,v 1.2 2002-12-08 15:50:58 tirsen Exp $ -->
+ * <!-- $Id: BasicInterceptor.java,v 1.1 2003-01-12 13:25:40 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.1 $
  */
 
 public abstract class BasicInterceptor implements DefinitionAwareInterceptor, FilterMethodsInterceptor {

@@ -9,6 +9,8 @@
     <body>
 
         <section name="Nanning Aspects">
+            <p>WARNING! The documentation has not been properly updated for the latest quite major refactoring. It does
+               not at the moment properly document Nanning.</p>
             <p>
                 Nanning Aspects is a simple yet scaleable aspect-oriented framework based on the ideas of
                 implementing AOP in Java outlined by Rickard Öberg in his

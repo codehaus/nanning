@@ -8,15 +8,15 @@ package com.tirsen.nanning.jelly;
 
 import org.apache.commons.jelly.TagSupport;
 import org.apache.commons.jelly.XMLOutput;
-import com.tirsen.nanning.AspectRepository;
+import com.tirsen.nanning.definition.AspectRepository;
 
 /**
  * TODO document AspectRepositoryTag
  *
- * <!-- $Id: AspectRepositoryTag.java,v 1.1 2002-11-03 19:05:33 tirsen Exp $ -->
+ * <!-- $Id: AspectRepositoryTag.java,v 1.2 2003-01-12 13:25:40 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class AspectRepositoryTag extends TagSupport
 {
