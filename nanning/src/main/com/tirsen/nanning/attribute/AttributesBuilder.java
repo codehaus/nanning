@@ -19,7 +19,7 @@ import java.util.Properties;
  * to parse another file, the reset() method must be called.</p>
  *
  * @author <a href="joe@truemesh.com">Joe Walnes</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class AttributesBuilder implements Builder {
 
@@ -55,7 +55,7 @@ public class AttributesBuilder implements Builder {
 		method.append('(');
 		for (Iterator params = def.params.iterator(); params.hasNext();) {
             FieldDef param = (FieldDef) params.next();
-			method.append(param.type);
+            method.append(getTypeWithoutPackage(param));
 			method.append(',');
 		}
 		if (def.params.size() > 0) {
@@ -66,7 +66,15 @@ public class AttributesBuilder implements Builder {
 		addCurrentAttributes(method.toString());
 	}
 
-	public void addField(FieldDef def) {
+    private String getTypeWithoutPackage(FieldDef param) {
+        String type = param.type;
+        if (type.indexOf('.') != -1) {
+            type = type.substring(type.lastIndexOf('.') + 1);
+        }
+        return type;
+    }
+
+    public void addField(FieldDef def) {
 		addCurrentAttributes("field." + def.name);
 	}
 
