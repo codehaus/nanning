@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.nanning.Invocation;
 import org.codehaus.nanning.AssertionException;
+import org.codehaus.nanning.util.WrappedException;
 import org.prevayler.TransactionWithQuery;
 
 import javax.security.auth.Subject;
@@ -36,7 +37,7 @@ public class InvokeTransaction implements TransactionWithQuery {
             outputStream.flush();
             return bytes.toByteArray();
         } catch (IOException e) {
-            throw new RuntimeException("Could not marshal call" + e);
+            throw new WrappedException("Could not marshal call", e);
         }
     }
 
@@ -46,9 +47,9 @@ public class InvokeTransaction implements TransactionWithQuery {
                     new MarshallingInputStream(new ByteArrayInputStream(marshalledCall), new IdentifyingMarshaller());
             return (AuthenticatedCall) inputStream.readObject();
         } catch (IOException e) {
-            throw new RuntimeException("Could not marshal call" + e);
+            throw new WrappedException("Could not marshal call", e);
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Could not marshal call" + e);
+            throw new WrappedException("Could not marshal call", e);
         }
     }
 

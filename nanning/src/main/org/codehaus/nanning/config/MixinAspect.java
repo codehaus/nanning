@@ -27,7 +27,7 @@ public class MixinAspect extends AbstractAspect {
                 try {
                     mixinInstance.setTarget(targetClass.newInstance());
                 } catch (Exception e) {
-                    throw new AspectException("could not instantiate target " + e);
+                    throw new AspectException("could not instantiate target", e);
                 }
             }
             aspectInstance.addMixin(mixinInstance);

@@ -15,6 +15,7 @@ import org.codehaus.nanning.MethodInterceptor;
 import org.codehaus.nanning.attribute.Attributes;
 import org.codehaus.nanning.util.Matcher;
 import org.codehaus.nanning.util.RegexpPattern;
+import org.codehaus.nanning.util.WrappedException;
 
 /**
  * TODO document ContractInterceptor.
@@ -22,7 +23,7 @@ import org.codehaus.nanning.util.RegexpPattern;
  * you can enable and disable contract-checking in the same way you enable and disable assertions (java -ea and so on).
  *
  * @author <a href="mailto:jon_tirsen@yahoo.org">Jon Tirsén</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class ContractInterceptor implements MethodInterceptor {
     private static final Log logger = LogFactory.getLog(ContractInterceptor.class);
@@ -98,7 +99,7 @@ public class ContractInterceptor implements MethodInterceptor {
         try {
             return executeExpression(expression, invocation.getProxy(), context);
         } catch (Exception e) {
-            throw new RuntimeException("Could not execute: " + expression + e);
+            throw new WrappedException("Could not execute: " + expression, e);
         }
     }
 

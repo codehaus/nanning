@@ -31,6 +31,7 @@ public abstract class AbstractAttributesTest extends TestCase {
             try {
                 Attributes.addSearchPath(attributesDir.toURL());
             } catch (MalformedURLException e) {
+                e.printStackTrace();
                 fail(e.getMessage());
             }
         }
