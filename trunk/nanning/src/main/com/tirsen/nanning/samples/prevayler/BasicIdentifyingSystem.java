@@ -54,7 +54,18 @@ public class BasicIdentifyingSystem extends AbstractClockedSystem implements Ide
     }
 
     public synchronized Collection getAllRegisteredObjects() {
-        return new ArrayList(objectToId.keySet());
+
+        Collection result = new ArrayList();
+        for (Iterator i = objectToId.entrySet().iterator(); i.hasNext();) {
+            try {
+                Map.Entry entry = (Map.Entry) i.next();
+                result.add(entry.getKey());
+            } catch (NoSuchElementException ignore) {
+                /* This sometimes happens with the jakarta ReferenceMap, lets just ignore it and continue */
+            }
+        }
+
+        return result;
     }
 
     public synchronized boolean hasObjectID(Object object) {
