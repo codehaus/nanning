@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <project>
     <extend>${basedir}/../project.xml</extend>
-    <name>Nanning Profiler</name>
+    <name>Nanning Definition</name>
     <id>nanning-profiler</id>
     <currentVersion>0.9</currentVersion>
-    <package>com.tirsen.nanning.cache</package>
+    <package>com.tirsen.nanning.definition</package>
     <shortDescription>Profiler</shortDescription>
-    <description>A profiling interceptor created by Khalil Bouhamza</description>
+    <description>The older deprecated definition format and API</description>
 
     <developers>
 
@@ -29,6 +29,17 @@
     </developers>
 
     <dependencies>
+
+        <dependency>
+            <id>dom4j</id>
+            <version>1.4-dev-8</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-jelly</groupId>
+            <artifactId>commons-jelly</artifactId>
+            <version>20030211.141339</version>
+        </dependency>
 
     </dependencies>
 

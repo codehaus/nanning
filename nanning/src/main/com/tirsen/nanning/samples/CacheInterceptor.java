@@ -6,22 +6,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.tirsen.nanning.*;
-import com.tirsen.nanning.attribute.Attributes;
+import com.tirsen.nanning.Invocation;
+import com.tirsen.nanning.MethodInterceptor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class CacheInterceptor implements MethodInterceptor, FilterMethodsInterceptor {
+public class CacheInterceptor implements MethodInterceptor {
     private static final Log logger = LogFactory.getLog(CacheInterceptor.class);
 
     /**
      * TODO Should be an LRU-cache
      */
     private Map cache = new HashMap();
-
-    public boolean interceptsMethod(Method method) {
-        return Attributes.hasAttribute(method, "cache");
-    }
 
     public Object invoke(Invocation invocation) throws Throwable {
         Method method = invocation.getMethod();

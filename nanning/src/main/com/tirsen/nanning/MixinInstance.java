@@ -13,14 +13,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
-
 /**
  * TODO document AspectDefinition
  *
- * <!-- $Id: MixinInstance.java,v 1.16 2003-06-22 16:26:26 tirsen Exp $ -->
+ * <!-- $Id: MixinInstance.java,v 1.17 2003-07-01 16:08:10 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.16 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.17 $
  */
 public class MixinInstance implements Serializable {
     static final long serialVersionUID = 7386027290257587762L;
@@ -198,14 +197,7 @@ public class MixinInstance implements Serializable {
         Method[] methods = getAllMethods();
         for (int i = 0; i < methods.length; i++) {
             Method method = methods[i];
-            if (interceptor instanceof FilterMethodsInterceptor) {
-                FilterMethodsInterceptor filterMethodsInterceptor = (FilterMethodsInterceptor) interceptor;
-                if (filterMethodsInterceptor.interceptsMethod(method)) {
-                    addInterceptor(method, (MethodInterceptor) interceptor);
-                }
-            } else {
-                addInterceptor(method, (MethodInterceptor) interceptor);
-            }
+            addInterceptor(method, (MethodInterceptor) interceptor);
         }
     }
 

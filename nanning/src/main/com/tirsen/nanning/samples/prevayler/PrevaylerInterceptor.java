@@ -2,17 +2,15 @@ package com.tirsen.nanning.samples.prevayler;
 
 import java.lang.reflect.Method;
 
-import com.tirsen.nanning.FilterMethodsInterceptor;
 import com.tirsen.nanning.Invocation;
 import com.tirsen.nanning.MethodInterceptor;
 import com.tirsen.nanning.attribute.Attributes;
-import com.tirsen.nanning.definition.SingletonInterceptor;
 
 /**
  * TODO document PrevaylerInterceptor
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirs?n</a>
- * @version $Revision: 1.29 $
+ * @version $Revision: 1.30 $
  */
 public class PrevaylerInterceptor implements MethodInterceptor {
     private boolean resolveEntities;

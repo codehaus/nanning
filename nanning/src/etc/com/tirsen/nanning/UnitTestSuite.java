@@ -18,6 +18,7 @@ import com.tirsen.nanning.samples.prevayler.ObjectGraphVisitorTest;
 import com.tirsen.nanning.samples.rmi.RemoteTest;
 import com.tirsen.nanning.xml.AspectSystemParserTest;
 import com.tirsen.nanning.locking.PessimisticLockingAspectTest;
+import com.tirsen.nanning.definition.*;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 

@@ -124,7 +124,17 @@
         <dependency>
             <groupId>nanning</groupId>
             <artifactId>nanning</artifactId>
-            <version>0.8</version>
+            <version>0.9</version>
+        </dependency>
+
+        <dependency>
+            <id>cglib</id>
+            <version>1.0</version>
+        </dependency>
+
+        <dependency>
+            <id>bcel</id>
+            <version>5.0</version>
         </dependency>
 
     </dependencies>
