@@ -18,6 +18,9 @@ public class SerializationTest extends AbstractAttributesTest {
                 aspectInstance.setTarget(Intf.class, targets[0]);
                 return aspectInstance.getProxy();
             }
+
+            public void setTargets(Object object, Object[] targets) {
+            }
         };
 
         AspectFactory multipleAspectFactory = new AspectFactory() {
@@ -32,6 +35,9 @@ public class SerializationTest extends AbstractAttributesTest {
                     aspectInstance.setTarget(TestMixin.class, targets[1]);
                 }
                 return aspectInstance.getProxy();
+            }
+
+            public void setTargets(Object object, Object[] targets) {
             }
         };
 
