@@ -58,7 +58,9 @@ public class GarbageCollectingPrevayler extends SnapshotPrevayler {
                 finalizationCallback.finalizationCallback();
             }
 
-            system.unregisterObjectID(unreferencedObject);
+            if (system.hasObjectID(unreferencedObject)) {
+                system.unregisterObjectID(unreferencedObject);
+            }
         }
     }
 
