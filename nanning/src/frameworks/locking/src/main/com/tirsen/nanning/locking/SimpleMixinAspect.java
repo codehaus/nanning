@@ -8,9 +8,9 @@ import com.tirsen.nanning.AspectException;
 import java.util.Arrays;
 
 /**
- * Abstract utility base-classes for aspects that themselves add state and behaviour to objects they intercept. The
+ * Abstract utility base-classes for aspects that themselves add state and behaviour to objects. The
  * aspect itself will be cloned and introduced as the target of a mixin. It can also add interceptors that work on
- * the state and behaviour introduced.
+ * the state and behavior introduced.
  */
 public abstract class SimpleMixinAspect implements Aspect, Cloneable {
     private Class interfaceClass;
