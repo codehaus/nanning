@@ -21,7 +21,7 @@ public class FindTargetMixinAspect implements Aspect {
 
         Class interfaceClass = aspectInstance.getClassIdentifier();
         Class targetClass = findImpl(interfaceClass);
-        Object target = null;
+        Object target;
         try {
             target = targetClass.newInstance();
         } catch (Exception e) {

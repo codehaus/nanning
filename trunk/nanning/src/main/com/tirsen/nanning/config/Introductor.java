@@ -4,32 +4,32 @@ import com.tirsen.nanning.AspectException;
 import com.tirsen.nanning.AspectInstance;
 import com.tirsen.nanning.MixinInstance;
 
-public class Introductor implements Aspect {
-    private Class interfaceClass;
-    private Class targetClass;
+public class Introductor extends AbstractAspect {
+    protected Class interfaceClass;
+    protected Class targetClass;
 
     public Introductor(Class interfaceClass, Class targetClass) {
         this.interfaceClass = interfaceClass;
         this.targetClass = targetClass;
     }
 
-    public void adviseMixin(AspectInstance aspectInstance, MixinInstance mixin) {
-    }
-
-    public void advise(AspectInstance aspectInstance) {
-    }
-
     public void introduce(AspectInstance aspectInstance) {
-        MixinInstance mixinInstance = new MixinInstance();
-        mixinInstance.setInterfaceClass(interfaceClass);
-        if (targetClass != null) {
-            try {
-                mixinInstance.setTarget(targetClass.newInstance());
-            } catch (Exception e) {
-                throw new AspectException("could not instantiate target " + e);
+        if (shouldIntroduce(aspectInstance)) {
+            MixinInstance mixinInstance = new MixinInstance();
+            mixinInstance.setInterfaceClass(interfaceClass);
+            if (targetClass != null) {
+                try {
+                    mixinInstance.setTarget(targetClass.newInstance());
+                } catch (Exception e) {
+                    throw new AspectException("could not instantiate target " + e);
+                }
             }
+            aspectInstance.addMixin(mixinInstance);
         }
-        aspectInstance.addMixin(mixinInstance);
+    }
+
+    public boolean shouldIntroduce(AspectInstance aspectInstance) {
+        return true;
     }
 
     public Class getInterfaceClass() {

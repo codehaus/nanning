@@ -1,7 +1,5 @@
 package com.tirsen.nanning.samples.prevayler;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.*;
 
 import org.apache.commons.logging.Log;
@@ -15,19 +13,14 @@ public class BasicIdentifyingSystem extends AbstractClockedSystem implements Ide
 
     private Map idToObject = SoftMap.createSoftValuesMap();
     /**
-     * If serializing this and then serializing the serialized object again it will fail with an OptionalDataException,
-     * thus I need to make this transient and reconstruct it from idToObject again.
+     * Rebuild this after xml-serialization.
+     * @xml-serializer-transient
      */
-    private transient Map objectToId = SoftMap.createSoftKeysMap();
+    private Map objectToId = SoftMap.createSoftKeysMap();
 
     private long nextObjectId = 0;
 
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        in.defaultReadObject();
-        buildMapsAfterDeserialization();
-    }
-
-    public void buildMapsAfterDeserialization() {
+    public void rebuildKeysMap() {
         objectToId = SoftMap.createSoftKeysMap();
         for (Iterator iterator = idToObject.entrySet().iterator(); iterator.hasNext();) {
             Map.Entry entry = (Map.Entry) iterator.next();

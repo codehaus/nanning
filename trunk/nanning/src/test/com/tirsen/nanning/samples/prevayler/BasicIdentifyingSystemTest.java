@@ -2,18 +2,29 @@ package com.tirsen.nanning.samples.prevayler;
 
 import java.io.*;
 
-import com.tirsen.nanning.samples.prevayler.BasicIdentifyingSystem;
+import com.tirsen.nanning.Aspects;
+import com.tirsen.nanning.config.AspectSystem;
+import com.tirsen.nanning.config.ClassIntroductor;
 import junit.framework.TestCase;
 
 public class BasicIdentifyingSystemTest extends TestCase {
     private BasicIdentifyingSystem basicIdentifyingSystem;
-    private String registredObject;
+    private Object registredObject;
+    
+    public static interface Interface {}
+    public static class Implementation implements Interface, Serializable {}
 
     protected void setUp() throws Exception {
         super.setUp();
 
+        AspectSystem aspectSystem = new AspectSystem();
+        aspectSystem.addAspect(new ClassIntroductor(Interface.class, Implementation.class));
+        Aspects.setContextAspectFactory(aspectSystem);
+
+        registredObject = Aspects.getCurrentAspectFactory().newInstance(Interface.class);
+
         basicIdentifyingSystem = new BasicIdentifyingSystem();
-        registredObject = "TestObject";
+
         CurrentPrevayler.enterTransaction();
         basicIdentifyingSystem.registerObjectID(registredObject);
         CurrentPrevayler.exitTransaction();

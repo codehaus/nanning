@@ -99,30 +99,6 @@ public class AspectSystemTest extends TestCase {
                      getInterceptorsForMethod(Intf.class.getMethod("call", new Class[0])).size());
     }
 
-    public void testCreateWithTargets() {
-//        AspectSystem aspectSystem = new AspectSystem();
-//        aspectSystem.addAspect(new FindTargetMixinAspect());
-//        aspectSystem.addAspect(new Introductor(TestMixin.class, TestMixinImpl.class));
-//        IntfImpl impl = new IntfImpl();
-//        TestMixinImpl testMixin = new TestMixinImpl();
-//
-//        Object bigMomma = aspectSystem.newInstance(Intf.class, new Object[]{impl, testMixin});
-//        assertSame(Aspects.getTarget(bigMomma, Intf.class), impl);
-//        assertSame(Aspects.getTarget(bigMomma, TestMixin.class), testMixin);
-//
-//        // test in another order
-//        bigMomma = aspectSystem.newInstance(Intf.class, new Object[]{testMixin, impl});
-//        assertSame(Aspects.getTarget(bigMomma, Intf.class), impl);
-//        assertSame(Aspects.getTarget(bigMomma, TestMixin.class), testMixin);
-//
-//        // test one object too many
-//        try {
-//            bigMomma = aspectSystem.newInstance(Intf.class, new Object[]{testMixin, impl, new Object()});
-//            fail();
-//        } catch (IllegalArgumentException e) {
-//        }
-    }
-
     public static interface Base {
         public void m();
     }

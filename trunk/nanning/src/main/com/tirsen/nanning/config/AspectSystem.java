@@ -15,7 +15,7 @@ public class AspectSystem implements AspectFactory {
 
     public Object newInstance(Class classIdentifier) {
         AspectInstance aspectInstance = createAspectInstance(classIdentifier);
-        return aspectInstance.getProxy(true);
+        return aspectInstance.getProxy();
     }
 
     private AspectInstance createAspectInstance(Class classIdentifier) {

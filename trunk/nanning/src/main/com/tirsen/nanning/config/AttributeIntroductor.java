@@ -11,9 +11,7 @@ public class AttributeIntroductor extends Introductor {
         this.attribute = attribute;
     }
 
-    public void introduce(AspectInstance aspectInstance) {
-        if (Attributes.hasInheritedAttribute(aspectInstance.getClassIdentifier(), attribute)) {
-            super.introduce(aspectInstance);
-        }
+    public boolean shouldIntroduce(AspectInstance aspectInstance) {
+        return Attributes.hasInheritedAttribute(aspectInstance.getClassIdentifier(), attribute);
     }
 }
