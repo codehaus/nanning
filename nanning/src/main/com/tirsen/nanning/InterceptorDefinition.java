@@ -15,10 +15,10 @@ import java.lang.reflect.Method;
 /**
  * TODO document InterceptorDefinition
  *
- * <!-- $Id: InterceptorDefinition.java,v 1.7 2002-12-03 17:04:58 lecando Exp $ -->
+ * <!-- $Id: InterceptorDefinition.java,v 1.8 2002-12-11 15:11:55 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class InterceptorDefinition {
     private final Class interceptorClass;
@@ -28,6 +28,9 @@ public class InterceptorDefinition {
     private Set positiveCache = new HashSet();
 
     public InterceptorDefinition(Class interceptorClass) {
+        if(!Interceptor.class.isAssignableFrom(interceptorClass)) {
+            throw new IllegalArgumentException(interceptorClass + " is not an interceptor.");
+        }
         this.interceptorClass = interceptorClass;
     }
 

@@ -12,14 +12,15 @@ import java.lang.reflect.Proxy;
 /**
  * The definition of an aspected object, specifies interfaces, interceptors and target-objects.
  *
- * <!-- $Id: AspectClass.java,v 1.17 2002-12-11 10:57:52 lecando Exp $ -->
+ * <!-- $Id: AspectClass.java,v 1.18 2002-12-11 15:11:54 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public class AspectClass {
     private final List aspectDefinitions = new ArrayList();
     private Map interfacesToInstancesIndex = new HashMap();
+    private AspectRepository aspectRepository;
 
     public AspectClass() {
         aspectDefinitions.add(new AspectDefinition());
@@ -70,7 +71,7 @@ public class AspectClass {
                 SideAspectInstance aspectInstance = null;
                 if (targets != null) {
                     aspectInstance =
-                            aspectDefinition.createAspectInstance(targets[iterator.nextIndex()]);
+                            aspectDefinition.createAspectInstance(targets[iterator.previousIndex()]);
                 } else {
                     aspectInstance =
                             aspectDefinition.createAspectInstance();
@@ -155,5 +156,13 @@ public class AspectClass {
 
     public void addInterceptor(InterceptorDefinition interceptorDefinition) {
         getClassAspectDefinition().addInterceptor(interceptorDefinition);
+    }
+
+    public AspectRepository getAspectRepository() {
+        return aspectRepository;
+    }
+
+    public void setAspectRepository(AspectRepository aspectRepository) {
+        this.aspectRepository = aspectRepository;
     }
 }

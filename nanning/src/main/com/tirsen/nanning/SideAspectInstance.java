@@ -10,22 +10,23 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.Serializable;
 
 
 /**
  * TODO document AspectDefinition
  *
- * <!-- $Id: SideAspectInstance.java,v 1.8 2002-12-08 12:57:45 tirsen Exp $ -->
+ * <!-- $Id: SideAspectInstance.java,v 1.9 2002-12-11 15:11:55 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.8 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.9 $
  */
 class SideAspectInstance {
-    private AspectDefinition aspectDefinition;
+    private transient AspectDefinition aspectDefinition;
     private Class interfaceClass;
-    private Interceptor[] interceptors;
+    private transient Interceptor[] interceptors;
     private Object target;
-    private MethodInterceptor[][] methodInterceptors;
+    private transient MethodInterceptor[][] methodInterceptors;
 
     public SideAspectInstance(AspectDefinition aspectDefinition) {
         this.aspectDefinition = aspectDefinition;
@@ -157,6 +158,10 @@ class SideAspectInstance {
 
         public Interceptor getInterceptor(int index) {
             return getAllInterceptors()[index];
+        }
+
+        public Class getTargetInterface() {
+            return getInterfaceClass();
         }
 
         public Object getTarget() {

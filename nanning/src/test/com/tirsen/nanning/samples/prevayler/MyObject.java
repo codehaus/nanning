@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * @instantiation-is-prevayler-command
  */
-public interface MyObject extends Serializable {
+public interface MyObject extends Serializable, Identifiable {
     String getAttribute();
 
     /**

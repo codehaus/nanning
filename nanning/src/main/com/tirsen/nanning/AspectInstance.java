@@ -6,25 +6,26 @@
  */
 package com.tirsen.nanning;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-
+import java.io.*;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * TODO document AspectInstance
  *
- * <!-- $Id: AspectInstance.java,v 1.17 2002-12-08 12:57:45 tirsen Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.18 2002-12-11 15:11:55 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.17 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.18 $
  */
 class AspectInstance implements InvocationHandler {
     private static final Method OBJECT_EQUALS_METHOD;
 
     private Object proxy;
-    private final SideAspectInstance[] sideAspectInstances;
-    private final AspectClass aspectClass;
+    private SideAspectInstance[] sideAspectInstances;
+    private AspectClass aspectClass;
 
 
     static {

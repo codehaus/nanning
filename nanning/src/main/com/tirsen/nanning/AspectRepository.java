@@ -23,13 +23,12 @@ import com.tirsen.nanning.jelly.AspectTagLibrary;
 /**
  * TODO document AspectRepository
  *
- * <!-- $Id: AspectRepository.java,v 1.8 2002-12-03 13:55:24 lecando Exp $ -->
+ * <!-- $Id: AspectRepository.java,v 1.9 2002-12-11 15:11:55 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
-public class AspectRepository  
-{
+public class AspectRepository {
     private static AspectRepository instance;
     private static final Log logger = LogFactory.getLog(AspectRepository.class);
 
@@ -37,63 +36,52 @@ public class AspectRepository
     private final Map aspectDefinitions = new HashMap();
     private final Map aspectClasses = new HashMap();
 
-    public void defineInterceptor(InterceptorDefinition interceptorDefinition)
-    {
+    public void defineInterceptor(InterceptorDefinition interceptorDefinition) {
         interceptorDefinitions.put(interceptorDefinition.getInterceptorClass(), interceptorDefinition);
     }
 
-    public InterceptorDefinition getInterceptor(Class interceptorClass)
-    {
+    public InterceptorDefinition getInterceptor(Class interceptorClass) {
         InterceptorDefinition interceptorDefinition =
                 (InterceptorDefinition) interceptorDefinitions.get(interceptorClass);
-        if(interceptorDefinition == null) {
+        if (interceptorDefinition == null) {
             throw new IllegalArgumentException("no such interceptor defined: " + interceptorClass);
         }
         return interceptorDefinition;
     }
 
-    public void defineAspect(AspectDefinition aspectDefinition)
-    {
+    public void defineAspect(AspectDefinition aspectDefinition) {
         aspectDefinitions.put(aspectDefinition.getInterfaceClass(), aspectDefinition);
     }
 
-    public AspectDefinition getAspect(Class interfaceClass)
-    {
+    public AspectDefinition getAspect(Class interfaceClass) {
         return (AspectDefinition) aspectDefinitions.get(interfaceClass);
     }
 
-    public void defineClass(AspectClass aspectClass)
-    {
+    public void defineClass(AspectClass aspectClass) {
+        aspectClass.setAspectRepository(this);
         aspectClasses.put(aspectClass.getInterfaceClass(), aspectClass);
     }
 
-    public AspectClass getClass(Class interfaceClass)
-    {
-        return (AspectClass) aspectClasses.get(interfaceClass);
+    public AspectClass getClass(Class interfaceClass) {
+        AspectClass aspectClass = (AspectClass) aspectClasses.get(interfaceClass);
+        if (aspectClass == null) {
+            throw new IllegalArgumentException("Did not find aspect-class with interface " +
+                                               interfaceClass.getName());
+        }
+        return aspectClass;
     }
 
-    public Object newInstance(Class aspectInterface)
-    {
+    public Object newInstance(Class aspectInterface) {
         AspectClass aClass = getClass(aspectInterface);
-        if (aClass == null)
-        {
-            throw new IllegalArgumentException("Did not find aspect-class with interface " +
-                    aspectInterface.getName());
-        }
         return aClass.newInstance();
     }
 
-    public static AspectRepository getInstance()
-    {
-        if(instance == null)
-        {
+    public static AspectRepository getInstance() {
+        if (instance == null) {
             instance = new AspectRepository();
-            try
-            {
+            try {
                 instance.configure(AspectRepository.class.getResource("/aspect-repository.xml"));
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 logger.warn("failed to configure default instance");
             }
         }
@@ -106,29 +94,23 @@ public class AspectRepository
      * @param resource
      * @throws ConfigureException
      */
-    public void configure(URL resource) throws ConfigureException
-    {
+    public void configure(URL resource) throws ConfigureException {
         JellyContext context = new JellyContext();
-        try
-        {
+        try {
             context.registerTagLibrary(AspectTagLibrary.TAG_LIBRARY_URI, new AspectTagLibrary());
             context.registerTagLibrary("", new AspectTagLibrary());
             XMLOutput xmlOutput = XMLOutput.createXMLOutput(new ByteArrayOutputStream());
             context.runScript(resource, xmlOutput);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new ConfigureException(e);
         }
 
         Collection aspectRepositories = AspectTagLibrary.findDefinedRepositories(context);
         Iterator iterator = aspectRepositories.iterator();
-        if(!iterator.hasNext())
-        {
+        if (!iterator.hasNext()) {
             throw new ConfigureException("No aspect-repository defined.");
         }
-        while (iterator.hasNext())
-        {
+        while (iterator.hasNext()) {
             AspectRepository configuredRepository = (AspectRepository) iterator.next();
             this.interceptorDefinitions.putAll(configuredRepository.interceptorDefinitions);
             this.aspectClasses.putAll(configuredRepository.aspectClasses);

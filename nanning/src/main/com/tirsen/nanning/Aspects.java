@@ -11,13 +11,15 @@ import java.lang.reflect.Proxy;
 /**
  * Facade for accessing some important features of aspected objects and their definitions.
  *
- * <!-- $Id: Aspects.java,v 1.10 2002-11-27 13:18:01 lecando Exp $ -->
+ * <!-- $Id: Aspects.java,v 1.11 2002-12-11 15:11:55 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class Aspects
 {
+    private static ThreadLocal contextAspectRepository = new ThreadLocal();
+
     /**
      * Gets the interceptors that belongs to the proxy
      *
@@ -53,7 +55,7 @@ public class Aspects
         return getAspectInstance(proxy).getTarget(interfaceClass);
     }
 
-    private static AspectInstance getAspectInstance(Object proxy)
+    static AspectInstance getAspectInstance(Object proxy)
     {
         return (AspectInstance) Proxy.getInvocationHandler(proxy);
     }
@@ -99,5 +101,17 @@ public class Aspects
 
     public static AspectClass getAspectClass(Object proxy) {
         return getAspectInstance(proxy).getAspectClass();
+    }
+
+    public static AspectRepository getCurrentAspectRepository() {
+        if(getThis() != null) {
+            return getAspectInstance(getThis()).getAspectClass().getAspectRepository();
+        } else {
+            return (AspectRepository) contextAspectRepository.get();
+        }
+    }
+
+    public static void setContextAspectRepository(AspectRepository aspectRepository) {
+        contextAspectRepository.set(aspectRepository);
     }
 }
