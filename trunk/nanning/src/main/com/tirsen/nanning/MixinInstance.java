@@ -6,6 +6,7 @@
  */
 package com.tirsen.nanning;
 
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -14,15 +15,18 @@ import java.util.*;
 /**
  * TODO document AspectDefinition
  *
- * <!-- $Id: MixinInstance.java,v 1.13 2003-05-11 13:40:52 tirsen Exp $ -->
+ * <!-- $Id: MixinInstance.java,v 1.14 2003-05-12 13:43:53 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.13 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.14 $
  */
-public final class MixinInstance {
+public final class MixinInstance implements Serializable {
+    static final long serialVersionUID = 7386027290257587762L;
+
     private Class interfaceClass;
     private Object target;
-    private Map methodInterceptors = new HashMap();
+
+    private transient Map methodInterceptors = new HashMap();
 
     public MixinInstance() {
     }
@@ -46,11 +50,13 @@ public final class MixinInstance {
 
     public Set getAllInterceptors() {
         Set allInterceptors = new HashSet();
-        for (Iterator methodIterator = methodInterceptors.values().iterator(); methodIterator.hasNext();) {
-            List interceptors = (List) methodIterator.next();
-            for (Iterator interceptorIterator = interceptors.iterator(); interceptorIterator.hasNext();) {
-                Interceptor interceptor = (Interceptor) interceptorIterator.next();
-                allInterceptors.add(interceptor);
+        if (methodInterceptors != null) {
+            for (Iterator methodIterator = methodInterceptors.values().iterator(); methodIterator.hasNext();) {
+                List interceptors = (List) methodIterator.next();
+                for (Iterator interceptorIterator = interceptors.iterator(); interceptorIterator.hasNext();) {
+                    Interceptor interceptor = (Interceptor) interceptorIterator.next();
+                    allInterceptors.add(interceptor);
+                }
             }
         }
         return allInterceptors;
@@ -61,6 +67,9 @@ public final class MixinInstance {
     }
 
     public List getInterceptorsForMethod(Method method) {
+        if (methodInterceptors == null) {
+            methodInterceptors = new HashMap();
+        }
         List interceptors = (List) methodInterceptors.get(method);
         if (interceptors == null) {
             interceptors = new ArrayList();

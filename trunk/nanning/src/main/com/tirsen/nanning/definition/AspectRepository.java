@@ -12,28 +12,22 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import com.tirsen.nanning.AspectFactory;
-import com.tirsen.nanning.Aspects;
-import com.tirsen.nanning.MixinInstance;
+import com.tirsen.nanning.AspectInstance;
 import com.tirsen.nanning.jelly.AspectTagLibrary;
 import org.apache.commons.jelly.JellyContext;
 import org.apache.commons.jelly.XMLOutput;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 
 /**
  * TODO document AspectRepository
  *
- * <!-- $Id: AspectRepository.java,v 1.10 2003-05-11 13:40:52 tirsen Exp $ -->
+ * <!-- $Id: AspectRepository.java,v 1.11 2003-05-12 13:43:53 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.10 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.11 $
  */
 public class AspectRepository implements AspectFactory {
     private static AspectRepository instance;
@@ -42,6 +36,9 @@ public class AspectRepository implements AspectFactory {
     protected final Map interceptorDefinitions = new HashMap();
     protected final Map aspectDefinitions = new HashMap();
     protected final Map aspectClasses = new HashMap();
+
+    public void reinitialize(AspectInstance aspectInstance) {
+    }
 
     public void defineInterceptor(InterceptorDefinition interceptorDefinition) {
         interceptorDefinitions.put(interceptorDefinition.getInterceptorClass(), interceptorDefinition);
@@ -134,21 +131,4 @@ public class AspectRepository implements AspectFactory {
         return instance;
     }
 
-    public void setTargets(Object object, Object[] targets) {
-        List targetsList = new ArrayList(Arrays.asList(targets));
-        Collection mixins = Aspects.getAspectInstance(object).getMixins();
-        for (Iterator iterator = mixins.iterator(); iterator.hasNext();) {
-            final MixinInstance mixin = (MixinInstance) iterator.next();
-            Object myTarget = CollectionUtils.find(targetsList, new Predicate() {
-                public boolean evaluate(Object o) {
-                    return mixin.getInterfaceClass().isInstance(o);
-                }
-            });
-            mixin.setTarget(myTarget);
-            targetsList.remove(myTarget);
-        }
-        if (!targetsList.isEmpty()) {
-            throw new IllegalArgumentException("could not find mixin for target(s) " + targetsList);
-        }
-    }
 }

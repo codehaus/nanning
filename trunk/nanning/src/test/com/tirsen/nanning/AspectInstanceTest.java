@@ -14,10 +14,10 @@ import java.lang.reflect.Proxy;
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: AspectInstanceTest.java,v 1.9 2003-05-11 15:42:20 tirsen Exp $ -->
+ * <!-- $Id: AspectInstanceTest.java,v 1.10 2003-05-12 13:43:53 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.9 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.10 $
  */
 public class AspectInstanceTest extends TestCase {
     public void testEmptyAspectInstance() {
@@ -378,12 +378,9 @@ public class AspectInstanceTest extends TestCase {
             return null;
         }
 
-        public Object newInstance(Class classIdentifier, Object[] targets) {
-            return null;
+        public void reinitialize(AspectInstance aspectInstance) {
         }
 
-        public void setTargets(Object object, Object[] targets) {
-        }
     }
 
 //    public void testCallsOnJavaLangObject() {
