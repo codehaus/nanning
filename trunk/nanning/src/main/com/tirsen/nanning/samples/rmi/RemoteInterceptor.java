@@ -24,7 +24,7 @@ public class RemoteInterceptor implements MethodInterceptor, SingletonIntercepto
             Call call = new RemoteServiceCall(invocation);
             output.writeObject(call);
             ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
-            return RemoteServiceCall.unmarshal(input.readObject());
+            return input.readObject();
         } finally {
             socket.close();
         }

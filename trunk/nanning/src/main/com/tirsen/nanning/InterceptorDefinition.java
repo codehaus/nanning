@@ -15,10 +15,10 @@ import java.lang.reflect.Method;
 /**
  * TODO document InterceptorDefinition
  *
- * <!-- $Id: InterceptorDefinition.java,v 1.9 2002-12-11 17:29:37 lecando Exp $ -->
+ * <!-- $Id: InterceptorDefinition.java,v 1.10 2002-12-12 08:35:36 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class InterceptorDefinition {
     private final Class interceptorClass;
@@ -65,8 +65,7 @@ public class InterceptorDefinition {
     public Object getAttribute(String name) {
         if (mapAttributes == null) {
             return null;
-        }
-        else {
+        } else {
             return mapAttributes.get(name);
         }
     }
