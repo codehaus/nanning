@@ -5,6 +5,7 @@
     <id>nanning</id>
     <logo>/images/nanning.png</logo>
     <currentVersion>0.6</currentVersion>
+    <groupId>nanning</groupId>
     <organization>
         <name>Jon Tirsen</name>
         <url>http://sourceforge.net/projects/nanning</url>
