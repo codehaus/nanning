@@ -7,13 +7,21 @@
  */
 package com.tirsen.nanning;
 
-import java.io.Serializable;
-import java.io.ObjectInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
@@ -31,10 +39,10 @@ import org.apache.commons.collections.Transformer;
  aspectInstance.addMixin(mixinInstance);
  </pre></code>
  *
- * <!-- $Id: AspectInstance.java,v 1.48 2003-06-11 15:13:31 lecando Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.49 2003-06-16 15:25:39 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.48 $
+ * @version $Revision: 1.49 $
  */
 public final class AspectInstance implements InvocationHandler, Serializable {
     static final long serialVersionUID = 5462785783512485056L;
@@ -92,8 +100,8 @@ public final class AspectInstance implements InvocationHandler, Serializable {
             Object prevThis = Aspects.getThis();
             try {
                 Aspects.setThis(proxy);
-                MixinInstance interfaceInstance = getMixinForInterface(interfaceClass);
-                return interfaceInstance.invokeMethod(proxy, method, args);
+                MixinInstance mixin = getMixinForInterface(interfaceClass);
+                return mixin.invokeMethod(proxy, method, args);
             } finally {
                 Aspects.setThis(prevThis);
             }

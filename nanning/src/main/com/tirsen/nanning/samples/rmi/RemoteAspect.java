@@ -20,11 +20,12 @@ public class RemoteAspect implements Aspect, MethodInterceptor {
         
         RemoteIdentity remoteIdentity = (RemoteIdentity) invocation.getTarget();
 
+        ServerConnectionManager connectionManager = remoteIdentity.getConnectionManager();
         ServerConnection connection = null;
         try {
-            connection = remoteIdentity.getConnectionManager().openConnection();
+            connection = connectionManager.openConnection();
         } catch (IOException e) {
-            throw new CouldNotConnectException(e);
+            throw new CouldNotConnectException("could not connect with " + connectionManager, e);
         }
 
         try {
