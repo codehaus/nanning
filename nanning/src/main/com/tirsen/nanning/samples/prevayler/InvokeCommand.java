@@ -70,5 +70,4 @@ public class InvokeCommand implements Command {
             CurrentPrevayler.setSystem(prev);
         }
     }
-
 }
