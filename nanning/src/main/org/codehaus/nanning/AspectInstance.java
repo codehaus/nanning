@@ -36,20 +36,20 @@ import java.util.Set;
  instance.addMixin(mixin);
  </pre></code>
  *
- * <!-- $Id: AspectInstance.java,v 1.2 2003-07-12 16:48:16 lecando Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.3 2003-08-29 15:20:31 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public final class AspectInstance implements InvocationHandler, Serializable {
     static final long serialVersionUID = 5462785783512485056L;
 
-    private Map mixins = new HashMap();
-    private List mixinsList = new ArrayList();
+    private Map mixins = new HashMap(1);
+    private List mixinsList = new ArrayList(1);
     private Class classIdentifier;
 
     private Object proxy;
-    private transient List constructionInterceptors = new ArrayList();
+    private transient List constructionInterceptors = new ArrayList(1);
     private transient AspectFactory aspectFactory;
 
     public AspectInstance() {
@@ -309,7 +309,7 @@ public final class AspectInstance implements InvocationHandler, Serializable {
      */
     public void addConstructionInterceptor(ConstructionInterceptor constructionInterceptor) {
         if (constructionInterceptors == null) {
-            constructionInterceptors = new ArrayList();
+            constructionInterceptors = new ArrayList(1);
         }
         constructionInterceptors.add(constructionInterceptor);
     }

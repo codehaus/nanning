@@ -34,10 +34,10 @@ mixin.addInterceptor(method, new MethodInterceptor() {
 }
 </code></pre>
  *
- * <!-- $Id: Mixin.java,v 1.1 2003-07-12 16:48:16 lecando Exp $ -->
+ * <!-- $Id: Mixin.java,v 1.2 2003-08-29 15:20:31 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class Mixin implements Serializable {
     static final long serialVersionUID = 7386027290257587762L;
@@ -92,7 +92,7 @@ public class Mixin implements Serializable {
         }
         List interceptors = (List) methodInterceptors.get(method);
         if (interceptors == null) {
-            interceptors = new ArrayList();
+            interceptors = new ArrayList(1);
             methodInterceptors.put(method, interceptors);
         }
         return interceptors;
