@@ -52,6 +52,12 @@ public class Pointcut {
         }
     }
 
+    /**
+     * Override if advises should be applied to the whole instance, will not affect wheather advises are applied
+     * to method or mixin.
+     * @param aspectInstance instance to decide wheather to advise or not.
+     * @return <code>true</code> will result in advises being applied to instance, <code>false</code>
+     */
     protected boolean adviseInstance(AspectInstance aspectInstance) {
         return false;
     }
