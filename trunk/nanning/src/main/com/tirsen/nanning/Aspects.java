@@ -16,14 +16,14 @@ import java.util.Set;
 /**
  * Utility for accessing and modifying aspected object.
  *
- * <!-- $Id: Aspects.java,v 1.20 2003-04-14 17:32:55 tirsen Exp $ -->
+ * <!-- $Id: Aspects.java,v 1.21 2003-04-25 10:08:35 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.20 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.21 $
  */
 public class Aspects {
     private static ThreadLocal contextAspectRepository = new InheritableThreadLocal();
-    static ThreadLocal currentThis = new InheritableThreadLocal();
+    private static ThreadLocal currentThis = new InheritableThreadLocal();
 
     /**
      * Gets the interceptors that belongs to the proxy.
@@ -144,5 +144,9 @@ public class Aspects {
             }
         }
         return null;
+    }
+
+    public static void setThis(Object proxy) {
+        Aspects.currentThis.set(proxy);
     }
 }

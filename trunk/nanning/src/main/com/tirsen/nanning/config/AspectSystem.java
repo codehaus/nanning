@@ -32,6 +32,7 @@ public class AspectSystem implements AspectFactory {
             aspect.process(aspectInstance);
         }
         return aspectInstance;
+
     }
 
     public Object newInstance(Class classIdentifier, Object[] targets) {

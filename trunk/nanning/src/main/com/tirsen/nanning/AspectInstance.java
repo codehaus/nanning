@@ -34,10 +34,10 @@ import org.apache.commons.lang.builder.ToStringStyle;
         aspectInstance.addMixin(mixinInstance);
 </pre></code>
  *
- * <!-- $Id: AspectInstance.java,v 1.36 2003-04-23 20:44:36 tirsen Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.37 2003-04-25 10:08:33 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.36 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.37 $
  */
 public final class AspectInstance implements InvocationHandler, Externalizable {
     static final long serialVersionUID = 5462785783512485056L;
@@ -103,13 +103,13 @@ public final class AspectInstance implements InvocationHandler, Externalizable {
         Class interfaceClass = method.getDeclaringClass();
 
         if (interfaceClass != Object.class) {
-            Object prevThis = Aspects.currentThis.get();
+            Object prevThis = Aspects.getThis();
             try {
-                Aspects.currentThis.set(proxy);
+                Aspects.setThis(proxy);
                 MixinInstance interfaceInstance = getMixinForInterface(interfaceClass);
                 return interfaceInstance.invokeMethod(proxy, method, args);
             } finally {
-                Aspects.currentThis.set(prevThis);
+                Aspects.setThis(prevThis);
             }
 
         } else {
@@ -293,9 +293,9 @@ public final class AspectInstance implements InvocationHandler, Externalizable {
 
     private Object executeConstructionInterceptors(Object proxy) {
         if (constructionInterceptors != null) {
-            Object prevThis = Aspects.currentThis.get();
+            Object prevThis = Aspects.getThis();
             try {
-                Aspects.currentThis.set(proxy);
+                Aspects.setThis(proxy);
                 for (Iterator iterator = constructionInterceptors.iterator(); iterator.hasNext();) {
                     ConstructionInterceptor constructionInterceptor = (ConstructionInterceptor) iterator.next();
                     Set interfaceClasses = getInterfaceClasses();
@@ -308,7 +308,7 @@ public final class AspectInstance implements InvocationHandler, Externalizable {
                 }
             } finally {
                 constructionInterceptors = null;
-                Aspects.currentThis.set(prevThis);
+                Aspects.setThis(prevThis);
             }
         }
         return proxy;
