@@ -1,5 +1,7 @@
 package com.tirsen.nanning.attribute;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
@@ -167,10 +169,6 @@ public class ClassPropertiesHelper {
         return signature;
     }
 
-    public void storeProperties(OutputStream output, String name) throws IOException {
-        properties.store(output, name);
-    }
-
     public String getPackageName() {
         return packageName;
     }
@@ -195,5 +193,19 @@ public class ClassPropertiesHelper {
 
     public void transferAttributesToTarget() {
         loadAttributes(properties);
+    }
+
+    public File getAttributeFile(File baseDir) {
+        return new File(baseDir, getPackageName().replace('.', File.separatorChar) + File.separator + getClassName() +
+                                 PropertyFileAttributeLoader.ATTRIBUTE_FILE_SUFFIX);
+    }
+
+    public void store(File dest) throws IOException {
+        OutputStream output = new FileOutputStream(getAttributeFile(dest));
+        try {
+            properties.store(output, getPackageName() + "." + getClassName());
+        } finally {
+            output.close();
+        }
     }
 }

@@ -34,10 +34,12 @@ public abstract class AbstractAttributesTest extends TestCase {
         compileAttributes(new File(baseDir, "src" + File.separator + "test"));
         compileAttributes(new File(baseDir, "src" + File.separator + "main"));
         File[] frameworks = new File(baseDir, "src" + File.separator + "frameworks").listFiles();
-        for (int i = 0; i < frameworks.length; i++) {
-            File framework = frameworks[i];
-            compileAttributes(new File(framework, "src" + File.separator + "test"));
-            compileAttributes(new File(framework, "src" + File.separator + "main"));
+        if (frameworks != null) {
+            for (int i = 0; i < frameworks.length; i++) {
+                File framework = frameworks[i];
+                compileAttributes(new File(framework, "src" + File.separator + "test"));
+                compileAttributes(new File(framework, "src" + File.separator + "main"));
+            }
         }
     }
 
@@ -48,5 +50,14 @@ public abstract class AbstractAttributesTest extends TestCase {
             attributesCompiler.setDest(attributesDir);
             attributesCompiler.execute();
         }
+    }
+
+    public static File findNanningFile(String path) {
+        File file = new File(path);
+        if (file.exists()) {
+            return file;
+        }
+        file = new File(".." + File.separator + "nanning", path);
+        return file;
     }
 }

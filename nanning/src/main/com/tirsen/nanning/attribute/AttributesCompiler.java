@@ -13,14 +13,16 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Task;
 
 import java.io.*;
+import java.util.List;
+import java.util.Iterator;
 
 /**
  * TODO document AttributesCompiler
  *
- * <!-- $Id: AttributesCompiler.java,v 1.7 2003-06-10 05:26:47 tirsen Exp $ -->
+ * <!-- $Id: AttributesCompiler.java,v 1.8 2003-06-10 11:28:14 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.7 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.8 $
  */
 public class AttributesCompiler extends Task {
     private File src;
@@ -65,24 +67,24 @@ public class AttributesCompiler extends Task {
     }
 
     private File getAttributeFile(String javaFileName) {
-        File result = new File(dest, javaFileName.substring(0, javaFileName.length() - 5) + ".attributes");
+        File result = new File(dest, javaFileName.substring(0, javaFileName.length() - 5) +
+                                     PropertyFileAttributeLoader.ATTRIBUTE_FILE_SUFFIX);
         result.getParentFile().mkdirs();
         return result;
     }
 
     private void createAttributesFile(File javaFile, File attributeFile) throws IOException {
-        ClassPropertiesHelper attributes = parseClassAttribute(javaFile);
-        OutputStream output = new FileOutputStream(attributeFile);
-        try {
-            attributes.storeProperties(output, javaFile.getName());
-        } finally {
-            output.close();
+        List result = parseClassAttribute(javaFile);
+        for (Iterator iterator = result.iterator(); iterator.hasNext();) {
+            ClassPropertiesHelper properties = (ClassPropertiesHelper) iterator.next();
+            properties.store(dest);
         }
     }
 
-    ClassPropertiesHelper parseClassAttribute(File javaFile) throws IOException {
+    List parseClassAttribute(File javaFile) throws IOException {
         InputStream input = new FileInputStream(javaFile);
         try {
+            builder.reset();
             new Parser(new JFlexLexer(input), builder).parse();
             return builder.getClassPropertiesHelper();
         } finally {

@@ -72,6 +72,10 @@
 
         <attainGoal name="jar:install" />
 
+    </goal>
+
+    <postGoal name="jar:install">
+
         <maven:reactor
             basedir="${basedir}/src/frameworks"
             includes="*/project.xml"
@@ -80,7 +84,7 @@
             ignoreFailures="false"
             />
 
-    </goal>
+    </postGoal>
 
     <preGoal name="xdoc:transform">
         <!-- use a template to create the plugins home page
