@@ -1,0 +1,49 @@
+<document>
+
+    <properties>
+        <author email="tirsen@codehaus.org">Jon Tirsen</author>
+        <title>Download</title>
+    </properties>
+
+    <body>
+
+        <section name="Download">
+            <p>
+                <b>Note!</b>
+                Due to complications in the build-process the latest release (0.9) is only available through
+                the maven-repository at Codehaus. If you want to have a more traditional distribution available
+                for 0.9 please contact the
+                <a href="mail-lists.html">mailing lists</a> and we will provide one
+                as soon as possible.
+            </p>
+            <p>
+                There are several ways to download Nanning:
+            </p>
+        </section>
+        <section name="Download with Maven">
+            <p>
+            If you're using Maven to build a project that depends on Nanning, you
+            should tell maven to use Codehaus' repository in addition to the one at
+            Ibiblio. Put the follwing in your project's project.properties file:
+            </p>
+            <pre>maven.repo.remote = http://www.ibiblio.org/maven/,http://dist.codehaus.org/</pre>
+        </section>
+        <section name="Download just the jars">
+            <p>
+            You can also directly download the jars from the Codehaus' repository
+                <a href="http://dist.codehaus.org/nanning/jars/">here</a>.
+            </p>
+        </section>
+        <section name="Download latest sources with a CVS client">
+            <p>
+            For CVS access, see <a href="cvs-usage.html">Source Repository</a>.
+            </p>
+        </section>
+        <section name="Older archived versions (at Sourceforge)">
+            <p>
+            Download older versions from Sourceforge,
+                <a href="http://sourceforge.net/project/showfiles.php?group_id=64968">here</a>.
+            </p>
+        </section>
+    </body>
+</document>
