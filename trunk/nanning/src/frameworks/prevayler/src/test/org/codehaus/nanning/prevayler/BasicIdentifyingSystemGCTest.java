@@ -119,6 +119,10 @@ public class BasicIdentifyingSystemGCTest extends TestCase {
             id = objectID;
         }
 
+        public void clearObjectID() {
+            id = -1;
+        }
+
         public boolean equals(Object o) {
             if (this == o) return true;
             if (!(o instanceof IdString)) return false;

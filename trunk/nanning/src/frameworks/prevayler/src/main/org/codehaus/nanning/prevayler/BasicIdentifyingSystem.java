@@ -162,4 +162,16 @@ public class BasicIdentifyingSystem extends IdentifiableImpl implements Identify
     private synchronized long getNextId() {
         return nextObjectId++;
     }
+
+    public synchronized void clear() {
+        for (Iterator i = idToObject.values().iterator(); i.hasNext();) {
+            IdentifiableSoftReference reference = (IdentifiableSoftReference) i.next();
+            Identifiable identifiable = (Identifiable) reference.get();
+            if (identifiable != null) {
+                identifiable.clearObjectID();
+            }
+            i.remove();
+        }
+        nextObjectId = 0;
+    }
 }

@@ -13,4 +13,9 @@ public interface Identifiable {
      * @transaction-required
      */
     void setObjectID(long objectID);
+
+    /**
+     * @transaction-required
+     */
+    void clearObjectID();
 }
