@@ -11,7 +11,9 @@ public class IdentifyingMarshaller implements Marshaller {
     public Object marshal(Object o) {
         if (Identity.isPrimitive(o)) {
             return o;
-        } else if (Identity.isService(o.getClass())) {
+        } else if (Identity.isStatefulService(o.getClass())) {
+            return o;
+        } else if (Identity.isStatelessService(o.getClass())) {
             return new Identity(o.getClass(), Aspects.getAspectInstance(o).getClassIdentifier());
         } else if (Identity.isEntity(o.getClass())) {
             if (CurrentPrevayler.getSystem().hasObjectID(o)) {
@@ -29,7 +31,7 @@ public class IdentifyingMarshaller implements Marshaller {
         if (Identity.isPrimitive(o)) {
             return o;
         } else if (o instanceof Identity) {
-            return resolve((Identity) o);
+            return ((Identity) o).resolve(Aspects.getCurrentAspectFactory(), CurrentPrevayler.getSystem());
         } else if (Identity.isEntity(o.getClass())) {
             if (!CurrentPrevayler.getSystem().hasObjectID(o)) {
                 registerObjectIDsRecursive(o);
@@ -77,7 +79,4 @@ public class IdentifyingMarshaller implements Marshaller {
         });
     }
 
-    protected Object resolve(Identity identity) {
-        return identity.resolve(Aspects.getCurrentAspectFactory(), CurrentPrevayler.getSystem());
-    }
 }
