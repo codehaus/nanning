@@ -1,17 +1,44 @@
 package com.tirsen.nanning.samples.prevayler;
 
 import java.io.InputStream;
+import java.io.Serializable;
+import java.security.AccessControlContext;
+import java.security.AccessController;
+import java.util.Set;
+import java.util.HashSet;
+
+import javax.security.auth.Subject;
 
 import com.tirsen.nanning.Aspects;
 import com.tirsen.nanning.Interceptor;
 import com.tirsen.nanning.Invocation;
 import org.apache.commons.io.IOUtil;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 
 public class IdentifyingCall extends Call {
     static final long serialVersionUID = -6836192619875407405L;
-    
+    private Set principals;
+    private Set privateCredentials;
+    private Set publicCredentials;
+
+    private static final Predicate isSerializable = new Predicate() {
+        public boolean evaluate(Object o) {
+            return o instanceof Serializable;
+        }
+    };
+
     public IdentifyingCall(Invocation invocation) throws Exception {
         super(invocation);
+        Subject subject = Subject.getSubject(AccessController.getContext());
+        if (subject != null) {
+            principals = new HashSet(subject.getPrincipals());
+            CollectionUtils.filter(principals, isSerializable);
+            privateCredentials = new HashSet(subject.getPrivateCredentials());
+            CollectionUtils.filter(privateCredentials, isSerializable);
+            publicCredentials = new HashSet(subject.getPublicCredentials());
+            CollectionUtils.filter(publicCredentials, isSerializable);
+        }
         target = marshal(target);
         args = marshalArguments(invocation.getArgs());
     }
@@ -50,7 +77,7 @@ public class IdentifyingCall extends Call {
         }
 
         throw new IllegalArgumentException("Can't marshal " + o +
-                                           " could it be an entity or service without the proper attribute?"+
+                                           " could it be an entity or service without the proper attribute?" +
                                            " (Use 'entity', 'service' or 'marshal-by-value'.)");
     }
 
@@ -124,6 +151,18 @@ public class IdentifyingCall extends Call {
     public Object getTarget() {
         assert target != null;
         return unmarshal(target);
+    }
+
+    public Subject getSubject() {
+        if (principals == null &&
+                publicCredentials == null &&
+                privateCredentials == null) {
+            return null;
+        } else {
+            return new Subject(false, principals == null ? new HashSet() : principals,
+                               publicCredentials == null ? new HashSet() : publicCredentials,
+                               privateCredentials == null ? new HashSet() : privateCredentials);
+        }
     }
 
 }
