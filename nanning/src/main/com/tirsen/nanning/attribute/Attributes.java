@@ -28,10 +28,10 @@ import java.util.*;
  * Hmm... wait, a minute, there's some support for this in QDox, maybe that will work...
  * -- jon
 
- * <!-- $Id: Attributes.java,v 1.2 2003-01-16 11:01:23 lecando Exp $ -->
+ * <!-- $Id: Attributes.java,v 1.3 2003-01-16 15:41:05 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 
 public class Attributes {
@@ -95,11 +95,11 @@ public class Attributes {
                     properties.putAll(AttributesXMLParser.parseXML(inputStream));
                 }
             } catch (MalformedURLException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Error fetching properties for " + klass, e);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Error fetching properties for " + klass, e);
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Error fetching properties for " + klass, e);
             } finally {
                 if (inputStream != null) {
                     try {
@@ -217,21 +217,43 @@ public class Attributes {
             return null;
         }
         
-        if (Attributes.hasAttribute(aClass, attribute)) {
-            return Attributes.getAttribute(aClass, attribute);
+        if (hasAttribute(aClass, attribute)) {
+            return getAttribute(aClass, attribute);
         } else {
-            String attributeValue = Attributes.getAttribute(aClass.getSuperclass(), attribute);
+            String attributeValue = getInheritedAttribute(aClass.getSuperclass(), attribute);
             if (attributeValue == null) {
                 Class[] interfaces = aClass.getInterfaces();
                 for (int i = 0; i < interfaces.length; i++) {
                     Class anInterface = interfaces[i];
-                    attributeValue = Attributes.getAttribute(anInterface, attribute);
+                    attributeValue = getInheritedAttribute(anInterface, attribute);
                     if (attributeValue != null) {
                         break;
                     }
                 }
             }
             return attributeValue;
+        }
+    }
+
+    public static boolean hasInheritedAttribute(Class aClass, String attribute) {
+        if (aClass == null) {
+            return false;
+        }
+
+        if (hasAttribute(aClass, attribute)) {
+            return true;
+        } else {
+            if (hasInheritedAttribute(aClass.getSuperclass(), attribute)) {
+                return true;
+            }
+            Class[] interfaces = aClass.getInterfaces();
+            for (int i = 0; i < interfaces.length; i++) {
+                Class anInterface = interfaces[i];
+                if(hasInheritedAttribute(anInterface, attribute)) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
