@@ -1,14 +1,12 @@
 package com.tirsen.nanning.samples.rmi;
 
-import java.net.Socket;
-import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
-import java.io.Serializable;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 
+import com.tirsen.nanning.Invocation;
 import com.tirsen.nanning.MethodInterceptor;
 import com.tirsen.nanning.SingletonInterceptor;
-import com.tirsen.nanning.Invocation;
-import com.tirsen.nanning.SerializableAspectInstance;
 import com.tirsen.nanning.samples.prevayler.Call;
 
 public class RemoteInterceptor implements MethodInterceptor, SingletonInterceptor {
