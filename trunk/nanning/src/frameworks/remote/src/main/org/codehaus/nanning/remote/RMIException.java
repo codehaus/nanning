@@ -1,6 +1,8 @@
 package org.codehaus.nanning.remote;
 
-public class RMIException extends RuntimeException {
+import org.codehaus.nanning.util.WrappedException;
+
+public class RMIException extends WrappedException {
     public RMIException() {
     }
 

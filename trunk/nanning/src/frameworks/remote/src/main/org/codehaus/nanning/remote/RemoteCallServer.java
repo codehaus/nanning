@@ -53,7 +53,6 @@ public class RemoteCallServer {
                 output.writeObject(result);
             } catch (NotSerializableException e) {
                 String message = "Could not serialize object with class " + result.getClass();
-                assert false : message;
                 logger.fatal(message);
             }
             output.flush();

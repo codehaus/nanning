@@ -13,10 +13,10 @@ import java.lang.reflect.Method;
 /**
  * TODO document AttributesTest
  *
- * <!-- $Id: AttributesTest.java,v 1.1 2003-07-04 10:54:00 lecando Exp $ -->
+ * <!-- $Id: AttributesTest.java,v 1.2 2003-09-05 07:56:45 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class AttributesTest extends AbstractAttributesTest {
     public static final String CLASS_ATTRIBUTE = "class.attribute";
@@ -48,7 +48,7 @@ public class AttributesTest extends AbstractAttributesTest {
 
             innerField = AttributesTestClass.InnerClass.class.getDeclaredField("innerField");
         } catch (Exception e) {
-            throw new Error("Could not reflect AttributesTestClass", e);
+            throw new Error("Could not reflect AttributesTestClass" + e);
         }
     }
 

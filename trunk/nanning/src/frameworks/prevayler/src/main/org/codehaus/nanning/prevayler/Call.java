@@ -36,7 +36,7 @@ public class Call implements Serializable {
         try {
             return interfaceClass.getMethod(methodName, parameterTypes);
         } catch (Exception e) {
-            throw new RuntimeException("did not find method " + methodName + " returning null", e);
+            throw new RuntimeException("did not find method " + methodName + " returning null" + e);
         }
     }
 

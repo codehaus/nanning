@@ -10,6 +10,7 @@ import com.thoughtworks.qdox.parser.Builder;
 import com.thoughtworks.qdox.parser.structs.ClassDef;
 import com.thoughtworks.qdox.parser.structs.FieldDef;
 import com.thoughtworks.qdox.parser.structs.MethodDef;
+import org.codehaus.nanning.AssertionException;
 
 /**
  * QDox Builder implementation for creating Properties containing attributes.
@@ -21,7 +22,7 @@ import com.thoughtworks.qdox.parser.structs.MethodDef;
  * to parse another file, the reset() method must be called.</p>
  *
  * @author <a href="joe@truemesh.org">Joe Walnes</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class AttributesBuilder implements Builder {
 
@@ -126,7 +127,9 @@ public class AttributesBuilder implements Builder {
     }
 
     public List getClassPropertiesHelpers() {
-        assert classPropertiesHelperStack.isEmpty();
+        if (!classPropertiesHelperStack.isEmpty()) {
+            throw new AssertionException();
+        }
         return classPropertiesHelpers;
     }
 }

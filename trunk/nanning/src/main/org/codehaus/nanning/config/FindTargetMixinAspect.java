@@ -3,6 +3,7 @@ package org.codehaus.nanning.config;
 import org.codehaus.nanning.AspectException;
 import org.codehaus.nanning.AspectInstance;
 import org.codehaus.nanning.Mixin;
+import org.codehaus.nanning.AssertionException;
 
 public class FindTargetMixinAspect implements Aspect {
     private static final String DEFAULT_IMPLEMENTATION_SUFFIX = "Impl";
@@ -46,7 +47,9 @@ public class FindTargetMixinAspect implements Aspect {
 
     private Class findImpl(Class interfaceClass) {
         Class impl = findImpl(interfaceClass, implementationSuffix);
-        assert impl != null : "could not find target for " + interfaceClass;
+        if (impl == null) {
+            throw new AssertionException("could not find target for " + interfaceClass);
+        }
         return impl;
     }
     

@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.Properties;
 
+import org.codehaus.nanning.util.WrappedException;
+
 public class PropertyFileAttributeLoader implements AttributesLoader {
     public static final String ATTRIBUTE_FILE_SUFFIX = ".attributes";
 
@@ -42,7 +44,7 @@ public class PropertyFileAttributeLoader implements AttributesLoader {
                 try {
                     inputStream.close();
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    throw new WrappedException(e);
                 }
             }
         }

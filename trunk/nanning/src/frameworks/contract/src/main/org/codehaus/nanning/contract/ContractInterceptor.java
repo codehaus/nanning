@@ -5,16 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.codehaus.nanning.Invocation;
-import org.codehaus.nanning.MethodInterceptor;
-import org.codehaus.nanning.attribute.Attributes;
 import ognl.MethodFailedException;
 import ognl.Ognl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.codehaus.nanning.Invocation;
+import org.codehaus.nanning.MethodInterceptor;
+import org.codehaus.nanning.attribute.Attributes;
+import org.codehaus.nanning.util.Matcher;
+import org.codehaus.nanning.util.RegexpPattern;
 
 /**
  * TODO document ContractInterceptor.
@@ -22,12 +22,12 @@ import org.apache.commons.logging.LogFactory;
  * you can enable and disable contract-checking in the same way you enable and disable assertions (java -ea and so on).
  *
  * @author <a href="mailto:jon_tirsen@yahoo.org">Jon Tirsén</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class ContractInterceptor implements MethodInterceptor {
     private static final Log logger = LogFactory.getLog(ContractInterceptor.class);
-    private static final Pattern oldPattern =
-            Pattern.compile("(.*)\\{old (.*?)}(.*)");
+    private static final RegexpPattern oldPattern =
+            RegexpPattern.compile("(.*)\\{old (.*?)}(.*)");
 
     /**
      * If this is non-null don't execute contracts, used when executing the expressions.
@@ -98,7 +98,7 @@ public class ContractInterceptor implements MethodInterceptor {
         try {
             return executeExpression(expression, invocation.getProxy(), context);
         } catch (Exception e) {
-            throw new RuntimeException("Could not execute: " + expression, e);
+            throw new RuntimeException("Could not execute: " + expression + e);
         }
     }
 
@@ -131,18 +131,18 @@ public class ContractInterceptor implements MethodInterceptor {
                 Boolean aBoolean = (Boolean) executeExpression(expression, root, context);
                 result = aBoolean.booleanValue();
                 if (!result) {
-                    throw new AssertionError(message);
+                    throw new Error(message);
                 }
             } catch (MethodFailedException e) {
                 if (e.getReason() instanceof Error) {
                     throw (Error) e.getReason();
                 } else {
                     logger.error("Could not execute expression: " + expression);
-                    throw new AssertionError("Could not execute expression: " + expression);
+                    throw new Error("Could not execute expression: " + expression);
                 }
             } catch (Exception e) {
                 logger.error("Could not execute expression: " + expression);
-                throw new AssertionError("Could not execute expression: " + expression);
+                throw new Error("Could not execute expression: " + expression);
             } finally {
                 checkContracts.set(null);
             }

@@ -3,6 +3,7 @@ package org.codehaus.nanning.prevayler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.nanning.Invocation;
+import org.codehaus.nanning.AssertionException;
 import org.prevayler.TransactionWithQuery;
 
 import javax.security.auth.Subject;
@@ -35,7 +36,7 @@ public class InvokeTransaction implements TransactionWithQuery {
             outputStream.flush();
             return bytes.toByteArray();
         } catch (IOException e) {
-            throw new RuntimeException("Could not marshal call", e);
+            throw new RuntimeException("Could not marshal call" + e);
         }
     }
 
@@ -45,9 +46,9 @@ public class InvokeTransaction implements TransactionWithQuery {
                     new MarshallingInputStream(new ByteArrayInputStream(marshalledCall), new IdentifyingMarshaller());
             return (AuthenticatedCall) inputStream.readObject();
         } catch (IOException e) {
-            throw new RuntimeException("Could not marshal call", e);
+            throw new RuntimeException("Could not marshal call" + e);
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Could not marshal call", e);
+            throw new RuntimeException("Could not marshal call" + e);
         }
     }
 
@@ -76,7 +77,9 @@ public class InvokeTransaction implements TransactionWithQuery {
         IdentifyingSystem identifyingSystem = (IdentifyingSystem) system;
         if (!identifyingSystem.hasObjectID(identifyingSystem)) {
             identifyingSystem.registerObjectID(identifyingSystem);
-            assert identifyingSystem.getObjectID(identifyingSystem) == 0;
+            if (identifyingSystem.getObjectID(identifyingSystem) != 0) {
+                throw new AssertionException();
+            }
         }
     }
 
@@ -84,8 +87,8 @@ public class InvokeTransaction implements TransactionWithQuery {
         /* Unwrap the InvocationTargetException */
         if (e instanceof InvocationTargetException) {
             InvocationTargetException invocationTargetException = (InvocationTargetException) e;
-            if (invocationTargetException.getCause() instanceof Exception) {
-                e = (Exception) e.getCause();
+            if (invocationTargetException.getTargetException() instanceof Exception) {
+                e = (Exception) invocationTargetException.getTargetException();
             }
         }
         logger.error("Failed to execute command.", e);

@@ -6,6 +6,8 @@ import org.codehaus.nanning.profiler.Profiled;
 import org.codehaus.nanning.profiler.ProfilerInterceptor;
 import org.codehaus.nanning.profiler.ProfilerLogger;
 
+import org.codehaus.nanning.util.OroUtils;
+
 public class ProfilerTest extends AbstractAttributesTest {
     public void testProfiler() throws Exception {
         Thread thread = new Thread(new Runnable() {
@@ -24,7 +26,7 @@ public class ProfilerTest extends AbstractAttributesTest {
         thread.join();
         String log = ProfilerLogger.getProfilerLogger().lastLog;
         assertNotNull(log);
-        assertTrue(log.matches("(.*)someMethod: (.*)ms"));
+        assertTrue(OroUtils.match(log, "(.*)someMethod: (.*)ms"));
     }
 
     public void testMinimumProfilingDuration() throws Exception {

@@ -5,6 +5,8 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.codehaus.nanning.AssertionException;
+
 public class ClassAttributes {
 
     private Class attributeClass;
@@ -45,7 +47,9 @@ public class ClassAttributes {
     }
 
     private Map getMap(Map map, Object key) {
-        assert map != null : "properties not loaded";
+        if (map == null) {
+            throw new AssertionException("properties not loaded");
+        }
         Map result = (Map) map.get(key);
         if (result == null) {
             result = new HashMap();

@@ -16,6 +16,7 @@ import java.util.Map;
 import org.codehaus.nanning.AspectFactory;
 import org.codehaus.nanning.AspectInstance;
 import org.codehaus.nanning.AspectException;
+import org.codehaus.nanning.AssertionException;
 import org.codehaus.nanning.jelly.AspectTagLibrary;
 import org.apache.commons.jelly.JellyContext;
 import org.apache.commons.jelly.XMLOutput;
@@ -23,10 +24,10 @@ import org.apache.commons.jelly.XMLOutput;
 /**
  * TODO document AspectRepository
  *
- * <!-- $Id: AspectRepository.java,v 1.1 2003-07-04 10:53:57 lecando Exp $ -->
+ * <!-- $Id: AspectRepository.java,v 1.2 2003-09-05 07:56:42 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * 
  * @deprecated please use the new {@link org.codehaus.nanning.config.AspectSystem} framework instead.
  */
@@ -126,7 +127,9 @@ public class AspectRepository implements AspectFactory {
     }
 
     public Object newInstance(Class aspectInterface, Object[] targets) {
-        assert aspectInterface instanceof Class : "aspect-classes are identified by the interface-class of their first mixin";
+        if (!(aspectInterface instanceof Class)) {
+            throw new AssertionException("aspect-classes are identified by the interface-class of their first mixin");
+        }
         Object instance = getClass(aspectInterface).newInstance(targets);
         return instance;
     }

@@ -3,9 +3,11 @@ package org.codehaus.nanning.prevayler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.nanning.Invocation;
+import org.codehaus.nanning.AssertionException;
 import org.prevayler.TransactionWithQuery;
 
 import javax.security.auth.Subject;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -30,7 +32,9 @@ public class InvokeCommand implements TransactionWithQuery {
         IdentifyingSystem identifyingSystem = (IdentifyingSystem) system;
         if (!identifyingSystem.hasObjectID(identifyingSystem)) {
             identifyingSystem.registerObjectID(identifyingSystem);
-            assert identifyingSystem.getObjectID(identifyingSystem) == 0;
+            if (identifyingSystem.getObjectID(identifyingSystem) != 0) {
+                throw new AssertionException();
+            }
         }
 
         try {
@@ -43,9 +47,10 @@ public class InvokeCommand implements TransactionWithQuery {
             /** Unwrap the invocation target exceptions */
             if (e instanceof InvocationTargetException) {
                 InvocationTargetException invocationTargetException = (InvocationTargetException) e;
-                if (invocationTargetException.getCause() instanceof Exception) {
-                    e = (Exception) e.getCause();
-                }
+// TODO: fix this
+//                if (invocationTargetException.getCause() instanceof Exception) {
+//                    e = (Exception) e.getCause();
+//                }
             }
             logger.error("Failed to execute command.", e);
 

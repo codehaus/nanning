@@ -7,15 +7,17 @@
  */
 package org.codehaus.nanning;
 
+import org.codehaus.nanning.util.WrappedException;
+
 /**
  * Base class for exceptions related to aspects.
  *
- * <!-- $Id: AspectException.java,v 1.1 2003-07-04 10:53:59 lecando Exp $ -->
+ * <!-- $Id: AspectException.java,v 1.2 2003-09-05 07:56:43 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
-public class AspectException extends RuntimeException {
+public class AspectException extends WrappedException {
 ///CLOVER:OFF
     public AspectException() {
     }

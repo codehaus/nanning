@@ -41,6 +41,10 @@
             <version>2.1</version>
         </dependency>
 
+        <dependency>
+            <id>oro</id>
+            <version>2.0.7</version>
+        </dependency>
     </dependencies>
 
 </project>

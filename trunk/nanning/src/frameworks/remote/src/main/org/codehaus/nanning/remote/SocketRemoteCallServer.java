@@ -4,13 +4,14 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketTimeoutException;
 import java.security.PrivilegedAction;
 import java.util.HashSet;
 
 import javax.security.auth.Subject;
 
 import org.codehaus.nanning.AspectFactory;
+import org.codehaus.nanning.AssertionException;
+import org.codehaus.nanning.util.WrappedException;
 import org.codehaus.nanning.remote.RemoteCallServer;
 import org.codehaus.nanning.remote.SocketConnectionManager;
 import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
@@ -32,10 +33,12 @@ public class SocketRemoteCallServer {
 
     public void start() {
         try {
-            assert port != 0 : "port not specified";
+            if (port == 0) {
+                throw new AssertionException("port not specified");
+            }
             logger.info("starting RMI-server on port " + port);
             serverSocket = new ServerSocket(port);
-            connectionManager = new SocketConnectionManager(InetAddress.getLocalHost().getCanonicalHostName(), port);
+            connectionManager = new SocketConnectionManager(InetAddress.getLocalHost().getHostName(), port);
             remoteCallServer = new RemoteCallServer(connectionManager);
             serverSocket.setSoTimeout(SERVER_SOCKET_TIMEOUT);
             threadPool = new PooledExecutor(threadPoolSize);
@@ -49,7 +52,6 @@ public class SocketRemoteCallServer {
 
                                 threadPool.execute(new SocketCallProcessor(socket));
 
-                            } catch (SocketTimeoutException ignore) {
                             } catch (InterruptedException ignore) {
                             } catch (IOException e) {
                                 logger.error("error accepting call", e);
@@ -66,7 +68,7 @@ public class SocketRemoteCallServer {
             });
             serverThread.start();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new WrappedException(e);
         }
     }
 
