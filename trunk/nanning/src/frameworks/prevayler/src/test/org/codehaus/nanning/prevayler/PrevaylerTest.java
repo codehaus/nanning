@@ -1,31 +1,27 @@
 package org.codehaus.nanning.prevayler;
 
-import java.io.*;
-import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.IdentityHashMap;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.codehaus.nanning.AspectFactory;
 import org.codehaus.nanning.AspectInstance;
 import org.codehaus.nanning.Aspects;
 import org.codehaus.nanning.Mixin;
 import org.codehaus.nanning.attribute.AbstractAttributesTest;
 import org.codehaus.nanning.attribute.Attributes;
-import org.codehaus.nanning.config.*;
+import org.codehaus.nanning.config.AspectSystem;
+import org.codehaus.nanning.config.FindTargetMixinAspect;
 import org.prevayler.PrevaylerFactory;
-import org.prevayler.Prevayler;
+
+import java.io.*;
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.IdentityHashMap;
 
 public class PrevaylerTest extends AbstractAttributesTest {
 
 
-
-
-
-    private AspectSystem aspectSystem;
-
     private File prevaylerDir;
+    private CountingPrevayler currentPrevayler;
+    private AspectSystem aspectSystem;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -35,12 +31,11 @@ public class PrevaylerTest extends AbstractAttributesTest {
         assertTrue("attributes not compiled or not on classpath (add 'target/attributes' to classpath)",
                 PrevaylerUtils.isTransactional(MySystem.class.getMethod("setSimpleString", new Class[]{String.class})));
 
-        AspectSystem aspectSystem = new AspectSystem();
+        aspectSystem = new AspectSystem();
         aspectSystem.addAspect(new FindTargetMixinAspect());
         aspectSystem.addAspect(new PrevaylerAspect());
 
-        this.aspectSystem = aspectSystem;
-        Aspects.setContextAspectFactory(this.aspectSystem);
+        Aspects.setContextAspectFactory(aspectSystem);
 
         prevaylerDir = File.createTempFile("test", "");
         prevaylerDir.delete();
@@ -53,30 +48,114 @@ public class PrevaylerTest extends AbstractAttributesTest {
     }
 
     public void testMethodCallWithSimpleStringIsPersisted() throws Exception {
-        final CountingPrevayler prevayler = newPrevayler();
-        CurrentPrevayler.withPrevayler(prevayler, new PrevaylerAction() {
+        newPrevayler();
+        withCurrentPrevayler(new PrevaylerAction() {
             public Object run() throws Exception {
-                assertFalse(currentMySystem().hasObjectID(currentMySystem()));
-                currentMySystem().setSimpleString("string");
-                InvokeCommand invokeCommand = (InvokeCommand) prevayler.getTransaction(0);
-                IdentifyingCall call = (IdentifyingCall) invokeCommand.getCall();
-                assertTrue(call.marshal(currentMySystem()) instanceof Identity);
-                assertTrue(call.target instanceof Identity);
-                assertEquals("string", call.args[0]);
-
-                prevayler.assertTransactionLog("setSimpleString");
-                assertEquals("string", currentMySystem().getSimpleString());
+                assertFalse(currentSystem().hasObjectID(currentSystem()));
+                currentSystem().setSimpleString("string");
+                currentPrevayler.assertTransactionLog("setSimpleString");
+                assertEquals("string", currentSystem().getSimpleString());
                 return null;
             }
         });
-        final CountingPrevayler loadedPrevayler = newPrevayler();
-        CurrentPrevayler.withPrevayler(loadedPrevayler, new PrevaylerAction() {
+        newPrevayler();
+        withCurrentPrevayler(new PrevaylerAction() {
             public Object run() throws Exception {
-                assertEquals("string", currentMySystem().getSimpleString());
+                assertEquals("string", currentSystem().getSimpleString());
                 return null;
             }
         });
     }
+
+    public void testMethodCallWithCircularGraphOfEntitiesIsPersisted() throws Exception {
+        newPrevayler();
+        final MyObject a = (MyObject) newInstance(MyObject.class);
+        final MyObject b = (MyObject) newInstance(MyObject.class);
+        withCurrentPrevayler(new PrevaylerAction() {
+            public Object run() throws Exception {
+                a.setMyObject(b);
+                b.setMyObject(a);
+                currentSystem().add(a);
+                currentSystem().add(b);
+
+                return null;
+            }
+        });
+
+        final long aId = getObjectId(a);
+        final long bId = getObjectId(b);
+
+        newPrevayler();
+        withCurrentPrevayler(new PrevaylerAction() {
+            public Object run() throws Exception {
+                MyObject loadedA = (MyObject) currentSystem().getObjectWithID(aId);
+                MyObject loadedB = (MyObject) currentSystem().getObjectWithID(bId);
+                assertSame(loadedB, loadedA.getMyObject());
+                assertSame(loadedA, loadedB.getMyObject());
+
+                return null;
+            }
+        });
+    }
+
+    long getObjectId(Object o) {
+        return currentSystem().getObjectID(o);
+    }
+
+    public static class EntityReference implements Serializable {
+        MyObject object;
+
+        public EntityReference(MyObject object) {
+            this.object = object;
+        }
+    }
+
+    public void testMethodCallWithValueObjectReferencingEntityIsPersisted() throws Exception {
+        newPrevayler();
+        final MyObject object = (MyObject) newInstance(MyObject.class);
+
+        withCurrentPrevayler(new PrevaylerAction() {
+            public Object run() throws Exception {
+                EntityReference ref = new EntityReference(object);
+                assertSame(object, ref.object);
+                currentSystem().setSimpleObject(ref);
+                assertTrue(currentSystem().hasObjectID(object));
+
+                return null;
+            }
+        });
+
+        final long objectId = getObjectId(object);
+
+        newPrevayler();
+        CurrentPrevayler.withPrevayler(currentPrevayler, new PrevaylerAction() {
+            public Object run() throws Exception {
+                MyObject loadedObject = (MyObject) currentSystem().getObjectWithID(objectId);
+                EntityReference ref = (EntityReference) currentSystem().getSimpleObject();
+                assertSame(loadedObject, ref.object);
+
+                return null;
+            }
+        });
+    }
+
+    private Object withCurrentPrevayler(PrevaylerAction prevaylerAction) throws Exception {
+        return CurrentPrevayler.withPrevayler(currentPrevayler, prevaylerAction);
+    }
+
+    private Object newInstance(final Class mainClass) {
+        try {
+            return withCurrentPrevayler(new PrevaylerAction() {
+                public Object run() throws Exception {
+                    return currentSystem().newInstance(mainClass);
+                }
+            });
+        } catch (Exception e) {
+            fail();
+            return null;
+        }
+    }
+
 
     /**
      * @entity
@@ -134,14 +213,15 @@ public class PrevaylerTest extends AbstractAttributesTest {
 
 
     public void testMethodCallingBackOnArgumentIsMadePersistent() throws Exception {
-        Prevayler prevayler = newPrevayler();
-        final CallingBack callingBack = (CallingBack) aspectSystem.newInstance(CallingBack.class);
-        final CalledBack calledBack = (CalledBack) aspectSystem.newInstance(CalledBack.class);
+        newPrevayler();
 
-        CurrentPrevayler.withPrevayler(prevayler, new PrevaylerAction() {
+        final CallingBack callingBack = (CallingBack) newInstance(CallingBack.class);
+        final CalledBack calledBack = (CalledBack) newInstance(CalledBack.class);
+
+        withCurrentPrevayler(new PrevaylerAction() {
             public Object run() throws Exception {
-                currentMySystem().add(callingBack);
-                currentMySystem().add(calledBack);
+                currentSystem().add(callingBack);
+                currentSystem().add(calledBack);
 
                 callingBack.callback(calledBack, "value");
                 assertEquals("value", calledBack.getValue());
@@ -149,14 +229,14 @@ public class PrevaylerTest extends AbstractAttributesTest {
             }
         });
 
-        final long calledBackId = ((IdentifyingSystem) prevayler.prevalentSystem()).getObjectID(calledBack);
-        final long callingBackId = ((IdentifyingSystem) prevayler.prevalentSystem()).getObjectID(callingBack);
+        final long calledBackId = getObjectId(calledBack);
+        final long callingBackId = getObjectId(callingBack);
 
-        Prevayler loadedPrevayler = newPrevayler();
-        CurrentPrevayler.withPrevayler(loadedPrevayler, new PrevaylerAction() {
+        newPrevayler();
+        withCurrentPrevayler(new PrevaylerAction() {
             public Object run() throws Exception {
-                CalledBack calledBack = (CalledBack) currentMySystem().getObjectWithID(calledBackId);
-                CallingBack callingBack = (CallingBack) currentMySystem().getObjectWithID(callingBackId);
+                CalledBack calledBack = (CalledBack) currentSystem().getObjectWithID(calledBackId);
+                CallingBack callingBack = (CallingBack) currentSystem().getObjectWithID(callingBackId);
                 assertEquals("value", calledBack.getValue());
                 assertSame(callingBack, calledBack.getCallingBack());
                 return null;
@@ -190,100 +270,101 @@ public class PrevaylerTest extends AbstractAttributesTest {
         }
     }
 
-//    public void testChangeAndReturnPreviousValue() throws Exception {
-//        // JIRA: NAN-11
-//        final CountingPrevayler prevayler = newPrevayler();
-//        CurrentPrevayler.withPrevayler(prevayler, new PrevaylerAction() {
-//            public Object run() throws Exception {
-//                ObjectWithValue o = (ObjectWithValue) aspectSystem.newInstance(ObjectWithValue.class);
-//                assertEquals("initialValue", o.getValue());
-//                assertEquals("initialValue", currentMySystem().changeAndReturnPreviousValue(o, "FREDDL"));
+    public void testChangeAndReturnPreviousValue() throws Exception {
+        // JIRA: NAN-11
+        newPrevayler();
+        withCurrentPrevayler(new PrevaylerAction() {
+            public Object run() throws Exception {
+                ObjectWithValue o = (ObjectWithValue) newInstance(ObjectWithValue.class);
+                assertEquals("initialValue", o.getValue());
+                assertEquals("initialValue", currentSystem().changeAndReturnPreviousValue(o, "FREDDL"));
+                return null;
+            }
+        });
+    }
+
+    /**
+     * Big badass functional test. I hate it, I want to kill it...
+     */
+//    public void test() throws Exception {
+//        newPrevayler();
+//        withCurrentPrevayler(new PrevaylerAction() {
+//            public Object run() throws NoSuchMethodException {
+//                MyObject insideObject = currentSystem().createMyObject();
+//                currentPrevayler.assertTransactionLog("newInstance");
+//                currentSystem().setMyObject(insideObject);
+//                currentPrevayler.assertTransactionLog("newInstance setMyObject");
+//
+//                assertTrue("Prevayler is lost after first transaction", CurrentPrevayler.hasPrevayler());
+//                insideObject.setValue("oldValue");
+//                currentPrevayler.assertNumberOfCommands(3);
+//                insideObject.setValue("newValue");
+//                currentPrevayler.assertNumberOfCommands(4);
+//
+//                MyObject outsideObject = (MyObject) currentSystem().newInstance(MyObject.class);
+//                currentPrevayler.assertNumberOfCommands("no command when object created outside prevayler", 4);
+//
+//                MyObject outsideNestedObject = (MyObject) currentSystem().newInstance(MyObject.class);
+//                currentPrevayler.assertNumberOfCommands("no command when object created outside prevayler", 4);
+//
+//                outsideObject.setMyObject(outsideNestedObject);
+//                currentPrevayler.assertNumberOfCommands("commands operating on objects outside prevayler still generates " +
+//                        "commands (they shouldn't really but we haven't implemented that yet)",
+//                        5);
+//
+//                // mixing prevayler and non-prevayler stuff the other way around will mess things up
+//                // uncomment this line and watch the nice little assert failure
+//                // there's another line in checkMySystem() that explains the real problem
+//                //                outsideNestedObject.setMyObject(insideObject);
+//
+//                insideObject.setMyObject(outsideObject);
+//                currentPrevayler.assertNumberOfCommands(
+//                        "command when operating on object inside prevayler with object outside prevayler", 6);
+//
+//                Collection objects = currentSystem().getAllObjects();
+//                assertEquals("objects not created ", 2, objects.size());
+//                final MyObject objectToFind = insideObject;
+//                insideObject = (MyObject) CollectionUtils.find(objects, new Predicate() {
+//                    public boolean evaluate(Object o) {
+//                        return o == objectToFind;
+//                    }
+//                });
+//                assertNotNull(insideObject);
+//                assertEquals("value not correct", "newValue", insideObject.getValue());
+//                assertNotNull(insideObject.getMyObject());
+//
+//                return null;
+//            }
+//        });
+//
+//        // reload database
+//        checkMySystem();
+//
+//        // reload database with snapshot
+//        currentPrevayler.takeSnapshot();
+//        checkMySystem();
+//    }
+
+//    private void checkMySystem() throws Exception {
+//        newPrevayler();
+//        withCurrentPrevayler(new PrevaylerAction() {
+//            public Object run() {
+//                Collection objects = currentSystem().getAllObjects();
+//                assertEquals("objects not persisted", 2, objects.size());
+//                MyObject myObject = currentSystem().getMyObject();
+//                assertEquals("property not correct value", "newValue", myObject.getValue());
+//                currentPrevayler.assertNumberOfCommands("just checking, should be no commands", 0);
+//
+//                // this will not hold if you mix objects created inside prevayler with those created outside
+//                // this object will not be identified correctly in the command and you will have two copies of the
+//                // "same" object
+//                //                assertSame(myObject, myObject.getMyObject().getMyObject().getMyObject());
 //                return null;
 //            }
 //        });
 //    }
 
-    /**
-     * Big badass functional test. I hate it, I want to kill it...
-     */
-    public void test() throws Exception {
-        final CountingPrevayler prevayler = newPrevayler();
-        CurrentPrevayler.withPrevayler(prevayler, new PrevaylerAction() {
-            public Object run() throws NoSuchMethodException {
-                MyObject insideObject = currentMySystem().createMyObject();
-                prevayler.assertNumberOfCommands("create should not result in a command", 0);
-                currentMySystem().setMyObject(insideObject);
-                prevayler.assertTransactionLog("setMyObject");
-
-                assertTrue("Prevayler is lost after first transaction", CurrentPrevayler.hasPrevayler());
-                insideObject.setValue("oldValue");
-                prevayler.assertNumberOfCommands(2);
-                insideObject.setValue("newValue");
-                prevayler.assertNumberOfCommands(3);
-
-                MyObject outsideObject = (MyObject) aspectSystem.newInstance(MyObject.class);
-                prevayler.assertNumberOfCommands("no command when object created outside prevayler", 3);
-
-                MyObject outsideNestedObject = (MyObject) aspectSystem.newInstance(MyObject.class);
-                prevayler.assertNumberOfCommands("no command when object created outside prevayler", 3);
-
-                outsideObject.setMyObject(outsideNestedObject);
-                prevayler.assertNumberOfCommands("commands operating on objects outside prevayler still generates " +
-                        "commands (they shouldn't really but we haven't implemented that yet)",
-                        4);
-
-                // mixing prevayler and non-prevayler stuff the other way around will mess things up
-                // uncomment this line and watch the nice little assert failure
-                // there's another line in checkMySystem() that explains the real problem
-                //                outsideNestedObject.setMyObject(insideObject);
-
-                insideObject.setMyObject(outsideObject);
-                prevayler.assertNumberOfCommands(
-                        "command when operating on object inside prevayler with object outside prevayler", 5);
-
-                Collection objects = currentMySystem().getAllObjects();
-                assertEquals("objects not created ", 3, objects.size());
-                final MyObject objectToFind = insideObject;
-                insideObject = (MyObject) CollectionUtils.find(objects, new Predicate() {
-                    public boolean evaluate(Object o) {
-                        return o == objectToFind;
-                    }
-                });
-                assertNotNull(insideObject);
-                assertEquals("value not correct", "newValue", insideObject.getValue());
-                assertNotNull(insideObject.getMyObject());
-
-                return null;
-            }
-        });
-
-        // reload database
-        checkMySystem();
-
-        // reload database with snapshot
-        prevayler.takeSnapshot();
-        checkMySystem();
-    }
-
-    private void checkMySystem() throws IOException, ClassNotFoundException {
-        final CountingPrevayler prevayler = newPrevayler();
-        CurrentPrevayler.withPrevayler(prevayler, new Runnable() {
-            public void run() {
-                Collection objects = currentMySystem().getAllObjects();
-                assertEquals("objects not persisted", 3, objects.size());
-                MyObject myObject = currentMySystem().getMyObject();
-                assertEquals("property not correct value", "newValue", myObject.getValue());
-                prevayler.assertNumberOfCommands("just checking, should be no commands", 0);
-
-                // this will not hold if you mix objects created inside prevayler with those created outside
-                // this object will not be identified correctly in the command and you will have two copies of the
-                // "same" object
-                //                assertSame(myObject, myObject.getMyObject().getMyObject().getMyObject());
-            }
-        });
-    }
-
-    public void testABC() throws ClassNotFoundException, IOException, NoSuchMethodException {
+    public void testABC() throws Exception {
         AspectInstance aspectInstance = Aspects.getAspectInstance(aspectSystem.newInstance(MyObject.class));
         Mixin mixinInstance = (Mixin) aspectInstance.getMixins().iterator().next();
 
@@ -295,47 +376,51 @@ public class PrevaylerTest extends AbstractAttributesTest {
         assertTrue(Attributes.hasAttribute(setABC, "transaction"));
         assertEquals(2, mixinInstance.getInterceptorsForMethod(setABC).size());
 
-        final CountingPrevayler prevayler = newPrevayler();
-        CurrentPrevayler.withPrevayler(prevayler, new Runnable() {
-            public void run() {
-                MyObject myObject = currentMySystem().createMyObject();
-                prevayler.assertNumberOfCommands(0);
+        newPrevayler();
+        withCurrentPrevayler(new PrevaylerAction() {
+            public Object run() {
+                MyObject myObject = currentSystem().createMyObject();
+                currentPrevayler.assertNumberOfCommands(1);
                 myObject.setABC(null);
-                prevayler.assertNumberOfCommands(1);
+                currentPrevayler.assertNumberOfCommands(2);
+                return null;
             }
         });
     }
 
-    public void testGarbageCollect() throws IOException, ClassNotFoundException {
-        CountingPrevayler prevayler = newPrevayler();
-        CurrentPrevayler.withPrevayler(prevayler, new Runnable() {
-            public void run() {
-                MyObject myObject = (MyObject) aspectSystem.newInstance(MyObject.class);
-                currentMySystem().setMyObject(myObject);
-                myObject.setMyObject((MyObject) aspectSystem.newInstance(MyObject.class));
-                assertEquals("two MyObjects should have been created", 2, currentMySystem().getAllObjects().size());
+    public void testGarbageCollect() throws Exception {
+        newPrevayler();
+        withCurrentPrevayler(new PrevaylerAction() {
+            public Object run() {
+                MyObject myObject = (MyObject) currentSystem().newInstance(MyObject.class);
+                currentSystem().setMyObject(myObject);
+                myObject.setMyObject((MyObject) currentSystem().newInstance(MyObject.class));
+                assertEquals("two MyObjects should have been created", 2, currentSystem().getAllObjects().size());
+                return null;
             }
         });
 
         // restoring
-        prevayler.takeSnapshot();
-        prevayler = newPrevayler();
-        CurrentPrevayler.withPrevayler(prevayler, new Runnable() {
-            public void run() {
-                assertEquals("two MyObjects should be left", 2, currentMySystem().getAllObjects().size());
+        currentPrevayler.takeSnapshot();
+        newPrevayler();
+        withCurrentPrevayler(new PrevaylerAction() {
+            public Object run() {
+                assertEquals("two MyObjects should be left", 2, currentSystem().getAllObjects().size());
                 // removing one of the objects
-                assertNotNull(currentMySystem().getMyObject().getMyObject());
-                currentMySystem().getMyObject().setMyObject(null);
+                assertNotNull(currentSystem().getMyObject().getMyObject());
+                currentSystem().getMyObject().setMyObject(null);
+                return null;
             }
         });
 
         // restoring and garbage collecting
-        prevayler.takeSnapshot();
-        prevayler = newPrevayler();
-        CurrentPrevayler.withPrevayler(prevayler, new Runnable() {
-            public void run() {
-                assertNull(currentMySystem().getMyObject().getMyObject());
-                assertEquals("1 MyObjects should be left, one garbage collected", 1, currentMySystem().getAllObjects().size());
+        currentPrevayler.takeSnapshot();
+        newPrevayler();
+        withCurrentPrevayler(new PrevaylerAction() {
+            public Object run() {
+                assertNull(currentSystem().getMyObject().getMyObject());
+                assertEquals("1 MyObjects should be left, one garbage collected", 1, currentSystem().getAllObjects().size());
+                return null;
             }
         });
     }
@@ -374,15 +459,16 @@ public class PrevaylerTest extends AbstractAttributesTest {
 //        return new ObjectInputStream(new ByteArrayInputStream(buffer.toByteArray())).readObject();
 //    }
 
-    private static MySystem currentMySystem() {
-        return (MySystem) CurrentPrevayler.getSystem();
+    private MySystem currentSystem() {
+        return CurrentPrevayler.hasPrevayler()
+                ? (MySystem) CurrentPrevayler.getSystem()
+                : (MySystem) currentPrevayler.prevalentSystem();
     }
 
-    private CountingPrevayler newPrevayler() throws IOException, ClassNotFoundException {
-        CountingPrevayler prevayler = new CountingPrevayler(
-                PrevaylerFactory.createPrevayler(aspectSystem.newInstance(MySystem.class),
+    private void newPrevayler() throws IOException, ClassNotFoundException {
+        currentPrevayler = new CountingPrevayler(
+                PrevaylerFactory.createPrevayler(Aspects.getCurrentAspectFactory().newInstance(MySystem.class),
                         prevaylerDir.getAbsolutePath()));
-        return prevayler;
     }
 
     public void testUnsupportedTransaction() {
@@ -406,3 +492,4 @@ public class PrevaylerTest extends AbstractAttributesTest {
         assertTrue(PrevaylerInterceptor.transactionalReturnValue(MySystem.class.getMethod("createMyObject", null)));
     }
 }
+

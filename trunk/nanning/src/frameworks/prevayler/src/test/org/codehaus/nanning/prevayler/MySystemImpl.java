@@ -13,9 +13,10 @@ public class MySystemImpl extends BasicIdentifyingSystem implements MySystem, Se
     private MyObject myObject;
     private String simpleString;
     private List objects = new ArrayList();
+    private Object simpleObject;
 
     public MyObject createMyObject() {
-        return (MyObject) Aspects.getCurrentAspectFactory().newInstance(MyObject.class);
+        return (MyObject) ((MySystem) Aspects.getThis()).newInstance(MyObject.class);
     }
 
     public void setMyObject(MyObject myObject) {
@@ -46,6 +47,18 @@ public class MySystemImpl extends BasicIdentifyingSystem implements MySystem, Se
 
     public void add(Object o) {
         objects.add(o);
+    }
+
+    public void setSimpleObject(Object o) {
+        this.simpleObject = o;
+    }
+
+    public Object getSimpleObject() {
+        return this.simpleObject;
+    }
+
+    public Object newInstance(Class mainClass) {
+        return Aspects.getCurrentAspectFactory().newInstance(mainClass);
     }
 
     public void setSimpleString(String simpleString) {

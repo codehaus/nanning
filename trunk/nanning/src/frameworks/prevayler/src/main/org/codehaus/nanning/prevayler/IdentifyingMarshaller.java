@@ -49,7 +49,7 @@ public class IdentifyingMarshaller implements Marshaller, Serializable {
 
         } else if (PrevaylerUtils.isEntity(o.getClass())) {
             if (!getSystem().hasObjectID(o)) {
-                registerObjectIDsRecursive(o);
+                getSystem().registerObjectID(o);
             }
             return o;
 
@@ -75,42 +75,5 @@ public class IdentifyingMarshaller implements Marshaller, Serializable {
             return getSystem().getObjectWithID(oid);
         }
         throw new IllegalArgumentException("Can't resolve objects of " + objectClass);
-    }
-
-    private void registerObjectIDsRecursive(final Object objectToRegister) {
-        final IdentifyingSystem system = getSystem();
-        final Set registeredObjects = new HashSet();
-
-        ObjectGraphVisitor.visit(objectToRegister, new ObjectGraphVisitor() {
-            protected void visit(Object o) {
-                if (o instanceof AccessibleObject) {
-                    return;
-                }
-                if (o instanceof Date) {
-                    return;
-                }
-                if (PrevaylerUtils.isPrimitive(o)) {
-                    return;
-                }
-                if (!registeredObjects.contains(o) && PrevaylerUtils.isEntity(o.getClass())) {
-                    assert !system.hasObjectID(o) : "you're mixing objects in prevayler with objects outside, this will lead to unpredictable results, " +
-                            "so I've banished that sort of behaviour with this assert here" +
-                            "(the object that was inside prevayler was " + o + " the object that was outside was " + objectToRegister + ")";
-
-                    system.registerObjectID(o);
-                    registeredObjects.add(o);
-                }
-                
-                /* for performance, skip the proxy part of all aspected objects */
-                if (Aspects.isAspectObject(o)) {
-                    Object[] targets = Aspects.getTargets(o);
-                    for (int i = 0; i < targets.length; i++) {
-                        super.visit(targets[i]);
-                    }
-                } else {
-                    super.visit(o);
-                }
-            }
-        });
     }
 }

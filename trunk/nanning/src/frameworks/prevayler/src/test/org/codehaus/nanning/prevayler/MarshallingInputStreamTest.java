@@ -1,8 +1,8 @@
-package org.codehaus.nanning.remote;
+package org.codehaus.nanning.prevayler;
 
 import junit.framework.TestCase;
 import org.codehaus.nanning.prevayler.Marshaller;
-import org.codehaus.nanning.remote.MarshallingInputStream;
+import org.codehaus.nanning.prevayler.MarshallingInputStream;
 
 import java.io.*;
 
