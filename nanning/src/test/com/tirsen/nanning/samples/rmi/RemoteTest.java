@@ -1,90 +1,34 @@
 package com.tirsen.nanning.samples.rmi;
 
-import java.io.File;
-import java.io.IOException;
-
 import com.tirsen.nanning.Aspects;
 import com.tirsen.nanning.attribute.AbstractAttributesTest;
 import com.tirsen.nanning.config.AspectSystem;
-import com.tirsen.nanning.config.MixinAspect;
-import com.tirsen.nanning.samples.prevayler.*;
-import org.prevayler.implementation.SnapshotPrevayler;
+import com.tirsen.nanning.config.FindTargetMixinAspect;
+import com.tirsen.nanning.samples.prevayler.Identity;
 
 public class RemoteTest extends AbstractAttributesTest {
-    private AspectSystem serverAspectSystem;
-    private File prevaylerDir;
     private int port = 12346;
-    private SnapshotPrevayler prevayler;
     private SocketRemoteCallServer remoteCallServer;
-    private RemoteMarshaller clientMarshaller;
 
     protected void setUp() throws Exception {
         super.setUp();
-        prevaylerDir = File.createTempFile("test", "");
-        prevaylerDir.delete();
-        prevaylerDir.deleteOnExit();
-        prevaylerDir.mkdirs();
-
-        serverAspectSystem = new AspectSystem();
-        serverAspectSystem.addAspect(new MixinAspect(MyObject.class, MyObjectImpl.class));
-        serverAspectSystem.addAspect(new MixinAspect(MySystem.class, MySystemImpl.class));
-        serverAspectSystem.addAspect(new MixinAspect(MyStatelessService.class, MyStatelessServiceImpl.class));
-        serverAspectSystem.addAspect(new MixinAspect(MyStatefulService.class, MyStatefulServiceImpl.class));
-        serverAspectSystem.addAspect(new PrevaylerAspect());
-
-        clientMarshaller = RemoteMarshaller.createClientSideMarshaller();
-
-        // init server side
-        Aspects.setContextAspectFactory(serverAspectSystem);
-        prevayler = new SnapshotPrevayler(serverAspectSystem.newInstance(MySystem.class),
-                                          prevaylerDir.getAbsolutePath());
-
-        remoteCallServer = new SocketRemoteCallServer();
-        remoteCallServer.setPort(port);
-
-        CurrentPrevayler.withPrevayler(prevayler, new Runnable() {
-            public void run() {
-                // start server, server-threads will inherit the prevayler and the context-aspect-factory from this thread
-                remoteCallServer.start();
-                remoteCallServer.setAspectFactory(serverAspectSystem);
-            }
-        });
     }
 
     protected void tearDown() throws Exception {
         super.tearDown();
+        if (remoteCallServer != null) {
+            remoteCallServer.stop();
+        }
+    }
+
+    public void testStartStop() {
+        remoteCallServer = new SocketRemoteCallServer();
+        remoteCallServer.setPort(port);
+        assertFalse(remoteCallServer.isStarted());
         remoteCallServer.stop();
-    }
-
-    public void testStatelessRemoteCall() throws IOException, ClassNotFoundException {
-        // server side
-        remoteCallServer.bind("MyStatelessService", serverAspectSystem.newInstance(MyStatelessService.class));
-
-        // client side
-        MyStatelessService myService = (MyStatelessService) new Naming(clientMarshaller, new SocketConnectionManager("localhost", port)).lookup("MyStatelessService");
-        myService.createObject("attributeValue");
-
-        // server side
-        CurrentPrevayler.withPrevayler(prevayler, new Runnable() {
-            public void run() {
-                MySystem system = (MySystem) CurrentPrevayler.getSystem();
-
-                // server side
-                assertNotNull("object not created on server side", system.getMyObject());
-                assertEquals("attribute wrong value", "attributeValue", system.getMyObject().getValue());
-            }
-        });
-    }
-
-    public void testStatefulRemoteCall() throws IOException, ClassNotFoundException {
-        // server side
-        remoteCallServer.bind("MyStatefulService", serverAspectSystem.newInstance(MyStatefulService.class));
-
-        // client side
-        MyStatefulService statefulService = (MyStatefulService) new Naming(clientMarshaller, new SocketConnectionManager("localhost", port)).lookup("MyStatefulService");
-        assertNull(statefulService.value());
-        statefulService.modify("value");
-        assertEquals("value", statefulService.value());
+        assertFalse(remoteCallServer.isStarted());
+        remoteCallServer.start();
+        assertTrue(remoteCallServer.isStarted());
     }
 
     public void testObjectTable() {
@@ -96,13 +40,13 @@ public class RemoteTest extends AbstractAttributesTest {
         assertSame(id, objectTable.register(o));
     }
 
-    public void testOBjectTableCleanup() throws Exception {
+    public void testObjectTableCleanup() throws Exception {
         Object o = new Object();
         ObjectTable objectTable = new ObjectTable(200);
         Object id = objectTable.register(o);
-        Thread.sleep(100);
+        Thread.sleep(50);
         assertTrue(objectTable.isIDRegistered(id));
-        Thread.sleep(101);
+        Thread.sleep(151);
         assertFalse(objectTable.isIDRegistered(id));
     }
 
@@ -113,14 +57,22 @@ public class RemoteTest extends AbstractAttributesTest {
         assertSame(o, clientMarshaller.unmarshal(new Identity(o.getClass(), id)));
     }
 
-    public void testIdentity() {
+    public void testIdentityEqualsAndHashCoe() {
         Identity identity1 = new Identity(Object.class, new Long(1));
+        assertEquals(identity1, identity1);
+        assertFalse(identity1.equals(""));
+        assertFalse(identity1.equals(new Identity(Object.class, new Long(2))));
+
         Identity identity2 = new Identity(Object.class, new Long(1));
         assertEquals(identity1, identity2);
+        assertEquals(identity2, identity1);
+        assertEquals(identity1.hashCode(), identity2.hashCode());
     }
 
     public void testRemoteMarshallerWithRemoteObject() {
-        Object service = serverAspectSystem.newInstance(MyStatefulService.class);
+        AspectSystem aspectSystem = new AspectSystem();
+        aspectSystem.addAspect(new FindTargetMixinAspect());
+        Object service = aspectSystem.newInstance(MyStatefulService.class);
 
         RemoteMarshaller clientMarshaller = RemoteMarshaller.createClientSideMarshaller();
         Identity identity = new RemoteIdentity(Aspects.getAspectInstance(service).getClassIdentifier(), new Long(System.currentTimeMillis()), new SocketConnectionManager("localhost", port));

@@ -7,16 +7,17 @@
 package com.tirsen.nanning;
 
 import java.lang.reflect.Proxy;
+import java.lang.reflect.Method;
 
 import junit.framework.TestCase;
 
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: AspectInstanceTest.java,v 1.5 2003-04-14 17:32:58 tirsen Exp $ -->
+ * <!-- $Id: AspectInstanceTest.java,v 1.6 2003-04-23 20:44:37 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class AspectInstanceTest extends TestCase {
     public void testEmptyAspectInstance() {
@@ -25,6 +26,7 @@ public class AspectInstanceTest extends TestCase {
         // test some of the methods from java.lang.Object
         assertNotNull(proxy);
         assertNotNull(proxy.toString());
+        assertSame(proxy, instance.getProxy());
     }
 
     public void testAspectInstanceWithOneMixin() {
@@ -36,7 +38,28 @@ public class AspectInstanceTest extends TestCase {
         intf.call();
     }
 
+    Method calledMethod = null;
+    public void testInterceptor() throws NoSuchMethodException {
+        AspectInstance instance = new AspectInstance();
+        MixinInstance mixin = new MixinInstance(Intf.class, new Impl());
+        Method callMethod = Intf.class.getMethod("call", null);
+        mixin.addInterceptor(callMethod, new MethodInterceptor() {
+            public Object invoke(Invocation invocation) throws Throwable {
+                calledMethod = invocation.getMethod();
+                return invocation.invokeNext();
+            }
+        });
+        instance.addMixin(mixin);
+        Intf intf = (Intf) instance.getProxy();
+        intf.call();
+        assertEquals(callMethod, calledMethod);
+    }
+
+
     public static class BlahongaException extends RuntimeException {
+    }
+
+    public static class BlahongaError extends Error {
     }
 
     public void testThrowsCorrectExceptions() {
@@ -60,6 +83,20 @@ public class AspectInstanceTest extends TestCase {
             proxy.call();
             fail();
         } catch (BlahongaException shouldHappen) {
+        } catch (Exception e) {
+            fail();
+        }
+
+        Aspects.setTarget(proxy, Intf.class, new Impl() {
+            public void call() {
+                throw new BlahongaError();
+            }
+        });
+
+        try {
+            proxy.call();
+            fail();
+        } catch (BlahongaError shouldHappen) {
         } catch (Exception e) {
             fail();
         }
@@ -139,4 +176,36 @@ public class AspectInstanceTest extends TestCase {
         intf.call();
         impl.verify();
     }
+
+    public static class ImplWithEquals extends Impl {
+        String state;
+
+        public ImplWithEquals(String state) {
+            this.state = state;
+        }
+
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof ImplWithEquals)) return false;
+
+            final ImplWithEquals implWithEquals = (ImplWithEquals) o;
+
+            if (!state.equals(implWithEquals.state)) return false;
+
+            return true;
+        }
+
+        public int hashCode() {
+            return state.hashCode();
+        }
+    }
+
+//    public void testCallsOnJavaLangObject() {
+//        AspectInstance aspectInstance1 = new AspectInstance();
+//        aspectInstance1.addMixin(new MixinInstance(Intf.class, new ImplWithEquals("state")));
+//        AspectInstance aspectInstance2 = new AspectInstance();
+//        aspectInstance2.addMixin(new MixinInstance(Intf.class, new ImplWithEquals("state")));
+//        assertEquals(aspectInstance1.getProxy(), aspectInstance2.getProxy());
+//    }
+
 }

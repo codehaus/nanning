@@ -9,6 +9,8 @@
     <body>
 
         <section name="Overview">
+            <p>For an updated version of this document see
+                <a href="http://nanning.snipsnap.org/space/Overview">SnipSnap</a></p>
             <p>
                 This is a short overview of the Nanning Aspects AOP framework.
             </p>
