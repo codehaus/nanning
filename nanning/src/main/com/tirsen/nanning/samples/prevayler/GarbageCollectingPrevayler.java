@@ -38,12 +38,10 @@ public class GarbageCollectingPrevayler extends SnapshotPrevayler {
             Object unreferencedObject = iterator.next();
 
             if (unreferencedObject instanceof FinalizationCallback) {
-                logger.debug("Finalizing object: " + unreferencedObject);
                 FinalizationCallback finalizationCallback = (FinalizationCallback) unreferencedObject;
                 finalizationCallback.finalizationCallback();
             }
 
-            logger.debug("Unregistering object: " + unreferencedObject);
             system.unregisterObjectID(unreferencedObject);
         }
     }
@@ -69,7 +67,6 @@ public class GarbageCollectingPrevayler extends SnapshotPrevayler {
 
                 if (Identity.isEntity(o.getClass())) {
                     referencedObjects.add(o);
-                    logger.debug("Adding referenced object: " + o);
                 }
 
                 if (Aspects.isAspectObject(o)) {

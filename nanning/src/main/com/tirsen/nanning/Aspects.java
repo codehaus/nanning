@@ -15,10 +15,10 @@ import java.util.Set;
 /**
  * Facade for accessing some important features of aspected objects and their definitions.
  *
- * <!-- $Id: Aspects.java,v 1.18 2003-03-03 10:07:33 lecando Exp $ -->
+ * <!-- $Id: Aspects.java,v 1.19 2003-03-27 18:19:33 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public class Aspects {
     private static ThreadLocal contextAspectRepository = new InheritableThreadLocal();
@@ -106,5 +106,20 @@ public class Aspects {
     public static MethodInterceptor[] getInterceptors(Object proxy, Method method) {
         List interceptors = getAspectInstance(proxy).getInterceptorsForMethod(method);
         return (MethodInterceptor[]) interceptors.toArray(new MethodInterceptor[interceptors.size()]);
+    }
+
+    public static Class getRealClass(Class proxyClass) {
+        if (!Proxy.isProxyClass(proxyClass)) {
+            return proxyClass;
+        }
+        Class[] interfaces = proxyClass.getInterfaces();
+        for (int i = 0; i < interfaces.length; i++) {
+            Class anInterface = interfaces[i];
+            Class realClass = getRealClass(anInterface);
+            if (realClass != null) {
+                return realClass;
+            }
+        }
+        return null;
     }
 }
