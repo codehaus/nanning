@@ -25,4 +25,6 @@ public interface IdentifyingSystem extends PrevalentSystem {
 
     Collection getAllRegisteredObjects();
 
+    boolean isIDRegistered(long objectId);
+
 }

@@ -3,6 +3,7 @@ package com.tirsen.nanning.samples.prevayler;
 import java.io.Serializable;
 
 import com.tirsen.nanning.AspectFactory;
+import com.tirsen.nanning.Aspects;
 import com.tirsen.nanning.attribute.Attributes;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -10,7 +11,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * TODO document Identity
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class Identity implements Serializable {
     static final long serialVersionUID = 716500751463534855L;
@@ -36,7 +37,9 @@ public class Identity implements Serializable {
             return aspectFactory.newInstance(identifier);
         }
         if (isEntity(objectClass)) {
-            return system.getObjectWithID(((Long) identifier).longValue());
+            long oid = ((Long) identifier).longValue();
+            assert system.isIDRegistered(oid) : "object of type " + Aspects.getRealClass(objectClass) + " had invalid object id " + oid;
+            return system.getObjectWithID(oid);
         }
         throw new IllegalArgumentException("Can't resolve objects of " + objectClass);
     }
