@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<document>
+
+    <properties>
+        <author email="tirsen@codehaus.org">Jon Tirsen</author>
+        <title>Nanning Aspects</title>
+    </properties>
+
+    <body>
+
+        <section name="Aspect Instance">
+            <p>
+                The AspectInstance is the heart of Nanning and implements the runtime support for aspect oriented programming. Aspect oriented programming mainly extends traditional object oriented programming with two new concepts: Introductions and advice. The AspectInstance in Nanning implements both of these concepts.
+            </p>
+            <p>
+				See the API documentation for <a href="api/org/codehaus/nanning/AspectInstance.html">org.codehaus.nanning.AspectInstance</a>.
+            </p>
+        </section>
+        
+        <section name="Dynamic proxies">
+            <p>
+            The runtime mechanism in Nanning is entirely based on dynamic proxies. A dynamic proxy is a class generated at runtime that implements one or more separate interfaces. A call on one of the methods of the an instance of the proxy will be sent to an object implementing InvocationHandler. In Nanning AspectInstance implements InvocationHandler and thus handles all the call to an object that has been aspectified.
+            </p>
+            <p>
+				Example, creating the proxy for an AspectInstance:
+            </p>
+                <source><![CDATA[
+AspectInstance aspectInstance = new AspectInstance();
+// set up the aspectInstance with mixins and interceptors
+Object proxy = aspectInstance.getProxy();]]></source>
+            <p>
+				See the API documentation for <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/lang/reflect/Proxy.html">java.lang.reflect.Proxy</a>.
+            </p>
+        </section>
+
+        <section name="Introductions">
+            <p>
+            In aspect oriented programming introductions is a way of adding state and behaviour to an existing class without actually changing that class.
+            </p>
+            <p>
+                In Nanning introductions are implemented as mixins. A mixin consists of one interface and a target object. An AspectInstance consists of one or more mixins. The dynamic proxy that the AspectInstance creates implements all the interfaces of all the mixins. A call on a method in an interface will eventually end up as a call on the target so the target should generally implement the interfaces of the mixin.
+            </p>
+            <p>
+            Example, adding a mixin to an AspectInstance:
+            </p>
+             <source><![CDATA[
+AspectInstance aspectInstance = new AspectInstance();
+aspectInstance.addMixin(new Mixin(Interface.class, new Target()));
+Interface proxy = (Interface) aspectInstance.getProxy();]]></source>
+            <p>
+				See the API documentation for <a href="api/org/codehaus/nanning/Mixin.html">org.codehaus.nanning.Mixin</a>.
+            </p>
+            <p>
+                Note: support for several interfaces on one mixin (but still only one target) is being implemented.
+            </p>
+        </section>
+
+        <section name="Advice">
+            <p>
+                In aspect oriented programming advice is a way of changing the behaviour of existing code.
+            </p>
+            <p>
+                In Nanning advice are implemented as interceptors. An interceptor is called before the method is actually called on the target, it is responsible for handing the call to the next interceptor in the chain of interceptors for that method, or if it is the last interceptor the call will be handed of to the actual target. The interceptor can also do additional processing after the call and change the return value. It may also choose to not execute the call at all (in for example a caching interceptor, where the call has already been cached).
+            </p>
+            <p>
+                Example, adding an interceptor to a method on a mixin:
+            </p>
+             <source><![CDATA[
+Method method = Interface.class.getMethod("call", null);
+AspectInstance aspectInstance = new AspectInstance();
+Mixin mixin = new Mixin(Interface.class, new Target());
+mixin.addInterceptor(method, new MethodInterceptor() {
+	public void invoke(Invocation invocation) {
+		System.out.println("Hello world from an interceptor on " + invocation.getMethod());
+		Object result = invocation.invokeNext(); // passes call on to next interceptor or target
+		return result: // result will be passed on to the caller as the return value of the call
+	}
+});
+aspectInstance.addMixin(mixin);
+Interface proxy = (Interface) aspectInstance.getProxy();
+proxy.call();]]></source>
+            <p>
+				See the API documentation for <a href="api/org/codehaus/nanning/MethodInterceptor.html">org.codehaus.nanning.MethodInterceptor</a>.
+            </p>
+        </section>
+
+        <section name="The main class (classIdentifier)">
+            <p>
+            In aspect oriented programming introductions and advice are applied to a single class. In Nanning there is not really the concept of a class since an AspectInstance can consist of several mixins, no mixin is more special than the other. Nanning instead supports the notion of indiciating what main class this AspectInstance should represent, the AspectInstance does not in itself use this main class for much, it could instead be used by clients of the AspectInstance such as pointcuts and the configuration system (see <a href="aspect-system.html">AspectSystem</a>). For historical reasons the main class is called the classIdentifier.
+            </p>
+            <p>
+                Example, specifying the main class (the classIdentifier) in the constructor:
+            </p>
+             <source><![CDATA[
+AspectInstance aspectInstance = new AspectInstance(Interface.class);
+assertEquals(Interface.class, aspectInstance.getClassIdentifier());
+]]></source>
+            <p>
+                Note, classIdentifier could be renamed mainClass before the release of 1.0.
+            </p>
+        </section>
+
+        <section name="Summary">
+            <p>
+            The AspectInstance implements the runtime of Nanning. Unfortunately it is a very low-level API and as soon as the system gets bigger that the trivial case additional abstractions needs to be created. For example, the AspectInstance APIs do not introduce the concepts of pointcut (a set of points where an introduction or advice should be applied) or aspect (the modularization of pointcuts, advice and introductions). All these higher-level concepts are defined in the configuration API: <a href="aspect-system.html">AspectSystem</a>.
+            </p>
+        </section>
+
+    </body>
+</document>
