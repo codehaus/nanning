@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<project>
+    <extend>${basedir}/../project.xml</extend>
+    <name>Nanning Contract</name>
+    <id>nanning-contract</id>
+    <currentVersion>0.8</currentVersion>
+    <package>com.tirsen.nanning.cache</package>
+    <shortDescription>Design by contract</shortDescription>
+    <description>A simple design by contract interceptor</description>
+
+    <developers>
+
+        <developer>
+            <name>Jon Tirsen</name>
+            <id>tirsen</id>
+            <organization>Lecando AB</organization>
+        </developer>
+
+        <developer>
+            <name>Lecando AB</name>
+            <id>lecando</id>
+            <organization>Lecando AB</organization>
+        </developer>
+
+    </developers>
+
+    <dependencies>
+
+        <dependency>
+            <id>ognl</id>
+            <version>2.3.2</version>
+        </dependency>
+
+    </dependencies>
+
+</project>
