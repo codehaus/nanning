@@ -22,13 +22,15 @@ public class RemoteAspect extends PointcutAspect implements MethodInterceptor {
 
     public Object invoke(Invocation invocation) throws Throwable {
         RemoteIdentity remoteIdentity = (RemoteIdentity) invocation.getTarget();
-        Socket socket = new Socket(remoteIdentity.getHostname(), remoteIdentity.getPort());
+
+        ServerConnection connection = remoteIdentity.getConnectionManager().openConnection();
+
         try {
             Call call = new MarshallingCall(invocation, marshaller);
 
-            ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+            ObjectOutputStream output = new ObjectOutputStream(connection.getOutputStream());
             output.writeObject(call);
-            ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
+            ObjectInputStream input = new ObjectInputStream(connection.getInputStream());
             Object result = marshaller.unmarshal(input.readObject());
             if (result instanceof ExceptionThrown) {
                 ExceptionThrown exceptionThrown = (ExceptionThrown) result;
@@ -40,7 +42,7 @@ public class RemoteAspect extends PointcutAspect implements MethodInterceptor {
             }
             return result;
         } finally {
-            socket.close();
+            connection.close();
         }
     }
 

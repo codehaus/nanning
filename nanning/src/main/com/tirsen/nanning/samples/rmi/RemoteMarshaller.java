@@ -17,8 +17,7 @@ import com.tirsen.nanning.samples.prevayler.Marshaller;
 public class RemoteMarshaller implements Marshaller {
     private ObjectTable objectTable = new ObjectTable();
     private AspectFactory aspectFactory;
-    private String hostname;
-    private int port;
+    private ServerConnectionManager connectionManager;
 
     /**
      * Constructs client-side marshaller.
@@ -41,9 +40,8 @@ public class RemoteMarshaller implements Marshaller {
     /**
      * Constructs server-side marshaller.
      */
-    public RemoteMarshaller(String hostname, int port) {
-        this.hostname = hostname;
-        this.port = port;
+    public RemoteMarshaller(ServerConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
     }
 
     public RemoteMarshaller(AspectFactory aspectFactory) {
@@ -83,7 +81,7 @@ public class RemoteMarshaller implements Marshaller {
                 return getSingleMixinTarget(o);
             } else {
                 return new RemoteIdentity((Class) Aspects.getAspectInstance(o).getClassIdentifier(), registerID(o),
-                                          hostname, port);
+                                          connectionManager);
             }
         }
 
