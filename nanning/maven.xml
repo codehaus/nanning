@@ -2,18 +2,28 @@
 <project default="java:jar" xmlns:jxr="jxr" xmlns:j="jelly:core">
 
     <preGoal name="dist:prepare-bin-filesystem">
-        <attainGoal name="site:generate" />
+        <attainGoal name="site:generate"/>
     </preGoal>
 
+    <postGoal name="dist:prepare-src-filesystem">
+        <delete file="${maven.dist.src.assembly.dir}/build.xml"/>
+        <mkdir dir="${maven.dist.src.assembly.dir}/lib"/>
+        <copy todir="${maven.dist.src.assembly.dir}/lib">
+            <fileset dir="${basedir}/lib">
+                <exclude name="**/clover/**" />
+            </fileset>
+        </copy>
+    </postGoal>
+
     <postGoal name="dist:prepare-bin-filesystem">
-        <mkdir dir="${maven.dist.bin.assembly.dir}/lib" />
+        <mkdir dir="${maven.dist.bin.assembly.dir}/lib"/>
 
         <j:forEach var="dep" items="${pom.dependencies}">
             <copy todir="${maven.dist.bin.assembly.dir}/lib"
-                file="${maven.repo.local}/${dep.getGroupId()}/jars/${dep.getArtifact()}" />
+                file="${maven.repo.local}/${dep.getGroupId()}/jars/${dep.getArtifact()}"/>
         </j:forEach>
 
-        <delete file="${maven.dist.bin.assembly.dir}/${maven.final.name}.jar" />
+        <delete file="${maven.dist.bin.assembly.dir}/${maven.final.name}.jar"/>
 
         <copy todir="${maven.dist.bin.assembly.dir}/lib">
             <fileset dir="${maven.build.dir}">
