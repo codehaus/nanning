@@ -13,7 +13,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.*;
 
-import com.tirsen.nanning.config.AspectSystem;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -32,10 +31,10 @@ import org.apache.commons.lang.builder.ToStringStyle;
  aspectInstance.addMixin(mixinInstance);
  </pre></code>
  *
- * <!-- $Id: AspectInstance.java,v 1.41 2003-05-12 13:43:53 lecando Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.42 2003-05-12 14:19:05 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.41 $
+ * @version $Revision: 1.42 $
  */
 public final class AspectInstance implements InvocationHandler, Serializable {
     static final long serialVersionUID = 5462785783512485056L;
@@ -174,12 +173,22 @@ public final class AspectInstance implements InvocationHandler, Serializable {
      * @param mixin
      */
     public void addMixin(MixinInstance mixin) {
-        assert proxy == null : "Can't addLink mixins when proxy has been created.";
+        assert proxy == null : "Can't addMixin mixins when proxy has been created.";
         Class interfaceClass = mixin.getInterfaceClass();
         bindMixinToInterface(interfaceClass, mixin);
         mixinsList.add(mixin);
     }
 
+
+    public void setMixins(List mixinsList) {
+        this.mixinsList = mixinsList;
+        mixins.clear();
+        for (Iterator i = mixinsList.iterator(); i.hasNext();) {
+            MixinInstance mixinInstance = (MixinInstance) i.next();
+            bindMixinToInterface(mixinInstance.getInterfaceClass(), mixinInstance);
+        }
+    }
+    
     /**
      * Binds the mixin to the specified interface and all of it's superclasses, overrides any other bindings
      * to that interface (and superclasses).
