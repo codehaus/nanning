@@ -8,6 +8,12 @@ Access to the actual object and the call-stack from the aspects. (done)
 
 Some kind of configuration through Java API.
 
+Aspects pluggable "on-the-side". That is several target-objects, each having several interfaces.
+
+Elegant error handling on:
+ - Method names are the same on several interfaces. (Don't support.)
+ - Haven't set required stuff in InterfaceDefinition.
+
 Implement state-management for aspects:
 1) Stateless. One aspect-instance per configuration for the whole system.
 2) State-per-call. Pool of aspect-instances that's allocated per call.
