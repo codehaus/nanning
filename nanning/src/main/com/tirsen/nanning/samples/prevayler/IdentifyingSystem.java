@@ -2,6 +2,8 @@ package com.tirsen.nanning.samples.prevayler;
 
 import org.prevayler.PrevalentSystem;
 
+import java.util.Set;
+
 public interface IdentifyingSystem extends PrevalentSystem {
     Object getObjectWithID(long oid);
 
@@ -18,4 +20,6 @@ public interface IdentifyingSystem extends PrevalentSystem {
     long registerObjectID(Object object);
 
     boolean hasObjectID(Object object);
+
+    void keepTheseObjects(Set objectsToKeep);
 }
