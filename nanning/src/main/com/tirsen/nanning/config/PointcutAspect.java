@@ -38,7 +38,7 @@ public class PointcutAspect implements Aspect {
                     Pointcut pointcut = (Pointcut) pointcutIterator.next();
                     pointcut.process(mixinInstance);
                 }
-                Method[] methods = mixinInstance.getInterfaceClass().getDeclaredMethods();
+                Method[] methods = getAllMethods(mixinInstance.getInterfaceClass());
                 for (int i = 0; i < methods.length; i++) {
                     Method method = methods[i];
                     for (Iterator pointcutIterator = pointcuts.iterator(); pointcutIterator.hasNext();) {
@@ -49,6 +49,33 @@ public class PointcutAspect implements Aspect {
             }
         } catch (Exception e) {
             throw new AspectException("Could not process aspect " + this, e);
+        }
+    }
+
+    private Method[] getAllMethods(Class klass) {
+        List result = getAllMethodsList(klass);
+        return (Method[]) result.toArray(new Method[result.size()]);
+    }
+
+    private List getAllMethodsList(Class klass) {
+        ArrayList result = new ArrayList();
+        addAllMethods(klass, result);
+        return result;
+    }
+
+    private void addAllMethods(Class klass, List result) {
+        if (klass != null) {
+            Method[] methods = klass.getDeclaredMethods();
+            for (int i = 0; i < methods.length; i++) {
+                Method method = methods[i];
+                result.add(method);
+            }
+            Class[] interfaces = klass.getInterfaces();
+            for (int i = 0; i < interfaces.length; i++) {
+                Class intf = interfaces[i];
+                addAllMethods(intf, result);
+            }
+            addAllMethods(klass.getSuperclass(), result);
         }
     }
 }

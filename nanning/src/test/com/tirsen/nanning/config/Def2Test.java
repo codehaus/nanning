@@ -38,6 +38,20 @@ public class Def2Test extends TestCase {
         callInterceptor.verify();
     }
 
+    public static interface IntfSub extends Intf {}
+    public static class ImplSub extends Impl {}
+
+    public void testInheritance() throws NoSuchMethodException {
+        AspectSystem aspectSystem = new AspectSystem();
+        aspectSystem.addAspect(AspectSystem.mixin(IntfSub.class, ImplSub.class));
+        aspectSystem.addAspect(AspectSystem.interceptor(new NullInterceptor()));
+        Object bigMomma = aspectSystem.newInstance(IntfSub.class);
+
+        assertEquals(1,
+                Aspects.getAspectInstance(bigMomma).getMixinForInterface(Intf.class).
+                getInterceptorsForMethod(Intf.class.getMethod("call", new Class[0])).size());
+    }
+
     public void testCreateWithTargets() {
         AspectSystem aspectSystem = new AspectSystem();
         aspectSystem.addAspect(AspectSystem.mixin(Intf.class, Impl.class));

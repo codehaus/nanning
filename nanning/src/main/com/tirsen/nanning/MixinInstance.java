@@ -14,10 +14,10 @@ import java.util.*;
 /**
  * TODO document AspectDefinition
  *
- * <!-- $Id: MixinInstance.java,v 1.7 2003-03-03 10:07:33 lecando Exp $ -->
+ * <!-- $Id: MixinInstance.java,v 1.8 2003-03-21 16:14:56 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public final class MixinInstance {
     private Class interfaceClass;
@@ -65,22 +65,21 @@ public final class MixinInstance {
     }
 
     class InvocationImpl implements Invocation {
-        private int index = -1;
         private Object proxy;
         private final Method method;
         private final Object[] args;
+        private ListIterator interceptors;
 
         public InvocationImpl(Object proxy, Method method, Object[] args) {
             this.proxy = proxy;
             this.method = method;
             this.args = args;
+            interceptors = getInterceptorsForMethod(method).listIterator();
         }
 
         public Object invokeNext() throws Throwable {
-            index++;
-            List interceptors = getInterceptorsForMethod(method);
-            if (index < interceptors.size()) {
-                return ((MethodInterceptor) interceptors.get(index)).invoke(this);
+            if (interceptors.hasNext()) {
+                return ((MethodInterceptor) interceptors.next()).invoke(this);
             } else {
                 try {
                     return method.invoke(getTarget(), args);
@@ -127,7 +126,7 @@ public final class MixinInstance {
         }
 
         public int getCurrentIndex() {
-            return index;
+            return interceptors.previousIndex();
         }
 
         public int getNumberOfInterceptors() {

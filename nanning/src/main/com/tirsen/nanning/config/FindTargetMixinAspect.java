@@ -5,9 +5,16 @@ import com.tirsen.nanning.AspectInstance;
 import com.tirsen.nanning.MixinInstance;
 
 public class FindTargetMixinAspect extends PointcutAspect {
-    private static final String IMPLEMENTATION_SUFFIX = "Impl";
+    private static final String DEFAULT_IMPLEMENTATION_SUFFIX = "Impl";
+    private String implementationSuffix = DEFAULT_IMPLEMENTATION_SUFFIX;
 
     public FindTargetMixinAspect() {
+        this(DEFAULT_IMPLEMENTATION_SUFFIX);
+    }
+
+    public FindTargetMixinAspect(String implementationSuffix) {
+        this.implementationSuffix = implementationSuffix;
+
         Advise advise = new Advise() {
             public void advise(AspectInstance aspectInstance) {
                 Class interfaceClass = (Class) aspectInstance.getClassIdentifier();
@@ -33,7 +40,7 @@ public class FindTargetMixinAspect extends PointcutAspect {
     private Class findImpl(Class interfaceClass) {
         String name = interfaceClass.getName();
         int packageEnd = name.lastIndexOf('.');
-        String className = name.substring(0, packageEnd) + name.substring(packageEnd) + IMPLEMENTATION_SUFFIX;
+        String className = name.substring(0, packageEnd) + name.substring(packageEnd) + implementationSuffix;
         try {
             return Class.forName(className);
         } catch (ClassNotFoundException e) {

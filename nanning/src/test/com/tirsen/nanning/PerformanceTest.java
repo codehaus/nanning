@@ -17,19 +17,19 @@ import com.tirsen.nanning.samples.StopWatch;
 /**
  * TODO document PerformanceTest
  *
- * <!-- $Id: PerformanceTest.java,v 1.15 2003-03-03 10:07:40 lecando Exp $ -->
+ * <!-- $Id: PerformanceTest.java,v 1.16 2003-03-21 16:14:57 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class PerformanceTest extends AbstractAttributesTest
 {
     public void testInvocation() throws IllegalAccessException, InstantiationException
     {
         // these are exceptionally high due to Clover...
-        double maxMemoryPerInvocation = 1.6;
-        double timesSlowerTolerance = 52;
-        double maxTimePerInvocation = 0.008;
+        double maxMemoryPerInvocation = 8;
+        double timesSlowerTolerance = 22;
+        double maxTimePerInvocation = 0.014;
 
         int numberOfInvocations = 100000;
 
@@ -151,8 +151,8 @@ public class PerformanceTest extends AbstractAttributesTest
     }
 
     public void testAttributes() throws NoSuchMethodException {
-        long maxTime = 17;
-        long maxMemory = 200;
+        long maxTime = 63;
+        long maxMemory = 0;
 
         // let the cache do it's thang
         Attributes.getAttribute(AttributesTestClass.class, "class.attribute");
@@ -168,8 +168,8 @@ public class PerformanceTest extends AbstractAttributesTest
         System.out.println();
         System.out.println("time spent " + stopWatch.getTimeSpent());
         System.out.println("memory used " + stopWatch.getMemoryUsed());
-        assertTrue("time exceeded", stopWatch.getTimeSpent() < maxTime);
-        assertTrue("memory exceeded", stopWatch.getMemoryUsed() < maxMemory);
+        assertTrue("time exceeded", stopWatch.getTimeSpent() <= maxTime);
+        assertTrue("memory exceeded", stopWatch.getMemoryUsed() <= maxMemory);
     }
 
     public void testInheritedAttributes() throws NoSuchMethodException {
