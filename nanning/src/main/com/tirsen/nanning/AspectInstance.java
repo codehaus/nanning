@@ -34,10 +34,10 @@ import org.apache.commons.lang.builder.ToStringStyle;
         aspectInstance.addMixin(mixinInstance);
 </pre></code>
  *
- * <!-- $Id: AspectInstance.java,v 1.34 2003-04-16 13:56:00 lecando Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.35 2003-04-23 08:16:38 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.34 $
+ * @version $Revision: 1.35 $
  */
 public final class AspectInstance implements InvocationHandler, Externalizable {
     static final long serialVersionUID = 5462785783512485056L;
@@ -72,12 +72,15 @@ public final class AspectInstance implements InvocationHandler, Externalizable {
         this.classIdentifier = classIdentifier;
     }
 
-    public Object createProxy() {
+    public Object createProxy(boolean runConstructionInterceptors) {
         if (proxy == null) {
             Set interfaces = getInterfaceClasses();
             proxy = Proxy.newProxyInstance(getClass().getClassLoader(),
                                            (Class[]) interfaces.toArray(new Class[0]),
                                            this);
+        }
+        if (runConstructionInterceptors) {
+            proxy = executeConstructionInterceptors(proxy);
         }
         return proxy;
     }
@@ -280,7 +283,15 @@ public final class AspectInstance implements InvocationHandler, Externalizable {
     }
 
     public Object getProxy() {
-        Object proxy = createProxy();
+        return getProxy(true);
+    }
+
+    public Object getProxy(boolean runConstructionInterceptors) {
+        Object proxy = createProxy(runConstructionInterceptors);
+        return proxy;
+    }
+
+    private Object executeConstructionInterceptors(Object proxy) {
         if (constructionInterceptors != null) {
             Object prevThis = Aspects.currentThis.get();
             try {

@@ -1,6 +1,5 @@
 package com.tirsen.nanning.samples.prevayler;
 
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -12,26 +11,25 @@ import javax.security.auth.Subject;
 import com.tirsen.nanning.Invocation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.prevayler.Command;
-import org.prevayler.PrevalentSystem;
+import org.prevayler.util.TransactionWithQuery;
 
-public class InvokeCommand implements Command {
+public class InvokeCommand extends TransactionWithQuery {
     static final long serialVersionUID = 320681517664792343L;
 
     private static final Log logger = LogFactory.getLog(InvokeCommand.class);
-    private IdentifyingCall call;
+    private AuthenticatedCall call;
 
     public InvokeCommand(Invocation invocation) throws Exception {
-        call = new IdentifyingCall(invocation);
+        call = new AuthenticatedCall(invocation);
     }
 
-    public Serializable execute(PrevalentSystem system) throws Exception {
-        IdentifyingSystem prev = null;
+    protected Object executeAndQuery(Object system) throws Exception {
+        Object prev = null;
         if (CurrentPrevayler.isInitialized()) {
             prev = CurrentPrevayler.getSystem();
         }
         if (!CurrentPrevayler.hasSystem() || CurrentPrevayler.getSystem() != system) {
-            CurrentPrevayler.setSystem((IdentifyingSystem) system);
+            CurrentPrevayler.setSystem(system);
         }
         CurrentPrevayler.enterTransaction();
         try {
@@ -50,9 +48,9 @@ public class InvokeCommand implements Command {
                 logger.debug("user " + subject);
             }
 
-            Serializable serializable = (Serializable) call.invoke();
+            Object result = call.invoke();
             logger.debug("success!");
-            return serializable;
+            return result;
         } catch (Exception e) {
 
             /** Unwrap the invocation target exceptions */

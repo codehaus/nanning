@@ -140,7 +140,7 @@
 
         <dependency>
             <id>prevayler</id>
-            <version>1.03.003alpha</version>
+            <version>2.00.000dev</version>
         </dependency>
 
         <dependency>

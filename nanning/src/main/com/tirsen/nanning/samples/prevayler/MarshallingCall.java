@@ -1,57 +1,20 @@
 package com.tirsen.nanning.samples.prevayler;
 
 import java.io.Serializable;
-import java.security.AccessController;
 import java.security.PrivilegedExceptionAction;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.security.auth.Subject;
 
 import com.tirsen.nanning.Invocation;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 
-public class MarshallingCall extends Call {
+public class MarshallingCall extends AuthenticatedCall {
     static final long serialVersionUID = -8607314000649422353L;
 
     private transient Marshaller marshaller;
 
-    private Set principals;
-    private Set privateCredentials;
-    private Set publicCredentials;
-
-    private static final Predicate isSerializable = new Predicate() {
-        public boolean evaluate(Object o) {
-            return o instanceof Serializable;
-        }
-    };
-
-
-    public MarshallingCall() {
-        Subject subject = Subject.getSubject(AccessController.getContext());
-        if (subject != null) {
-            principals = new HashSet(subject.getPrincipals());
-            CollectionUtils.filter(principals, isSerializable);
-            privateCredentials = new HashSet(subject.getPrivateCredentials());
-            CollectionUtils.filter(privateCredentials, isSerializable);
-            publicCredentials = new HashSet(subject.getPublicCredentials());
-            CollectionUtils.filter(publicCredentials, isSerializable);
-        }
-    }
-
     public MarshallingCall(Invocation invocation, Marshaller marshaller) throws Exception {
-        this();
         setMarshaller(marshaller);
         setInvocation(invocation);
-    }
-
-    public Subject getSubject() {
-        if (principals == null && publicCredentials == null && privateCredentials == null) {
-            return null;
-        } else {
-            return new Subject(false, principals == null ? new HashSet() : principals, publicCredentials == null ? new HashSet() : publicCredentials, privateCredentials == null ? new HashSet() : privateCredentials);
-        }
     }
 
     public void setMarshaller(Marshaller marshaller) {

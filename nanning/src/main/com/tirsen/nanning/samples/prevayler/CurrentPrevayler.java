@@ -1,6 +1,7 @@
 package com.tirsen.nanning.samples.prevayler;
 
 import org.prevayler.Prevayler;
+import org.prevayler.util.clock.ClockedSystem;
 
 public class CurrentPrevayler {
 
@@ -16,18 +17,18 @@ public class CurrentPrevayler {
         return currentSystem.get() != null;
     }
 
-    public static IdentifyingSystem getSystem() {
-        IdentifyingSystem identifyingSystem;
+    public static Object getSystem() {
+        Object system;
         if (hasPrevayler()) {
-            identifyingSystem = (IdentifyingSystem) getPrevayler().system();
+            system = getPrevayler().prevalentSystem();
         } else {
-            identifyingSystem = (IdentifyingSystem) currentSystem.get();
+            system = currentSystem.get();
         }
-        assert identifyingSystem != null : "Prevayler not initialized for this thread, no current system";
-        return identifyingSystem;
+        assert system != null : "Prevayler not initialized for this thread, no current system";
+        return system;
     }
 
-    public static void setSystem(IdentifyingSystem system) {
+    public static void setSystem(Object system) {
         currentSystem.set(system);
         if (system != null) {
             setPrevayler(null);
@@ -38,6 +39,10 @@ public class CurrentPrevayler {
         Prevayler prevayler = (Prevayler) currentPrevayler.get();
         assert prevayler != null : "Prevayler not initialized for this thread, no current Prevayler";
         return prevayler;
+    }
+
+    public static ClockedSystem clockedSystem() {
+        return (ClockedSystem) getSystem();
     }
 
     public static void setPrevayler(Prevayler prevayler) {
