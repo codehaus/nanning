@@ -3,6 +3,7 @@
     <pomVersion>3</pomVersion>
     <name>Nanning Aspects</name>
     <id>nanning</id>
+    <logo>/images/nanning.png</logo>
     <currentVersion>0.4</currentVersion>
     <organization>
         <url>http://sourceforge.net/projects/nanning</url>
@@ -213,14 +214,13 @@
     </build>
     <reports>
         <report>maven-checkstyle-plugin</report>
-        <report>maven-javadoc-plugin</report>
         <report>maven-jdepend-plugin</report>
         <report>maven-changelog-plugin</report>
         <report>maven-file-activity-plugin</report>
         <report>maven-developer-activity-plugin</report>
-<!--        <report>maven-jxr-plugin</report>-->
+        <report>maven-jxr-plugin</report>
+        <report>maven-javadoc-plugin</report>
         <report>maven-junit-report-plugin</report>
-<!--        <report>maven-jellydoc-plugin</report>-->
         <report>maven-clover-plugin</report>
     </reports>
 </project>
