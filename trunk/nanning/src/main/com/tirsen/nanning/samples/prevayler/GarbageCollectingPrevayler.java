@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-public class GarbageCollectingSystem extends SnapshotPrevayler {
-    public GarbageCollectingSystem(IdentifyingSystem system, String path) throws IOException, ClassNotFoundException {
+public class GarbageCollectingPrevayler extends SnapshotPrevayler {
+    public GarbageCollectingPrevayler(IdentifyingSystem system, String path) throws IOException, ClassNotFoundException {
         super(system, path);
     }
 

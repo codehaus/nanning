@@ -172,7 +172,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
         return (MySystem) CurrentPrevayler.getSystem();
     }
 
-    private static class CountingPrevayler extends GarbageCollectingSystem {
+    private static class CountingPrevayler extends GarbageCollectingPrevayler {
         private int numberOfCommandsInLog = 0;
 
         public CountingPrevayler(IdentifyingSystem system, String dir) throws IOException, ClassNotFoundException {
