@@ -3,9 +3,9 @@ package com.tirsen.nanning.samples.prevayler;
 import org.prevayler.PrevalentSystem;
 
 public interface IdentifyingSystem extends PrevalentSystem {
-    int getOID(Object object);
+    long getOID(Object object);
 
-    Object getObjectWithID(int oid);
+    Object getObjectWithID(long oid);
 
-    void registerOID(Object object);
+    long registerOID(Object object);
 }

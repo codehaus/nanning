@@ -18,14 +18,14 @@ public class ConstructCommand implements Command {
     }
 
     public Serializable execute(PrevalentSystem prevalentSystem) throws Exception {
-        CurrentPrevayler.getPrevaylerInterceptor().enterTransaction();
+        PrevaylerInterceptor.getPrevaylerInterceptor().enterTransaction();
         CurrentPrevayler.setSystem((IdentifyingSystem) prevalentSystem);
         try {
             Object o = Aspects.getCurrentAspectRepository().newInstance(interfaceClass);
             CurrentPrevayler.getSystem().registerOID(o);
             return (Serializable) o;
         } finally {
-            CurrentPrevayler.getPrevaylerInterceptor().exitTransaction();
+            PrevaylerInterceptor.getPrevaylerInterceptor().exitTransaction();
         }
     }
 }

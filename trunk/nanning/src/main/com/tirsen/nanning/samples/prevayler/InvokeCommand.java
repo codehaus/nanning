@@ -27,7 +27,7 @@ public class InvokeCommand implements Command {
 
     protected Serializable execute(
             PrevalentSystem system, Method method, Object unmarshalledTarget, Object[] unmarshalledArgs) {
-        CurrentPrevayler.getPrevaylerInterceptor().enterTransaction();
+        PrevaylerInterceptor.getPrevaylerInterceptor().enterTransaction();
         CurrentPrevayler.setSystem((IdentifyingSystem) system);
         try {
             try {
@@ -37,7 +37,7 @@ public class InvokeCommand implements Command {
                 throw new RuntimeException(e);
             }
         } finally {
-            CurrentPrevayler.getPrevaylerInterceptor().exitTransaction();
+            PrevaylerInterceptor.getPrevaylerInterceptor().exitTransaction();
         }
     }
 
