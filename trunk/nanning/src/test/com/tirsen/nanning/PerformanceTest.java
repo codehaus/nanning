@@ -10,17 +10,26 @@ import junit.framework.TestCase;
 import com.tirsen.nanning.samples.StopWatch;
 import com.tirsen.nanning.definition.AspectClass;
 import com.tirsen.nanning.attribute.Attributes;
+import com.tirsen.nanning.attribute.AttributesTestClass;
+import com.tirsen.nanning.attribute.AttributesTest;
+
+import java.lang.reflect.Method;
 
 /**
  * TODO document PerformanceTest
  *
- * <!-- $Id: PerformanceTest.java,v 1.11 2003-01-19 12:09:04 tirsen Exp $ -->
+ * <!-- $Id: PerformanceTest.java,v 1.12 2003-01-19 22:47:07 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class PerformanceTest extends TestCase
 {
+    protected void setUp() throws Exception {
+        super.setUp();
+        AttributesTest.compileAttributes();
+    }
+
     public void testInvocation() throws IllegalAccessException, InstantiationException
     {
         // these are exceptionally high due to Clover...
@@ -147,16 +156,18 @@ public class PerformanceTest extends TestCase
 //        assertTrue("time per instantiation exceeded", timesSlowerTolerance > timesSlower);
     }
 
-    public void testAttributes() {
-        long maxTime = 2672;
-        long maxMemory = 355753;
+    public void testAttributes() throws NoSuchMethodException {
+        long maxTime = 17;
+        long maxMemory = 200;
 
         // let the cache do it's thang
         Attributes.getAttribute(AttributesTestClass.class, "classAttribute");
+        Method method = AttributesTestClass.class.getMethod("method", null);
         StopWatch stopWatch = new StopWatch(true);
 
         for (int i = 0; i < 1000; i++) {
-            Attributes.getAttribute(AttributesTestClass.class, "classAttribute");
+            assertEquals("classValue", Attributes.getAttribute(AttributesTestClass.class, "classAttribute"));
+            assertEquals("methodValue", Attributes.getAttribute(method, "methodAttribute"));
         }
 
         stopWatch.stop();
@@ -167,16 +178,18 @@ public class PerformanceTest extends TestCase
         assertTrue("memory exceeded", stopWatch.getMemoryUsed() < maxMemory);
     }
 
-    public void testInheritedAttributes() {
-        long maxTime = 4454;
-        long maxMemory = 369409;
+    public void testInheritedAttributes() throws NoSuchMethodException {
+        long maxTime = 17;
+        long maxMemory = 180000;
 
         // let the cache do it's thang
         Attributes.getInheritedAttribute(AttributesTestClass.class, "classAttribute");
+        Method method = AttributesTestClass.class.getMethod("method", null);
         StopWatch stopWatch = new StopWatch(true);
 
         for (int i = 0; i < 1000; i++) {
-            Attributes.getInheritedAttribute(AttributesTestClass.class, "classAttribute");
+            assertEquals("classValue", Attributes.getInheritedAttribute(AttributesTestClass.class, "classAttribute"));
+            assertEquals("methodValue", Attributes.getAttribute(method, "methodAttribute"));
         }
 
         stopWatch.stop();
