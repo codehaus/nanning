@@ -185,12 +185,7 @@
 
         <dependency>
             <id>prevayler</id>
-            <version>2.00.000dev</version>
-        </dependency>
-
-        <dependency>
-            <id>ognl</id>
-            <version>2.3.2</version>
+            <version>2.00.000dev2</version>
         </dependency>
 
         <dependency>
@@ -220,6 +215,8 @@
             <excludes>
                 <exclude>**/Abstract*.java</exclude>
                 <exclude>**/PerformanceTest.java</exclude>
+                <exclude>**/BasicIdentifyingSystemGCTest.java</exclude>
+                <exclude>**/SoftMapTest.java</exclude>
             </excludes>
             <resources>
                 <resource>

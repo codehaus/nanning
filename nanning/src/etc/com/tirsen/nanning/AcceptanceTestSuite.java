@@ -6,12 +6,11 @@
  */
 package com.tirsen.nanning;
 
-import com.tirsen.nanning.samples.ContractInterceptorTest;
 import com.tirsen.nanning.samples.TraceInterceptorTest;
 import com.tirsen.nanning.samples.prevayler.PrevaylerTest;
-import com.tirsen.nanning.samples.rmi.RemoteTest;
 import com.tirsen.nanning.samples.rmi.RemoteCallServerTest;
 import com.tirsen.nanning.xml.XMLTest;
+import com.tirsen.nanning.contract.ContractInterceptorTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -19,7 +18,7 @@ import junit.framework.TestSuite;
 /**
  * TODO document UnitTestSuite
  *
- * <!-- $Id: AcceptanceTestSuite.java,v 1.8 2003-05-22 20:18:35 tirsen Exp $ -->
+ * <!-- $Id: AcceptanceTestSuite.java,v 1.8 2003/05/22 20:18:35 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
  * @version $Revision: 1.8 $

@@ -13,7 +13,7 @@ import junit.framework.TestSuite;
 /**
  * TODO document AllTestSuite
  *
- * <!-- $Id: AllTestSuite.java,v 1.3 2003-03-21 17:11:13 lecando Exp $ -->
+ * <!-- $Id: AllTestSuite.java,v 1.3 2003/03/21 17:11:13 lecando Exp $ -->
  *
  * @author $Author: lecando $
  * @version $Revision: 1.3 $

@@ -18,6 +18,9 @@ public class RemoteAspect implements Aspect, MethodInterceptor {
     private Marshaller marshaller;
 
     public Object invoke(Invocation invocation) throws Throwable {
+        assert invocation.getTarget() instanceof RemoteIdentity :
+                "target is not remote-reference: " + invocation.getTarget();
+        
         RemoteIdentity remoteIdentity = (RemoteIdentity) invocation.getTarget();
 
         ServerConnection connection = null;
@@ -28,16 +31,16 @@ public class RemoteAspect implements Aspect, MethodInterceptor {
         }
 
         try {
-            Call call = new MarshallingCall(invocation, marshaller);
+            Call call = new Call(invocation);
 
-            ObjectOutputStream output = null;
+            MarshallingOutputStream output = null;
             try {
-                output = new ObjectOutputStream(connection.getOutputStream());
+                output = new MarshallingOutputStream(connection.getOutputStream(), marshaller);
             } catch (IOException e) {
                 throw new CouldNotConnectException(e);
             }
             output.writeObject(call);
-            ObjectInputStream input = new ObjectInputStream(connection.getInputStream());
+            MarshallingInputStream input = new MarshallingInputStream(connection.getInputStream(), marshaller);
             Object result = marshaller.unmarshal(input.readObject());
             if (result instanceof ExceptionThrown) {
                 ExceptionThrown exceptionThrown = (ExceptionThrown) result;

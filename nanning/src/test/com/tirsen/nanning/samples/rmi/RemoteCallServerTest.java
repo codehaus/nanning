@@ -2,6 +2,8 @@ package com.tirsen.nanning.samples.rmi;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Iterator;
 
 import com.tirsen.nanning.Aspects;
 import com.tirsen.nanning.attribute.AbstractAttributesTest;
@@ -11,13 +13,14 @@ import com.tirsen.nanning.samples.prevayler.CurrentPrevayler;
 import com.tirsen.nanning.samples.prevayler.MySystem;
 import com.tirsen.nanning.samples.prevayler.PrevaylerAspect;
 import org.prevayler.implementation.SnapshotPrevayler;
+import com.tirsen.nanning.samples.prevayler.MyObject;
 
 public class RemoteCallServerTest extends AbstractAttributesTest {
     private AspectSystem serverAspectSystem;
     private File prevaylerDir;
-    private int port = 12346;
-    private SnapshotPrevayler prevayler;
-    private SocketRemoteCallServer remoteCallServer;
+	private int port = 12346;
+	private SnapshotPrevayler prevayler;
+	private SocketRemoteCallServer remoteCallServer;
     private RemoteMarshaller clientMarshaller;
 
     protected void setUp() throws Exception {
@@ -60,8 +63,27 @@ public class RemoteCallServerTest extends AbstractAttributesTest {
         remoteCallServer.bind("MyStatelessService", serverAspectSystem.newInstance(MyStatelessService.class));
 
         // client side
-        MyStatelessService myService = (MyStatelessService) new Naming(clientMarshaller, new SocketConnectionManager("localhost", port)).lookup("MyStatelessService");
-        myService.createObject("attributeValue");
+        Naming naming = new Naming(clientMarshaller, new SocketConnectionManager("localhost", port));
+        MyStatelessService myService = (MyStatelessService) naming.lookup("MyStatelessService");
+
+        {
+            myService.createObject("attributeValue");
+        }
+
+        {
+            MyObject myObject = myService.getMyObject();
+            String value = myObject.getValue();
+            assertEquals("attributeValue", value);
+        }
+
+        {
+            Collection col = myService.getAllObjects();
+            assertEquals(1, col.size());
+            MyObject[] myObjects = (MyObject[])col.toArray(new MyObject[1]);
+            MyObject myObject = myObjects[0];
+            String value = myObject.getValue();
+            assertEquals("attributeValue", value);
+        }
 
         // server side
         CurrentPrevayler.withPrevayler(prevayler, new Runnable() {

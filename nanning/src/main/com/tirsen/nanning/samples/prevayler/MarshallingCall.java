@@ -88,18 +88,22 @@ public class MarshallingCall extends AuthenticatedCall {
     public Object invoke() throws Exception {
         Subject subject = getSubject();
 
+        Object result;
+
         if (subject != null) {
             try {
-                return (Serializable) Subject.doAs(subject, new PrivilegedExceptionAction() {
-                    public Object run() throws Exception {
-                        return MarshallingCall.super.invoke();
-                    }
-                });
+                result = Subject.doAs(subject, new PrivilegedExceptionAction() {
+                                            public Object run() throws Exception {
+                                                return MarshallingCall.super.invoke();
+                                            }
+                                        });
             } catch (java.security.PrivilegedActionException e) {
                 throw e.getException();
             }
         } else {
-            return super.invoke();
+            result = super.invoke();
         }
+
+        return result;
     }
 }

@@ -10,6 +10,7 @@ import javax.security.auth.Subject;
 import com.tirsen.nanning.AspectFactory;
 import com.tirsen.nanning.Aspects;
 import com.tirsen.nanning.samples.prevayler.MarshallingCall;
+import com.tirsen.nanning.samples.prevayler.Call;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -38,12 +39,12 @@ public class RemoteCallServer {
         }
 
         try {
-            ObjectInputStream input = new ObjectInputStream(commandStream);
+            MarshallingInputStream input = new MarshallingInputStream(commandStream, marshaller);
             Object command = input.readObject();
 
             Object result = processCall(command);
 
-            ObjectOutputStream output = new ObjectOutputStream(resultStream);
+            MarshallingOutputStream output = new MarshallingOutputStream(resultStream, marshaller);
             try {
                 output.writeObject(result);
             } catch (NotSerializableException e) {
@@ -63,8 +64,8 @@ public class RemoteCallServer {
 
     private Object processCall(Object command) {
         Object result;
-        if (command instanceof MarshallingCall) {
-            MarshallingCall call = (MarshallingCall) command;
+        if (command instanceof Call) {
+            Call call = (Call) command;
 
             result = processRemoteCall(call);
 
@@ -76,8 +77,6 @@ public class RemoteCallServer {
             result = new ExceptionThrown(new RuntimeException("No such command exception."));
         }
 
-        result = marshaller.marshal(result);
-
         return result;
     }
 
@@ -88,10 +87,9 @@ public class RemoteCallServer {
         return result;
     }
 
-    private Object processRemoteCall(MarshallingCall call) {
+    private Object processRemoteCall(Call call) {
         Object result;
         try {
-            call.setMarshaller(marshaller);
             result = call.invoke();
         } catch (Throwable e) {
             logger.error("error executing call", e);

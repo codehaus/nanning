@@ -57,7 +57,7 @@ public class RemoteTest extends AbstractAttributesTest {
         assertSame(o, clientMarshaller.unmarshal(new Identity(o.getClass(), id)));
     }
 
-    public void testIdentityEqualsAndHashCoe() {
+    public void testIdentityEqualsAndHashCode() {
         Identity identity1 = new Identity(Object.class, new Long(1));
         assertEquals(identity1, identity1);
         assertFalse(identity1.equals(""));

@@ -1,6 +1,7 @@
 package com.tirsen.nanning.samples.rmi;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 import com.tirsen.nanning.Aspects;
 import com.tirsen.nanning.samples.prevayler.CurrentPrevayler;
@@ -13,4 +14,12 @@ public class MyStatelessServiceImpl implements MyStatelessService, Serializable 
         ((MySystem) CurrentPrevayler.getSystem()).setMyObject(myObject);
         myObject.setValue(attributeValue);
     }
+    
+    public MyObject getMyObject() {
+    	return ((MySystem)CurrentPrevayler.getSystem()).getMyObject();
+    }
+	
+	public Collection getAllObjects() {
+		return ((MySystem)CurrentPrevayler.getSystem()).getAllObjects();
+	}
 }

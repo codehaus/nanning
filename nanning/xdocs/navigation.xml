@@ -18,6 +18,7 @@
         <menu name="Nanning Aspects">
             <item name="Overview" href="/overview.html"/>
             <item name="Usage" href="/usage.html"/>
+            <item name="Frameworks" href="/frameworks/index.html"/>
             <item name="Building" href="/building.html"/>
         </menu>
     </body>

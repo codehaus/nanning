@@ -1,0 +1,188 @@
+<?xml version="1.0"?>
+<project>
+    <pomVersion>3</pomVersion>
+    <name>Nanning Aspects</name>
+    <groupId>nanning</groupId>
+    <id>nanning</id>
+    <logo>/../../images/nanning.png</logo>
+    <currentVersion>0.4</currentVersion>
+    <organization>
+        <name>Jon Tirsen</name>
+        <url>http://sourceforge.net/projects/nanning</url>
+        <logo>http://sourceforge.net/sflogo.php?group_id=64968&amp;type=5</logo>
+    </organization>
+    <inceptionYear>2002</inceptionYear>
+    <package>com.tirsen.nanning</package>
+
+    <shortDescription>Nanning is a simple yet scaleable aspect-oriented framework.</shortDescription>
+
+    <description>
+        Nanning is a simple yet scaleable aspect-oriented framework in Java it can be used to replace EJB in J2EE.
+    </description>
+
+    <url>http://nanning.sourceforge.net</url>
+    <issueTrackingUrl>
+        http://jira.codehaus.org/secure/BrowseProject.jspa?id=10102
+    </issueTrackingUrl>
+    <siteAddress>Sourceforge</siteAddress>
+    <siteDirectory>/home/groups/n/na/nanning/htdocs</siteDirectory>
+    <distributionDirectory>
+        /unknownatthistime
+    </distributionDirectory>
+
+    <repository>
+        <connection>
+            scm:cvs:pserver:anonymous@cvs.nanning.sourceforge.net:/cvsroot/nanning:nanning
+        </connection>
+        <url>
+            http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/nanning/nanning/
+        </url>
+    </repository>
+
+    <mailingLists>
+        <mailingList>
+            <name>Nanning Developer List</name>
+            <subscribe>http://lists.sourceforge.net/mailman/listinfo/nanning-developer</subscribe>
+            <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/nanning-developer</unsubscribe>
+            <archive>http://lists.sourceforge.net/mailman/listinfo/nanning-developer</archive>
+        </mailingList>
+    </mailingLists>
+
+    <developers>
+
+        <developer>
+            <name>Jon Tirsen</name>
+            <id>tirsen</id>
+            <organization>Lecando AB</organization>
+        </developer>
+
+        <developer>
+            <name>Lecando AB</name>
+            <id>lecando</id>
+            <organization>Lecando AB</organization>
+        </developer>
+
+    </developers>
+
+    <dependencies>
+
+        <dependency>
+            <id>commons-collections</id>
+            <version>2.1</version>
+        </dependency>
+
+        <dependency>
+            <id>qdox</id>
+            <version>1.1</version>
+        </dependency>
+
+        <dependency>
+            <id>commons-logging</id>
+            <version>1.0.2</version>
+        </dependency>
+
+        <dependency>
+            <id>concurrent</id>
+            <version>1.3.2</version>
+        </dependency>
+
+        <dependency>
+            <id>commons-digester</id>
+            <version>1.3</version>
+        </dependency>
+
+        <dependency>
+            <id>commons-beanutils</id>
+            <version>1.5</version>
+        </dependency>
+
+        <dependency>
+            <id>commons-lang</id>
+            <version>1.0</version>
+        </dependency>
+
+        <dependency>
+            <id>dom4j</id>
+            <version>1.4-dev-8</version>
+        </dependency>
+
+        <dependency>
+            <id>junit</id>
+            <version>3.8.1</version>
+        </dependency>
+
+        <dependency>
+            <id>ant</id>
+            <version>1.5</version>
+        </dependency>
+
+        <dependency>
+            <id>log4j</id>
+            <version>1.2.8</version>
+        </dependency>
+
+        <dependency>
+          <groupId>commons-jelly</groupId>
+          <artifactId>commons-jelly</artifactId>
+          <version>20030211.141339</version>
+        </dependency>
+
+        <dependency>
+            <groupId>nanning</groupId>
+            <artifactId>nanning</artifactId>
+            <version>0.7</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+
+        <nagEmailAddress>
+            tirsen@users.sourceforge.net
+        </nagEmailAddress>
+
+        <sourceDirectory>${basedir}/src/main</sourceDirectory>
+
+        <unitTestSourceDirectory>${basedir}/src/test</unitTestSourceDirectory>
+
+        <!-- Unit test classes -->
+
+        <unitTest>
+            <includes>
+                <include>**/*Test.java</include>
+            </includes>
+            <excludes>
+                <exclude>**/Abstract*.java</exclude>
+                <exclude>**/PerformanceTest.java</exclude>
+                <exclude>**/BasicIdentifyingSystemGCTest.java</exclude>
+                <exclude>**/SoftMapTest.java</exclude>
+            </excludes>
+            <resources>
+                <resource>
+                    <directory>${basedir}/src/test</directory>
+                    <includes>
+                        <include>**/*.xml</include>
+                        <include>**/*.properties</include>
+                    </includes>
+                </resource>
+            </resources>
+        </unitTest>
+
+
+        <resources>
+            <directory>${basedir}/src/main</directory>
+            <includes>
+                <include>**/*.xml</include>
+            </includes>
+        </resources>
+
+    </build>
+    <reports>
+        <report>maven-checkstyle-plugin</report>
+        <report>maven-jdepend-plugin</report>
+        <report>maven-jxr-plugin</report>
+<!--        <report>maven-javadoc-plugin</report>-->
+        <report>maven-junit-report-plugin</report>
+        <report>maven-clover-plugin</report>
+    </reports>
+</project>
