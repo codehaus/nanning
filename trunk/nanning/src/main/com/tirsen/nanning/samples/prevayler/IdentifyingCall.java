@@ -119,7 +119,7 @@ public class IdentifyingCall extends Call {
                 if (Identity.isEntity(o.getClass())) {
                     assert !system.hasObjectID(o) :
                             "you're mixing object in prevayler with objects outside, this will lead to unpredictable results, " +
-                            "so I've banished that sort of behaviour with this assert here";
+                            "so I've banished that sort of behaviour with this assert here, the object that was inside prevayler was " + o;
                     system.registerObjectID(o);
                     super.visit(o);
                 }
