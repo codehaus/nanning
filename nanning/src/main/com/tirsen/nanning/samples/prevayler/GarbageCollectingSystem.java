@@ -23,7 +23,7 @@ public class GarbageCollectingSystem extends SnapshotPrevayler {
         final Set referencedObjects = new HashSet();
         ObjectGraphVisitor.visit(system, new ObjectGraphVisitor() {
             protected void visit(Object o) {
-                if (IdentifyingCall.isEntity(o.getClass())) {
+                if (Identity.isEntity(o.getClass())) {
                     referencedObjects.add(o);
                 }
                 if (Aspects.isAspectObject(o)) {
@@ -36,7 +36,7 @@ public class GarbageCollectingSystem extends SnapshotPrevayler {
                     for (int i = 0; i < interceptors.length; i++) {
                         super.visit(interceptors[i]);
                     }
-                } else if (IdentifyingCall.isMarshalByValue(o)) {
+                } else if (Identity.isMarshalByValue(o)) {
                     // also skip any value objects, they shouldn't contain references to entities anyway
                 } else {
                     System.out.println("going in");
