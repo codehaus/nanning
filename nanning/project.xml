@@ -8,8 +8,8 @@
     <groupId>nanning</groupId>
     <organization>
         <name>Jon Tirsen</name>
-        <url>http://sourceforge.net/projects/nanning</url>
-        <logo>http://sourceforge.net/sflogo.php?group_id=64968&amp;type=5</logo>
+        <url>http://codehaus.org</url>
+        <logo>http://images.werken.com/codehaus-plain.gif</logo>
     </organization>
     <inceptionYear>2002</inceptionYear>
     <package>com.tirsen.nanning</package>
@@ -24,8 +24,8 @@
     <issueTrackingUrl>
         http://jira.codehaus.org/secure/BrowseProject.jspa?id=10102
     </issueTrackingUrl>
-    <siteAddress>shell.sourceforge.net</siteAddress>
-    <siteDirectory>/home/groups/n/na/nanning/htdocs</siteDirectory>
+    <siteAddress>codehaus.org</siteAddress>
+    <siteDirectory>/www/nanning.codehaus.org</siteDirectory>
     <distributionDirectory>
         /unknownatthistime
     </distributionDirectory>
