@@ -21,16 +21,16 @@ import com.tirsen.nanning.Attributes;
 /**
  * TODO document AttributesTest
  *
- * <!-- $Id: AttributesTest.java,v 1.2 2002-12-03 17:21:01 lecando Exp $ -->
+ * <!-- $Id: AttributesTest.java,v 1.3 2002-12-04 07:45:33 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.2 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.3 $
  */
 public class AttributesTest extends TestCase
 {
     private File targetDir;
     private URL searchPath;
-    private static boolean attributesCompiled;
+    private static boolean attributesCompiled = false;
 
     protected void setUp() throws Exception
     {
@@ -80,6 +80,8 @@ public class AttributesTest extends TestCase
             AttributesCompiler attributesCompiler = new AttributesCompiler();
             attributesCompiler.setSrc(new File("src" + File.separator + "test"));
             attributesCompiler.setDest(targetDir);
+            attributesCompiler.execute();
+            attributesCompiler.setSrc(new File("src" + File.separator + "main"));
             attributesCompiler.execute();
         }
     }

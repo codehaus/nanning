@@ -28,11 +28,12 @@ import java.util.*;
  * Hmm... wait, a minute, there's some support for this in QDox, maybe that will work...
  * -- jon
 
- * <!-- $Id: Attributes.java,v 1.8 2002-12-03 13:55:24 lecando Exp $ -->
+ * <!-- $Id: Attributes.java,v 1.9 2002-12-04 07:45:32 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.8 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.9 $
  */
+
 public class Attributes
 {
     private static final Log logger = LogFactory.getLog(Attributes.class);
@@ -53,8 +54,11 @@ public class Attributes
 
     private static String getProperty(Class klass, String key)
     {
+        System.out.println("key = " + key);
         Properties properties = getProperties(klass);
-        return properties.getProperty(key);
+        String value = properties.getProperty(key);
+        System.out.println("value = " + value);
+        return value;
     }
 
     private static Properties getProperties(Class klass)
@@ -142,7 +146,8 @@ public class Attributes
             for (int i = 0; i < parameterTypes.length; i++)
             {
                 Class parameterType = parameterTypes[i];
-                stringBuffer.append(parameterType.getName());
+                String type = parameterType.getName();
+                stringBuffer.append(type.substring(type.lastIndexOf('.') + 1));
                 if (i + 1 < parameterTypes.length)
                 {
                     stringBuffer.append(',');

@@ -17,10 +17,10 @@ import com.tirsen.nanning.*;
 /**
  * TODO document UnitTestSuite
  *
- * <!-- $Id: UnitTestSuite.java,v 1.5 2002-12-03 17:21:02 lecando Exp $ -->
+ * <!-- $Id: UnitTestSuite.java,v 1.6 2002-12-04 07:45:33 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.5 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.6 $
  */
 public class UnitTestSuite
 {
@@ -29,16 +29,13 @@ public class UnitTestSuite
     {
         TestSuite suite = new TestSuite();
         suite.addTestSuite(AspectClassTest.class);
-        suite.addTestSuite(InterceptorTest.class);
-        suite.addTestSuite(ConstructionInterceptorTest.class);
+//        suite.addTestSuite(InterceptorTest.class);
+//        suite.addTestSuite(ConstructionInterceptorTest.class);
         suite.addTestSuite(AspectRepositoryTest.class);
-        suite.addTestSuite(PerformanceTest.class);
         suite.addTestSuite(AttributesTest.class);
-        suite.addTestSuite(TraceInterceptorTest.class);
         suite.addTestSuite(AspectsTest.class);
         suite.addTestSuite(ContractInterceptorTest.class);
         suite.addTestSuite(MethodFilterTest.class);
-        suite.addTestSuite(com.tirsen.nanning.samples.prevayler.PrevaylerTest.class);
         return suite;
     }
     ///CLOVER:ON
