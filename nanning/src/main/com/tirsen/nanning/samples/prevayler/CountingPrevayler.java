@@ -3,8 +3,8 @@ package com.tirsen.nanning.samples.prevayler;
 import java.io.IOException;
 import java.io.Serializable;
 
-import org.prevayler.Command;
 import junit.framework.Assert;
+import org.prevayler.Command;
 
 public class CountingPrevayler extends GarbageCollectingPrevayler {
     private int numberOfCommandsInLog = 0;

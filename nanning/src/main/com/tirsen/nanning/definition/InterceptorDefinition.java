@@ -6,24 +6,24 @@
  */
 package com.tirsen.nanning.definition;
 
-import com.tirsen.nanning.AspectException;
-import com.tirsen.nanning.ConstructionInterceptor;
-import com.tirsen.nanning.Interceptor;
-import com.tirsen.nanning.MethodInterceptor;
-
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.tirsen.nanning.AspectException;
+import com.tirsen.nanning.ConstructionInterceptor;
+import com.tirsen.nanning.Interceptor;
+import com.tirsen.nanning.MethodInterceptor;
+
 /**
  * TODO document InterceptorDefinition
  *
- * <!-- $Id: InterceptorDefinition.java,v 1.3 2003-01-24 13:40:09 tirsen Exp $ -->
+ * <!-- $Id: InterceptorDefinition.java,v 1.4 2003-03-21 17:11:11 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.3 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.4 $
  */
 public class InterceptorDefinition {
     private final Class interceptorClass;
@@ -33,14 +33,14 @@ public class InterceptorDefinition {
     private Set positiveCache = new HashSet();
 
     public InterceptorDefinition(Class interceptorClass) {
-        if(!Interceptor.class.isAssignableFrom(interceptorClass)) {
+        if (!Interceptor.class.isAssignableFrom(interceptorClass)) {
             throw new IllegalArgumentException(interceptorClass + " is not an interceptor.");
         }
         this.interceptorClass = interceptorClass;
     }
 
     public Interceptor newInstance() {
-        if(singletonInterceptor != null) {
+        if (singletonInterceptor != null) {
             return singletonInterceptor;
         }
         try {
@@ -76,10 +76,10 @@ public class InterceptorDefinition {
     }
 
     public boolean interceptsMethod(Method method) {
-        if(negativeCache.contains(method)) {
+        if (negativeCache.contains(method)) {
             return false;
         }
-        if(positiveCache.contains(method)) {
+        if (positiveCache.contains(method)) {
             return true;
         }
 
@@ -89,7 +89,7 @@ public class InterceptorDefinition {
                 positiveCache.add(method);
                 return true;
             }
-        } else if(interceptor instanceof MethodInterceptor) {
+        } else if (interceptor instanceof MethodInterceptor) {
             positiveCache.add(method);
             return true;
         }
@@ -99,17 +99,17 @@ public class InterceptorDefinition {
 
     public boolean interceptsConstructor(Class interfaceClass) {
         Interceptor interceptor = newInstance();
-        if(interceptor instanceof ConstructionInterceptor) {
+        if (interceptor instanceof ConstructionInterceptor) {
             return ((ConstructionInterceptor) interceptor).interceptsConstructor(interfaceClass);
         }
         return false;
     }
 
     public Interceptor getSingleton() {
-        if(singletonInterceptor == null) {
+        if (singletonInterceptor == null) {
             newInstance();
         }
-        if(singletonInterceptor == null) {
+        if (singletonInterceptor == null) {
             throw new IllegalStateException("This is not a singleton-interceptor: " + interceptorClass);
         }
 

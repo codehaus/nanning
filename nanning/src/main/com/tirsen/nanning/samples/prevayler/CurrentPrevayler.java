@@ -1,7 +1,6 @@
 package com.tirsen.nanning.samples.prevayler;
 
 import org.prevayler.Prevayler;
-import org.prevayler.PrevalentSystem;
 
 public class CurrentPrevayler {
     private static ThreadLocal isInTransaction = new ThreadLocal() {

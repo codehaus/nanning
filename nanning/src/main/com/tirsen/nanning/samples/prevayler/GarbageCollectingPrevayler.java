@@ -1,20 +1,20 @@
 package com.tirsen.nanning.samples.prevayler;
 
-import com.tirsen.nanning.Aspects;
-import com.tirsen.nanning.Interceptor;
-import com.tirsen.nanning.attribute.Attributes;
-import org.prevayler.implementation.SnapshotPrevayler;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Iterator;
-import java.util.Collection;
 import java.lang.ref.Reference;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import com.tirsen.nanning.Aspects;
+import com.tirsen.nanning.Interceptor;
+import com.tirsen.nanning.attribute.Attributes;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.prevayler.implementation.SnapshotPrevayler;
 
 public class GarbageCollectingPrevayler extends SnapshotPrevayler {
     private static final Log logger = LogFactory.getLog(GarbageCollectingPrevayler.class);

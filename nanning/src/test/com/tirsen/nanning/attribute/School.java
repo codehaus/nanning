@@ -17,33 +17,27 @@ package com.tirsen.nanning.attribute;
  */
 
 
-public class School
-{
+public class School {
     private String name;
     private String director;
 
-    public void hireTeacher(Teacher teacher, String salary)
-    {
+    public void hireTeacher(Teacher teacher, String salary) {
 
     }
 
-    public void sackAllTeachers()
-    {
+    public void sackAllTeachers() {
 
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 
-    class Teacher
-    {
+    class Teacher {
 
     }
 

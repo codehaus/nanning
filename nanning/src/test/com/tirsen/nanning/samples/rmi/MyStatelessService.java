@@ -1,7 +1,6 @@
 package com.tirsen.nanning.samples.rmi;
 
 
-
 /**
  * @remote
  * @service

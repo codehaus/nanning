@@ -6,20 +6,19 @@
  */
 package com.tirsen.nanning.jelly;
 
+import org.apache.commons.jelly.JellyTagException;
 import org.apache.commons.jelly.TagSupport;
 import org.apache.commons.jelly.XMLOutput;
-import org.apache.commons.jelly.JellyTagException;
 
 /**
  * TODO document InterfaceTag
  *
- * <!-- $Id: InterfaceTag.java,v 1.3 2003-03-12 22:34:53 tirsen Exp $ -->
+ * <!-- $Id: InterfaceTag.java,v 1.4 2003-03-21 17:11:12 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.3 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.4 $
  */
-public class InterfaceTag extends TagSupport
-{
+public class InterfaceTag extends TagSupport {
     public void doTag(XMLOutput xmlOutput) throws JellyTagException {
         try {
             Class interfaceClass =

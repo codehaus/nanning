@@ -13,19 +13,16 @@ import junit.framework.TestCase;
 /**
  * TODO document AspectClassTest
  *
- * <!-- $Id: AspectClassTest.java,v 1.10 2003-02-06 20:33:42 tirsen Exp $ -->
+ * <!-- $Id: AspectClassTest.java,v 1.11 2003-03-21 17:11:13 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.10 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.11 $
  */
-public class AspectClassTest extends TestCase
-{
-    public static class BlahongaException extends RuntimeException
-    {
+public class AspectClassTest extends TestCase {
+    public static class BlahongaException extends RuntimeException {
     }
 
-    public void testThrowsCorrectExceptions()
-    {
+    public void testThrowsCorrectExceptions() {
         AspectClass aspectClass = new AspectClass();
         aspectClass.setInterface(Intf.class);
         aspectClass.addInterceptor(MockInterceptor.class);
@@ -34,30 +31,22 @@ public class AspectClassTest extends TestCase
 
         Intf proxy = (Intf) aspectClass.newInstance();
 
-        Aspects.setTarget(proxy, Intf.class, new Impl()
-        {
-            public void call()
-            {
+        Aspects.setTarget(proxy, Intf.class, new Impl() {
+            public void call() {
                 throw new BlahongaException();
             }
         });
 
-        try
-        {
+        try {
             proxy.call();
             fail();
-        }
-        catch (BlahongaException shouldHappen)
-        {
-        }
-        catch (Exception e)
-        {
+        } catch (BlahongaException shouldHappen) {
+        } catch (Exception e) {
             fail();
         }
     }
 
-    public void testSideAspectAndAspectsOnProxy() throws IllegalAccessException, InstantiationException, NoSuchMethodException
-    {
+    public void testSideAspectAndAspectsOnProxy() throws IllegalAccessException, InstantiationException, NoSuchMethodException {
         AspectClass aspectClass = new AspectClass();
         aspectClass.setInterface(Intf.class);
         aspectClass.addInterceptor(MockInterceptor.class);
@@ -77,8 +66,7 @@ public class AspectClassTest extends TestCase
         verifySideAspect(bigMomma);
     }
 
-    public static void verifySideAspect(Object bigMomma) throws NoSuchMethodException
-    {
+    public static void verifySideAspect(Object bigMomma) throws NoSuchMethodException {
         Impl target = (Impl) Aspects.getTarget(bigMomma, Intf.class);
         target.expectThis(bigMomma);
         MockInterceptor classInterceptor =
@@ -114,8 +102,7 @@ public class AspectClassTest extends TestCase
         sideTarget.verify();
     }
 
-    public void testNoAspects() throws IllegalAccessException, InstantiationException
-    {
+    public void testNoAspects() throws IllegalAccessException, InstantiationException {
         AspectClass aspectClass = new AspectClass();
         aspectClass.setInterface(Intf.class);
         aspectClass.setTarget(Impl.class);

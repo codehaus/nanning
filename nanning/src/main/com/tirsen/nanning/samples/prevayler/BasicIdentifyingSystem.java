@@ -1,12 +1,12 @@
 package com.tirsen.nanning.samples.prevayler;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.*;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.prevayler.AlarmClock;
-
-import java.util.*;
-import java.io.ObjectInputStream;
-import java.io.IOException;
 
 public class BasicIdentifyingSystem implements IdentifyingSystem {
     static final long serialVersionUID = 4503034161857395426L;
@@ -76,7 +76,7 @@ public class BasicIdentifyingSystem implements IdentifyingSystem {
         assert !objectToId.containsKey(object);
         assert id != null && object != null;
         idToObject.put(id, object);
-        objectToId.put(object,  id);
+        objectToId.put(object, id);
         logger.debug("registering object " + object + " with id " + id);
         return id.longValue();
     }

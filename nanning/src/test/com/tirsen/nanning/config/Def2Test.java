@@ -24,8 +24,8 @@ public class Def2Test extends TestCase {
         constructionInterceptor.verify();
 
         assertSame(nullInterceptor,
-                Aspects.getAspectInstance(bigMomma).getMixinForInterface(Intf.class).
-                getInterceptorsForMethod(Intf.class.getMethod("call", new Class[0])).get(1));
+                   Aspects.getAspectInstance(bigMomma).getMixinForInterface(Intf.class).
+                   getInterceptorsForMethod(Intf.class.getMethod("call", new Class[0])).get(1));
         MockInterceptor callInterceptor =
                 (MockInterceptor) Aspects.getAspectInstance(bigMomma).getMixinForInterface(Intf.class).
                 getInterceptorsForMethod(Intf.class.getMethod("call", new Class[0])).get(0);

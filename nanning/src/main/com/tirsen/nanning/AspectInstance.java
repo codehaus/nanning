@@ -23,10 +23,10 @@ import org.apache.commons.lang.builder.ToStringStyle;
 /**
  * TODO document AspectInstance
  *
- * <!-- $Id: AspectInstance.java,v 1.30 2003-03-12 22:34:52 tirsen Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.31 2003-03-21 17:11:08 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.30 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.31 $
  */
 public final class AspectInstance implements InvocationHandler, Externalizable {
     static final long serialVersionUID = 5462785783512485056L;
@@ -65,8 +65,8 @@ public final class AspectInstance implements InvocationHandler, Externalizable {
         if (proxy == null) {
             Set interfaces = getInterfaceClasses();
             proxy = Proxy.newProxyInstance(getClass().getClassLoader(),
-                    (Class[]) interfaces.toArray(new Class[0]),
-                    this);
+                                           (Class[]) interfaces.toArray(new Class[0]),
+                                           this);
         }
         return proxy;
     }

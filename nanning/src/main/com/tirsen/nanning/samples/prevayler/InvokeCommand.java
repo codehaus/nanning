@@ -49,7 +49,7 @@ public class InvokeCommand implements Command {
                 logger.debug("args " + argsList);
                 logger.debug("user " + subject);
             }
-            
+
             Serializable serializable = (Serializable) call.invoke();
             logger.debug("success!");
             return serializable;

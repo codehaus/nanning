@@ -1,11 +1,11 @@
 package com.tirsen.nanning.config;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import com.tirsen.nanning.AspectInstance;
 import com.tirsen.nanning.ConstructionInterceptor;
 import com.tirsen.nanning.MixinInstance;
-
-import java.util.Collection;
-import java.util.Iterator;
 
 public class ConstructionInterceptorAspect implements Aspect {
     private Class interceptorClass;

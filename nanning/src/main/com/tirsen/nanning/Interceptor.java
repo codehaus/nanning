@@ -8,11 +8,10 @@ package com.tirsen.nanning;
 
 /**
  *
- * <!-- $Id: Interceptor.java,v 1.5 2002-12-03 17:04:56 lecando Exp $ -->
+ * <!-- $Id: Interceptor.java,v 1.6 2003-03-21 17:11:09 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
-public interface Interceptor
-{
+public interface Interceptor {
 }

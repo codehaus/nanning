@@ -6,25 +6,25 @@
  */
 package com.tirsen.nanning.samples;
 
-import com.tirsen.nanning.definition.AspectClass;
-import junit.framework.TestCase;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogConfigurationException;
-import org.apache.commons.logging.LogFactory;
-
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.tirsen.nanning.definition.AspectClass;
+import junit.framework.TestCase;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogConfigurationException;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * TODO document TraceInterceptorTest
  *
- * <!-- $Id: TraceInterceptorTest.java,v 1.6 2003-01-24 13:29:30 tirsen Exp $ -->
+ * <!-- $Id: TraceInterceptorTest.java,v 1.7 2003-03-21 17:11:15 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.6 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.7 $
  */
 public class TraceInterceptorTest extends TestCase {
     private ClassLoader prevContextClassLoader;
@@ -163,7 +163,7 @@ public class TraceInterceptorTest extends TestCase {
         Thread.currentThread().setContextClassLoader(new URLClassLoader(new URL[0]));
         prevFactory = System.getProperty(LogFactory.FACTORY_PROPERTY);
         System.setProperty(LogFactory.FACTORY_PROPERTY,
-                "com.tirsen.nanning.samples.TraceInterceptorTest$MockLogFactory");
+                           "com.tirsen.nanning.samples.TraceInterceptorTest$MockLogFactory");
     }
 
     protected void tearDown() throws Exception {

@@ -1,16 +1,15 @@
 package com.tirsen.nanning.samples.prevayler;
 
-import java.io.InputStream;
 import java.io.IOException;
-import java.io.Serializable;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Date;
+import java.io.InputStream;
 import java.lang.reflect.AccessibleObject;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
-import org.apache.commons.io.IOUtil;
 import com.tirsen.nanning.Aspects;
 import com.tirsen.nanning.Interceptor;
+import org.apache.commons.io.IOUtil;
 
 public class IdentifyingMarshaller implements Marshaller {
     public Object marshal(Object o) {

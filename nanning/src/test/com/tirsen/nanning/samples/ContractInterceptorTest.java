@@ -1,15 +1,15 @@
 package com.tirsen.nanning.samples;
 
+import java.net.MalformedURLException;
+
 import com.tirsen.nanning.attribute.AbstractAttributesTest;
 import com.tirsen.nanning.definition.AspectClass;
-
-import java.net.MalformedURLException;
 
 /**
  * TODO document ContractInterceptorTest
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class ContractInterceptorTest extends AbstractAttributesTest {
     public void test() throws MalformedURLException {

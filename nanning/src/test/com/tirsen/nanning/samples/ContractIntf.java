@@ -7,6 +7,7 @@ package com.tirsen.nanning.samples;
  */
 public interface ContractIntf {
     public int getValue();
+
     public void setValue(int value);
 
     /**

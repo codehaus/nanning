@@ -1,21 +1,21 @@
 package com.tirsen.nanning;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.tirsen.nanning.attribute.AbstractAttributesTest;
 import com.tirsen.nanning.definition.AspectClass;
 import com.tirsen.nanning.definition.InterceptorDefinition;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * TODO document AttributesTest
  *
- * <!-- $Id: AttributeFilterTest.java,v 1.5 2003-03-12 16:01:44 lecando Exp $ -->
+ * <!-- $Id: AttributeFilterTest.java,v 1.6 2003-03-21 17:11:14 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
-public class AttributeFilterTest  extends AbstractAttributesTest {
+public class AttributeFilterTest extends AbstractAttributesTest {
     private static List expectedMethods;
 
     protected void setUp() throws Exception {

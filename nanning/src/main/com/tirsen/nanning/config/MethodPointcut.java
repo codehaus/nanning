@@ -1,8 +1,8 @@
 package com.tirsen.nanning.config;
 
-import com.tirsen.nanning.MixinInstance;
-
 import java.lang.reflect.Method;
+
+import com.tirsen.nanning.MixinInstance;
 
 /**
  * Advises all methods but nothing else.

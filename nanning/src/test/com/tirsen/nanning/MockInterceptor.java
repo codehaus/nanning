@@ -6,17 +6,17 @@
  */
 package com.tirsen.nanning;
 
-import junit.framework.Assert;
-
 import java.lang.reflect.Method;
+
+import junit.framework.Assert;
 
 /**
  * TODO document MockInterceptor
  *
- * <!-- $Id: MockInterceptor.java,v 1.4 2003-02-06 20:33:42 tirsen Exp $ -->
+ * <!-- $Id: MockInterceptor.java,v 1.5 2003-03-21 17:11:14 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.4 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.5 $
  */
 public class MockInterceptor implements MethodInterceptor {
     private Object expectTarget;
@@ -83,11 +83,11 @@ public class MockInterceptor implements MethodInterceptor {
 
         if (expectAtIndex != -1) {
             Assert.assertEquals("interceptor not at correct index during call",
-                    expectAtIndex, actualAtIndex);
+                                expectAtIndex, actualAtIndex);
         }
         if (expectNumberOfInterceptors != -1) {
             Assert.assertEquals("number of interceptor not at correct index during call",
-                    expectNumberOfInterceptors, actualNumberOfInterceptors);
+                                expectNumberOfInterceptors, actualNumberOfInterceptors);
         }
 
         return invocation.invokeNext();

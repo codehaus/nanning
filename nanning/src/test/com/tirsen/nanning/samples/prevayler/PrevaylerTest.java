@@ -57,32 +57,32 @@ public class PrevaylerTest extends AbstractAttributesTest {
                 MyObject outsideObject = (MyObject) aspectFactory.newInstance(MyObject.class);
                 prevayler.assertNumberOfCommands("no command when object created outside prevayler", 4);
                 assertFalse("object created outside Prevayler should not get an object ID",
-                        currentMySystem().hasObjectID(outsideObject));
+                            currentMySystem().hasObjectID(outsideObject));
 
                 MyObject outsideNestedObject = (MyObject) aspectFactory.newInstance(MyObject.class);
                 prevayler.assertNumberOfCommands("no command when object created outside prevayler", 4);
                 assertFalse("object created outside Prevayler should not get an object ID",
-                        currentMySystem().hasObjectID(outsideNestedObject));
+                            currentMySystem().hasObjectID(outsideNestedObject));
                 outsideObject.setMyObject(outsideNestedObject);
                 prevayler.assertNumberOfCommands("no command when operating on object outside prevayler", 4);
                 assertFalse("object created outside Prevayler " +
-                        "and used as argument to another object created ouside Prevayler should not get an object ID",
-                        currentMySystem().hasObjectID(outsideNestedObject));
+                            "and used as argument to another object created ouside Prevayler should not get an object ID",
+                            currentMySystem().hasObjectID(outsideNestedObject));
 
                 // mixing prevayler and non-prevayler stuff the other way around will mess things up
                 // uncomment this line and watch the nice little assert failure
                 // there's another line in checkMySystem() that explains the real problem
-//                outsideNestedObject.setMyObject(insideObject);
+                //                outsideNestedObject.setMyObject(insideObject);
 
                 insideObject.setMyObject(outsideObject);
                 prevayler.assertNumberOfCommands(
                         "command when operating on object inside prevayler with object outside prevayler", 5);
                 assertTrue("when object is put inside Prevayler it should get an object ID",
-                        currentMySystem().hasObjectID(outsideObject));
+                           currentMySystem().hasObjectID(outsideObject));
                 assertTrue("even nested objects put inside Prevayler should get object IDs (this is tricky stuff!)",
-                        currentMySystem().hasObjectID(outsideNestedObject));
+                           currentMySystem().hasObjectID(outsideNestedObject));
 
-                Collection  objects = currentMySystem().getAllRegisteredObjects();
+                Collection objects = currentMySystem().getAllRegisteredObjects();
                 assertEquals("objects not created ", 4, objects.size());
                 final MyObject objectToFind = insideObject;
                 insideObject = (MyObject) CollectionUtils.find(objects, new Predicate() {
@@ -117,7 +117,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
                 // this will not hold if you mix objects created inside prevayler with those created outside
                 // this object will not be identified correctly in the command and you will have two copies of the
                 // "same" object
-//                assertSame(myObject, myObject.getMyObject().getMyObject().getMyObject());
+                //                assertSame(myObject, myObject.getMyObject().getMyObject().getMyObject());
             }
         });
     }
@@ -143,7 +143,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
                 assertNotNull(currentMySystem().getMyObject().getMyObject());
                 currentMySystem().getMyObject().setMyObject(null);
                 assertEquals("garbage collect on snapshot only, three object should be here still",
-                        3, currentMySystem().getAllRegisteredObjects().size());
+                             3, currentMySystem().getAllRegisteredObjects().size());
             }
         });
 
@@ -217,7 +217,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
 
     private CountingPrevayler newPrevayler() throws IOException, ClassNotFoundException {
         CountingPrevayler prevayler = new CountingPrevayler((IdentifyingSystem) aspectFactory.newInstance(MySystem.class),
-                                prevaylerDir.getAbsolutePath());
+                                                            prevaylerDir.getAbsolutePath());
         return prevayler;
     }
 }

@@ -1,11 +1,11 @@
 package com.tirsen.nanning.attribute;
 
-import org.apache.commons.digester.Digester;
-import org.xml.sax.SAXException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+
+import org.apache.commons.digester.Digester;
+import org.xml.sax.SAXException;
 
 public class AttributesXMLParser {
     private Properties properties;
@@ -63,7 +63,7 @@ public class AttributesXMLParser {
     }
 
     public void addArgumentType(String type) {
-        if(argumentList == null) {
+        if (argumentList == null) {
             argumentList = type;
         } else {
             argumentList += ",";

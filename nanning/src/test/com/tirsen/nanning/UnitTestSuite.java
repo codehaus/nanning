@@ -8,8 +8,8 @@ package com.tirsen.nanning;
 
 import com.tirsen.nanning.attribute.AttributesTest;
 import com.tirsen.nanning.attribute.AttributesXMLParserTest;
-import com.tirsen.nanning.samples.prevayler.ObjectGraphVisitorTest;
 import com.tirsen.nanning.config.Def2Test;
+import com.tirsen.nanning.samples.prevayler.ObjectGraphVisitorTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -17,10 +17,10 @@ import junit.framework.TestSuite;
 /**
  * TODO document UnitTestSuite
  *
- * <!-- $Id: UnitTestSuite.java,v 1.12 2003-03-12 22:34:55 tirsen Exp $ -->
+ * <!-- $Id: UnitTestSuite.java,v 1.13 2003-03-21 17:11:14 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.12 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.13 $
  */
 public class UnitTestSuite {
     ///CLOVER:OFF

@@ -1,11 +1,9 @@
 package com.tirsen.nanning.config;
 
-import com.tirsen.nanning.AspectInstance;
-import com.tirsen.nanning.MixinInstance;
-import com.tirsen.nanning.Interceptor;
-import com.tirsen.nanning.MethodInterceptor;
-
 import java.lang.reflect.Method;
+
+import com.tirsen.nanning.MethodInterceptor;
+import com.tirsen.nanning.MixinInstance;
 
 public class InterceptorAdvise extends Advise {
     public static final int SINGLETON = 0;

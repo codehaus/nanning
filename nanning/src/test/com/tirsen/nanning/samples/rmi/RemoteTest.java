@@ -41,7 +41,7 @@ public class RemoteTest extends AbstractAttributesTest {
         // init server side
         Aspects.setContextAspectFactory(serverAspectSystem);
         prevayler = new SnapshotPrevayler((PrevalentSystem) serverAspectSystem.newInstance(MySystem.class),
-                                                                    prevaylerDir.getAbsolutePath());
+                                          prevaylerDir.getAbsolutePath());
 
         remoteCallServer = new SocketRemoteCallServer();
         remoteCallServer.setPort(port);
