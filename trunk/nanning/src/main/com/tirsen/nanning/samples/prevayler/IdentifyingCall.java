@@ -74,7 +74,7 @@ public class IdentifyingCall extends Call {
         throw new IllegalArgumentException("Can't identify " + object);
     }
 
-    protected Object resolve(Identity identity) {
+    protected static Object resolve(Identity identity) {
         if (Attributes.hasInheritedAttribute(identity.getObjectClass(), "entity")) {
             return CurrentPrevayler.getSystem().getObjectWithID(((Long) identity.getIdentifier()).longValue());
         }

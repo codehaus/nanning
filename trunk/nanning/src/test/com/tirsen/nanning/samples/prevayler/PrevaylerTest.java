@@ -83,7 +83,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
         });
     }
 
-    private MySystem currentMySystem() {
+    private static MySystem currentMySystem() {
         return (MySystem) CurrentPrevayler.getSystem();
     }
 

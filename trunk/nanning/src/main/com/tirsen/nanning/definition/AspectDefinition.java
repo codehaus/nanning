@@ -14,10 +14,10 @@ import java.util.*;
 /**
  * Defines an interface that's to be added to an aspected object.
  *
- * <!-- $Id: AspectDefinition.java,v 1.3 2003-01-24 13:29:30 tirsen Exp $ -->
+ * <!-- $Id: AspectDefinition.java,v 1.4 2003-01-24 13:40:09 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class AspectDefinition
 {
@@ -73,10 +73,6 @@ public class AspectDefinition
         this.targetClass = targetClass;
     }
 
-    public Class getTarget() {
-        return targetClass;
-    }
-
     MixinInstance createMixinInstance()
             throws IllegalAccessException, InstantiationException
     {
@@ -90,10 +86,6 @@ public class AspectDefinition
     public Class getInterfaceClass()
     {
         return interfaceClass;
-    }
-
-    public int getMethodIndex(Method method) {
-        return ((Integer) methodsToIndex.get(method)).intValue();
     }
 
     MixinInstance newInstance(Object target)
@@ -119,7 +111,7 @@ public class AspectDefinition
         return mixinInstance;
     }
 
-    void checkTarget(Object target) {
+    private void checkTarget(Object target) {
         if(target == null) {
             return;
         }
@@ -130,39 +122,6 @@ public class AspectDefinition
         if(!targetClass.isInstance(target)) {
             throw new IllegalArgumentException("target is not an instance of target-class: " + target);
         }
-    }
-
-    public class ConstructionInvocationImpl implements ConstructionInvocation {
-        private Object proxy;
-
-        public ConstructionInvocationImpl(Object proxy) {
-            this.proxy = proxy;
-        }
-
-        public Object getProxy() {
-            return proxy;
-        }
-
-        public Object getTarget() {
-            return Aspects.getTarget(proxy, getInterfaceClass());
-        }
-
-        public void setTarget(Object target) {
-            Aspects.setTarget(proxy, getInterfaceClass(), target);
-        }
-    }
-
-    public Object initializeProxy(Object proxy) {
-        for (Iterator iterator = interceptorDefinitions.iterator(); iterator.hasNext();) {
-            InterceptorDefinition interceptorDefinition = (InterceptorDefinition) iterator.next();
-            if(interceptorDefinition.interceptsConstructor(getInterfaceClass())) {
-                ConstructionInterceptor constructionInterceptor = (ConstructionInterceptor) interceptorDefinition.newInstance();
-                if(constructionInterceptor.interceptsConstructor(getInterfaceClass())) {
-                    proxy = constructionInterceptor.construct(new ConstructionInvocationImpl(proxy));
-                }
-            }
-        }
-        return proxy;
     }
 
     public List getConstructionInterceptors() {

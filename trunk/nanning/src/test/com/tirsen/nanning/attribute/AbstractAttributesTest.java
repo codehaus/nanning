@@ -13,7 +13,7 @@ public abstract class AbstractAttributesTest extends TestCase {
         compileAttributes();
     }
 
-    public static void compileAttributes() {
+    private static void compileAttributes() {
         if (!attributesCompiled) {
             attributesCompiled = true;
             File targetDir = new File("target" + File.separator + "attributes");
