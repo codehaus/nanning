@@ -34,10 +34,10 @@ import org.apache.commons.lang.builder.ToStringStyle;
  aspectInstance.addMixin(mixinInstance);
  </pre></code>
  *
- * <!-- $Id: AspectInstance.java,v 1.39 2003-05-11 15:42:20 tirsen Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.40 2003-05-12 08:55:32 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.39 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.40 $
  */
 public final class AspectInstance implements InvocationHandler, Externalizable {
     static final long serialVersionUID = 5462785783512485056L;
@@ -191,13 +191,13 @@ public final class AspectInstance implements InvocationHandler, Externalizable {
 
     /**
      * Adds a mixin.
-     * @param mixinInstance
+     * @param mixin
      */
-    public void addMixin(MixinInstance mixinInstance) {
+    public void addMixin(MixinInstance mixin) {
         assert proxy == null : "Can't addLink mixins when proxy has been created.";
-        Class interfaceClass = mixinInstance.getInterfaceClass();
-        bindMixinToInterface(interfaceClass, mixinInstance);
-        mixinsList.add(mixinInstance);
+        Class interfaceClass = mixin.getInterfaceClass();
+        bindMixinToInterface(interfaceClass, mixin);
+        mixinsList.add(mixin);
     }
 
     /**
@@ -321,8 +321,8 @@ public final class AspectInstance implements InvocationHandler, Externalizable {
      * Returns all mixins defined on this AspectInstance.
      * @return
      */
-    public Collection getMixins() {
-        return Collections.unmodifiableCollection(mixinsList);
+    public List getMixins() {
+        return Collections.unmodifiableList(mixinsList);
     }
 
     /**
