@@ -15,17 +15,16 @@ import org.apache.commons.logging.LogFactory;
 /**
  * TODO document TraceInterceptor
  *
- * <!-- $Id: TraceInterceptor.java,v 1.3 2002-12-03 17:11:54 lecando Exp $ -->
+ * <!-- $Id: TraceInterceptor.java,v 1.4 2002-12-03 17:14:56 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class TraceInterceptor implements MethodInterceptor, SingletonInterceptor
 {
     public Object invoke(Invocation invocation) throws Throwable
     {
-        StopWatch watch = new StopWatch();
-        watch.start();
+        StopWatch watch = new StopWatch(false);
 
         Log log = LogFactory.getLog(invocation.getTarget().getClass());
         StringBuffer methodCallMessage = new StringBuffer();
@@ -54,13 +53,13 @@ public class TraceInterceptor implements MethodInterceptor, SingletonInterceptor
         catch (Throwable e)
         {
             watch.stop();
-            log.error("<<< " + methodCallMessage + " threw exception, took " + watch.getTime() + " ms", e);
+            log.error("<<< " + methodCallMessage + " threw exception, took " + watch.getTimeSpent() + " ms", e);
             throw e;
         }
         finally
         {
             watch.stop();
-            log.debug("<<< " + methodCallMessage + ", took " + watch.getTime() + " ms, result " + result);
+            log.debug("<<< " + methodCallMessage + ", took " + watch.getTimeSpent() + " ms, result " + result);
         }
     }
 }
