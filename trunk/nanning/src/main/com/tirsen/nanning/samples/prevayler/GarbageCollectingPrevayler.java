@@ -1,6 +1,7 @@
 package com.tirsen.nanning.samples.prevayler;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.ref.Reference;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -10,29 +11,42 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.tirsen.nanning.Aspects;
-import com.tirsen.nanning.Interceptor;
 import com.tirsen.nanning.attribute.Attributes;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.prevayler.Command;
 import org.prevayler.implementation.SnapshotPrevayler;
 
 public class GarbageCollectingPrevayler extends SnapshotPrevayler {
     private static final Log logger = LogFactory.getLog(GarbageCollectingPrevayler.class);
+
+    private Object snapshotLock = new Object();
 
     public GarbageCollectingPrevayler(IdentifyingSystem system, String path) throws IOException, ClassNotFoundException {
         super(system, path);
     }
 
     public void takeSnapshot() throws IOException {
-        IdentifyingSystem system = (IdentifyingSystem) system();
-        garbageCollectSystem(system);
-        super.takeSnapshot();
+        synchronized (snapshotLock) {
+            IdentifyingSystem system = (IdentifyingSystem) system();
+            garbageCollectSystem(system);
+            super.takeSnapshot();
+        }
+    }
+
+    public Serializable executeCommand(Command command) throws Exception {
+        synchronized (snapshotLock) {
+            return super.executeCommand(command);
+        }
     }
 
     public static void garbageCollectSystem(IdentifyingSystem system) {
+        logger.info("Garbage collecting system");
         Set referencedObjects = getReferencedObjects(system);
         Collection unreferencedObjects = new HashSet(system.getAllRegisteredObjects());
         unreferencedObjects.removeAll(referencedObjects);
+
+        logger.info("Garbage collected " + unreferencedObjects.size() + " number of objects");
 
         for (Iterator iterator = unreferencedObjects.iterator(); iterator.hasNext();) {
             Object unreferencedObject = iterator.next();
