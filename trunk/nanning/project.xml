@@ -19,7 +19,7 @@
 
     <url>http://nanning.sourceforge.net</url>
     <issueTrackingUrl>
-        http://sourceforge.net/tracker/?group_id=64968
+        http://jira.codehaus.org/secure/BrowseProject.jspa?id=10102
     </issueTrackingUrl>
     <siteAddress>Sourceforge</siteAddress>
     <siteDirectory>/home/groups/n/na/nanning/htdocs</siteDirectory>
@@ -37,6 +37,11 @@
     </repository>
 
     <versions>
+        <version>
+            <id>0.2</id>
+            <name>0.2</name>
+            <tag>RELEASE_0_2</tag>
+        </version>
         <version>
             <id>0.1</id>
             <name>0.1</name>
@@ -207,8 +212,9 @@
         <report>maven-changelog-plugin</report>
         <report>maven-file-activity-plugin</report>
         <report>maven-developer-activity-plugin</report>
-<!--        <report>maven-jxr-plugin</report>-->
+        <report>maven-jxr-plugin</report>
         <report>maven-junit-report-plugin</report>
 <!--        <report>maven-jellydoc-plugin</report>-->
+        <report>maven-clover-plugin</report>
     </reports>
 </project>

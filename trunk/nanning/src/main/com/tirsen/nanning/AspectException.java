@@ -8,12 +8,12 @@
 package com.tirsen.nanning;
 
 /**
- * TODO document AspectException
+ * Base class for exceptions related to aspects.
  *
- * <!-- $Id: AspectException.java,v 1.4 2003-04-14 17:32:54 tirsen Exp $ -->
+ * <!-- $Id: AspectException.java,v 1.5 2003-04-23 20:44:36 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class AspectException extends RuntimeException {
     public AspectException() {

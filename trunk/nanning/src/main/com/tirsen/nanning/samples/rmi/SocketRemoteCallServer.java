@@ -73,15 +73,27 @@ public class SocketRemoteCallServer {
     }
 
     public void stop() {
-        if (serverThread == null) {
+        if (serverThread == null && serverSocket == null) {
             return;
         }
 
         doStop = true;
         try {
             serverThread.join(SERVER_SOCKET_TIMEOUT + 1);
+            serverThread = null;
         } catch (InterruptedException e) {
-            logger.warn("could not stop server properly");
+            ///CLOVER:OFF
+            logger.warn("could not stop server properly", e);
+            ///CLOVER:ON
+        }
+
+        try {
+            serverSocket.close();
+            serverSocket = null;
+        } catch (IOException e) {
+            ///CLOVER:OFF
+            logger.warn("could not stop server properly", e);
+            ///CLOVER:ON
         }
     }
 
@@ -95,6 +107,10 @@ public class SocketRemoteCallServer {
 
     public void setAspectFactory(AspectFactory aspectFactory) {
         remoteCallServer.setAspectFactory(aspectFactory);
+    }
+
+    public boolean isStarted() {
+        return serverSocket != null || serverThread != null;
     }
 
     protected class SocketCallProcessor implements Runnable {
