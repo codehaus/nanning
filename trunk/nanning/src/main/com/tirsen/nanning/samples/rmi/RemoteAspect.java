@@ -9,6 +9,7 @@ import com.tirsen.nanning.MixinInstance;
 import com.tirsen.nanning.config.Aspect;
 import com.tirsen.nanning.samples.prevayler.Call;
 import com.tirsen.nanning.samples.prevayler.Marshaller;
+import com.tirsen.nanning.samples.prevayler.AuthenticatedCall;
 
 public class RemoteAspect implements Aspect, MethodInterceptor {
     private Marshaller marshaller;
@@ -27,7 +28,7 @@ public class RemoteAspect implements Aspect, MethodInterceptor {
         }
 
         try {
-            Call call = new Call(invocation);
+            Call call = new AuthenticatedCall(invocation);
 
             MarshallingOutputStream output = null;
             try {

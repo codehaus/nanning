@@ -16,4 +16,6 @@ public interface MyStatelessService {
 	public MyObject getMyObject();
 	
 	public Collection getAllObjects();
+
+    void authenticatedCall(String expectedUserName);
 }
