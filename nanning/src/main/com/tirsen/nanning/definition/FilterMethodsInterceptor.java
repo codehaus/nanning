@@ -11,12 +11,13 @@ import com.tirsen.nanning.MethodInterceptor;
 import java.lang.reflect.Method;
 
 /**
- * Implement this if you want to do method-level filtering.
+ * Implement this if you want to do method-level filtering when using AspectClass. Warning! If you're using
+ * AspectInstance this won't work, you have to do you method-level filtering manually.
  *
- * <!-- $Id: FilterMethodsInterceptor.java,v 1.1 2003-01-12 13:25:40 tirsen Exp $ -->
+ * <!-- $Id: FilterMethodsInterceptor.java,v 1.2 2003-02-06 20:33:41 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public interface FilterMethodsInterceptor extends MethodInterceptor
 {

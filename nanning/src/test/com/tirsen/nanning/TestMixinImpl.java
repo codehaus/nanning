@@ -9,18 +9,18 @@ package com.tirsen.nanning;
 import junit.framework.Assert;
 
 /**
- * TODO document SideAspectImpl
+ * TODO document TestMixinImpl
  *
- * <!-- $Id: SideAspectImpl.java,v 1.2 2003-01-24 13:29:30 tirsen Exp $ -->
+ * <!-- $Id: TestMixinImpl.java,v 1.1 2003-02-06 20:33:42 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.1 $
  */
-public class SideAspectImpl implements SideAspect
+public class TestMixinImpl implements TestMixin
 {
     private boolean called;
 
-    public void sideCall()
+    public void mixinCall()
     {
         called = true;
     }

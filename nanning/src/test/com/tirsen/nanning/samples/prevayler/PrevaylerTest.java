@@ -1,14 +1,11 @@
 package com.tirsen.nanning.samples.prevayler;
 
+import com.tirsen.nanning.AspectFactory;
 import com.tirsen.nanning.Aspects;
 import com.tirsen.nanning.attribute.AbstractAttributesTest;
-import com.tirsen.nanning.definition.AspectClass;
-import com.tirsen.nanning.definition.AspectRepository;
-import com.tirsen.nanning.definition.InterceptorDefinition;
-import org.prevayler.PrevalentSystem;
-import org.prevayler.Prevayler;
+import com.tirsen.nanning.config.AspectSystem;
+import com.tirsen.nanning.config.MixinAspect;
 import org.prevayler.Command;
-import org.prevayler.implementation.SnapshotPrevayler;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,34 +14,20 @@ import java.util.List;
 
 public class PrevaylerTest extends AbstractAttributesTest {
 
-    private AspectRepository aspectRepository;
+    private AspectFactory aspectFactory;
 
     private File prevaylerDir;
 
     protected void setUp() throws Exception {
         super.setUp();
 
-        aspectRepository = new AspectRepository();
+        AspectSystem aspectSystem = new AspectSystem();
+        aspectSystem.addAspect(new MixinAspect(MySystem.class, MySystemImpl.class));
+        aspectSystem.addAspect(new MixinAspect(MyObject.class, MyObjectImpl.class));
+        aspectSystem.addAspect(new PrevaylerAspect());
 
-        aspectRepository.defineInterceptor(new InterceptorDefinition(PrevaylerInterceptor.class));
-
-        {
-            AspectClass aspectClass = new AspectClass();
-            aspectClass.setInterface(MyObject.class);
-            aspectClass.addInterceptor(aspectRepository.getInterceptor(PrevaylerInterceptor.class));
-            aspectClass.setTarget(MyObjectImpl.class);
-            aspectRepository.defineClass(aspectClass);
-        }
-
-        {
-            AspectClass aspectClass = new AspectClass();
-            aspectClass.setInterface(MySystem.class);
-            aspectClass.addInterceptor(aspectRepository.getInterceptor(PrevaylerInterceptor.class));
-            aspectClass.setTarget(MySystemImpl.class);
-            aspectRepository.defineClass(aspectClass);
-        }
-
-        Aspects.setContextAspectFactory(aspectRepository);
+        aspectFactory = aspectSystem;
+        Aspects.setContextAspectFactory(aspectFactory);
 
         prevaylerDir = File.createTempFile("test", "");
         prevaylerDir.delete();
@@ -71,12 +54,12 @@ public class PrevaylerTest extends AbstractAttributesTest {
                 insideObject.setAttribute("newValue");
                 prevayler.assertNumberOfCommands(4);
 
-                MyObject outsideObject = (MyObject) aspectRepository.newInstance(MyObject.class);
+                MyObject outsideObject = (MyObject) aspectFactory.newInstance(MyObject.class);
                 prevayler.assertNumberOfCommands("no command when object created outside prevayler", 4);
                 assertFalse("object created outside Prevayler should not get an object ID",
                         currentMySystem().hasObjectID(outsideObject));
 
-                MyObject outsideNestedObject = (MyObject) aspectRepository.newInstance(MyObject.class);
+                MyObject outsideNestedObject = (MyObject) aspectFactory.newInstance(MyObject.class);
                 prevayler.assertNumberOfCommands("no command when object created outside prevayler", 4);
                 assertFalse("object created outside Prevayler should not get an object ID",
                         currentMySystem().hasObjectID(outsideNestedObject));
@@ -137,9 +120,9 @@ public class PrevaylerTest extends AbstractAttributesTest {
         CountingPrevayler prevayler = newPrevayler();
         CurrentPrevayler.withPrevayler(prevayler, new Runnable() {
             public void run() {
-                MyObject myObject = (MyObject) aspectRepository.newInstance(MyObject.class);
+                MyObject myObject = (MyObject) aspectFactory.newInstance(MyObject.class);
                 currentMySystem().setMyObject(myObject);
-                myObject.setMyObject((MyObject) aspectRepository.newInstance(MyObject.class));
+                myObject.setMyObject((MyObject) aspectFactory.newInstance(MyObject.class));
                 assertEquals("three objects should have been created", 3, currentMySystem().getObjects().size());
             }
         });
@@ -199,7 +182,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
     }
 
     private CountingPrevayler newPrevayler() throws IOException, ClassNotFoundException {
-        CountingPrevayler prevayler = new CountingPrevayler((IdentifyingSystem) aspectRepository.newInstance(MySystem.class),
+        CountingPrevayler prevayler = new CountingPrevayler((IdentifyingSystem) aspectFactory.newInstance(MySystem.class),
                                 prevaylerDir.getAbsolutePath());
         return prevayler;
     }

@@ -7,31 +7,6 @@ import com.tirsen.nanning.definition.SingletonInterceptor;
 import junit.framework.TestCase;
 
 public class ConstructionInterceptorTest extends TestCase {
-    public static class MockConstructionInterceptor implements ConstructionInterceptor, SingletonInterceptor {
-        private ConstructionInvocation constructionInvocation;
-        private Object newTarget;
-
-        public Object construct(ConstructionInvocation invocation) {
-            this.constructionInvocation = invocation;
-            if (newTarget != null) {
-                invocation.setTarget(newTarget);
-            }
-            return invocation.getProxy();
-        }
-
-        public boolean interceptsConstructor(Class interfaceClass) {
-            return true;
-        }
-
-        public ConstructionInvocation getInvocation() {
-            return constructionInvocation;
-        }
-
-        public void changeTarget(Object newTarget) {
-            this.newTarget = newTarget;
-        }
-    }
-
     public void testConstructionInterceptor() {
         AspectClass aspectClass = new AspectClass();
         aspectClass.setInterface(Intf.class);
@@ -47,7 +22,7 @@ public class ConstructionInterceptorTest extends TestCase {
 
         Intf intf = (Intf) aspectClass.newInstance();
         ConstructionInvocation constructionInvocation = mockConstructionInterceptor.getInvocation();
-        assertNotNull("construction-interceptor never called", constructionInvocation);
+        mockConstructionInterceptor.verify();
         assertSame("proxy was not correct", intf, constructionInvocation.getProxy());
         assertSame("target was not correct", Aspects.getTargets(intf)[0], constructionInvocation.getTarget());
     }
