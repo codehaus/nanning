@@ -1,17 +1,14 @@
 package com.tirsen.nanning.samples.prevayler;
 
-import java.io.Serializable;
-
-import com.tirsen.nanning.AspectFactory;
-import com.tirsen.nanning.Aspects;
 import com.tirsen.nanning.attribute.Attributes;
-import org.apache.commons.lang.builder.ToStringBuilder;
+
+import java.io.Serializable;
 
 /**
  * TODO document Identity
  *
- * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.18 $
+ * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsen</a>
+ * @version $Revision: 1.19 $
  */
 public class Identity implements Serializable {
     static final long serialVersionUID = 716500751463534855L;
@@ -82,7 +79,7 @@ public class Identity implements Serializable {
     }
 
     public String toString() {
-        return new ToStringBuilder(this).append("objectClass", objectClass).append("identifier", identifier).toString();
+        return this + "[objectClass=" + objectClass + ",identifier=" + identifier + "]";
     }
 
     public static boolean isService(Class objectClass) {

@@ -1,5 +1,11 @@
 package com.tirsen.nanning.samples;
 
+import com.tirsen.nanning.Invocation;
+import com.tirsen.nanning.MethodInterceptor;
+import com.tirsen.nanning.attribute.Attributes;
+import ognl.MethodFailedException;
+import ognl.Ognl;
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,11 +14,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.tirsen.nanning.Invocation;
-import com.tirsen.nanning.MethodInterceptor;
-import com.tirsen.nanning.attribute.Attributes;
-import ognl.MethodFailedException;
-import ognl.Ognl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -22,7 +23,7 @@ import org.apache.commons.logging.LogFactory;
  * you can enable and disable contract-checking in the same way you enable and disable assertions (java -ea and so on).
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirs?n</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class ContractInterceptor implements MethodInterceptor {
     private static final Log logger = LogFactory.getLog(ContractInterceptor.class);
@@ -34,7 +35,7 @@ public class ContractInterceptor implements MethodInterceptor {
      */
     private ThreadLocal checkContracts = new ThreadLocal();
 
-    
+
     public Object invoke(Invocation invocation) throws Throwable {
         String ensures = Attributes.getAttribute(invocation.getMethod(), "ensures");
         String requires = Attributes.getAttribute(invocation.getMethod(), "requires");

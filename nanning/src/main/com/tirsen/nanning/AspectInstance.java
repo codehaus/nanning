@@ -17,8 +17,6 @@ import java.util.*;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
 
 /**
  * The central concept of the Nanning Core, contains mixins.
@@ -33,10 +31,10 @@ import org.apache.commons.lang.builder.ToStringStyle;
  aspectInstance.addMixin(mixinInstance);
  </pre></code>
  *
- * <!-- $Id: AspectInstance.java,v 1.44 2003-05-23 07:43:39 lecando Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.45 2003-05-26 05:39:31 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.44 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.45 $
  */
 public final class AspectInstance implements InvocationHandler, Serializable {
     static final long serialVersionUID = 5462785783512485056L;
@@ -297,10 +295,8 @@ public final class AspectInstance implements InvocationHandler, Serializable {
         if (mixinsList.size() == 1) {
             return "aspect{" + mixinsList.get(0).toString() + "}";
         }
-        return "aspect{" + new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE)
-                .append("class", classIdentifier)
-                .append("mixins", mixinsList)
-                .toString() + "}";
+        return "aspect{class=" + classIdentifier +
+                "mixins=" + mixinsList + "}";
     }
 
     /**

@@ -2,14 +2,13 @@ package com.tirsen.nanning.samples.prevayler;
 
 import java.util.*;
 
+import org.prevayler.util.clock.AbstractClockedSystem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.prevayler.util.clock.AbstractClockedSystem;
 
 public class BasicIdentifyingSystem extends AbstractClockedSystem implements IdentifyingSystem {
-    static final long serialVersionUID = 4503034161857395426L;
-
     private static final Log logger = LogFactory.getLog(BasicIdentifyingSystem.class);
+    static final long serialVersionUID = 4503034161857395426L;
 
     private Map idToObject = SoftMap.createSoftValuesMap();
     /**
@@ -73,7 +72,7 @@ public class BasicIdentifyingSystem extends AbstractClockedSystem implements Ide
         if (!CurrentPrevayler.isInTransaction()) {
             throw new IllegalStateException("You have to be inside a transaction to register objects");
         }
-        
+
         assert object != null : "can't register null";
         assert !hasObjectID(object) : "already has ID: " + object;
 

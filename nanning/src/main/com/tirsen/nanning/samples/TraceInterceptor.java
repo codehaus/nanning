@@ -6,12 +6,8 @@
  */
 package com.tirsen.nanning.samples;
 
-import java.lang.reflect.Method;
-
 import com.tirsen.nanning.Invocation;
 import com.tirsen.nanning.MethodInterceptor;
-import com.tirsen.nanning.MixinInstance;
-import com.tirsen.nanning.AspectInstance;
 import com.tirsen.nanning.definition.SingletonInterceptor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -19,17 +15,26 @@ import org.apache.commons.logging.LogFactory;
 /**
  * TODO document TraceInterceptor
  *
- * <!-- $Id: TraceInterceptor.java,v 1.9 2003-05-11 11:17:17 tirsen Exp $ -->
+ * <!-- $Id: TraceInterceptor.java,v 1.10 2003-05-26 05:39:32 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class TraceInterceptor implements MethodInterceptor, SingletonInterceptor {
+    private Log logger;
+
+    public TraceInterceptor(Log logger) {
+        this.logger = logger;
+    }
+
+    public TraceInterceptor() {
+    }
 
     public Object invoke(Invocation invocation) throws Throwable {
         StopWatch watch = new StopWatch(false);
 
-        Log log = LogFactory.getLog(invocation.getTarget().getClass());
+        Log logger = getLogger(invocation.getTarget().getClass());
+
         StringBuffer methodCallMessage = new StringBuffer();
         methodCallMessage.append(invocation.getMethod().getName());
         methodCallMessage.append('(');
@@ -44,18 +49,27 @@ public class TraceInterceptor implements MethodInterceptor, SingletonInterceptor
             }
         }
         methodCallMessage.append(')');
-        log.trace(">>> " + methodCallMessage);
+        logger.debug(">>> " + methodCallMessage);
         Object result = null;
         try {
             result = invocation.invokeNext();
             return result;
         } catch (Throwable e) {
             watch.stop();
-            log.error("<<< " + methodCallMessage + " threw exception, took " + (int) watch.getTimeSpent() + " ms", e);
+            logger.error("<<< " + methodCallMessage + " threw exception, took " + (int) watch.getTimeSpent() + " ms", e);
             throw e;
         } finally {
             watch.stop();
-            log.debug("<<< " + methodCallMessage + ", took " + (int) watch.getTimeSpent() + " ms, result " + result);
+            logger.debug("<<< " + methodCallMessage + ", took " + (int) watch.getTimeSpent() + " ms, result " + result);
         }
+    }
+
+    private Log getLogger(Class targetClass) {
+        Log logger;
+        logger = this.logger;
+        if (logger == null) {
+            logger = LogFactory.getLog(targetClass);
+        }
+        return logger;
     }
 }

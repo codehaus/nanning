@@ -29,7 +29,9 @@ public class CacheInterceptor implements MethodInterceptor, FilterMethodsInterce
         List args = Arrays.asList(invocation.getArgs()); // needs args as collection for hashCode and equals
         Object cachedResult = methodCache.get(args);
         if (cachedResult == null) {
-            logger.debug("caching call for method " + method + " with args " + args);
+            if (logger.isDebugEnabled()) {
+                logger.debug("caching call for method " + method + " with args " + args);
+            }
             cachedResult = invocation.invokeNext();
             methodCache.put(args, cachedResult);
         }

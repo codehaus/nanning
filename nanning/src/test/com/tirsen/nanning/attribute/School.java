@@ -37,9 +37,5 @@ public class School {
         this.name = name;
     }
 
-    class Teacher {
-
-    }
-
 
 }
