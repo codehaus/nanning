@@ -7,15 +7,13 @@
  */
 package com.tirsen.nanning;
 
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
+import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.*;
 
+import com.tirsen.nanning.config.AspectSystem;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -34,32 +32,21 @@ import org.apache.commons.lang.builder.ToStringStyle;
  aspectInstance.addMixin(mixinInstance);
  </pre></code>
  *
- * <!-- $Id: AspectInstance.java,v 1.40 2003-05-12 08:55:32 lecando Exp $ -->
+ * <!-- $Id: AspectInstance.java,v 1.41 2003-05-12 13:43:53 lecando Exp $ -->
  *
  * @author $Author: lecando $
- * @version $Revision: 1.40 $
+ * @version $Revision: 1.41 $
  */
-public final class AspectInstance implements InvocationHandler, Externalizable {
+public final class AspectInstance implements InvocationHandler, Serializable {
     static final long serialVersionUID = 5462785783512485056L;
 
-    private Object proxy;
     private Map mixins = new HashMap();
-
-    /**
-     * Used during serialization only.
-     */
-    private Class serializeClassIdentifier;
-    /**
-     * Used during serialization only.
-     */
-    private Object[] serializeTargets;
-
-
     private List mixinsList = new ArrayList();
-    private List constructionInterceptors = new ArrayList();
-
-    private AspectFactory aspectFactory;
     private Class classIdentifier;
+
+    private Object proxy;
+    private transient List constructionInterceptors = new ArrayList();
+    private transient AspectFactory aspectFactory;
 
     public AspectInstance() {
     }
@@ -168,21 +155,14 @@ public final class AspectInstance implements InvocationHandler, Externalizable {
     private Object readResolve() {
         AspectFactory currentAspectFactory = Aspects.getCurrentAspectFactory();
         assert currentAspectFactory != null : "context AspectFactory not specified, it is not possible to deserialize " + this;
-        assert serializeClassIdentifier != null && serializeTargets != null;
-        AspectInstance aspectInstance = Aspects.getAspectInstance(currentAspectFactory.newInstance(serializeClassIdentifier, serializeTargets));
-        assert aspectInstance != null;
-
-        return aspectInstance;
-    }
-
-    public void writeExternal(ObjectOutput out) throws IOException {
-        out.writeObject(getClassIdentifier());
-        out.writeObject(getTargets());
-    }
-
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        serializeClassIdentifier = (Class) in.readObject();
-        serializeTargets = (Object[]) in.readObject();
+//        AspectInstance aspectInstance = Aspects.getAspectInstance(currentAspectFactory.newInstance(classIdentifier, mixinsList.toArray(new MixinInstance[mixinsList.size()])));
+//        assert aspectInstance != null;
+//
+//        return aspectInstance;
+        
+        aspectFactory = currentAspectFactory;
+        aspectFactory.reinitialize(this);
+        return this;
     }
 
     public Class getClassIdentifier() {
@@ -228,7 +208,9 @@ public final class AspectInstance implements InvocationHandler, Externalizable {
      */
     public Set getAllInterceptors() {
         Set result = new LinkedHashSet();
-        result.addAll(constructionInterceptors);
+        if (constructionInterceptors != null) {
+            result.addAll(constructionInterceptors);
+        }
 
         for (Iterator mixinIterator = mixinsList.iterator(); mixinIterator.hasNext();) {
             MixinInstance mixinInstance = (MixinInstance) mixinIterator.next();
@@ -293,15 +275,18 @@ public final class AspectInstance implements InvocationHandler, Externalizable {
     private Object executeConstructionInterceptors(Object proxy) {
         Object prevThis = Aspects.getThis();
         try {
-            Aspects.setThis(proxy);
-            for (Iterator iterator = constructionInterceptors.iterator(); iterator.hasNext();) {
-                ConstructionInterceptor constructionInterceptor = (ConstructionInterceptor) iterator.next();
-                if (constructionInterceptor.interceptsConstructor(getClassIdentifier())) {
-                    proxy = constructionInterceptor.construct(new ConstructionInvocationImpl(proxy, getClassIdentifier()));
+            if (constructionInterceptors != null) {
+                Aspects.setThis(proxy);
+                for (Iterator iterator = constructionInterceptors.iterator(); iterator.hasNext();) {
+                    ConstructionInterceptor constructionInterceptor = (ConstructionInterceptor) iterator.next();
+                    if (constructionInterceptor.interceptsConstructor(getClassIdentifier())) {
+                        proxy = constructionInterceptor.construct(new ConstructionInvocationImpl(proxy, getClassIdentifier()));
+                    }
                 }
             }
 
         } finally {
+            constructionInterceptors = null;
             Aspects.setThis(prevThis);
         }
         return proxy;
@@ -329,6 +314,9 @@ public final class AspectInstance implements InvocationHandler, Externalizable {
      * Adds a ConstructionInterceptor, the interceptor will be invoked when creating the proxy in {@link #getProxy()}.
      */
     public void addConstructionInterceptor(ConstructionInterceptor constructionInterceptor) {
+        if (constructionInterceptors == null) {
+            constructionInterceptors = new ArrayList();
+        }
         constructionInterceptors.add(constructionInterceptor);
     }
 
