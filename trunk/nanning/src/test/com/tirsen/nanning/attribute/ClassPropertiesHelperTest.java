@@ -40,7 +40,6 @@ public class ClassPropertiesHelperTest extends TestCase {
         assertEquals("method(String,String)", ClassPropertiesHelper.methodSignature(AttributesTest.argMethod));
         assertEquals("method(String)", ClassPropertiesHelper.methodSignature(AttributesTest.arrayArgMethod));
         assertEquals("method(String)", ClassPropertiesHelper.methodSignature(AttributesTest.arrayArgMethod));
-
         assertEquals("method(double)", ClassPropertiesHelper.methodSignature(
                 ClassPropertiesHelperTest.class.getDeclaredMethod("method", new Class[] { double[].class })));
         assertEquals("method(Double)", ClassPropertiesHelper.methodSignature(
@@ -80,6 +79,4 @@ public class ClassPropertiesHelperTest extends TestCase {
         assertEquals(new File(baseDir, "package" + File.separator + "name" + File.separator + "ClassName.attributes"),
                      classPropertiesHelper.getAttributeFile(baseDir));
     }
-
-
 }
