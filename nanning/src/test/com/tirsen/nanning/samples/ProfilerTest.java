@@ -23,9 +23,7 @@ public class ProfilerTest extends AbstractAttributesTest {
         thread.join();
         String log = ProfilerLogger.getProfilerLogger().lastLog;
         assertNotNull(log);
-        assertTrue(log.endsWith("someMethod: 0ms"));
-
-
+        assertTrue("log not correct: <" + log + ">", log.matches("(.*)someMethod: (.*)ms"));
     }
 
     public void testMinimumProfilingDuration() throws Exception {

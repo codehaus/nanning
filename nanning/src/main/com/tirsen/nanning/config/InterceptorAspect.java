@@ -7,7 +7,7 @@ import com.tirsen.nanning.MixinInstance;
 
 import java.lang.reflect.Method;
 import java.util.Iterator;
-import java.util.Arrays;
+import java.util.List;
 
 public class InterceptorAspect implements Aspect {
     public static final int SINGLETON = 0;
@@ -18,7 +18,7 @@ public class InterceptorAspect implements Aspect {
     private Class interceptorClass;
     private int stateManagement;
     private MethodInterceptor singletonInterceptor;
-    private final Pointcut pointcut;
+    private Pointcut pointcut;
 
     public InterceptorAspect(MethodInterceptor interceptor) {
         this(new AllPointcut(), interceptor);
@@ -29,7 +29,7 @@ public class InterceptorAspect implements Aspect {
     }
 
     public InterceptorAspect(Pointcut pointcut, Class interceptorClass, int stateManagement) {
-        this.pointcut = pointcut;
+        setPointcut(pointcut);
 
         this.interceptorClass = interceptorClass;
         this.stateManagement = stateManagement;
@@ -42,10 +42,22 @@ public class InterceptorAspect implements Aspect {
         }
     }
 
+    public void setPointcut(Pointcut pointcut) {
+        this.pointcut = pointcut;
+    }
+
     public InterceptorAspect(Pointcut pointcut, MethodInterceptor interceptor) {
         this.pointcut = pointcut;
         singletonInterceptor = interceptor;
         stateManagement = SINGLETON;
+    }
+
+    public Class getInterceptorClass() {
+        return interceptorClass;
+    }
+
+    public int getStateManagement() {
+        return stateManagement;
     }
 
     private MethodInterceptor createInterceptor() {
@@ -56,28 +68,43 @@ public class InterceptorAspect implements Aspect {
         }
     }
 
-    public void introduce(AspectInstance aspectInstance) {
+    public void introduce(AspectInstance instance) {
     }
 
+    /**
+     * @deprecated override {@link #advise(com.tirsen.nanning.AspectInstance)} instead and manually iterate the mixins.
+     */
     public void adviseMixin(AspectInstance instance, MixinInstance mixin) {
-        Method[] methods = getMethodsToAdvise(instance, mixin);
-        for (int i = 0; i < methods.length; i++) {
-            Method method = methods[i];
-            if (stateManagement == SINGLETON) {
-                assert singletonInterceptor != null;
-                mixin.addInterceptor(method, singletonInterceptor);
-            }
-            if (stateManagement == PER_METHOD) {
-                MethodInterceptor interceptor = createInterceptor();
-                mixin.addInterceptor(method, interceptor);
-            }
-        }
     }
 
     Method[] getMethodsToAdvise(AspectInstance instance, MixinInstance mixin) {
         return pointcut.methodsToAdvise(instance, mixin);
     }
 
-    public void advise(AspectInstance aspectInstance) {
+    public void advise(AspectInstance instance) {
+        if (pointcut.adviseInstance(instance)) {
+            List mixins = instance.getMixins();
+            for (Iterator iterator = mixins.iterator(); iterator.hasNext();) {
+                MixinInstance mixin = (MixinInstance) iterator.next();
+                if (pointcut.adviseMixin(mixin)) {
+                    Method[] methods = getMethodsToAdvise(instance, mixin);
+                    for (int i = 0; i < methods.length; i++) {
+                        Method method = methods[i];
+                        if (stateManagement == SINGLETON) {
+                            assert singletonInterceptor != null;
+                            mixin.addInterceptor(method, singletonInterceptor);
+                        }
+                        if (stateManagement == PER_METHOD) {
+                            MethodInterceptor interceptor = createInterceptor();
+                            mixin.addInterceptor(method, interceptor);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public Pointcut getPointcut() {
+        return pointcut;
     }
 }

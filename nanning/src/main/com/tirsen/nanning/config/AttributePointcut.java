@@ -11,6 +11,10 @@ public class AttributePointcut extends AbstractPointcut {
         this.attribute = attribute;
     }
 
+    public String getAttribute() {
+        return attribute;
+    }
+
     protected boolean adviseMethod(Method method) {
         return Attributes.hasAttribute(method, attribute);
     }

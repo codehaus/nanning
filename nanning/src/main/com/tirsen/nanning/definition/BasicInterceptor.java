@@ -17,12 +17,13 @@ import com.tirsen.nanning.FilterMethodsInterceptor;
  * basic interceptor with methodNameFilter support.
  * TODO document BasicInterceptor
  *
- * <!-- $Id: BasicInterceptor.java,v 1.6 2003-05-11 13:40:52 tirsen Exp $ -->
+ * <!-- $Id: BasicInterceptor.java,v 1.7 2003-05-22 20:18:32 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
+ *
+ * @deprecated please use the new {@link com.tirsen.nanning.config.AspectSystem} framework instead.
  */
-
 public abstract class BasicInterceptor implements DefinitionAwareInterceptor, FilterMethodsInterceptor {
     public static String METHOD_NAME_FILTER_ATTRIBUTE_NAME = "methodNameFilter";
 

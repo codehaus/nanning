@@ -17,7 +17,7 @@ public class CacheTest extends AbstractAttributesTest {
     public void testCacheCounter() {
         AspectSystem aspectSystem = new AspectSystem();
         aspectSystem.addAspect(new FindTargetMixinAspect());
-        CacheCounterAspect counter = new CacheCounterAspect(new CacheInterceptor());
+        CacheAspect counter = new CacheAspect(new CacheInterceptor());
         aspectSystem.addAspect(counter);
 
         assertEquals(1, counter.getCacheHitRatio(), 0.01);

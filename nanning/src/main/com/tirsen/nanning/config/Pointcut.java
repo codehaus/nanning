@@ -13,4 +13,8 @@ public interface Pointcut {
      * @return Methods to advise.
      */
     Method[] methodsToAdvise(AspectInstance instance, MixinInstance mixin);
+
+    boolean adviseInstance(AspectInstance instance);
+
+    boolean adviseMixin(MixinInstance mixin);
 }
