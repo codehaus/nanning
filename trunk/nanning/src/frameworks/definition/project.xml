@@ -2,7 +2,7 @@
 <project>
     <extend>${basedir}/../project.xml</extend>
     <name>Nanning Definition</name>
-    <id>nanning-profiler</id>
+    <id>nanning-definition</id>
     <currentVersion>0.9</currentVersion>
     <package>com.tirsen.nanning.definition</package>
     <shortDescription>Profiler</shortDescription>
@@ -39,6 +39,11 @@
             <groupId>commons-jelly</groupId>
             <artifactId>commons-jelly</artifactId>
             <version>20030211.141339</version>
+        </dependency>
+
+        <dependency>
+            <id>commons-beanutils</id>
+            <version>1.5</version>
         </dependency>
 
     </dependencies>

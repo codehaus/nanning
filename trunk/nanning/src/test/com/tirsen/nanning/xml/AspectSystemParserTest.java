@@ -29,6 +29,13 @@ public class AspectSystemParserTest extends TestCase {
         }
     }
 
+    public void testParseEmptyAspectSystem() throws IOException {
+        String xml = "<aspect-system />";
+
+        aspectSystemParser = new AspectSystemParser();
+        assertTrue(aspectSystemParser.parse(xml) instanceof AspectSystem);
+    }
+
     public void testParseAspect() throws IOException {
         String xml = "<aspect-system><aspect class='" + TestAspect.class.getName() + "' /></aspect-system>";
         AspectSystem aspectSystem = aspectSystemParser.parse(xml);
@@ -49,7 +56,7 @@ public class AspectSystemParserTest extends TestCase {
         assertEquals(InterceptorAspect.PER_METHOD, interceptorAspect.getStateManagement());
     }
 
-    public void testParsePointcut() throws IOException {
+    public void testParseInterceptorWithPointcut() throws IOException {
         String xml = "<aspect-system><interceptor class='" + TestInterceptor.class.getName() + "'>" +
                 "<pointcut attribute='attribute'></pointcut>" +
                 "</interceptor></aspect-system>";
@@ -85,13 +92,5 @@ public class AspectSystemParserTest extends TestCase {
         Introductor introductor = (Introductor) aspectSystem.getAspects().get(0);
         assertEquals(Interface.class, introductor.getInterfaceClass());
         assertEquals(Target.class, introductor.getTargetClass());
-    }
-
-
-    public void testParseAspectSystem() throws IOException {
-        String xml = "<aspect-system />";
-
-        aspectSystemParser = new AspectSystemParser();
-        assertTrue(aspectSystemParser.parse(xml) instanceof AspectSystem);
     }
 }

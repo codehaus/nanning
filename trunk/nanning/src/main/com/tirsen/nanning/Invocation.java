@@ -12,10 +12,10 @@ import java.lang.reflect.Method;
 /**
  * Description of the current invocation, given to an interceptor upon method-call.
  *
- * <!-- $Id: Invocation.java,v 1.8 2003-06-11 15:13:32 lecando Exp $ -->
+ * <!-- $Id: Invocation.java,v 1.9 2003-07-04 06:57:11 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.8 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.9 $
  */
 public interface Invocation {
     /**
@@ -33,6 +33,11 @@ public interface Invocation {
      */
     Object getTarget();
 
+    /**
+     * Change the target of the current mixin.
+     *
+     * @param o
+     */
     void setTarget(Object o);
 
     /**
@@ -54,7 +59,7 @@ public interface Invocation {
      *
      * @return the total number of interceptors in the chain.
      */
-    int getNumberOfInterceptors();
+    int getfInterceptorCount();
 
     /**
      * Gets the interceptors at the specified index.
@@ -82,5 +87,7 @@ public interface Invocation {
 
     AspectInstance getAspectInstance();
 
-    Object getArg(int arg);
+    int getArgumentCount();
+
+    Object getArgument(int arg);
 }

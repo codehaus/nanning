@@ -5,7 +5,8 @@ import junit.framework.TestCase;
 public class ConstructionInterceptorTest extends TestCase {
     public void testConstructionInterceptor() {
         AspectInstance aspectInstance = new AspectInstance(Intf.class);
-        aspectInstance.addMixin(new MixinInstance(Intf.class, new IntfImpl()));
+        IntfImpl target = new IntfImpl();
+        aspectInstance.addMixin(new MixinInstance(Intf.class, target));
         MockConstructionInterceptor mockConstructionInterceptor = new MockConstructionInterceptor();
         aspectInstance.addConstructionInterceptor(mockConstructionInterceptor);
 
@@ -16,6 +17,6 @@ public class ConstructionInterceptorTest extends TestCase {
         ConstructionInvocation constructionInvocation = mockConstructionInterceptor.getInvocation();
         mockConstructionInterceptor.verify();
         assertSame("proxy was not correct", intf, constructionInvocation.getProxy());
-        assertSame("target was not correct", Aspects.getTargets(intf)[0], constructionInvocation.getTarget());
+        assertEquals("target was not correct", newTarget, constructionInvocation.getTarget());
     }
 }

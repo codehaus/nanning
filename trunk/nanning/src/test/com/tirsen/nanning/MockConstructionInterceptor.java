@@ -14,10 +14,6 @@ public class MockConstructionInterceptor implements ConstructionInterceptor {
         return invocation.getProxy();
     }
 
-    public boolean interceptsConstructor(Class klass) {
-        return true;
-    }
-
     public ConstructionInvocation getInvocation() {
         return constructionInvocation;
     }

@@ -15,10 +15,10 @@ import com.tirsen.nanning.Invocation;
 /**
  * TODO document MockInterceptor
  *
- * <!-- $Id: MockInterceptor.java,v 1.1 2003-07-01 16:08:10 lecando Exp $ -->
+ * <!-- $Id: MockInterceptor.java,v 1.2 2003-07-04 06:57:10 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.1 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.2 $
  */
 public class MockInterceptor implements MethodInterceptor {
     private Object expectTarget;
@@ -64,7 +64,7 @@ public class MockInterceptor implements MethodInterceptor {
         Assert.assertSame(this, invocation.getInterceptor(invocation.getCurrentIndex()));
 
         // check that getNumberOfInterceptors is correct
-        actualNumberOfInterceptors = invocation.getNumberOfInterceptors();
+        actualNumberOfInterceptors = invocation.getfInterceptorCount();
         invocation.getInterceptor(actualNumberOfInterceptors - 1); // should work...
         try {
             invocation.getInterceptor(actualNumberOfInterceptors); // should not work...

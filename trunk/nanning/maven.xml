@@ -14,7 +14,7 @@
         <delete dir="${maven.dist.src.assembly.dir}/src/etc"/>
         <mkdir dir="${maven.dist.src.assembly.dir}/lib"/>
 
-        <copy file="${basedir}/docs/CHANGES" todir="${maven.dist.bin.assembly.dir}" />
+        <copy file="${basedir}/docs/CHANGES" todir="${maven.dist.bin.assembly.dir}"/>
     </postGoal>
 
     <postGoal name="dist:prepare-bin-filesystem">
@@ -43,30 +43,30 @@
             <j:set var="frameworkName" value="${framework.parentFile.name}"/>
             <copy toDir="${maven.dist.bin.assembly.dir}/lib">
                 <fileset dir="${basedir}/src/frameworks/${frameworkName}/target">
-                    <include name="*.jar" />
+                    <include name="*.jar"/>
                 </fileset>
             </copy>
         </j:forEach>
 
-        <copy file="${basedir}/docs/CHANGES" todir="${maven.dist.bin.assembly.dir}" />
+        <copy file="${basedir}/docs/CHANGES" todir="${maven.dist.bin.assembly.dir}"/>
     </postGoal>
 
-<!--    <goal name="nanning:frameworks-docs">-->
-<!---->
-<!--        <attainGoal name="jar:install" />-->
-<!---->
-<!--        <maven:reactor-->
-<!--            basedir="${basedir}/src/frameworks"-->
-<!--            includes="*/project.xml"-->
-<!--            goals="site"-->
-<!--            banner="Generating docs for"-->
-<!--            ignoreFailures="false"-->
-<!--            />-->
-<!---->
-<!--    </goal>-->
+    <goal name="nanning:frameworks-docs">
+
+        <attainGoal name="jar:install"/>
+
+        <maven:reactor
+            basedir="${basedir}/src/frameworks"
+            includes="*/project.xml"
+            goals="site"
+            banner="Generating docs for"
+            ignoreFailures="false"
+            />
+
+    </goal>
 
     <preGoal name="clean">
-        <attainGoal name="nanning:frameworks-clean" />
+        <attainGoal name="nanning:frameworks-clean"/>
     </preGoal>
 
     <goal name="nanning:frameworks-clean">
@@ -95,7 +95,7 @@
 
     <postGoal name="jar:install">
 
-        <attainGoal name="nanning:frameworks-build" />
+        <attainGoal name="nanning:frameworks-build"/>
 
     </postGoal>
 
@@ -108,7 +108,7 @@
 <!--            prettyPrint="true">-->
 <!--            <document>-->
 <!--                <properties>-->
-<!--                    <title>Maven Plugins</title>-->
+<!--                    <title>Nanning Frameworks</title>-->
 <!--                    <author email="tirsen@users.sourceforge.net">Jon Tirsen</author>-->
 <!--                </properties>-->
 <!--                <body>-->
@@ -140,11 +140,11 @@
 
 <!--    <preGoal name="xdoc">-->
 <!---->
-<!--        <attainGoal name="nanning:frameworks-docs" />-->
-<!---->
+<!--        <attainGoal name="nanning:frameworks-docs"/>-->
+
         <!-- create the parent directory for the docs -->
 <!--        <mkdir dir="${maven.docs.dest}/frameworks"/>-->
-<!---->
+
         <!-- copy them all to ${maven.docs.dest}/reference/plugins/${plugin.id}/ -->
 <!--        <ant:fileScanner var="frameworkProjects">-->
 <!--            <fileset dir="${basedir}">-->
@@ -160,8 +160,7 @@
 <!--        </j:forEach>-->
 <!--    </preGoal>-->
 
-   <!-- This is needed because of a maven bug or something, please do 
-not delete -->
-   <goal name="lecando:deploy-build"/>
+    <!-- This is needed because of a maven bug or something, please do not delete -->
+    <goal name="lecando:deploy-build"/>
 
 </project>
