@@ -12,7 +12,7 @@ import com.tirsen.nanning.config.PointcutAspect;
  * TODO document PrevaylerInterceptor
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class PrevaylerAspect extends PointcutAspect {
 
@@ -36,5 +36,4 @@ public class PrevaylerAspect extends PointcutAspect {
             }
         });
     }
-
 }
