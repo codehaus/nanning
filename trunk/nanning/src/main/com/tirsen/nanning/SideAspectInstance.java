@@ -14,10 +14,10 @@ import java.util.ArrayList;
 /**
  * TODO document AspectDefinition
  *
- * <!-- $Id: SideAspectInstance.java,v 1.3 2002-11-18 20:56:30 tirsen Exp $ -->
+ * <!-- $Id: SideAspectInstance.java,v 1.4 2002-11-25 12:17:07 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.3 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.4 $
  */
 class SideAspectInstance {
     private AspectDefinition aspectDefinition;
@@ -35,6 +35,7 @@ class SideAspectInstance {
     }
 
     public void setTarget(Object target) {
+        aspectDefinition.checkTarget(target);
         this.target = target;
     }
 
