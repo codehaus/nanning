@@ -1,0 +1,8 @@
+
+<project default="java:jar" xmlns:jxr="jxr" xmlns:j="jelly:core">
+
+    <preGoal name="site:generate">
+      <attainGoal name="clover"/>
+    </preGoal>
+
+</project>
