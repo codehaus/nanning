@@ -6,6 +6,8 @@ import java.util.Date;
 import org.codehaus.nanning.attribute.AbstractAttributesTest;
 import org.codehaus.nanning.config.AspectSystem;
 import org.codehaus.nanning.config.FindTargetMixinAspect;
+import org.codehaus.nanning.config.MixinAspect;
+import org.codehaus.nanning.config.P;
 
 import org.codehaus.nanning.prevayler.BasicIdentifyingSystem;
 import org.codehaus.nanning.prevayler.CurrentPrevayler;
@@ -23,12 +25,13 @@ public class IdentifyingMarshallerTest extends AbstractAttributesTest {
         super.setUp();
         aspectSystem = new AspectSystem();
         aspectSystem.addAspect(new FindTargetMixinAspect());
+        aspectSystem.addAspect(new MixinAspect(Identifiable.class, IdentifiableImpl.class, P.all()));
 
         system = new TestSystem();
         entity = (MyObject) aspectSystem.newInstance(MyObject.class);
         system.setEntity(entity);
         CurrentPrevayler.enterTransaction(system);
-        entityId = system.registerObjectID(entity);
+        entityId = system.register(entity);
         CurrentPrevayler.exitTransaction();
 
         marshaller = new IdentifyingMarshaller();
@@ -73,11 +76,11 @@ public class IdentifyingMarshallerTest extends AbstractAttributesTest {
     public void testMarshalUnregisteredEntity() {
         Object object = aspectSystem.newInstance(MyObject.class);
         assertSame("Unregistered entity should be marshalled by value", object, marshaller.marshal(object));
-        assertFalse(system.hasObjectID(object));
+        assertFalse(((Identifiable) object).hasObjectID());
         CurrentPrevayler.enterTransaction(system);
         assertSame("Unregistered entity should be marshalled by value", object, marshaller.unmarshal(object));
         CurrentPrevayler.exitTransaction();
-        assertTrue(system.hasObjectID(object));
+        assertTrue(((Identifiable) object).hasObjectID());
     }
 
     public void testUnmarshalUnregisteredGraph() {
@@ -86,14 +89,14 @@ public class IdentifyingMarshallerTest extends AbstractAttributesTest {
         object1.setMyObject(object2);
 
         marshaller.marshal(object1);
-        assertFalse(system.hasObjectID(object1));
-        assertFalse(system.hasObjectID(object2));
+        assertFalse(((Identifiable) object1).hasObjectID());
+        assertFalse(((Identifiable) object2).hasObjectID());
 
         CurrentPrevayler.enterTransaction(system);
         marshaller.unmarshal(object1);
         CurrentPrevayler.exitTransaction();
-        assertTrue(system.hasObjectID(object1));
-        assertFalse(system.hasObjectID(object2));
+        assertTrue(((Identifiable) object1).hasObjectID());
+        assertFalse(((Identifiable) object2).hasObjectID());
     }
 
     public void TODOtestUnmarshalMixedGraph() {
@@ -102,11 +105,11 @@ public class IdentifyingMarshallerTest extends AbstractAttributesTest {
         object1.setMyObject(object2);
 
         CurrentPrevayler.enterTransaction(system);
-        system.registerObjectID(object2);
+        system.register(object2);
 
         marshaller.marshal(object1);
-        assertFalse(system.hasObjectID(object1));
-        assertTrue(system.hasObjectID(object2));
+        assertFalse(((Identifiable) object1).hasObjectID());
+        assertTrue(((Identifiable) object2).hasObjectID());
 
         try {
             marshaller.unmarshal(object1);
@@ -130,6 +133,5 @@ public class IdentifyingMarshallerTest extends AbstractAttributesTest {
     private void testMarshalAndUnMarshalPrimitive(Object object) {
         assertSame("A non entity should not be identified", object, marshaller.marshal(object));
         assertSame("A non entity should not be identified", object, marshaller.unmarshal(object));
-        assertFalse("Primitive should not become registered", system.hasObjectID(object));
     }
 }

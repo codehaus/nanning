@@ -15,7 +15,6 @@ import org.prevayler.PrevaylerFactory;
 
 public class PrevaylerTest extends AbstractAttributesTest {
 
-
     private File prevaylerDir;
     private CountingPrevayler currentPrevayler;
     private AspectSystem aspectSystem;
@@ -24,9 +23,9 @@ public class PrevaylerTest extends AbstractAttributesTest {
         super.setUp();
 
         assertTrue("attributes not compiled or not on classpath (add 'target/attributes' to classpath)",
-                PrevaylerUtils.isTransactional(MySystem.class.getMethod("setMyObject", new Class[]{MyObject.class})));
+                   PrevaylerUtils.isTransactional(MySystem.class.getMethod("setMyObject", new Class[]{MyObject.class})));
         assertTrue("attributes not compiled or not on classpath (add 'target/attributes' to classpath)",
-                PrevaylerUtils.isTransactional(MySystem.class.getMethod("setSimpleString", new Class[]{String.class})));
+                   PrevaylerUtils.isTransactional(MySystem.class.getMethod("setSimpleString", new Class[]{String.class})));
 
         aspectSystem = new AspectSystem();
         aspectSystem.addAspect(new FindTargetMixinAspect());
@@ -48,7 +47,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
         newPrevayler();
         withCurrentPrevayler(new PrevaylerAction() {
             public Object run() throws Exception {
-                assertFalse(currentSystem().hasObjectID(currentSystem()));
+                assertFalse(((Identifiable) currentSystem()).hasObjectID());
                 currentSystem().setSimpleString("string");
                 currentPrevayler.assertTransactionLog("setSimpleString");
                 assertEquals("string", currentSystem().getSimpleString());
@@ -85,8 +84,8 @@ public class PrevaylerTest extends AbstractAttributesTest {
         newPrevayler();
         withCurrentPrevayler(new PrevaylerAction() {
             public Object run() throws Exception {
-                MyObject loadedA = (MyObject) currentSystem().getObjectWithID(aId);
-                MyObject loadedB = (MyObject) currentSystem().getObjectWithID(bId);
+                MyObject loadedA = (MyObject) currentSystem().getIdentifiable(aId);
+                MyObject loadedB = (MyObject) currentSystem().getIdentifiable(bId);
                 assertSame(loadedB, loadedA.getMyObject());
                 assertSame(loadedA, loadedB.getMyObject());
 
@@ -96,7 +95,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
     }
 
     long getObjectId(Object o) {
-        return currentSystem().getObjectID(o);
+        return ((Identifiable) o).getObjectID();
     }
 
     public static class EntityReference implements Serializable {
@@ -116,7 +115,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
                 EntityReference ref = new EntityReference(object);
                 assertSame(object, ref.object);
                 currentSystem().setSimpleObject(ref);
-                assertTrue(currentSystem().hasObjectID(object));
+                assertTrue(((Identifiable) object).hasObjectID());
 
                 return null;
             }
@@ -127,7 +126,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
         newPrevayler();
         CurrentPrevayler.withPrevayler(currentPrevayler, new PrevaylerAction() {
             public Object run() throws Exception {
-                MyObject loadedObject = (MyObject) currentSystem().getObjectWithID(objectId);
+                MyObject loadedObject = (MyObject) currentSystem().getIdentifiable(objectId);
                 EntityReference ref = (EntityReference) currentSystem().getSimpleObject();
                 assertSame(loadedObject, ref.object);
 
@@ -179,11 +178,14 @@ public class PrevaylerTest extends AbstractAttributesTest {
          * @transaction
          */
         void setValue(String value);
+
         String getValue();
+
         /**
          * @transaction
          */
         void setCallingBack(CallingBack callingBack);
+
         CallingBack getCallingBack();
     }
 
@@ -232,8 +234,8 @@ public class PrevaylerTest extends AbstractAttributesTest {
         newPrevayler();
         withCurrentPrevayler(new PrevaylerAction() {
             public Object run() throws Exception {
-                CalledBack calledBack = (CalledBack) currentSystem().getObjectWithID(calledBackId);
-                CallingBack callingBack = (CallingBack) currentSystem().getObjectWithID(callingBackId);
+                CalledBack calledBack = (CalledBack) currentSystem().getIdentifiable(calledBackId);
+                CallingBack callingBack = (CallingBack) currentSystem().getIdentifiable(callingBackId);
                 assertEquals("value", calledBack.getValue());
                 assertSame(callingBack, calledBack.getCallingBack());
                 return null;
@@ -244,8 +246,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
     /**
      * @entity
      */
-    public interface ObjectWithValue
-    {
+    public interface ObjectWithValue {
         String getValue();
 
         /**
@@ -254,8 +255,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
         void setValue(String freddl);
     }
 
-    public static class ObjectWithValueImpl implements ObjectWithValue, Serializable
-    {
+    public static class ObjectWithValueImpl implements ObjectWithValue, Serializable {
         String value = "initialValue";
 
         public String getValue() {
@@ -341,7 +341,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
 //        currentPrevayler.takeSnapshot();
 //        checkMySystem();
 //    }
-
+//
 //    private void checkMySystem() throws Exception {
 //        newPrevayler();
 //        withCurrentPrevayler(new PrevaylerAction() {
@@ -441,11 +441,11 @@ public class PrevaylerTest extends AbstractAttributesTest {
 
 //    public void testOptionalDataException() throws IOException, ClassNotFoundException {
 //        MySystem mySystem = (MySystem) aspectSystem.newInstance(MySystem.class);
-//        mySystem.registerObjectID(aspectSystem.newInstance(MyObject.class));
-//        assertEquals(1, mySystem.getObjectID(mySystem.getAllRegisteredObjects().iterator().next()));
+//        mySystem.register(aspectSystem.newInstance(MyObject.class));
+//        assertEquals(1, ((Identifiable) mySystem).getObjectID());
 //        mySystem = (MySystem) serialize(mySystem);
 //        mySystem = (MySystem) serialize(mySystem);
-//        assertEquals(1, mySystem.getObjectID(mySystem.getAllRegisteredObjects().iterator().next()));
+//        assertEquals(1, ((Identifiable) mySystem).getObjectID());
 //        assertEquals(2, mySystem.getAllRegisteredObjects().size());
 //    }
 //
@@ -465,7 +465,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
     private void newPrevayler() throws IOException, ClassNotFoundException {
         currentPrevayler = new CountingPrevayler(
                 PrevaylerFactory.createPrevayler((Serializable) Aspects.getCurrentAspectFactory().newInstance(MySystem.class),
-                        prevaylerDir.getAbsolutePath()));
+                                                 prevaylerDir.getAbsolutePath()));
     }
 
     public void testUnsupportedTransaction() {

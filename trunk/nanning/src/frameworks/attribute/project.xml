@@ -24,27 +24,4 @@
 
     </developers>
 
-    <dependencies>
-
-        <dependency>
-            <id>commons-digester</id>
-            <version>1.4.1</version>
-        </dependency>
-
-        <dependency>
-            <id>commons-beanutils</id>
-            <version>1.5</version>
-        </dependency>
-
-        <dependency>
-            <id>commons-collections</id>
-            <version>2.1</version>
-        </dependency>
-
-        <dependency>
-            <id>oro</id>
-            <version>2.0.7</version>
-        </dependency>
-    </dependencies>
-
 </project>

@@ -13,6 +13,7 @@ import org.codehaus.nanning.remote.RemoteIdentity;
 import org.codehaus.nanning.attribute.Attributes;
 import org.codehaus.nanning.config.Aspect;
 import org.codehaus.nanning.config.AspectSystem;
+import org.codehaus.nanning.config.FindTargetMixinAspect;
 import org.codehaus.nanning.prevayler.Identity;
 import org.codehaus.nanning.prevayler.Marshaller;
 

@@ -30,10 +30,13 @@
 
     <repository>
         <connection>
-            scm:cvs:pserver:anoncvs@codehaus.org:/cvsroot/nanning:nanning
+            scm:cvs:pserver:anonymous@cvs.codehaus.org:/cvsroot/nanning:nanning
         </connection>
+        <developerConnection>
+            scm:cvs:ext:${maven.username}@cvs.codehaus.org:/cvsroot/nanning:nanning
+        </developerConnection>
         <url>
-           http://cvs.codehaus.org/viewcvs.cgi/?cvsroot=nanning
+            http://nanning.cvs.codehaus.org/nanning
         </url>
     </repository>
 
@@ -151,6 +154,16 @@
     <dependencies>
 
         <dependency>
+            <id>xerces</id>
+            <version>2.0.2</version>
+        </dependency>
+
+        <dependency>
+            <id>xml-apis</id>
+            <version>1.0.b2</version>
+        </dependency>
+
+        <dependency>
             <id>qdox</id>
             <version>1.2</version>
         </dependency>
@@ -162,7 +175,7 @@
 
         <dependency>
             <id>ant</id>
-            <version>1.5.2</version>
+            <version>1.5.1</version>
         </dependency>
 
         <dependency>

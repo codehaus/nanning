@@ -7,7 +7,7 @@ import org.apache.commons.logging.LogFactory;
 public class ProfilerLogger {
     private static final Log logger = LogFactory.getLog(ProfilerLogger.class);
 
-    private static final ProfilerLogger instance = new ProfilerLogger();
+    private static ProfilerLogger instance = new ProfilerLogger();
 
     String lastLog;
 

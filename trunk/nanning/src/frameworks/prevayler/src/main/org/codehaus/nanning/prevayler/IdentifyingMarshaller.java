@@ -26,8 +26,8 @@ public class IdentifyingMarshaller implements Marshaller, Serializable {
             return new Identity(Aspects.getAspectInstance(o).getClassIdentifier(), new Long(0));
 
         } else if (PrevaylerUtils.isEntity(o.getClass())) {
-            if (getSystem().hasObjectID(o)) {
-                return new Identity(Aspects.getAspectInstance(o).getClassIdentifier(), new Long(getSystem().getObjectID(o)));
+            if (((Identifiable) o).hasObjectID()) {
+                return new Identity(Aspects.getAspectInstance(o).getClassIdentifier(), new Long(((Identifiable) o).getObjectID()));
             } else {
                 /* object is not part of target prevalent-system, marshal by value and assign ID at execution */
                 return o;
@@ -46,8 +46,8 @@ public class IdentifyingMarshaller implements Marshaller, Serializable {
             return resolve((Identity) o);
 
         } else if (PrevaylerUtils.isEntity(o.getClass())) {
-            if (!getSystem().hasObjectID(o)) {
-                getSystem().registerObjectID(o);
+            if (!((Identifiable) o).hasObjectID()) {
+                getSystem().register(o);
             }
             return o;
 
@@ -71,7 +71,7 @@ public class IdentifyingMarshaller implements Marshaller, Serializable {
             if (!getSystem().isIDRegistered(oid)) {
                 throw new AssertionException("object of type " + Aspects.getRealClass(objectClass) + " had invalid object id " + oid);
             }
-            return getSystem().getObjectWithID(oid);
+            return getSystem().getIdentifiable(oid);
         }
         throw new IllegalArgumentException("Can't resolve objects of " + objectClass);
     }

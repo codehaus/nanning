@@ -3,17 +3,13 @@ package org.codehaus.nanning.prevayler;
 import java.util.Collection;
 
 public interface IdentifyingSystem {
-    Object getObjectWithID(long oid);
-
-    long getObjectID(Object object);
+    Identifiable getIdentifiable(long oid);
 
     boolean hasNoRegisteredObjects();
 
     Collection getAllRegisteredObjects();
 
-    boolean hasObjectID(Object object);
-
     boolean isIDRegistered(long objectId);
 
-    long registerObjectID(Object object);
+    long register(Object object);
 }

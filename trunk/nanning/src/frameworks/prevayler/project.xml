@@ -27,12 +27,8 @@
     <dependencies>
 
         <dependency>
-            <id>prevayler</id>
-            <version>2.00.000-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <id>oro</id>
-            <version>2.0.7</version>
+            <id>junit</id>
+            <version>3.8.1</version>
         </dependency>
 
     </dependencies>

@@ -29,7 +29,6 @@
     </developers>
 
     <dependencies>
-
         <dependency>
             <id>dom4j</id>
             <version>1.4-dev-8</version>
@@ -40,17 +39,6 @@
             <artifactId>commons-jelly</artifactId>
             <version>20030211.141339</version>
         </dependency>
-
-        <dependency>
-            <id>commons-beanutils</id>
-            <version>1.5</version>
-        </dependency>
-
-        <dependency>
-            <id>oro</id>
-            <version>2.0.7</version>
-        </dependency>
-        
     </dependencies>
 
 </project>

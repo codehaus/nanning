@@ -1,6 +1,7 @@
 package org.codehaus.nanning.prevayler;
 
 import org.codehaus.nanning.AspectInstance;
+import org.codehaus.nanning.Mixin;
 import org.codehaus.nanning.config.Aspect;
 import org.codehaus.nanning.config.P;
 import org.codehaus.nanning.config.Pointcut;
@@ -9,7 +10,7 @@ import org.codehaus.nanning.config.Pointcut;
  * TODO document PrevaylerInterceptor
  *
  * @author <a href="mailto:jon_tirsen@yahoo.org">Jon Tirsen</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class PrevaylerAspect implements Aspect {
     private TransactionUnsupportedInterceptor unsupportedInterceptor;
@@ -38,5 +39,8 @@ public class PrevaylerAspect implements Aspect {
     }
 
     public void introduce(AspectInstance aspectInstance) {
+        if (PrevaylerUtils.isEntity(aspectInstance.getClassIdentifier())) {
+            aspectInstance.addMixin(new Mixin(Identifiable.class, new IdentifiableImpl()));
+        }
     }
 }
