@@ -44,18 +44,6 @@ public class AspectSystem implements AspectFactory {
 
             aspect.advise(aspectInstance);
         }
-        adviceMixins(aspectInstance);
-    }
-
-    protected void adviceMixins(AspectInstance aspectInstance) {
-        for (Iterator mixinIterator = aspectInstance.getMixins().iterator(); mixinIterator.hasNext();) {
-            MixinInstance mixinInstance = (MixinInstance) mixinIterator.next();
-
-            for (Iterator aspectIterator = aspects.iterator(); aspectIterator.hasNext();) {
-                Aspect aspect = (Aspect) aspectIterator.next();
-                aspect.adviseMixin(aspectInstance, mixinInstance);
-            }
-        }
     }
 
     protected void introduce(AspectInstance aspectInstance) {

@@ -68,12 +68,6 @@ public class InterceptorAspect implements Aspect {
     public void introduce(AspectInstance instance) {
     }
 
-    /**
-     * @deprecated override {@link #advise(com.tirsen.nanning.AspectInstance)} instead and manually iterate the mixins.
-     */
-    public void adviseMixin(AspectInstance instance, MixinInstance mixin) {
-    }
-
     Method[] getMethodsToAdvise(AspectInstance instance, MixinInstance mixin) {
         return pointcut.methodsToAdvise(instance, mixin);
     }

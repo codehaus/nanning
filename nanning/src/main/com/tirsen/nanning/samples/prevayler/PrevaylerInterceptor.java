@@ -12,9 +12,9 @@ import com.tirsen.nanning.definition.SingletonInterceptor;
  * TODO document PrevaylerInterceptor
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirs?n</a>
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  */
-public class PrevaylerInterceptor implements SingletonInterceptor, MethodInterceptor, FilterMethodsInterceptor {
+public class PrevaylerInterceptor implements MethodInterceptor {
     private boolean resolveEntities;
 
     public PrevaylerInterceptor(boolean resolveEntities) {
@@ -40,8 +40,8 @@ public class PrevaylerInterceptor implements SingletonInterceptor, MethodInterce
 
         if (CurrentPrevayler.hasPrevayler()
                 && !CurrentPrevayler.isInTransaction()
-                && (Identity.isService(invocation.getTargetInterface()) ||
-                Identity.isEntity(invocation.getTargetInterface())))
+                && (PrevaylerUtils.isService(invocation.getTargetInterface()) ||
+                PrevaylerUtils.isEntity(invocation.getTargetInterface())))
         {
             CurrentPrevayler.enterTransaction();
             try {

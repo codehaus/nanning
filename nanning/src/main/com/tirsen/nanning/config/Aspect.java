@@ -8,10 +8,5 @@ import com.tirsen.nanning.MixinInstance;
 public interface Aspect {
     void introduce(AspectInstance aspectInstance);
 
-    /**
-     * @deprecated
-     */ 
-    void adviseMixin(AspectInstance aspectInstance, MixinInstance mixin);
-
     void advise(AspectInstance aspectInstance);
 }

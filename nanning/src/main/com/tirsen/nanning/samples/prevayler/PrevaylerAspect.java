@@ -1,21 +1,27 @@
 package com.tirsen.nanning.samples.prevayler;
 
+import java.lang.reflect.Method;
+
 import com.tirsen.nanning.AspectInstance;
 import com.tirsen.nanning.MixinInstance;
 import com.tirsen.nanning.attribute.Attributes;
 import com.tirsen.nanning.config.Aspect;
+import com.tirsen.nanning.config.AttributePointcut;
 
 /**
  * TODO document PrevaylerInterceptor
  *
- * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirs?n</a>
- * @version $Revision: 1.11 $
+ * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsen</a>
+ * @version $Revision: 1.12 $
  */
 public class PrevaylerAspect implements Aspect {
     private TransactionUnsupportedInterceptor unsupportedInterceptor;
     private CheckTransactionUnsupportedInterceptor checkUnsupportedInterceptor;
     private PrevaylerInterceptor prevaylerInterceptor;
     private RegisterObjectInterceptor registerObjectInterceptor;
+    
+    private AttributePointcut transactionUnsupportedPointcut = new AttributePointcut("transaction-unsupported");
+    private AttributePointcut transactionPointcut = new AttributePointcut("transaction");
 
     public PrevaylerAspect() {
         this(false);
@@ -25,19 +31,18 @@ public class PrevaylerAspect implements Aspect {
         unsupportedInterceptor = new TransactionUnsupportedInterceptor();
         checkUnsupportedInterceptor = new CheckTransactionUnsupportedInterceptor();
         prevaylerInterceptor = new PrevaylerInterceptor(useIdentification);
+        
         if (useIdentification) {
             registerObjectInterceptor = new RegisterObjectInterceptor();
         }
     }
-
-    public void adviseMixin(AspectInstance aspectInstance, MixinInstance mixin) {
-        mixin.addInterceptor(unsupportedInterceptor);
-        mixin.addInterceptor(checkUnsupportedInterceptor);
-        mixin.addInterceptor(prevaylerInterceptor);
-    }
-
+    
     public void advise(AspectInstance aspectInstance) {
-        if (registerObjectInterceptor != null && Attributes.hasInheritedAttribute(aspectInstance.getClassIdentifier(), "entity")) {
+        transactionUnsupportedPointcut.advise(aspectInstance, unsupportedInterceptor);
+        transactionPointcut.advise(aspectInstance, checkUnsupportedInterceptor);
+        transactionPointcut.advise(aspectInstance, prevaylerInterceptor);
+
+        if (registerObjectInterceptor != null && PrevaylerUtils.isEntity(aspectInstance.getClassIdentifier())) {
             aspectInstance.addConstructionInterceptor(registerObjectInterceptor);
         }
     }

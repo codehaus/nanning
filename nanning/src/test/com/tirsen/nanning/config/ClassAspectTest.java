@@ -17,9 +17,6 @@ public class ClassAspectTest extends TestCase {
             public void introduce(AspectInstance aspectInstance) {
             }
 
-            public void adviseMixin(AspectInstance aspectInstance, MixinInstance mixin) {
-            }
-
             public void advise(AspectInstance aspectInstance) {
                 wasCalled = true;
             }
@@ -37,9 +34,6 @@ public class ClassAspectTest extends TestCase {
         classAspect.addAspect(new Aspect() {
             public void introduce(AspectInstance aspectInstance) {
                 wasCalled = true;
-            }
-
-            public void adviseMixin(AspectInstance aspectInstance, MixinInstance mixin) {
             }
 
             public void advise(AspectInstance aspectInstance) {

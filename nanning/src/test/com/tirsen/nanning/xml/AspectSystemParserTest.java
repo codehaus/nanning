@@ -19,9 +19,6 @@ public class AspectSystemParserTest extends TestCase {
         public void introduce(AspectInstance aspectInstance) {
         }
 
-        public void adviseMixin(AspectInstance aspectInstance, MixinInstance mixin) {
-        }
-
         public void advise(AspectInstance aspectInstance) {
         }
     }

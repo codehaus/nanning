@@ -54,7 +54,6 @@ public class PessimisticLockingAspectTest extends TestCase {
         Lockable lockable = (Lockable) instance.getProxy();
         lockable.lock();
         assertTrue(lockable.isLocked());
-        assertTrue(lockAspect.isLocked(lockable));
     }
 
     public void testCallWithoutLock() {

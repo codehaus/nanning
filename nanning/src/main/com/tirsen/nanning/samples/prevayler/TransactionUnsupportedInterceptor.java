@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import com.tirsen.nanning.*;
 import com.tirsen.nanning.attribute.Attributes;
 
-public class TransactionUnsupportedInterceptor implements MethodInterceptor, FilterMethodsInterceptor  {
+public class TransactionUnsupportedInterceptor implements MethodInterceptor {
     
     public Object invoke(Invocation invocation) throws Throwable {
         CheckTransactionUnsupportedInterceptor.enterTransactionsUnsupported();
@@ -14,9 +14,5 @@ public class TransactionUnsupportedInterceptor implements MethodInterceptor, Fil
         } finally {
             CheckTransactionUnsupportedInterceptor.exitTransactionsUnsupported();
         }
-    }
-
-    public boolean interceptsMethod(Method method) {
-        return Attributes.hasAttribute(method, "transaction-unsupported");
     }
 }

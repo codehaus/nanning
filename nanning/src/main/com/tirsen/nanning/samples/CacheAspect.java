@@ -53,9 +53,6 @@ public class CacheAspect implements Aspect {
         }
     }
 
-    public void adviseMixin(AspectInstance aspectInstance, MixinInstance mixin) {
-    }
-
     public double getCacheHitRatio() {
         return totalCount == 0 ? 1 :  (totalCount - missCount) / (double) totalCount;
     }
