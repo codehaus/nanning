@@ -126,12 +126,14 @@ public class PrevaylerTest extends AbstractAttributesTest {
                 prevayler.assertNumberOfCommands("just checking, should be no commands", 0);
 
                 // this will not hold if you mix objects created inside prevayler with those created outside
+                // this object will not be identified correctly in the command and you will have two copies of the
+                // "same" object
                 //assertSame(myObject, myObject.getMyObject().getMyObject().getMyObject());
             }
         });
     }
 
-    public void TODOtestGarbageCollect() throws IOException, ClassNotFoundException {
+    public void testGarbageCollect() throws IOException, ClassNotFoundException {
         CountingPrevayler prevayler = newPrevayler();
         CurrentPrevayler.withPrevayler(prevayler, new Runnable() {
             public void run() {
@@ -170,11 +172,11 @@ public class PrevaylerTest extends AbstractAttributesTest {
         return (MySystem) CurrentPrevayler.getSystem();
     }
 
-    private static class CountingPrevayler extends SnapshotPrevayler {
+    private static class CountingPrevayler extends GarbageCollectingSystem {
         private int numberOfCommandsInLog = 0;
 
-        public CountingPrevayler(PrevalentSystem prevalentSystem, String dir) throws IOException, ClassNotFoundException {
-            super(prevalentSystem, dir);
+        public CountingPrevayler(IdentifyingSystem system, String dir) throws IOException, ClassNotFoundException {
+            super(system, dir);
         }
 
         public Serializable executeCommand(Command command) throws Exception {
@@ -197,7 +199,7 @@ public class PrevaylerTest extends AbstractAttributesTest {
     }
 
     private CountingPrevayler newPrevayler() throws IOException, ClassNotFoundException {
-        CountingPrevayler prevayler = new CountingPrevayler((PrevalentSystem) aspectRepository.newInstance(MySystem.class),
+        CountingPrevayler prevayler = new CountingPrevayler((IdentifyingSystem) aspectRepository.newInstance(MySystem.class),
                                 prevaylerDir.getAbsolutePath());
         return prevayler;
     }

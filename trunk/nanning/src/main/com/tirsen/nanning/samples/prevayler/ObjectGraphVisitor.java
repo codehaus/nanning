@@ -12,6 +12,10 @@ public class ObjectGraphVisitor {
     private static final Log logger = LogFactory.getLog(ObjectGraphVisitor.class);
     protected Set visited = new HashSet();
 
+    public Set getVisited() {
+        return visited;
+    }
+
     public static void visit(Object o, ObjectGraphVisitor visitor) {
         visitor.visit(o);
     }

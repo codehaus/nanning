@@ -6,6 +6,8 @@ import org.prevayler.AlarmClock;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 public class BasicIdentifyingSystem implements IdentifyingSystem {
     private static final Log logger = LogFactory.getLog(BasicIdentifyingSystem.class);
@@ -31,6 +33,12 @@ public class BasicIdentifyingSystem implements IdentifyingSystem {
 
     public boolean hasObjectID(Object object) {
         return objects.contains(object);
+    }
+
+    public void keepTheseObjects(Set objectsToKeep) {
+        Set objectsToRemove = new HashSet(objects);
+        objectsToRemove.removeAll(objectsToKeep);
+        objects.removeAll(objectsToRemove);
     }
 
     public long registerObjectID(Object object) {

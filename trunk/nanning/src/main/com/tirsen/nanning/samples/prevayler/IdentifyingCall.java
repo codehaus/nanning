@@ -64,13 +64,7 @@ public class IdentifyingCall extends Call {
     }
 
     private Object unmarshal(Object o) {
-        if (o == null) {
-            return null;
-        } else if (o instanceof Number) {
-            return o;
-        } else if (o instanceof String) {
-            return o;
-        } else if (o instanceof Character) {
+        if (isMarshalByValue(o)) {
             return o;
         } else if (o instanceof Identity) {
             return resolve((Identity) o);
@@ -120,7 +114,7 @@ public class IdentifyingCall extends Call {
         throw new IllegalArgumentException("Can't resolve objects of " + objectClass);
     }
 
-    private boolean isEntity(Class objectClass) {
+    static boolean isEntity(Class objectClass) {
         return Attributes.hasInheritedAttribute(objectClass, "entity");
     }
 
@@ -135,5 +129,21 @@ public class IdentifyingCall extends Call {
     public Object getTarget() {
         assert target != null;
         return unmarshal(target);
+    }
+
+    public static boolean isMarshalByValue(Object o) {
+        if (o == null) {
+            return true;
+        } else if (o instanceof Number) {
+            return true;
+        } else if (o instanceof String) {
+            return true;
+        } else if (o instanceof Character) {
+            return true;
+        } else if (o instanceof Class) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
