@@ -1,4 +1,4 @@
-package com.tirsen.nanning.samples;
+package com.tirsen.nanning.profiler;
 
 public interface Profiled
 {

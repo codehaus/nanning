@@ -11,6 +11,7 @@ import com.tirsen.nanning.samples.prevayler.PrevaylerTest;
 import com.tirsen.nanning.samples.rmi.RemoteCallServerTest;
 import com.tirsen.nanning.xml.XMLTest;
 import com.tirsen.nanning.contract.ContractInterceptorTest;
+import com.tirsen.nanning.attribute.AttributesTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -32,6 +33,7 @@ public class AcceptanceTestSuite {
         suite.addTestSuite(RemoteCallServerTest.class);
         suite.addTestSuite(ContractInterceptorTest.class);
         suite.addTestSuite(XMLTest.class);
+        suite.addTestSuite(AttributesTest.class);
         return suite;
     }
     ///CLOVER:ON

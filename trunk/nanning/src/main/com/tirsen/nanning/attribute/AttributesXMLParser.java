@@ -8,19 +8,18 @@ import org.apache.commons.digester.Digester;
 import org.xml.sax.SAXException;
 
 public class AttributesXMLParser {
-    private Properties properties;
     private String fieldName;
     private String methodName;
     private String argumentList;
+    private ClassAttributes classAttributes;
 
-    protected AttributesXMLParser() {
-        properties = new Properties();
+    public AttributesXMLParser(ClassAttributes classAttributes) {
+        this.classAttributes = classAttributes;
     }
 
-    public static Properties parseXML(InputStream input) throws IOException, SAXException {
-        AttributesXMLParser attributesXMLParser = new AttributesXMLParser();
+    public static void parseXML(InputStream input, ClassAttributes classAttributes) throws IOException, SAXException {
+        AttributesXMLParser attributesXMLParser = new AttributesXMLParser(classAttributes);
         attributesXMLParser.parse(input);
-        return attributesXMLParser.getProperties();
     }
 
     private void parse(InputStream input) throws IOException, SAXException {
@@ -40,15 +39,17 @@ public class AttributesXMLParser {
     }
 
     public void setAttributeValue(String name, String value) {
-        String propertyName;
         if (fieldName != null) {
-            propertyName = "field." + fieldName + "." + name;
+            classAttributes.loadFieldAttribute(fieldName, name, value);
+            
         } else if (methodName != null) {
-            propertyName = "method." + methodName + "(" + ((argumentList == null) ? "" : argumentList) + ")" + "." + name;
+            String methodSignature = methodName + "(" + ((argumentList == null) ? "" : argumentList) + ")";
+            classAttributes.loadMethodAttribute(methodSignature, name, value);
+
         } else {
-            propertyName = "class." + name;
+            classAttributes.loadClassAttribute(name, value);
+
         }
-        properties.setProperty(propertyName, value);
         fieldName = null;
         methodName = null;
         argumentList = null;
@@ -70,9 +71,4 @@ public class AttributesXMLParser {
             argumentList += type;
         }
     }
-
-    private Properties getProperties() {
-        return properties;
-    }
-
 }

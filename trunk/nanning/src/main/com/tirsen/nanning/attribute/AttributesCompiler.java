@@ -18,10 +18,10 @@ import org.apache.tools.ant.Task;
 /**
  * TODO document AttributesCompiler
  *
- * <!-- $Id: AttributesCompiler.java,v 1.5 2003-03-21 17:11:10 lecando Exp $ -->
+ * <!-- $Id: AttributesCompiler.java,v 1.6 2003-06-09 17:40:41 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.5 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.6 $
  */
 public class AttributesCompiler extends Task {
     private File src;
@@ -72,7 +72,7 @@ public class AttributesCompiler extends Task {
     }
 
     private void createAttributesFile(File javaFile, File attributeFile) throws IOException {
-        Properties attributes = parseAttributeProperties(javaFile);
+        ClassAttributes attributes = parseClassAttribute(javaFile);
         OutputStream output = new FileOutputStream(attributeFile);
         try {
             attributes.store(output, javaFile.getName());
@@ -81,12 +81,12 @@ public class AttributesCompiler extends Task {
         }
     }
 
-    private Properties parseAttributeProperties(File javaFile) throws IOException {
+    ClassAttributes parseClassAttribute(File javaFile) throws IOException {
         InputStream input = new FileInputStream(javaFile);
         try {
             builder.reset();
             new Parser(new JFlexLexer(input), builder).parse();
-            return builder.getProperties();
+            return builder.getClassAttributes();
         } finally {
             input.close();
         }

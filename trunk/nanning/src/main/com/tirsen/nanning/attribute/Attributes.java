@@ -25,16 +25,15 @@ import java.util.*;
  * Hmm... wait, a minute, there's some support for this in QDox, maybe that will work...
  * -- jon
 
- * <!-- $Id: Attributes.java,v 1.12 2003-05-26 05:39:32 tirsen Exp $ -->
+ * <!-- $Id: Attributes.java,v 1.13 2003-06-09 17:40:41 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 
 public class Attributes {
     private static List searchPaths = new ArrayList();
     private static Map propertiesCache = new HashMap();
-    private static Map methodPropertyNameCache = new HashMap();
     private static Map classAttributesCache = new HashMap();
 
     public static String getAttribute(Class klass, String attribute) {
@@ -58,7 +57,7 @@ public class Attributes {
                 boolean found = false;
 
                 // load the JavaDoc-tags
-                inputStream = findFile(klass, className.substring(className.lastIndexOf('.') + 1) + ".attributes");
+                inputStream = findFile(klass, className(klass) + ".attributes");
                 if (inputStream == null) {
                     inputStream = findFile(klass, className.replace('.', '/') + ".attributes");
                 }
@@ -70,17 +69,6 @@ public class Attributes {
                 }
 
                 inputStream = null;
-
-                // load the XML-defined attributes
-                inputStream = findFile(klass, className.substring(className.lastIndexOf('.') + 1) + ".xml");
-                if (inputStream == null) {
-                    inputStream = findFile(klass, className.replace('.', '/') + ".xml");
-                }
-
-                if (inputStream != null) {
-                    properties.putAll(AttributesXMLParser.parseXML(inputStream));
-                    found = true;
-                }
 
 //                if (!found) {
 //                    logger.debug("could not find attributes for " + klass + " on classpath or in " + searchPaths);
@@ -106,7 +94,12 @@ public class Attributes {
         return properties;
     }
 
-    private static InputStream findFile(Class klass, String fileName) throws MalformedURLException {
+    static String className(Class klass) {
+        String className = klass.getName();
+        return className.substring(className.lastIndexOf('.') + 1);
+    }
+
+    static InputStream findFile(Class klass, String fileName) throws MalformedURLException {
         InputStream inputStream = klass.getResourceAsStream(fileName);
 
         if (inputStream == null) {
@@ -128,32 +121,6 @@ public class Attributes {
 
     public static String getAttribute(Method method, String attribute) {
         return getAttributes(method.getDeclaringClass()).getAttribute(method, attribute);
-    }
-
-    static String methodSignature(Method method) {
-        String signature = (String) methodPropertyNameCache.get(method);
-        if (signature == null) {
-            StringBuffer stringBuffer = new StringBuffer();
-            stringBuffer.append(method.getName());
-            stringBuffer.append('(');
-            Class[] parameterTypes = method.getParameterTypes();
-            for (int i = 0; i < parameterTypes.length; i++) {
-                Class parameterType = parameterTypes[i];
-                String type = parameterType.getName();
-                type = type.substring(type.lastIndexOf('.') + 1);
-                if (type.lastIndexOf(';') != -1) {
-                    type = type.substring(0, type.lastIndexOf(';'));
-                }
-                stringBuffer.append(type);
-                if (i + 1 < parameterTypes.length) {
-                    stringBuffer.append(',');
-                }
-            }
-            stringBuffer.append(')');
-            signature = stringBuffer.toString();
-            methodPropertyNameCache.put(method, signature);
-        }
-        return signature;
     }
 
     public static String getAttribute(Field field, String attribute) {

@@ -39,6 +39,8 @@
 
     <goal name="nanning:frameworks-docs">
 
+        <attainGoal name="jar:install" />
+
         <maven:reactor
             basedir="${basedir}/src/frameworks"
             includes="*/project.xml"
