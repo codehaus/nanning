@@ -15,15 +15,18 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Properties;
 
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.BuildException;
+
 /**
  * TODO document AttributesCompiler
  *
- * <!-- $Id: AttributesCompiler.java,v 1.1 2002-10-28 21:45:34 tirsen Exp $ -->
+ * <!-- $Id: AttributesCompiler.java,v 1.2 2002-10-30 13:27:42 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.1 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.2 $
  */
-public class AttributesCompiler
+public class AttributesCompiler extends Task
 {
     private File src;
     private File dest;
@@ -38,64 +41,68 @@ public class AttributesCompiler
         this.dest = dest;
     }
 
-    public void execute() throws IOException
+    public void execute()
     {
-        System.out.println("Compiling attributes for " + src + " into " + dest);
-        JavaDocBuilder javaDocBuilder = new JavaDocBuilder();
-        javaDocBuilder.addSourceTree(src);
-        JavaSource[] sources = javaDocBuilder.getSources();
-        for (int sourceIndex = 0; sourceIndex < sources.length; sourceIndex++)
-        {
-            JavaSource source = sources[sourceIndex];
-            JavaClass[] classes = source.getClasses();
-            for (int classIndex = 0; classIndex < classes.length; classIndex++)
+        try {
+            System.out.println("Compiling attributes for " + src + " into " + dest);
+            JavaDocBuilder javaDocBuilder = new JavaDocBuilder();
+            javaDocBuilder.addSourceTree(src);
+            JavaSource[] sources = javaDocBuilder.getSources();
+            for (int sourceIndex = 0; sourceIndex < sources.length; sourceIndex++)
             {
-                JavaClass javaClass = classes[classIndex];
-                JavaField[] fields = javaClass.getFields();
-                Properties properties = new Properties();
-                processTags("class", javaClass.getTags(), properties);
-                for (int fieldIndex = 0; fieldIndex < fields.length; fieldIndex++)
+                JavaSource source = sources[sourceIndex];
+                JavaClass[] classes = source.getClasses();
+                for (int classIndex = 0; classIndex < classes.length; classIndex++)
                 {
-                    JavaField field = fields[fieldIndex];
-                    processTags(field.getName(), field.getTags(), properties);
-                }
-                JavaMethod[] methods = javaClass.getMethods();
-                for (int methodIndex = 0; methodIndex < methods.length; methodIndex++)
-                {
-                    JavaMethod method = methods[methodIndex];
-                    StringBuffer name = new StringBuffer();
-                    name.append(method.getName());
-                    name.append('(');
-                    JavaParameter[] parameters = method.getParameters();
-                    for (int parameterIndex = 0; parameterIndex < parameters.length; parameterIndex++)
+                    JavaClass javaClass = classes[classIndex];
+                    JavaField[] fields = javaClass.getFields();
+                    Properties properties = new Properties();
+                    processTags("class", javaClass.getTags(), properties);
+                    for (int fieldIndex = 0; fieldIndex < fields.length; fieldIndex++)
                     {
-                        JavaParameter parameter = parameters[parameterIndex];
-                        name.append(parameter.getType().getValue());
-                        if(parameterIndex + 1 < parameters.length)
-                        {
-                            name.append(',');
-                        }
+                        JavaField field = fields[fieldIndex];
+                        processTags(field.getName(), field.getTags(), properties);
                     }
-                    name.append(')');
-                    processTags(name.toString(), method.getTags(), properties);
-                }
-                File dir = new File(dest, javaClass.getPackage().replace('.', File.separatorChar));
-                dir.mkdirs();
-                File attributeFile = new File(dir, javaClass.getName() + ".attributes");
-                OutputStream output = null;
-                try
-                {
-                    output = new FileOutputStream(attributeFile);
-                    properties.store(output, javaClass.getName());
-                }
-                finally
-                {
-                    if (output != null)
+                    JavaMethod[] methods = javaClass.getMethods();
+                    for (int methodIndex = 0; methodIndex < methods.length; methodIndex++)
                     {
-                        output.close();
+                        JavaMethod method = methods[methodIndex];
+                        StringBuffer name = new StringBuffer();
+                        name.append(method.getName());
+                        name.append('(');
+                        JavaParameter[] parameters = method.getParameters();
+                        for (int parameterIndex = 0; parameterIndex < parameters.length; parameterIndex++)
+                        {
+                            JavaParameter parameter = parameters[parameterIndex];
+                            name.append(parameter.getType().getValue());
+                            if(parameterIndex + 1 < parameters.length)
+                            {
+                                name.append(',');
+                            }
+                        }
+                        name.append(')');
+                        processTags(name.toString(), method.getTags(), properties);
+                    }
+                    File dir = new File(dest, javaClass.getPackage().replace('.', File.separatorChar));
+                    dir.mkdirs();
+                    File attributeFile = new File(dir, javaClass.getName() + ".attributes");
+                    OutputStream output = null;
+                    try
+                    {
+                        output = new FileOutputStream(attributeFile);
+                        properties.store(output, javaClass.getName());
+                    }
+                    finally
+                    {
+                        if (output != null)
+                        {
+                            output.close();
+                        }
                     }
                 }
             }
+        } catch (IOException e) {
+            throw new BuildException(e);
         }
     }
 

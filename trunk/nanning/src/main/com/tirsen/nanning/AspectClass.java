@@ -14,10 +14,10 @@ import java.util.List;
 /**
  * The definition of an aspected object, specifies interfaces, interceptors and target-objects.
  *
- * <!-- $Id: AspectClass.java,v 1.5 2002-10-28 18:51:00 tirsen Exp $ -->
+ * <!-- $Id: AspectClass.java,v 1.6 2002-10-30 13:27:42 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.5 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.6 $
  */
 public class AspectClass extends AspectDefinition
 {
@@ -28,37 +28,43 @@ public class AspectClass extends AspectDefinition
      *
      * @return a new aspected object.
      *
-     * @throws InstantiationException
+     * @throws AspectException
      */
-    public Object newInstance() throws InstantiationException, IllegalAccessException
+    public Object newInstance()
     {
-        List instances = new ArrayList(aspectDefinitions.size() + 1);
+        try {
+            List instances = new ArrayList(aspectDefinitions.size() + 1);
 
-        // add the class-specific interface, interceptors and target
-        SideAspectInstance classInterfaceInstance = createInterfaceInstance();
-        instances.add(classInterfaceInstance);
-        List proxyInterceptors = Arrays.asList(classInterfaceInstance.getInterceptors());
+            // add the class-specific interface, interceptors and target
+            SideAspectInstance classInterfaceInstance = createInterfaceInstance();
+            instances.add(classInterfaceInstance);
+            List proxyInterceptors = Arrays.asList(classInterfaceInstance.getInterceptors());
 
-        for (Iterator iterator = aspectDefinitions.iterator(); iterator.hasNext();)
-        {
-            AspectDefinition interfaceDefinition = (AspectDefinition) iterator.next();
-            SideAspectInstance interfaceInstance = interfaceDefinition.createInterfaceInstance();
+            for (Iterator iterator = aspectDefinitions.iterator(); iterator.hasNext();)
+            {
+                AspectDefinition interfaceDefinition = (AspectDefinition) iterator.next();
+                SideAspectInstance interfaceInstance = interfaceDefinition.createInterfaceInstance();
 
-            // add the interceptors for the class _before_ those defined for the side-aspect
-            int size = proxyInterceptors.size() + interfaceInstance.getInterceptors().length;
-            List interfaceInterceptors = new ArrayList(size);
-            interfaceInterceptors.addAll(proxyInterceptors);
-            interfaceInterceptors.addAll(Arrays.asList(interfaceInstance.getInterceptors()));
-            interfaceInstance.setInterceptors((Interceptor[]) interfaceInterceptors.toArray(new Interceptor[size]));
+                // add the interceptors for the class _before_ those defined for the side-aspect
+                int size = proxyInterceptors.size() + interfaceInstance.getInterceptors().length;
+                List interfaceInterceptors = new ArrayList(size);
+                interfaceInterceptors.addAll(proxyInterceptors);
+                interfaceInterceptors.addAll(Arrays.asList(interfaceInstance.getInterceptors()));
+                interfaceInstance.setInterceptors((Interceptor[]) interfaceInterceptors.toArray(new Interceptor[size]));
 
-            instances.add(interfaceInstance);
+                instances.add(interfaceInstance);
+            }
+
+
+            AspectInstance aspectInstance =
+                    new AspectInstance((SideAspectInstance[]) instances.toArray(new SideAspectInstance[0]));
+
+            return aspectInstance.createProxy();
+        } catch (IllegalAccessException e) {
+            throw new AspectException(e);
+        } catch (InstantiationException e) {
+            throw new AspectException(e);
         }
-
-
-        AspectInstance aspectInstance =
-                new AspectInstance((SideAspectInstance[]) instances.toArray(new SideAspectInstance[0]));
-
-        return aspectInstance.createProxy();
     }
 
     /**

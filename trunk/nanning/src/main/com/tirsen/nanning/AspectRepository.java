@@ -12,10 +12,10 @@ import java.util.Map;
 /**
  * TODO document AspectRepository
  *
- * <!-- $Id: AspectRepository.java,v 1.2 2002-10-28 18:51:00 tirsen Exp $ -->
+ * <!-- $Id: AspectRepository.java,v 1.3 2002-10-30 13:27:42 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.2 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.3 $
  */
 public class AspectRepository
 {
@@ -53,7 +53,7 @@ public class AspectRepository
         return (AspectClass) aspectClasses.get(interfaceClass);
     }
 
-    public Object newInstance(Class aspectInterface) throws InstantiationException, IllegalAccessException
+    public Object newInstance(Class aspectInterface)
     {
         return getClass(aspectInterface).newInstance();
     }
