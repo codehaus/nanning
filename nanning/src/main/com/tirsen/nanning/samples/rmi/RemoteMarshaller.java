@@ -1,9 +1,7 @@
 package com.tirsen.nanning.samples.rmi;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import com.tirsen.nanning.AspectFactory;
 import com.tirsen.nanning.AspectInstance;
@@ -109,5 +107,9 @@ public class RemoteMarshaller implements Marshaller {
 
         Object target = mixinInstance.getTarget();
         return target;
+    }
+
+    public void reset() {
+        objectTable.clear();
     }
 }

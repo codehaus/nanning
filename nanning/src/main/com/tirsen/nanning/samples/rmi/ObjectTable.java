@@ -35,4 +35,10 @@ class ObjectTable {
     public boolean hasID(Object o) {
         return objectToId.containsKey(o);
     }
+
+    public void clear() {
+        objectToId.clear();
+        idToObject.clear();
+        currentId = 0;
+    }
 }
