@@ -154,6 +154,7 @@ public class BasicIdentifyingSystem extends IdentifiableImpl implements Identify
         }
         for (Iterator i = readBackValues.iterator(); i.hasNext();) {
             Identifiable identifiable = (Identifiable) i.next();
+            nextObjectId = Math.max(identifiable.getObjectID() + 1, nextObjectId);
             register(identifiable);
         }
         readBackValues = null;
@@ -163,15 +164,4 @@ public class BasicIdentifyingSystem extends IdentifiableImpl implements Identify
         return nextObjectId++;
     }
 
-    public synchronized void clear() {
-        for (Iterator i = idToObject.values().iterator(); i.hasNext();) {
-            IdentifiableSoftReference reference = (IdentifiableSoftReference) i.next();
-            Identifiable identifiable = (Identifiable) reference.get();
-            if (identifiable != null) {
-                identifiable.clearObjectID();
-            }
-            i.remove();
-        }
-        nextObjectId = 0;
-    }
 }
