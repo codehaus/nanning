@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
  * TODO document PrevaylerInterceptor
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class PrevaylerInterceptor
         implements SingletonInterceptor, FilterMethodsInterceptor, ConstructionInterceptor {
@@ -31,6 +31,7 @@ public class PrevaylerInterceptor
         if (object instanceof IdentifyingSystem) {
             ((IdentifyingSystem) object).registerObjectID(object);
         }
+        // only give object ID's if they are created inside Prevayler
         if (CurrentPrevayler.isInTransaction()) {
             if (!CurrentPrevayler.getSystem().hasObjectID(object)) {
                 CurrentPrevayler.getSystem().registerObjectID(object);
@@ -40,7 +41,10 @@ public class PrevaylerInterceptor
     }
 
     public Object invoke(Invocation invocation) throws Throwable {
-        if (!CurrentPrevayler.isInTransaction()) {
+        // only first call on objects already in Prevayler should result in a command in the log
+        if (CurrentPrevayler.hasPrevayler() &&
+                !CurrentPrevayler.isInTransaction() &&
+                CurrentPrevayler.getSystem().hasObjectID(invocation.getProxy())) {
             CurrentPrevayler.enterTransaction();
             try {
                 InvokeCommand command = new InvokeCommand(invocation);

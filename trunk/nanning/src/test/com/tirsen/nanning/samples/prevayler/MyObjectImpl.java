@@ -16,18 +16,7 @@ public class MyObjectImpl implements MyObject {
         this.myObject = myObject;
     }
 
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof MyObjectImpl)) return false;
-
-        final MyObjectImpl myObject = (MyObjectImpl) o;
-
-        if (attribute != null ? !attribute.equals(myObject.attribute) : myObject.attribute != null) return false;
-
-        return true;
-    }
-
-    public int hashCode() {
-        return (attribute != null ? attribute.hashCode() : 0);
+    public MyObject getMyObject() {
+        return myObject;
     }
 }

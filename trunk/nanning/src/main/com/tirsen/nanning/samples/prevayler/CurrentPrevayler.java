@@ -62,4 +62,8 @@ public class CurrentPrevayler {
             setPrevayler(lastPrevayler);
         }
     }
+
+    public static boolean hasPrevayler() {
+        return currentPrevayler.get() != null;
+    }
 }
