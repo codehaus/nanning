@@ -17,10 +17,10 @@ import com.tirsen.nanning.*;
 /**
  * TODO document UnitTestSuite
  *
- * <!-- $Id: UnitTestSuite.java,v 1.6 2002-12-04 07:45:33 tirsen Exp $ -->
+ * <!-- $Id: UnitTestSuite.java,v 1.7 2002-12-08 15:50:58 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class UnitTestSuite
 {
@@ -36,6 +36,7 @@ public class UnitTestSuite
         suite.addTestSuite(AspectsTest.class);
         suite.addTestSuite(ContractInterceptorTest.class);
         suite.addTestSuite(MethodFilterTest.class);
+        suite.addTestSuite(AttributeFilterTest.class);
         return suite;
     }
     ///CLOVER:ON
