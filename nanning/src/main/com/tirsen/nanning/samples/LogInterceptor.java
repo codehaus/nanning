@@ -14,10 +14,10 @@ import org.apache.commons.logging.Log;
 /**
  * TODO document LogInterceptor
  *
- * <!-- $Id: LogInterceptor.java,v 1.2 2002-10-28 21:45:34 tirsen Exp $ -->
+ * <!-- $Id: LogInterceptor.java,v 1.3 2002-10-30 20:10:54 tirsen Exp $ -->
  *
  * @author $Author: tirsen $
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class LogInterceptor implements Interceptor
 {
@@ -32,7 +32,7 @@ public class LogInterceptor implements Interceptor
         {
             Object arg = args[i];
             methodCallMessage.append(arg);
-            if(i + 1 < args.length)
+            if (i + 1 < args.length)
             {
                 methodCallMessage.append(", ");
             }
@@ -45,7 +45,7 @@ public class LogInterceptor implements Interceptor
             result = invocation.invokeNext();
             return result;
         }
-        catch(Throwable e)
+        catch (Throwable e)
         {
             log.error("<<< " + methodCallMessage + " threw exception", e);
             throw e;

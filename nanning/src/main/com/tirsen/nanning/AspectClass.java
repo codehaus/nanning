@@ -14,10 +14,10 @@ import java.util.List;
 /**
  * The definition of an aspected object, specifies interfaces, interceptors and target-objects.
  *
- * <!-- $Id: AspectClass.java,v 1.6 2002-10-30 13:27:42 lecando Exp $ -->
+ * <!-- $Id: AspectClass.java,v 1.7 2002-10-30 20:10:53 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.6 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.7 $
  */
 public class AspectClass extends AspectDefinition
 {
@@ -32,7 +32,8 @@ public class AspectClass extends AspectDefinition
      */
     public Object newInstance()
     {
-        try {
+        try
+        {
             List instances = new ArrayList(aspectDefinitions.size() + 1);
 
             // add the class-specific interface, interceptors and target
@@ -60,9 +61,13 @@ public class AspectClass extends AspectDefinition
                     new AspectInstance((SideAspectInstance[]) instances.toArray(new SideAspectInstance[0]));
 
             return aspectInstance.createProxy();
-        } catch (IllegalAccessException e) {
+        }
+        catch (IllegalAccessException e)
+        {
             throw new AspectException(e);
-        } catch (InstantiationException e) {
+        }
+        catch (InstantiationException e)
+        {
             throw new AspectException(e);
         }
     }
