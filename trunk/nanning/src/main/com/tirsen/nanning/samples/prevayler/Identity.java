@@ -12,9 +12,11 @@ import com.tirsen.nanning.attribute.Attributes;
  * TODO document Identity
  *
  * @author <a href="mailto:jon_tirsen@yahoo.com">Jon Tirsén</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class Identity implements Serializable {
+    static final long serialVersionUID = 716500751463534855L;
+    
     private Class objectClass;
     private Object identifier;
 

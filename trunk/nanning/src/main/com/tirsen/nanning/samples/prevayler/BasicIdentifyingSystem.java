@@ -7,6 +7,8 @@ import org.prevayler.AlarmClock;
 import java.util.*;
 
 public class BasicIdentifyingSystem implements IdentifyingSystem {
+    static final long serialVersionUID = 4503034161857395426L;
+
     private static final Log logger = LogFactory.getLog(BasicIdentifyingSystem.class);
     private AlarmClock clock;
 
@@ -46,7 +48,7 @@ public class BasicIdentifyingSystem implements IdentifyingSystem {
 
         Long id = getNextId();
         objectsById.put(id, object);
-        idsByObject.put(object,  id);
+        idsByObject.put(object, id);
         return id.longValue();
     }
 

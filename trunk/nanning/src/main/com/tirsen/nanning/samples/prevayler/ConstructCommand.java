@@ -12,7 +12,8 @@ import java.io.Serializable;
 
 public class ConstructCommand implements Command {
     private static final Log logger = LogFactory.getLog(ConstructCommand.class);
-
+    static final long serialVersionUID = 8814750796281720268L;
+    
     private Object classIdentifier;
 
     public ConstructCommand(ConstructionInvocation invocation) {
