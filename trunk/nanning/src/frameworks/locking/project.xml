@@ -2,7 +2,7 @@
 <project>
     <extend>${basedir}/../project.xml</extend>
     <name>Nanning Locking</name>
-    <id>nanning-profiler</id>
+    <id>nanning-locking</id>
     <currentVersion>0.1</currentVersion>
     <package>com.tirsen.nanning.locking</package>
     <shortDescription>Locking</shortDescription>

@@ -17,10 +17,10 @@ import java.util.ArrayList;
 /**
  * Utility for accessing and modifying aspected object.
  *
- * <!-- $Id: Aspects.java,v 1.22 2003-05-09 14:57:45 lecando Exp $ -->
+ * <!-- $Id: Aspects.java,v 1.23 2003-06-20 11:53:58 tirsen Exp $ -->
  *
- * @author $Author: lecando $
- * @version $Revision: 1.22 $
+ * @author $Author: tirsen $
+ * @version $Revision: 1.23 $
  */
 public class Aspects {
     private static ThreadLocal contextAspectRepository = new InheritableThreadLocal();
@@ -147,7 +147,7 @@ public class Aspects {
         return null;
     }
 
-    public static void setThis(Object proxy) {
+    static void setThis(Object proxy) {
         Aspects.currentThis.set(proxy);
     }
 }

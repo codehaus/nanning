@@ -1,3 +1,12 @@
+0.8
+ - Moved some frameworks out of core Nanning.
+ - Support for inner classes in attributes, somewhat refactored.
+ - Changed pointcut model a little bit.
+ - Remote framework now supports marshalling nested objects. 
+
+0.7
+ Internal release only...
+
 0.6
  - Initial implementation of new XML format based on AspectSystem.
  - Large set of smaller refactorings and bugfixes.
