@@ -5,8 +5,10 @@ import org.codehaus.nanning.util.WrappedException;
 import org.codehaus.nanning.AssertionException;
 
 import java.util.Stack;
+import java.util.Date;
 
 public class CurrentPrevayler {
+    private static ThreadLocal clocks = new InheritableThreadLocal();
     private static ThreadLocal currentPrevayler = new InheritableThreadLocal();
     private static ThreadLocal currentSystems = new ThreadLocal();
 
@@ -104,4 +106,26 @@ public class CurrentPrevayler {
         return currentPrevayler.get() != null;
     }
 
+    public static void setClock(Date clock) {
+        if (clock == null) {
+            throw new AssertionException("Cant set null clock, use clearClock() instead");
+        }
+        clocks.set(clock);
+    }
+
+    public static Date getClock() {
+        Date date = (Date) clocks.get();
+        if (date == null) {
+            throw new AssertionException("No clock is set");
+        }
+        return date;
+    }
+
+    public static void clearClock() {
+        clocks.set(null);
+    }
+
+    public static boolean hasClock() {
+        return clocks.get() != null;
+    }
 }

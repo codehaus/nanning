@@ -59,6 +59,7 @@ public class InvokeTransaction implements TransactionWithQuery {
 
         registerObjectIDForSystem(system);
         try {
+            CurrentPrevayler.setClock(executionTime);
 
             AuthenticatedCall call = unmarshalCall();
             logInvocation(call);
@@ -70,6 +71,7 @@ public class InvokeTransaction implements TransactionWithQuery {
             handleException(e);
             throw e;
         } finally {
+            CurrentPrevayler.clearClock();
             CurrentPrevayler.exitTransaction();
         }
     }

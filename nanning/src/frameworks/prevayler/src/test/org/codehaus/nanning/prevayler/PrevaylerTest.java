@@ -3,6 +3,7 @@ package org.codehaus.nanning.prevayler;
 import java.io.*;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Date;
 
 import org.codehaus.nanning.AspectInstance;
 import org.codehaus.nanning.Aspects;
@@ -42,6 +43,55 @@ public class PrevaylerTest extends AbstractAttributesTest {
 
     protected void tearDown() throws Exception {
         prevaylerDir.delete();
+    }
+
+    /**
+     * @entity
+     */
+    public static interface TestDatesWithPrevayler {
+        /**
+         * @transaction
+         */
+        void touchTime();
+
+        Date getTime();
+    }
+
+    public static class TestDatesWithPrevaylerImpl implements TestDatesWithPrevayler, Serializable {
+        private Date time;
+
+        public void touchTime() {
+            this.time = CurrentPrevayler.getClock();
+        }
+
+        public Date getTime() {
+            return time;
+        }
+    }
+
+    public void testDatesWithPrevayler() throws Exception {
+        newPrevayler();
+
+        final TestDatesWithPrevayler testDatesWithPrevayler = (TestDatesWithPrevayler) newInstance(TestDatesWithPrevayler.class);
+        withCurrentPrevayler(new PrevaylerAction() {
+            public Object run() throws Exception {
+                currentSystem().add(testDatesWithPrevayler);
+
+                assertNull(testDatesWithPrevayler.getTime());
+                testDatesWithPrevayler.touchTime();
+                assertNotNull(testDatesWithPrevayler.getTime());
+                return null;
+            }
+        });
+
+        final long testDatesWithPrevaylerId = getObjectId(testDatesWithPrevayler);
+        newPrevayler();
+        withCurrentPrevayler(new PrevaylerAction() {
+            public Object run() throws Exception {
+                assertNotNull(((TestDatesWithPrevayler) currentSystem().getIdentifiable(testDatesWithPrevaylerId)).getTime());
+                return null;
+            }
+        });
     }
 
     public void testMethodCallWithSimpleStringIsPersisted() throws Exception {
