@@ -83,6 +83,9 @@ public class RemoteMarshaller implements Marshaller {
                 return new RemoteIdentity((Class) Aspects.getAspectInstance(o).getClassIdentifier(), registerID(o),
                                           connectionManager);
             }
+        } else {
+            assert Aspects.isAspectObject(o) ? !isRemoteStub(o) : true
+                    : o + " was remote stub but did not have 'remote'-attribute";
         }
 
         return o;

@@ -15,7 +15,8 @@ import org.apache.commons.logging.LogFactory;
 
 public class RemoteCallServer {
     private static final Log logger = LogFactory.getLog(SocketRemoteCallServer.class);
-    private AspectFactory aspectRepository;
+    
+    private AspectFactory aspectFactory;
     private Map naming = new HashMap();
     private RemoteMarshaller marshaller;
 
@@ -24,7 +25,7 @@ public class RemoteCallServer {
     }
 
     public void processCall(InputStream commandStream, OutputStream resultStream) {
-        Aspects.setContextAspectFactory(aspectRepository);
+        Aspects.setContextAspectFactory(aspectFactory);
         Subject subject = Subject.getSubject(AccessController.getContext());
         if (subject != null) {
             subject.getPrincipals().clear();
@@ -96,7 +97,7 @@ public class RemoteCallServer {
     }
 
     public void setAspectFactory(AspectFactory aspectRepository) {
-        this.aspectRepository = aspectRepository;
+        this.aspectFactory = aspectRepository;
     }
 
     public void bind(String name, Object o) {
