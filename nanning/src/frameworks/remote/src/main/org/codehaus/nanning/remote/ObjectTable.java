@@ -12,7 +12,7 @@ import java.util.Collections;
 class ObjectTable {
     private static final Log logger = LogFactory.getLog(ObjectTable.class);
 
-    private static final int DEFAULT_TIMEOUT = 60 * 60 * 1000;
+    private static final int DEFAULT_TIMEOUT = 10 * 60 * 60 * 1000;
 
     private Map objectToId = Collections.synchronizedMap(new HashMap());
     private Map idToReference = Collections.synchronizedMap(new HashMap());
