@@ -34,10 +34,10 @@ mixin.addInterceptor(method, new MethodInterceptor() {
 }
 </code></pre>
  *
- * <!-- $Id: Mixin.java,v 1.5 2004-02-07 15:10:15 tirsen Exp $ -->
+ * <!-- $Id: Mixin.java,v 1.6 2005-04-11 07:56:20 lecando Exp $ -->
  *
- * @author $Author: tirsen $
- * @version $Revision: 1.5 $
+ * @author $Author: lecando $
+ * @version $Revision: 1.6 $
  */
 public class Mixin implements Serializable {
     static final long serialVersionUID = 7386027290257587762L;
@@ -45,7 +45,7 @@ public class Mixin implements Serializable {
     private Class interfaceClass;
     private Object target;
 
-    private transient Map methodInterceptors = new HashMap(2);
+    private transient MethodInterceptorMapping methodInterceptors = new MethodInterceptorMapping();
 
     public Mixin() {
     }
@@ -71,17 +71,14 @@ public class Mixin implements Serializable {
     }
 
     public Set getAllInterceptors() {
-        Set allInterceptors = new HashSet();
-        if (methodInterceptors != null) {
-            for (Iterator methodIterator = methodInterceptors.values().iterator(); methodIterator.hasNext();) {
-                List interceptors = (List) methodIterator.next();
-                for (Iterator interceptorIterator = interceptors.iterator(); interceptorIterator.hasNext();) {
-                    Interceptor interceptor = (Interceptor) interceptorIterator.next();
-                    allInterceptors.add(interceptor);
-                }
-            }
+        return getMethodInterceptors().getAllInterceptors();
+    }
+
+    private MethodInterceptorMapping getMethodInterceptors() {
+        if (methodInterceptors == null) {
+            methodInterceptors = new MethodInterceptorMapping();
         }
-        return allInterceptors;
+        return methodInterceptors;
     }
 
     public Object getTarget() {
@@ -89,15 +86,7 @@ public class Mixin implements Serializable {
     }
 
     public List getInterceptorsForMethod(Method method) {
-        if (methodInterceptors == null) {
-            methodInterceptors = new HashMap(2);
-        }
-        List interceptors = (List) methodInterceptors.get(method);
-        if (interceptors == null) {
-            interceptors = new ArrayList(1);
-            methodInterceptors.put(method, interceptors);
-        }
-        return interceptors;
+        return getMethodInterceptors().get(method);
     }
 
     protected class InvocationImpl implements Invocation {
@@ -238,7 +227,7 @@ public class Mixin implements Serializable {
      * @param interceptor
      */
     public void addInterceptor(Method method, MethodInterceptor interceptor) {
-        getInterceptorsForMethod(method).add(interceptor);
+        getMethodInterceptors().add(method, interceptor);
     }
 
     public Method[] getAllMethods() {

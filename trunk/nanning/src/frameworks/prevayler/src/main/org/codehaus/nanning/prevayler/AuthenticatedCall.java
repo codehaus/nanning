@@ -53,13 +53,15 @@ public class AuthenticatedCall extends Call {
 
     public Object invoke() throws Exception {
         try {
-            return Subject.doAs(getSubject(), new PrivilegedExceptionAction() {
-                public Object run() throws Exception {
-                    return AuthenticatedCall.super.invoke();
-                }
-            });
+            return Subject.doAs(getSubject(), new InvokeSuperAction());
         } catch (PrivilegedActionException e) {
             throw e.getException();
+        }
+    }
+
+    private class InvokeSuperAction implements PrivilegedExceptionAction {
+        public Object run() throws Exception {
+            return AuthenticatedCall.super.invoke();
         }
     }
 }
